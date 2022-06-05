@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Impressum{% endblock %}
+
+{% block content %}
+
+
+    <div class="header_static">
+        <h2 class="display-4">Datenschutz</h2>
+    </div>
+    <!-- SVG Path created with https://yqnn.github.io/svg-path-editor/ -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 1">
+      <path d="M 0 0 C 0 0 0 1 1 1 C 2.3333 1 2.455 0.523 4.013 0.505 C 7 1 6 0 9.065 0.089 C 10.532 0.143 11 1 12 1 C 14 1 14 0 16 0.107 C 18 0 18 1 20 1 C 20 1 21 1 21 0" fill="#785C9D"/>
+    </svg>
+
+    <div class="row">
+    <div class="col-sm-8">
+        <p class="display-6">Cookies</p>
+
+            Da es sich bei Kindisch.at um eine rein statische Seite handelt, ist die Verwendung von Cookies nicht notwendig / überflüssig.
+
+        <p class="display-6">Nutzerverhalten</p>
+
+            Um Kindisch.at besser an die Bedürfnisse der Nutzer anpassen zu können, speichern wir einige anonyme Daten, wie etwa, den Browsertyp oder den Gerätetyp (Smartphone, Laptop, etc) mit dem du unsere Seite besucht hast. In keinem Fall werden Daten gespeichert, die es uns ermöglichen würden dich als Person in irgendeiner Form nachverfolgen zu können (zB IP-Adresse)
+        </div>
+        <div class="col-sm-4">
+             <img src="{% static 'images/cookie.png' %}" alt="cookie" width="100%" style="float: right">
+             <p class="attribution_image"><a href="https://storyset.com/food">Illustration by Freepik Storyset</a></p>
+        </div>
+    </div>
+
+{% endblock %}

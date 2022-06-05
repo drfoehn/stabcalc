@@ -1,0 +1,27 @@
+{% for field in form %}
+
+<div class="input-group mb-3  form-field-group {{ field.name }}">
+    <span class="form-label col-sm-2" id="form-label">
+        {{ field.label_tag }}
+    </span>
+    <div class="form-control col-sm-10  form-field">
+        {{ field }}<br>
+        <span class="form_helptext">{{ field.help_text }}</span>
+    </div>
+</div>
+{#Super alternativen für Checkboxes:#}
+{#    https://codepen.io/marcusconnor/pen/QJNvMa#}
+{#    https://codepen.io/cobra_winfrey/pen/YjWpKd#}
+{#    https://codepen.io/agoodwin/pen/gKpKqw#}
+{#    https://codepen.io/kathykato/pen/jzOxgv#}
+
+{% endfor %}
+
+
+
+
+
+
+
+
+

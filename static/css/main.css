@@ -1,0 +1,22 @@
+
+/* ------------------OVERALL------------------*/
+
+ul{
+    list-style: none;
+}
+
+a:link {
+color: #FF924C;
+}
+
+a:visited {
+color: #FF924C;
+}
+
+a:hover {
+color: #FFCA3A;
+}
+
+a:active {
+color: #FFCA3A;
+}

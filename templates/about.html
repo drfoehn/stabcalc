@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Über Uns{% endblock %}
+
+{% block content %}
+
+
+    <div class="header_static">
+        <h2 class="display-4">Über uns</h2>
+    </div>
+    <!-- SVG Path created with https://yqnn.github.io/svg-path-editor/ -->
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 1">
+        <path d="M 0 0 C 0 0 0 1 1 1 C 2.3333 1 2.455 0.523 4.013 0.505 C 7 1 6 0 9.065 0.089 C 10.532 0.143 11 1 12 1 C 14 1 14 0 16 0.107 C 18 0 18 1 20 1 C 20 1 21 1 21 0"
+              fill="#785C9D"/>
+    </svg>
+
+
+    <div class="row">
+    <div class="col-sm-8">
+    <div class="display-5">
+            Wer wir sind und was wir wollen.
+        </div>
+        <div class="display-6">
+            Wer sind wir?
+        </div>
+        <div>
+            Wir sind zwei Väter mit jeweils 3 Kindern. Dadurch sind wir immer sehr gefordert das entsprechende
+            Freizeitprogramm zu gestalten. Da wir dachten, dass wir da sicher nicht die einzigen sind und
+            praktischerweise auch eine Freude damit haben solche Webseiten zu basteln, kam uns die Idee für diese
+            Plattform.
+        </div>
+        <div class="display-6">
+            Was ist der Zweck dieser Seite?
+        </div>
+        <div>
+            Diese Seite versteht sich als Netzwerk, in welchem Eltern und Kinder ihre Tipps für Freizeitaktivitäten mit
+            anderen Salzburgern teilen können.<br>
+            Das heißt es braucht <span style="font-weight: bold; font-size: 120%; color: red">DEINE HILFE</span>, damit diese Plattform funktionieren kann.
+            <ul>
+                        <li><a href="{% url 'leisuretips:add' %}">Freizeittipp vorschlagen</a></li>
+                        <li><a href="{% url 'hikes:add' %}">Wanderung vorschlagen</a></li>
+                        <li><a href="{% url 'events:add' %}">Veranstaltung vorschagen</a></li>
+            </ul>
+        </div>
+        <div class="display-6">
+            Kooperation mit dem Wandaverlag
+        </div>
+        <div>
+            Alle Eltern im Salzburger Raum (und darüber hinaus) kennen die tollen Kinderwagen-Wanderbücher von Elisabeth
+            Göllner-Kampel und ihren <a href="https://www.wandaverlag.com/">Ein-Frau-Wandaverlag.</a><br>
+            Seit Jänner 2015 hat sich eine super Kooperation mit Elisabeth ergeben, durch welche sie unserer Plattform
+            (und somit Dir) sukzessive Wege aus ihren Büchern zur Verfügung stellt! - Insgesamt werden es über 100 Tipps
+            sein!<br>
+            Diese Zusammenarbeit ist eine Bereicherung für beide Seiten. Die Bücher werden durch digitale Möglichkeiten
+            (Karten, Auswahlfunktion) aufgewertet und unsere Plattform durch vielfach erprobte und verlässliche Touren
+            und Ausflugtipps bereichert.<br>
+            Die gebundenen Bücher bieten euch zusätzliche Vorteile wie genauere Angaben, Wandertagebuch, die Möglichkeit
+            für persönliche Notizen u.v.m.
+        </div>
+        <div class="display-6">
+            Was unterscheidet diese Seite von anderen ähnlichen Seiten?
+        </div>
+        <div>
+            <ol>
+            <li>Kindisch.at ist ausschließlich für den Salzburger Raum gedacht.</li>
+            <li>Kinidsch.at enthält ausschließlich persönliche Beiträge, die bereits von Eltern und deren Kindern besucht
+            wurden. Es ist somit keine Linksammlung von aus dem Internet kopierten Tips (ausgenommen natürlich
+            Veranstaltungen, die in der Zukunft liegen). Daher findest du zu jedem Beitrag auch persönliche Bilder der
+            Eltern, die den jeweiligen Beitrag geteilt haben.</li>
+            <li>Kindisch.at ist eine gemeinnützige Seite, die nicht auf Gewinn ausgerichtet ist (Grundidee war durch den
+            Aufbau einer solchen Plattform selbst mehr Tipps von anderen zu bekommen, was wir mit unseren Kindern in
+            Salzburg machen können)</li>
+            <li>Kindisch.at ist optimiert für die Ansicht auf Smartphones. D.h. der Inhalt sowie die Menüführung der Seite
+            passt sich an die Größe deines Bildschirms an.</li>
+                </ol>
+            <p>Viel Spaß beim Mitmachen!</p>
+        </div>
+    </div>
+    <div class="col-sm-4">
+             <img src="{% static 'images/hello.png' %}" alt="hello" width="100%" style="float: right">
+             <p class="attribution_image"><a href="https://storyset.com/people">Illustration by Freepik Storyset</a></p>
+    </div>
+
+    </div>
+
+
+{% endblock %}
