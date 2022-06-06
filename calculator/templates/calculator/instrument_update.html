@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Instruments{% endblock %}
+
+{% block content %}
+
+
+    {% if object_list %}
+        <div class="row d-flex justify-content-center">
+            {% for instrument in object_list %}
+                <div>
+                {{ instrument.name }}<br>
+                {{ instrument.manufacturer }}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No instruments saved</p>
+    {% endif %}
+
+{% endblock %}
+
+

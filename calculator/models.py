@@ -1,19 +1,33 @@
+from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django import forms
+from django.urls import reverse
+from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
 
+class LabUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you', verbose_name='E-Mail')
+    laboratory = models.CharField(_('Name of Laboratory'), max_length=255)
+    country = CountryField(verbose_name='Country')
+    city = models.CharField(max_length=255, verbose_name='City')
+    REQUIRED_FIELDS = ['email', 'laboratory', 'country', 'city']
+
 
 class Instrument(models.Model):
-    hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
+    user = models.OneToOneField(LabUser, on_delete=models.CASCADE, related_name="todolist", null=True)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('dashboard')
 
 class Condition(models.Model):
     ROOMTEMP = 1
@@ -103,20 +117,20 @@ class Sample(models.Model):
         , blank=True, null=True
     )
 
-    container_fillingvolume = models.FloatField(verbose_name='Container Fillingvolume')
+    container_fillingvolume = models.FloatField(verbose_name='Container Fillingvolume', blank=True, null=True)
 
+    NONE = 0
     EDTA = 1
     HEP = 2
     CITRATE = 3
-    SERUM = 4
-    URINE = 5
+    CLOTACTIVATOR = 6
     Other = 9
     CONTAINERADDITIVE = (
+        (NONE, _("No additive")),
         (EDTA, _("EDTA")),
         (HEP, _("Heparin")),
         (CITRATE, _("Citrate")),
-        (SERUM, _("Serum")),
-        (URINE, _("Urine")),
+        (CLOTACTIVATOR, _("Clotactivator (Serum)")),
         (OTHER, _("Other - Please specify")),
 
     )
@@ -140,8 +154,9 @@ class Parameter(models.Model):
     reagent_manufacturer = models.CharField(max_length=255, verbose_name='Reagent manufacturer', blank=True, null=True)
     CV_intra = models.FloatField(verbose_name='CV% intra', blank=True, null=True)
     CV_inter = models.FloatField(verbose_name='CV% inter', blank=True, null=True)
-    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
+    method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
+    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -152,7 +167,7 @@ class Duration(models.Model):
     #
     # duration_number = forms.ChoiceField(choices=DURATION_CHOICES)
 
-    duration_number =  models.IntegerField(choices=list(zip(range(1, 32), range(1, 32))), unique=True)
+    duration_number = models.IntegerField(choices=list(zip(range(1, 32), range(1, 32))), unique=True)
 
     MINUTES = "MIN"
     HOURS = "HR"
@@ -177,10 +192,18 @@ class Duration(models.Model):
     # def __str__(self):
     #     return self.duration_number
 
+class Population(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Population Title")
+    subjects = models.IntegerField()
+    replicates = models.SmallIntegerField(choices=list(zip(range(1, 11), range(1, 11))))
+
+    def __str__(self):
+        return self.title
 
 class Result(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
+    population = models.ForeignKey(Population, on_delete=models.CASCADE)
     value = models.FloatField()
 
