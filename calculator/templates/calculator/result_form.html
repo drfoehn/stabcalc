@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headadditional %}
+{% endblock %}
+
+{% block title %}Insert Results{% endblock %}
+
+{% block content %}
+  <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
+    <h2 class="display-4">Input Results</h2>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+    {% if object_list %}
+        b
+    {% endif %}
+      <form method="POST">
+        {% csrf_token %}
+          {{ form.as_table }}
+
+          <input type="submit" value="Submit">
+          {#                    {% include "includes/form_template.html" %}#}
+      </form>
+    </div>
+
+  </div>
+{% endblock content %}

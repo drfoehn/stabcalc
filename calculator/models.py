@@ -18,13 +18,12 @@ class LabUser(models.Model):
 
 
 class Instrument(models.Model):
-    user = models.OneToOneField(LabUser, on_delete=models.CASCADE, related_name="todolist", null=True)
+    author = models.ForeignKey(LabUser, on_delete=models.CASCADE, related_name="todolist", null=True)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
-
     def __str__(self):
-        return self.name
+        return str('%s %s' % (self.name, self.manufacturer))
 
     def get_absolute_url(self):
         return reverse('dashboard')
@@ -57,7 +56,6 @@ class Condition(models.Model):
 
     # def __str__(self):
     #     return self.temperature
-
 
 class Sample(models.Model):
     VENOUS_BLOOD = 1
@@ -141,10 +139,13 @@ class Sample(models.Model):
         verbose_name='Container Additive', blank=True, null=True
     )
 
-    gel = models.BooleanField(verbose_name='Container with gel')
+    gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
 
     # def __str__(self):
     #     return self.sample_type
+    def __str__(self):
+        return str('%s %s' % (self.sample_type, self.container_additive))
+    # TODO: Show name of choices rather than numbers
 
 
 class Parameter(models.Model):
@@ -171,9 +172,9 @@ class Duration(models.Model):
 
     MINUTES = "MIN"
     HOURS = "HR"
-    DAYS = "DY"
+    DAYS = "DAY"
     MONTHS = "MON"
-    YEARS = "YR"
+    YEARS = "YEAR"
     DURATION = (
         (MINUTES, _("Minute(s)")),
         (HOURS, _("Hour(s)")),
@@ -184,18 +185,23 @@ class Duration(models.Model):
     )
 
     duration_unit = models.CharField(
-        max_length=3,
+        max_length=4,
         choices=DURATION,
         default=HOURS,
     )
 
-    # def __str__(self):
-    #     return self.duration_number
+    def __str__(self):
+        return str('%s %s' % (self.duration_number, self.duration_unit))
+
+class Subject(models.Model):
+    name = models.CharField(max_length=20, blank=True, null=True)
+    def __str__(self):
+        return self.name
 
 class Population(models.Model):
     title = models.CharField(max_length=255, verbose_name="Population Title")
-    subjects = models.IntegerField()
-    replicates = models.SmallIntegerField(choices=list(zip(range(1, 11), range(1, 11))))
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, help_text='How many patients/volunteers were recruited?')
+    replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?', choices=list(zip(range(1, 11), range(1, 11))))
 
     def __str__(self):
         return self.title
@@ -205,5 +211,6 @@ class Result(models.Model):
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     population = models.ForeignKey(Population, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     value = models.FloatField()
 

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from django.conf.urls.static import static
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_TEMPLATE_DIR = Path(BASE_DIR, "templates")
@@ -35,6 +36,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'jazzmin',
+    # 'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -158,13 +160,13 @@ JAZZMIN_SETTINGS = {
     # "site_header": "Library",
     #
     # # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    # "site_brand": "Library",
+    "site_brand": "Lab Dashboard",
     #
     # # Logo to use for your site, must be present in static files, used for brand on top left
-    # "site_logo": "books/img/logo.png",
+    "site_logo": "images/calculator-logo-white.png",
     #
     # # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    # "login_logo": None,
+    "login_logo": 'images/eflm-logo.png',
     #
     # # Logo to use for login form in dark themes (defaults to login_logo)
     # "login_logo_dark": None,
@@ -176,10 +178,10 @@ JAZZMIN_SETTINGS = {
     # "site_icon": None,
     #
     # # Welcome text on the login screen
-    # "welcome_sign": "Welcome to the library",
+    "welcome_sign": "Welcome to EFLM Stability Calculator",
     #
     # # Copyright on the footer
-    # "copyright": "Acme Library Ltd",
+    "copyright": "EFLM WG-PRE",
     #
     # # The model admin to search from the search bar, search bar omitted if excluded
     # "search_model": "auth.User",
@@ -212,10 +214,10 @@ JAZZMIN_SETTINGS = {
     # #############
     #
     # # Additional links to include in the user menu on the top right ("app" url type is not allowed)
-    # "usermenu_links": [
-    #     {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
-    #     {"model": "auth.user"}
-    # ],
+    "usermenu_links": [
+        {"name": "Support", "url": "#", "new_window": True},
+        # {"model": "auth.user"}
+    ],
     #
     # #############
     # # Side Menu #
@@ -248,14 +250,17 @@ JAZZMIN_SETTINGS = {
     #
     # # Custom icons for side menu apps/models See https://fontawesome.com/icons?d=gallery&m=free&v=5.0.0,5.0.1,5.0.10,5.0.11,5.0.12,5.0.13,5.0.2,5.0.3,5.0.4,5.0.5,5.0.6,5.0.7,5.0.8,5.0.9,5.1.0,5.1.1,5.2.0,5.3.0,5.3.1,5.4.0,5.4.1,5.4.2,5.13.0,5.12.0,5.11.2,5.11.1,5.10.0,5.9.0,5.8.2,5.8.1,5.7.2,5.7.1,5.7.0,5.6.3,5.5.0,5.4.2
     # # for the full list of 5.13.0 free icon classes
-    # "icons": {
-    #     "auth": "fas fa-users-cog",
-    #     "auth.user": "fas fa-user",
-    #     "auth.Group": "fas fa-users",
-    # },
+
+
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+#TODO: Access Models?
+    },
     # # Icons that are used when one is not manually specified
-    # "default_icon_parents": "fas fa-chevron-circle-right",
-    # "default_icon_children": "fas fa-circle",
+    "default_icon_parents": "fas fa-chevron-circle-right",
+    "default_icon_children": "fas fa-circle",
 
     #################
     # Related Modal #
@@ -285,5 +290,7 @@ JAZZMIN_SETTINGS = {
     # # override change forms on a per modeladmin basis
     # "changeform_format_overrides": {"auth.user": "collapsible", "auth.group": "vertical_tabs"},
     # # Add a language dropdown into the admin
+
+    # TODO: Language Chooser funzt nicht
     # "language_chooser": True,
 }

@@ -14,12 +14,21 @@ class LabUserInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (LabUserInline,)
 
+class ConditionAdmin(admin.ModelAdmin):
+    model = Condition
+    list_display = ['temperature', 'light', 'air', 'agitation']
+
+class InstrumentAdmin(admin.ModelAdmin):
+    model = Instrument
+    list_display = ['name', 'manufacturer']
+
+class ParameterAdmin(admin.ModelAdmin):
+    model = Parameter
 
 
-# class ParameterAdmin(admin.ModelAdmin):
-#     model = ParameterModel
-
-
+class ResultAdmin(admin.ModelAdmin):
+    model = Result
+    extra = 1
 
 # class ResultInline(admin.StackedInline):
 #     model = Result
@@ -43,17 +52,19 @@ user_dashboard = UserAdminArea(name='UserAdmin')
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Parameter)
-admin.site.register(Instrument)
-admin.site.register(Condition)
+admin.site.register(Instrument, InstrumentAdmin)
+admin.site.register(Condition, ConditionAdmin)
 admin.site.register(Sample)
 admin.site.register(Duration)
 admin.site.register(Population)
-admin.site.register(Result)
+admin.site.register(Result, ResultAdmin)
+admin.site.register(Subject)
 
 user_dashboard.register(Parameter)
-user_dashboard.register(Instrument)
-user_dashboard.register(Condition)
+user_dashboard.register(Instrument, InstrumentAdmin)
+user_dashboard.register(Condition, ConditionAdmin)
 user_dashboard.register(Sample)
 user_dashboard.register(Duration)
 user_dashboard.register(Population)
-# user_dashboard.register(Result)
+user_dashboard.register(Result, ResultAdmin)
+user_dashboard.register(Subject)

@@ -52,6 +52,15 @@ class SampleAddView(CreateView):
         return super().post(request, *args, **kwargs)
 
 
+class ResultsAddView(CreateView):
+    # template_name = "xxx.html"
+    model = Result
+    form_class = ResultForm
+    # success_url = "/dashboard"
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
 
 class ParameterIndex(ListView):
     model = Parameter
