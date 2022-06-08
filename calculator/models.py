@@ -163,6 +163,10 @@ class Parameter(models.Model):
         return self.name
 
 
+class Value(models.Model):
+    value = models.FloatField()
+    duration = models.ForeignKey("Duration", on_delete=models.CASCADE, related_name='value_set')
+
 class Duration(models.Model):
     # DURATION_CHOICES = [(x, x) for x in range(1, 32)]
     #
@@ -189,28 +193,31 @@ class Duration(models.Model):
         choices=DURATION,
         default=HOURS,
     )
-
+    value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='duration_value_set')
+    subject = models.ForeignKey("Subject", on_delete=models.CASCADE, related_name='duration_subject_set')
     def __str__(self):
         return str('%s %s' % (self.duration_number, self.duration_unit))
 
+
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
+    duration = models.ForeignKey(Duration, on_delete=models.CASCADE, related_name='subject_duration_set')
+    setting = models.ForeignKey('Setting', on_delete=models.CASCADE, related_name='subject_setting_set')
     def __str__(self):
         return self.name
 
-class Population(models.Model):
-    title = models.CharField(max_length=255, verbose_name="Population Title")
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, help_text='How many patients/volunteers were recruited?')
-    replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?', choices=list(zip(range(1, 11), range(1, 11))))
+# class Population(models.Model):
+#     title = models.CharField(max_length=255, verbose_name="Population Title")
+#     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, help_text='How many patients/volunteers were recruited?')
+#     replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?', choices=list(zip(range(1, 11), range(1, 11))))
+#
+#     def __str__(self):
+#         return self.title
 
-    def __str__(self):
-        return self.title
-
-class Result(models.Model):
+class Setting(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
-    duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
-    population = models.ForeignKey(Population, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    value = models.FloatField()
+    # population = models.ForeignKey(Population, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='setting_set')
+
 

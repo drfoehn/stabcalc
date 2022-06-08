@@ -16,12 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+
 from calculator import views
+from calculator.views import *
 from calculator.admin import user_dashboard
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin-tools/', include('admin_tools.urls')),
+
     path('admin/', admin.site.urls),
+    #URLs for Password reset
+    #TODO: set up an email backend for the reset link to actually work.
+    path('admin/password_reset/',auth_views.PasswordResetView.as_view(),name='admin_password_reset',),
+    path('admin/password_reset/done/',auth_views.PasswordResetDoneView.as_view(),name='password_reset_done',),
+    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(),name='password_reset_confirm',),
+    path('reset/done/',auth_views.PasswordResetCompleteView.as_view(),name='password_reset_complete',),
+
+
     path('dashboard/', user_dashboard.urls),
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     # path("dashboard/", TemplateView.as_view(template_name="dashboard.html"), name="dashboard"),
@@ -31,6 +42,7 @@ urlpatterns = [
     path("add-sample/", views.SampleAddView.as_view(), name="add_sample"),
     path("add-parameter/", views.ParameterAddView.as_view(), name="add_parameter"),
     path("instrument-list", views.InstrumentIndex.as_view(), name="instrument_list"),
-    path("add-results/", views.ResultsAddView.as_view(), name="add_results"),
+    path("add-results/", views.ValuesAddView.as_view(), name="add_results"),
+    path("input/", views.MultiInputView.as_view(), name="input"),
 
 ]

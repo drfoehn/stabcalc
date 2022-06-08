@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'calculator',
     'django_countries',
+    "crispy_forms",
+    "crispy_bootstrap5",
 
 ]
 

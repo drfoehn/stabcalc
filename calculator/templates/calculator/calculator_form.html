@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block headadditional %}
+{% endblock %}
+
+{% block title %}Insert Stability Data{% endblock %}
+
+{% block content %}
+  <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
+    <h2 class="display-4">Input Stability Study data</h2>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+<form id='offer_negotiation_form' class="content-form" action='./' enctype="multipart/form-data" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {{ setting_form.as_p }}
+
+    <input type="submit" name="{{ setting_form.prefix }}-submit-counter-bid"
+    title="Submit a counter bid"
+    value="Submit" />
+</form>
+
+
+
+<form id='offer-attachment-form' class="content-form" action='./' enctype="multipart/form-data" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {{ duration_form.as_p }}
+
+    <input name="{{ duration_form.prefix }}-submit" type="submit" value="Submit" />
+</form>
+
+        <form id='offer-attachment-form' class="content-form" action='./' enctype="multipart/form-data" method="post" accept-charset="utf-8">
+    {% csrf_token %}
+    {{ value_form.as_p }}
+
+    <input name="{{ value_form.prefix }}-submit" type="submit" value="Submit" />
+</form>
+
+            </div>
+
+  </div>
+{% endblock content %}
