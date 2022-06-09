@@ -226,7 +226,6 @@ class Duration(models.Model):
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
-    duration = models.ManyToManyField(Duration)
 
     def __str__(self):
         return self.name
@@ -234,11 +233,15 @@ class Subject(models.Model):
 
 class Result(models.Model):
     value = models.FloatField()
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, blank=True, null=True)
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    replicate = models.ForeignKey(Replicate, on_delete=models.CASCADE)
+    duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
 
-    def duration(self):
-        return self.subject.duration
+    def subject(self):
+        return self.replicate.subject
+
+    # def duration(self):
+    #     return self.subject.duration
 
     # def average(self):
     #     results = self.objects.all()
@@ -248,11 +251,3 @@ class Result(models.Model):
     #     print("Entered results: ", results)
     #     print("Average: ", average)
 
-    def average(self):
-        results = self.objects.values_list()
-
-
-
-
-    # def average(self):
-    #     return self.value

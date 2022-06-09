@@ -8,6 +8,9 @@ from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
 
+class ResultsView(ListView):
+    model = Result
+
 
 class DashboardView(ListView):
     model = Instrument

@@ -96,6 +96,7 @@ admin.site.register(Duration, DurationAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Result, ResultAdmin)
+admin.site.register(Replicate,ReplicateAdmin)
 
 
 user_dashboard.register(Parameter)

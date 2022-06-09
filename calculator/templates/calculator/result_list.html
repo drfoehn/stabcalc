@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Instruments{% endblock %}
+
+{% block content %}
+
+
+    {% if object_list %}
+        <div class="row d-flex justify-content-center">
+            {% for result in object_list %}
+                <div>
+                {{ result.value }}<br>
+{#                {{ result.average }}<br>#}
+                    {{ result.duration}}<br>
+                    {{ result.setting }}<br>
+                    {{ result.subject }}<br>
+{#                <a href="{% url 'edit_results' result.id %}">update</a>#}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No results saved</p>
+    {% endif %}
+    <a href="{% url 'add_results' %}">add result</a>
+
+{% endblock %}
+
+
