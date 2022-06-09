@@ -20,63 +20,61 @@ class LabUserInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (LabUserInline,)
 
-class ConditionAdmin(admin.ModelAdmin):
-    model = Condition
-    list_display = ['temperature', 'light', 'air', 'agitation']
 
-class InstrumentAdmin(admin.ModelAdmin):
-    model = Instrument
-    list_display = ['name', 'manufacturer']
+
+
 
 class ParameterAdmin(admin.ModelAdmin):
     model = Parameter
 
+class InstrumentAdmin(admin.ModelAdmin):
+    model = Instrument
+    exclude = ('author',)
+    list_display = ['name', 'manufacturer']
 
-
-
-
-class ValueInline(admin.StackedInline):
-    model = Value
-    extra = 1
-
-class DurationAdmin(admin.ModelAdmin):
-    model = Duration
-    exclude = ('value',)
-    inlines = [ValueInline]
-
-class DurationInline(admin.TabularInline):
-    model = Duration
-    exclude = ('value',)
-    extra = 1
-
-class SubjectAdmin(admin.ModelAdmin):
-    model = Subject
-    inlines = [DurationInline]
-    fields = None
-
+class ConditionAdmin(admin.ModelAdmin):
+    model = Condition
+    list_display = ['temperature', 'light', 'air', 'agitation', 'other_Condition']
 
 class SubjectInline(admin.TabularInline):
     model = Subject
-    exclude = ('value',)
+    extra = 1
+
+# TODO: Prepopulate Duration filed with all durautions from the setting (Custom validation? Override initial?)
+
+
+class DurationInline(admin.TabularInline):
+    model = Duration
     extra = 1
 
 class SettingAdmin(admin.ModelAdmin):
     model = Setting
     exclude = ('subject',)
-    inlines = [SubjectInline]
+    inlines = [SubjectInline, DurationInline]
+
+class SubjectAdmin(admin.ModelAdmin):
+    model = Subject
+    # inlines = [DurationInline]
+    exclude = ('duration',)
+
+class ResultInline(admin.StackedInline):
+    model = Result
+    extra = 1
+
+class DurationAdmin(admin.ModelAdmin):
+    model = Duration
+    exclude = ('value', 'subject')
+    # inlines = [ResultInline]
+
+class ResultAdmin(admin.ModelAdmin):
+    model = Result
 
 
 
-
-class FooAdmin(admin.ModelAdmin):
-    form = InstrumentForm
-    add_form_template = "calculator/instrument_form.html"
-    change_form_template = "calculator/instrument_update.html"
-
-
-
-
-
+# class InstrumentAdmin(admin.ModelAdmin):
+#     form = InstrumentForm
+#     add_form_template = "calculator/instrument_form.html"
+#     change_form_template = "calculator/instrument_update.html"
 
 
 class UserAdminArea(admin.AdminSite):
@@ -90,13 +88,14 @@ user_dashboard = UserAdminArea(name='UserAdmin')
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(Parameter)
-admin.site.register(Instrument, FooAdmin)
+admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(Sample)
 admin.site.register(Duration, DurationAdmin)
 # admin.site.register(Population)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Subject, SubjectAdmin)
+admin.site.register(Result, ResultAdmin)
 
 
 user_dashboard.register(Parameter)
@@ -107,3 +106,4 @@ user_dashboard.register(Duration, DurationAdmin)
 # user_dashboard.register(Population)
 user_dashboard.register(Setting, SettingAdmin)
 user_dashboard.register(Subject, SubjectAdmin)
+user_dashboard.register(Result, ResultAdmin)

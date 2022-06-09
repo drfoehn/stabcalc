@@ -4,13 +4,16 @@ from django import forms
 from django.urls import reverse
 from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
+import math
+import statistics
 
 
 # Create your models here.
 
 class LabUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you', verbose_name='E-Mail')
+    email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you',
+                              verbose_name='E-Mail')
     laboratory = models.CharField(_('Name of Laboratory'), max_length=255)
     country = CountryField(verbose_name='Country')
     city = models.CharField(max_length=255, verbose_name='City')
@@ -23,10 +26,11 @@ class Instrument(models.Model):
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
     def __str__(self):
-        return str('%s %s' % (self.name, self.manufacturer))
+        return f"{self.name}, {self.manufacturer}"
 
     def get_absolute_url(self):
         return reverse('dashboard')
+
 
 class Condition(models.Model):
     ROOMTEMP = 1
@@ -52,10 +56,11 @@ class Condition(models.Model):
     light = models.BooleanField(verbose_name='Exposure to light during storage')
     air = models.BooleanField(verbose_name='Exposure to air during storage')
     agitation = models.BooleanField(verbose_name='Agitation during storage')
-    other_Condition=models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
+    other_Condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
 
-    # def __str__(self):
-    #     return self.temperature
+    def __str__(self):
+        return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_Condition}"
+
 
 class Sample(models.Model):
     VENOUS_BLOOD = 1
@@ -144,8 +149,8 @@ class Sample(models.Model):
     # def __str__(self):
     #     return self.sample_type
     def __str__(self):
-        return str('%s %s' % (self.sample_type, self.container_additive))
-    # TODO: Show name of choices rather than numbers
+        return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
+
 
 
 class Parameter(models.Model):
@@ -160,64 +165,94 @@ class Parameter(models.Model):
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - Intrument: {self.instrument.name} / Handmethod: {self.method_hand}"
 
 
-class Value(models.Model):
-    value = models.FloatField()
-    duration = models.ForeignKey("Duration", on_delete=models.CASCADE, related_name='value_set')
+class Setting(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True, help_text='Choose any name that identifies your stability study')
+    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
+    condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
+    replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
+                                          choices=list(zip(range(1, 11), range(1, 11))))
+
+    def __str__(self):
+        return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
 
 class Duration(models.Model):
-    # DURATION_CHOICES = [(x, x) for x in range(1, 32)]
-    #
-    # duration_number = forms.ChoiceField(choices=DURATION_CHOICES)
+    duration_number = models.PositiveIntegerField(blank=True, null=True)
 
-    duration_number = models.IntegerField(choices=list(zip(range(1, 32), range(1, 32))), unique=True)
-
-    MINUTES = "MIN"
-    HOURS = "HR"
-    DAYS = "DAY"
-    MONTHS = "MON"
-    YEARS = "YEAR"
-    DURATION = (
+    MINUTES = "1"
+    HOURS = "2"
+    DAYS = "3"
+    MONTHS = "4"
+    YEARS = "5"
+    DurationChoices = (
         (MINUTES, _("Minute(s)")),
         (HOURS, _("Hour(s)")),
         (DAYS, _("Day(s)")),
         (MONTHS, _("Month(s)")),
         (YEARS, _("Year(s)")),
-
-    )
-
+     )
     duration_unit = models.CharField(
-        max_length=4,
-        choices=DURATION,
-        default=HOURS,
+        choices=DurationChoices,
+        blank=True, null=True,
+        max_length=1
     )
-    value = models.ForeignKey(Value, on_delete=models.CASCADE, related_name='duration_value_set')
-    subject = models.ForeignKey("Subject", on_delete=models.CASCADE, related_name='duration_subject_set')
+
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+
+    def seconds(self):
+        if self.duration_unit == Duration.DurationChoices[0]:
+            return self.duration_number * 60
+
+    def minutes(self):
+        if self.duration_unit == Duration.DurationChoices[0]:
+            return self.duration_number
+
+    def hours(self):
+        if self.duration_unit == Duration.DurationChoices[1]:
+            return self.duration_number
+
+
+
     def __str__(self):
-        return str('%s %s' % (self.duration_number, self.duration_unit))
+        unit = self.get_duration_unit_display()
+        return f"{self.duration_number}, {unit}"
+
+    def replicates(self):
+        return self.setting.replicates
 
 
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
-    duration = models.ForeignKey(Duration, on_delete=models.CASCADE, related_name='subject_duration_set')
-    setting = models.ForeignKey('Setting', on_delete=models.CASCADE, related_name='subject_setting_set')
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
+    duration = models.ManyToManyField(Duration)
+
     def __str__(self):
         return self.name
 
-# class Population(models.Model):
-#     title = models.CharField(max_length=255, verbose_name="Population Title")
-#     subject = models.ForeignKey(Subject, on_delete=models.CASCADE, help_text='How many patients/volunteers were recruited?')
-#     replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?', choices=list(zip(range(1, 11), range(1, 11))))
-#
-#     def __str__(self):
-#         return self.title
 
-class Setting(models.Model):
-    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
-    condition = models.ForeignKey(Condition, on_delete=models.CASCADE)
-    # population = models.ForeignKey(Population, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name='setting_set')
+class Result(models.Model):
+    value = models.FloatField()
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, blank=True, null=True)
+
+    def duration(self):
+        return self.subject.duration
+
+    # def average(self):
+    #     results = self.objects.all()
+    #     SumOfResults = sum(results)
+    #     count = len(results)
+    #     average = SumOfResults/count
+    #     print("Entered results: ", results)
+    #     print("Average: ", average)
+
+    def average(self):
+        results = self.objects.values_list()
 
 
+
+
+    # def average(self):
+    #     return self.value

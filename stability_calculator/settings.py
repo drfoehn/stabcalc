@@ -152,7 +152,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 JAZZMIN_SETTINGS = {
     # # title of the window (Will default to current_admin_site.site_title if absent or None)

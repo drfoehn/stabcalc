@@ -38,12 +38,12 @@ class DurationForm(forms.ModelForm):
         model = Duration
         fields = '__all__'
 
-class ValueForm(forms.ModelForm):
-    class Meta:
-        model = Value
-        fields = '__all__'
-
-ValueFormset = modelformset_factory(Subject, fields=("duration",), extra=1)
+# class ValueForm(forms.ModelForm):
+#     class Meta:
+#         model = Value
+#         fields = '__all__'
+#
+# ValueFormset = modelformset_factory(Subject, fields=("duration",), extra=1)
 
 
 

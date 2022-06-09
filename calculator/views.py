@@ -68,7 +68,7 @@ class ValuesAddView(TemplateView):
     # Define method to handle GET request
     def get(self, *args, **kwargs):
         # Create an instance of the formset
-        formset = ValueFormset(queryset=Value.objects.none())
+        formset = ValueFormset(queryset=Result.objects.none())
         return self.render_to_response({'value_formset': formset})
 
     def post(self, *args, **kwargs):
@@ -155,16 +155,16 @@ class MultiInputView(TemplateView):
 
         if context['setting_form'].is_valid():
             instance = context['setting_form'].save()
-            messages.success(request, 'Setting saved.'.format(instance.pk))
+            # messages.success(request, 'Setting saved.'.format(instance.pk))
         elif context['duration_form'].is_valid():
             instance = context['parameter_form'].save()
-            messages.success(request, 'Duration setting has been saved.'.format(instance.pk))
+            # messages.success(request, 'Duration setting has been saved.'.format(instance.pk))
         elif context['value_form'].is_valid():
             instance = context['value_form'].save()
-            messages.success(request, 'Value has been saved.'.format(instance.pk))
+            # messages.success(request, 'Value has been saved.'.format(instance.pk))
             # advise of any errors
 
         else:
-            messages.error('Error(s) encountered during form processing, please review below and re-submit')
-
+            # messages.error('Error(s) encountered during form processing, please review below and re-submit')
+            pass
         return self.render_to_response(context)
