@@ -64,12 +64,15 @@ class ResultInline(admin.StackedInline):
 class DurationAdmin(admin.ModelAdmin):
     model = Duration
     exclude = ('value', 'subject')
+    # ordering = ["seconds"]
     # inlines = [ResultInline]
 
 class ResultAdmin(admin.ModelAdmin):
     model = Result
 
 
+class ReplicateAdmin(admin.ModelAdmin):
+    inlines = [ResultInline]
 
 # class InstrumentAdmin(admin.ModelAdmin):
 #     form = InstrumentForm

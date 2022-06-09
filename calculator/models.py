@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django import forms
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 import math
@@ -178,7 +179,12 @@ class Setting(models.Model):
     def __str__(self):
         return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
 
+
 class Duration(models.Model):
+    class Meta:
+        unique_together = ["duration_number", "duration_unit"]
+        ordering = ["seconds"]
+
     duration_number = models.PositiveIntegerField(blank=True, null=True)
 
     MINUTES = "1"
@@ -201,19 +207,21 @@ class Duration(models.Model):
 
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
 
-    def seconds(self):
-        if self.duration_unit == Duration.DurationChoices[0]:
-            return self.duration_number * 60
-
-    def minutes(self):
-        if self.duration_unit == Duration.DurationChoices[0]:
-            return self.duration_number
-
-    def hours(self):
-        if self.duration_unit == Duration.DurationChoices[1]:
-            return self.duration_number
+    seconds = models.PositiveIntegerField(blank=True)
 
 
+    def save(
+        self, *args,**kwargs
+    ):
+        calc_tbl={
+            self.MINUTES: 60,
+            self.HOURS : 60*60,
+            self.DAYS : 60*60*24,
+            self.MONTHS:60*60*24*30,
+            self.YEARS :60*60*24*365,
+        }
+        self.seconds = calc_tbl[self.duration_unit]*self.duration_number
+        super().save( *args,**kwargs)
 
     def __str__(self):
         unit = self.get_duration_unit_display()
@@ -230,6 +238,23 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
+    def values(self,duration: Duration):
+        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all())]
+
+    def average(self, duration: Duration):
+        return statistics.mean(self.values(duration))
+
+    def stdv(self, duration: Duration):
+        return statistics.stdev(self.values(duration))
+
+class Replicate(models.Model):
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    # result_set
+
+#TODO: Pro Replicate darf nur eine Duration eingegeben werden
+
+    def __str__(self):
+        return str(self.id) #FIXME: Zahl des Replicates ausgeben
 
 class Result(models.Model):
     value = models.FloatField()
@@ -240,6 +265,8 @@ class Result(models.Model):
     def subject(self):
         return self.replicate.subject
 
+    def __str__(self):
+        return str(self.value)
     # def duration(self):
     #     return self.subject.duration
 
