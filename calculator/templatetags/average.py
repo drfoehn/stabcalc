@@ -1,5 +1,5 @@
 from django import template
-from calculator.models import Duration, Subject
+from calculator.models import *
 
 register = template.Library()
 

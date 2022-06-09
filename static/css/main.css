@@ -1,6 +1,10 @@
 
 /* ------------------OVERALL------------------*/
 
+/*table, th, td {*/
+/*  border: 1px solid black;*/
+/*}*/
+
 ul{
     list-style: none;
 }

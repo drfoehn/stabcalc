@@ -7,34 +7,56 @@
 
 
 
-        <div class="row d-flex justify-content-center">
-            {% for subject in subjects %}
-                <div class="row">
-                    <div class="col-2"> {{ subject }}</div>
-                    <div class="col-2">
-                    {% for replicate in subject.replicate_set.all %}
-                        <div class="row">
-                        <div class="col-2">
-                        Replicate {{ replicate }}
-                        </div>
-
-                        {% for result in replicate.result_set.all %}
-                            <div class="col">
-                                {{ result }}
-                            </div>
-                        {% endfor %}
-                        <div class="col-2">
-                            Avg: {% average subject duration %}
-                        </div>
-    {#                a{{ d.average }}b<br>#}
-    {#                    {{ i. }}#}
-    {#                <a href="{% url 'edit_results' result.id %}">update</a>#}
-                        </div>
+    <div class="row d-flex justify-content-center">
+        <table class="table table-hover" style="border: solid 1px black">
+            <thead>
+            <tr>
+                <th scope="col">Subject</th>
+                <th scope="col">Results (replicates) for <br>
+                 {% for subject in subjects %}
+                {% for replicate in subject.replicate_set.all %}
+                            {% for result in replicate.result_set.all %}
+                                {% if forloop.first %}
+                                Duration: {{ result.duration }}
+                                {% endif %}
                     {% endfor %}
-                    </div>
-                </div>
             {% endfor %}
-        </div>
+            {% endfor %}
+                <th scope="col">Duration</th>
+                <th scope="col">Average</th>
+                <th scope="col">CV%</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for subject in subjects %}
+                <tr>
+                    <th scope="row">{{ subject }}</th>
+                    <td>
+                        {% for replicate in subject.replicate_set.all %}
+                            {% for result in replicate.result_set.all %}
+                                Result: {{ result }} - Duration: {{ result.duration }}<br>
+
+                            {% endfor %}
+                        {% endfor %}
+                    </td>
+                    <td></td>
+                    <td>
+                        {% for replicate in subject.replicate_set.all %}
+                            {% for result in replicate.result_set.all %}
+{#                            {% if forloop.first %}#}
+                            Avg: {% average subject.values result.duration %} /{{ result }} /{{ result.duration }}
+{#                            {% endif %}#}
+                                {% endfor %}
+                        {% endfor %}
+                    </td>
+                    <td>CV%</td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
 
 
     <a href="{% url 'add_results' %}">add result</a>
