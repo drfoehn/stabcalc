@@ -44,6 +44,6 @@ urlpatterns = [
     path("instrument-list", views.InstrumentIndex.as_view(), name="instrument_list"),
     path("add-results/", views.ValuesAddView.as_view(), name="add_results"),
     path("input/", views.MultiInputView.as_view(), name="input"),
-    path("results/", views.ResultsView.as_view(), name="results"),
+    path("results/<pk>", views.ResultsView.as_view(), name="results"),
 
 ]

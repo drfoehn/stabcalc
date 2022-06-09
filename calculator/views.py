@@ -8,8 +8,32 @@ from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
 
-class ResultsView(ListView):
-    model = Result
+class ResultsView(DetailView):
+    template_name = 'calculator/results.html'
+    model = Setting
+    context_object_name = "setting"
+
+    # extra_context={'subjects': Subject.objects.all()}, {'results': Result.objects.all()}
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        subjects = Subject.objects.filter(setting=self.object)
+        """
+        subject1
+            -replicate1
+                -result1[2h]
+                -result2[4h]
+            -repicate2
+                -result3[2h]
+                -result4[4h]
+            
+        """
+        context["results"] = Result.objects.all()
+        context["durations"] = Duration.objects.all()
+        context["replicates"] = Replicate.objects.all()
+        context["subjects"] = subjects
+        return context
+
 
 
 class DashboardView(ListView):

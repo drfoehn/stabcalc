@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n static average %}
+
+{% block title %}Instruments{% endblock %}
+
+{% block content %}
+
+
+
+        <div class="row d-flex justify-content-center">
+            {% for subject in subjects %}
+                <div class="row">
+                    <div class="col-2"> {{ subject }}</div>
+                    <div class="col-2">
+                    {% for replicate in subject.replicate_set.all %}
+                        <div class="row">
+                        <div class="col-2">
+                        Replicate {{ replicate }}
+                        </div>
+
+                        {% for result in replicate.result_set.all %}
+                            <div class="col">
+                                {{ result }}
+                            </div>
+                        {% endfor %}
+                        <div class="col-2">
+                            Avg: {% average subject duration %}
+                        </div>
+    {#                a{{ d.average }}b<br>#}
+    {#                    {{ i. }}#}
+    {#                <a href="{% url 'edit_results' result.id %}">update</a>#}
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+    <a href="{% url 'add_results' %}">add result</a>
+
+{% endblock %}
+
+
