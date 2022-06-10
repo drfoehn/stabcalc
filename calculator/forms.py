@@ -4,7 +4,7 @@ from django.forms import formset_factory, modelformset_factory
 from .models import *
 from django import forms
 
-# TODO: https://pypi.org/project/django-composite-field/
+# TODO: https://pypi.org/project/django-composite-field/;  https://pypi.org/project/django-dynamic-admin-forms/
 
 class InstrumentForm(forms.ModelForm):
     class Meta:

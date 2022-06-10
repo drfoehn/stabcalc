@@ -181,6 +181,16 @@ class Setting(models.Model):
     def __str__(self):
         return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
 
+    def values_tot(self, duration: 'Duration'):
+        return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
+
+    def average_tot(self, duration: 'Duration'):
+        values = self.values_tot(duration)
+        if not values:
+            return "-"
+        else:
+            return math.ceil((statistics.mean(values))*100)/100
+
 
 class Duration(models.Model):
     class Meta:
@@ -232,6 +242,7 @@ class Duration(models.Model):
         return self.setting.replicates
 
 
+
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
@@ -239,10 +250,10 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
-    getcontext().prec = 42
-
     def values(self, duration: Duration):
         return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration)]
+
+
 
     def average(self, duration: Duration):
         values = self.values(duration)
@@ -271,6 +282,16 @@ class Subject(models.Model):
             return math.ceil(((stdv / average) * 100)*100)/100
 
 
+
+# TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
+    # def number_of_subjects(self, setting: Setting):
+    #     nr = self.objects.count(setting)
+    #     if not nr:
+    #         return "-"
+    #     else:
+    #         return nr
+
+
 class Replicate(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
@@ -287,9 +308,10 @@ class Result(models.Model):
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
     replicate = models.ForeignKey(Replicate, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
-    def subject(self):
-        return self.replicate.subject
+    # def subject(self):
+    #     return self.replicate.subject
 
     def __str__(self):
         return str(self.value)

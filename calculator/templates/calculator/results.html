@@ -67,8 +67,10 @@
             </tbody>
             <tfoot>
             <tr>
-                <td>No of subjects:</td>
-                <td>AVG Total:</td>
+                <td>No of subjects: {{ subjects.count }}</td>
+                {% for duration in setting.duration_set.all %}
+                    <td>AVG Total: {% average_tot setting duration %}</td>
+                {% endfor %}
             </tr>
             </tfoot>
         </table>
