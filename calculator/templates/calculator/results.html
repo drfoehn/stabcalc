@@ -8,6 +8,25 @@
 
 
     <div class="row d-flex justify-content-center">
+
+
+    {{ setting.name }}<br>
+    {{ setting.parameter.name }} ({{ setting.parameter.unit}})<br>
+    {{ setting.parameter.sample}}<br>
+    {{ setting.parameter.instrument }}<br>
+    {{ setting.parameter.reagent_name }}<br>
+    {{ setting.parameter.reagent_manufacturer}}<br>
+    {{ setting.parameter.method_hand}}<br>
+
+    {{ setting.parameter.CV_intra}}<br>
+    {{ setting.parameter.CV_inter}}<br>
+    {{ setting.condition.temperature }}<br>
+    {{ setting.condition.light }}<br>
+    {{ setting.condition.air }}<br>
+    {{ setting.condition.agitation }}<br>
+    {{ setting.condition.other_Condition }}<br>
+
+
         <table class="table table-hover" style="border: solid 1px black">
             <thead>
             <tr>
@@ -36,8 +55,10 @@
                             {% for replicate in subject.replicate_set.all %}
                                 {% for result in replicate.result_set.all %}
                                     {% if result.duration == duration %}
+
                                         {{ result }} <br>
-                                        {#                                        - Duration: {{ result.duration }}<br>#}
+{#TODO: Alle Werte werden bei Sub1 angezeigt#}
+                                        Subject: {{ result.subject }}<br>
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
@@ -81,43 +102,57 @@
 
 
 
-    <canvas id="myChart" width="400" height="400"></canvas>
+    <canvas id="myChart" width="400" height="200"></canvas>
     <script>
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
+                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
+                datasets: [
+                    {
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 1)',
+                        fill: 'origin',
+                        borderWidth: 5,
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                    itemRadius: 10,
+                        spanGaps: true,
+                        label: 'Averages at selected timepoints',
+                    data: [{% for duration in setting.duration_set.all %} {% average_tot setting duration %},
+                {% endfor %}],
+                    {#backgroundColor: [#}
+                    {#    'rgba(255, 99, 132, 1)',#}
+                    {#    'rgba(54, 162, 235, 1)',#}
+                    {#    'rgba(255, 206, 86, 1)',#}
+                    {#    'rgba(75, 192, 192, 1)',#}
+                    {#    'rgba(153, 102, 255, 1)',#}
+                    {#    'rgba(255, 159, 64, 1)'#}
+                    {#],#}
+                    {#borderColor: [#}
+                    {#    'rgba(255, 99, 132, 1)',#}
+                    {#    'rgba(54, 162, 235, 1)',#}
+                    {#    'rgba(255, 206, 86, 1)',#}
+                    {#    'rgba(75, 192, 192, 1)',#}
+                    {#    'rgba(153, 102, 255, 1)',#}
+                    {#    'rgba(255, 159, 64, 1)'#}
+                    {#],#}
+
                 }]
             },
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            text: ['lalalal'],
+                        }
                     }
                 }
             }
         });
     </script>
+
 
 {% endblock %}
