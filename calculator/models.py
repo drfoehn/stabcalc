@@ -245,7 +245,11 @@ class Subject(models.Model):
         return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration)]
 
     def average(self, duration: Duration):
-        return statistics.mean(self.values(duration))
+        values = self.values(duration)
+        if not values:
+            return "-"
+        else:
+            return math.ceil((statistics.mean(values))*100)/100
 
     def stdv(self, duration: Duration):
         values = self.values(duration)
