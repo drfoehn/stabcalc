@@ -44,7 +44,7 @@
                         {% for replicate in subject.replicate_set.all %}
                             {% for result in replicate.result_set.all %}
 {#                            {% if forloop.first %}#}
-                            Avg: {% average subject.values result.duration %} /{{ result }} /{{ result.duration }}
+                            Avg: {% average subject result.duration %} /{{ result }} /{{ result.duration }}
 {#                            {% endif %}#}
                                 {% endfor %}
                         {% endfor %}
