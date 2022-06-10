@@ -5,26 +5,84 @@
 
 {% block content %}
 
+<div class="jumbotron">
+  <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
+  <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+  <hr class="my-4">
+</div>
+
+    <div class="row ">
+    <div class="col">
+        <table>
+            <thead>
+            <th>Analytical Information</th>
+            </thead>
+            <tr>
+                <th>Parameter:</th>
+                <td>{{ setting.parameter.name }} ({{ setting.parameter.unit}})</td>
+            </tr>
+
+            <tr>
+                <th>Instrument:</th>
+                <td>{{ setting.parameter.instrument }}</td>
+            </tr>
+            <tr>
+                <th>Reagent:</th>
+                <td>{{ setting.parameter.reagent_name }} - {{ setting.parameter.reagent_manufacturer}}</td>
+            </tr>
+            <tr>
+                <th>Manual method:</th>
+                <td>{{ setting.parameter.method_hand}}</td>
+            </tr>
+            <tr>
+                <th>Method Intra CV%</th>
+                <td>{{ setting.parameter.CV_intra}}</td>
+            </tr>
+            <tr>
+                <th>Method Inter CV%</th>
+                <td>{{ setting.parameter.CV_inter}}</td>
+            </tr>
+        </table>
+        </div>
+    <div class="col">
+        <table>
+            <thead>
+                <th>Storage Conditions</th>
+            </thead>
+            <tr>
+                <th>Sample</th>
+                <td>{{ setting.parameter.sample}}</td>
+            </tr>
+            <tr>
+                <th>Temperature</th>
+                <td>{{ setting.condition.temperature }}</td>
+            </tr>
+            <tr>
+                <th>Exposure to light during storage</th>
+                <td>{{ setting.condition.light }}</td>
+            </tr>
+            <tr>
+                <th>Exposure to air during storage</th>
+                <td>{{ setting.condition.air }}</td>
+            </tr>
+            <tr>
+                <th>Agitation during storage</th>
+                <td>{{ setting.condition.agitation }}</td>
+            </tr>
+            <tr>
+                <th>Other condition</th>
+                <td>{{ setting.condition.other_Condition }}</td>
+            </tr>
+        </table>
+
+    </div>
 
 
-    <div class="row d-flex justify-content-center">
 
 
-    {{ setting.name }}<br>
-    {{ setting.parameter.name }} ({{ setting.parameter.unit}})<br>
-    {{ setting.parameter.sample}}<br>
-    {{ setting.parameter.instrument }}<br>
-    {{ setting.parameter.reagent_name }}<br>
-    {{ setting.parameter.reagent_manufacturer}}<br>
-    {{ setting.parameter.method_hand}}<br>
 
-    {{ setting.parameter.CV_intra}}<br>
-    {{ setting.parameter.CV_inter}}<br>
-    {{ setting.condition.temperature }}<br>
-    {{ setting.condition.light }}<br>
-    {{ setting.condition.air }}<br>
-    {{ setting.condition.agitation }}<br>
-    {{ setting.condition.other_Condition }}<br>
+    </div>
+    <div class="row">
 
 
         <table class="table table-hover" style="border: solid 1px black">
