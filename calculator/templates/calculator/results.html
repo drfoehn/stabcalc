@@ -77,14 +77,14 @@
 
     </div>
 
-
+<hr class="my-4">
 
 
 
     </div>
     <div class="row">
 
-
+<div class="col">
         <table class="table table-hover" style="border: solid 1px black">
             <thead>
             <tr>
@@ -153,14 +153,15 @@
             </tr>
             </tfoot>
         </table>
-    </div>
+
 
 
     <a href="{% url 'add_results' %}">add result</a>
 
+</div>
+    <div class="col">
 
-
-    <canvas id="myChart" width="400" height="200"></canvas>
+    <canvas id="myChart" width="400" height="300"></canvas>
     <script>
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, {
@@ -211,6 +212,6 @@
             }
         });
     </script>
-
-
+</div>
+</div>
 {% endblock %}
