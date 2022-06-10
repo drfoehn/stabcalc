@@ -47,19 +47,24 @@ class DurationInline(admin.TabularInline):
     model = Duration
     extra = 1
 
-class SettingAdmin(admin.ModelAdmin):
-    model = Setting
-    exclude = ('subject',)
-    inlines = [SubjectInline, DurationInline]
-
-class SubjectAdmin(admin.ModelAdmin):
-    model = Subject
-    # inlines = [DurationInline]
-    exclude = ('duration',)
-
 class ResultInline(admin.StackedInline):
     model = Result
     extra = 1
+
+class ReplicateInline(admin.TabularInline):
+    model = Replicate
+    extra = 1
+
+class SettingAdmin(admin.ModelAdmin):
+    model = Setting
+    exclude = ('subject',)
+    inlines = [SubjectInline]
+
+class SubjectAdmin(admin.ModelAdmin):
+    model = Subject
+    # inlines = [ResultInline]
+    # inlines = [DurationInline]
+    exclude = ('duration',)
 
 class DurationAdmin(admin.ModelAdmin):
     model = Duration

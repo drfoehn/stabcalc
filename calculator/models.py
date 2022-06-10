@@ -1,3 +1,5 @@
+from decimal import Decimal, getcontext
+
 from django.contrib.auth.models import AbstractUser, User
 from django.db import models
 from django import forms
@@ -153,7 +155,6 @@ class Sample(models.Model):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
 
-
 class Parameter(models.Model):
     name = models.CharField(max_length=255, verbose_name='Parameter Name')
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
@@ -170,7 +171,8 @@ class Parameter(models.Model):
 
 
 class Setting(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True, help_text='Choose any name that identifies your stability study')
+    name = models.CharField(max_length=255, blank=True, null=True,
+                            help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
     replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
@@ -198,30 +200,29 @@ class Duration(models.Model):
         (DAYS, _("Day(s)")),
         (MONTHS, _("Month(s)")),
         (YEARS, _("Year(s)")),
-     )
+    )
     duration_unit = models.CharField(
         choices=DurationChoices,
         blank=True, null=True,
         max_length=1
     )
 
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    setting = models.ManyToManyField(Setting)
 
     seconds = models.PositiveIntegerField(blank=True)
 
-
     def save(
-        self, *args,**kwargs
+            self, *args, **kwargs
     ):
-        calc_tbl={
+        calc_tbl = {
             self.MINUTES: 60,
-            self.HOURS : 60*60,
-            self.DAYS : 60*60*24,
-            self.MONTHS:60*60*24*30,
-            self.YEARS :60*60*24*365,
+            self.HOURS: 60 * 60,
+            self.DAYS: 60 * 60 * 24,
+            self.MONTHS: 60 * 60 * 24 * 30,
+            self.YEARS: 60 * 60 * 24 * 365,
         }
-        self.seconds = calc_tbl[self.duration_unit]*self.duration_number
-        super().save( *args,**kwargs)
+        self.seconds = calc_tbl[self.duration_unit] * self.duration_number
+        super().save(*args, **kwargs)
 
     def __str__(self):
         unit = self.get_duration_unit_display()
@@ -238,23 +239,44 @@ class Subject(models.Model):
     def __str__(self):
         return self.name
 
-    def values(self,duration: Duration):
-        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all())]
+    getcontext().prec = 42
+
+    def values(self, duration: Duration):
+        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration)]
 
     def average(self, duration: Duration):
         return statistics.mean(self.values(duration))
 
     def stdv(self, duration: Duration):
-        return statistics.stdev(self.values(duration))
+        values = self.values(duration)
+        if len(values) < 2:
+            return "-"
+        else:
+            return math.ceil((statistics.stdev(values))*100)/100
+
+    def cv(self, duration: Duration):
+
+        average = self.average(duration)
+        stdv = self.stdv(duration)
+
+        if average == '-':
+            return '-'
+        elif stdv == '-':
+            return '-'
+        else:
+            return math.ceil(((stdv / average) * 100)*100)/100
+
 
 class Replicate(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
     # result_set
 
-#TODO: Pro Replicate darf nur eine Duration eingegeben werden
+    # TODO: Pro Replicate darf nur eine Duration eingegeben werden
 
     def __str__(self):
-        return str(self.id) #FIXME: Zahl des Replicates ausgeben
+        return str(self.id)  # FIXME: Zahl des Replicates ausgeben
+
 
 class Result(models.Model):
     value = models.FloatField()
@@ -268,7 +290,6 @@ class Result(models.Model):
     def __str__(self):
         return str(self.value)
 
-
     # def duration(self):
     #     return self.subject.duration
 
@@ -279,4 +300,3 @@ class Result(models.Model):
     #     average = SumOfResults/count
     #     print("Entered results: ", results)
     #     print("Average: ", average)
-
