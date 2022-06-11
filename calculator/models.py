@@ -319,12 +319,12 @@ class Subject(models.Model):
             return math.ceil(((stdv / average) * 100)*100)/100
 
     # def deviation(self, duration: Duration):
-    #     values = self.values(duration)
-    #     baseline = self.values(duration_number=0)
-    #     if not values:
+    #     average = self.average(duration)
+    #     baseline = self.average()
+    #     if not average:
     #         return " "
     #     else:
-    #         return ((values - baseline)/baseline)*100
+    #         return ((float(average) - float(baseline))/float(baseline))*100
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
     # def number_of_subjects(self, setting: Setting):

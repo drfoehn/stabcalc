@@ -13,11 +13,11 @@
 
     <div class="row ">
     <div class="col">
-        <table>
+        <table class="table table-hover">
             <thead>
             <th class="th_analytical">Analytical Information</th>
             </thead>
-            <tr>
+            <tr class="parameter_name">
                 <th>Parameter:</th>
                 <td>{{ setting.parameter.name }} ({{ setting.parameter.unit}})</td>
             </tr>
@@ -28,51 +28,93 @@
             </tr>
             <tr>
                 <th>Reagent:</th>
-                <td>{{ setting.parameter.reagent_name }} - {{ setting.parameter.reagent_manufacturer}}</td>
+                <td>{{ setting.parameter.reagent_name }}<br>
+                    {{ setting.parameter.reagent_manufacturer}}
+                </td>
             </tr>
             <tr>
                 <th>Manual method:</th>
-                <td>{{ setting.parameter.method_hand}}</td>
+                <td>{% if setting.parameter.method_hand == True %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}</td>
             </tr>
             <tr>
                 <th>Method Intra CV%</th>
-                <td>{{ setting.parameter.CV_intra}}</td>
+                <td>{{ setting.parameter.CV_intra}} %</td>
             </tr>
             <tr>
                 <th>Method Inter CV%</th>
-                <td>{{ setting.parameter.CV_inter}}</td>
+                <td>{{ setting.parameter.CV_inter}} %</td>
             </tr>
         </table>
         </div>
     <div class="col">
-        <table>
+        <table class="table table-hover">
             <thead>
                 <th class="th_condition">Storage Conditions</th>
             </thead>
             <tr>
                 <th>Sample</th>
-                <td>{{ setting.parameter.sample}}</td>
+                <td>
+                    Sample Type: {{ setting.parameter.sample.get_sample_type_display}} <br>
+                    Additive: {{ setting.parameter.sample.get_container_additive_display}}<br>
+                    Container: {{ setting.parameter.sample.container_fillingvolume}} mL /
+                                {{ setting.parameter.sample.get_container_dimension_display}} /
+                                {{ setting.parameter.sample.get_container_material_display}}
+                    Seperator (Gel): {% if setting.parameter.sample.gel == True %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Temperature</th>
-                <td>{{ setting.condition.temperature }}</td>
+                <td>
+                {{ setting.condition.get_temperature_display }}
+                </td>
             </tr>
-            <tr>
-                <th>Exposure to light during storage</th>
-                <td>{{ setting.condition.light }}</td>
-            </tr>
-            <tr>
-                <th>Exposure to air during storage</th>
-                <td>{{ setting.condition.air }}</td>
-            </tr>
-            <tr>
-                <th>Agitation during storage</th>
-                <td>{{ setting.condition.agitation }}</td>
-            </tr>
-            <tr>
+        <tr>
                 <th>Other condition</th>
                 <td>{{ setting.condition.other_Condition }}</td>
             </tr>
+                <tr>
+                    <th>Exposure during storage to...</th>
+                </tr>
+            <tr>
+                <th>...light</th>
+                <td>
+                    {% if setting.condition.light == True %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}
+                    </td>
+            </tr>
+            <tr>
+                <th>...air</th>
+                <td>
+                    {% if setting.condition.air.light == True %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>...agitation</th>
+                <td>
+
+                    {% if setting.condition.agitation == True %}
+                    Yes
+                    {% else %}
+                    No
+                    {% endif %}
+                </td>
+            </tr>
+
         </table>
 
     </div>
@@ -156,7 +198,7 @@
     <div class="row">
 
 <div class="col">
-        <table class="table table-hover" style="border: solid 1px black">
+        <table class="table table-hover">
             <thead class="th_results">
             <tr>
                 <th scope="col">Subject</th>
@@ -198,7 +240,8 @@
                             <hr/>
                             AVG: {% average subject duration %}<br>
                             SD: {% stdv subject duration %}<br>
-                            CV: {% cv subject duration %}
+                            CV: {% cv subject duration %}<br>
+{#                            DEV%: {% deviation subject duration %}#}
                         </td>
                     {% endfor %}
 

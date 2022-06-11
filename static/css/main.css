@@ -90,6 +90,10 @@ th{
 
 /*---------------------------------Resultpage------------------------------------*/
 
+
+
+.parameter_name,
+.th_results,
 .th_condition,
 .th_analytical{
     font-family: 'Ubuntu', sans-serif;

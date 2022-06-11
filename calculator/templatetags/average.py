@@ -36,9 +36,13 @@ def avg_tot_sd_h(setting: Setting, duration: Duration):
 def avg_tot_sd_l(setting: Setting, duration: Duration):
     return setting.avg_tot_sd_l(duration)
 
-def current_subject(value): # Only one argument.
-    """Converts a string into all lowercase"""
-    return value.self
+# @register.simple_tag
+# def deviation(subject: Subject, duration: Duration):
+#     return subject.deviation(duration)
+
+# def current_subject(value): # Only one argument.
+#     """Converts a string into all lowercase"""
+#     return value.self
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
 # @register.simple_tag
