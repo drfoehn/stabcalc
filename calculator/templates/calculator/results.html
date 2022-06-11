@@ -15,7 +15,7 @@
     <div class="col">
         <table>
             <thead>
-            <th>Analytical Information</th>
+            <th class="th_analytical">Analytical Information</th>
             </thead>
             <tr>
                 <th>Parameter:</th>
@@ -47,7 +47,7 @@
     <div class="col">
         <table>
             <thead>
-                <th>Storage Conditions</th>
+                <th class="th_condition">Storage Conditions</th>
             </thead>
             <tr>
                 <th>Sample</th>
@@ -78,90 +78,9 @@
     </div>
 
 <hr class="my-4">
-
-
-
-    </div>
-    <div class="row">
-
-<div class="col">
-        <table class="table table-hover" style="border: solid 1px black">
-            <thead>
-            <tr>
-                <th scope="col">Subject</th>
-
-                {#                 {% for subject in subjects %}#}
-                {#                {% for replicate in subject.replicate_set.all %}#}
-                {% for duration in setting.duration_set.all %}
-                    {#                                {% ifchanged %}#}
-                    <th>Duration: {{ duration }}</th>
-                    {#{% endifchanged %}#}
-                {% endfor %}
-                {#            {% endfor %}#}
-                {#            {% endfor %}#}
-                {#                <th scope="col">Average</th>#}
-                {#                <th scope="col">CV%</th>#}
-            </tr>
-            </thead>
-            <tbody>
-            {% for subject in subjects %}
-                <tr>
-                    <th scope="row">{{ subject }}</th>
-
-                    {% for duration in setting.duration_set.all %}
-                        <td>
-                            {% for replicate in subject.replicate_set.all %}
-                                {% for result in replicate.result_set.all %}
-                                    {% if result.duration == duration %}
-
-                                        {{ result }} <br>
-{#TODO: Alle Werte werden bei Sub1 angezeigt#}
-                                        Subject: {{ result.subject }}<br>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                            <hr/>
-                            AVG: {% average subject duration %}<br>
-                            SD: {% stdv subject duration %}<br>
-                            CV: {% cv subject duration %}
-                        </td>
-                    {% endfor %}
-
-                    <td></td>
-                    {#                    <td>#}
-                    {#                        {% for replicate in subject.replicate_set.all %}#}
-                    {#                            {% for result in replicate.result_set.all %}#}
-                    {#                            {% if forloop.first %}#}
-                    {#                                Avg: {% average subject result.duration %} / {{ subject }} / {{ result }} /#}
-                    {#                                {{ result.duration }}#}
-                    {#                            {% endif %}#}
-                    {#                            {% endfor %}#}
-                    {#                        {% endfor %}#}
-                    {#                    </td>#}
-                    {#                    <td>CV%</td>#}
-
-                </tr>
-            {% endfor %}
-
-            </tbody>
-            <tfoot>
-            <tr>
-                <td>No of subjects: {{ subjects.count }}</td>
-                {% for duration in setting.duration_set.all %}
-                    <td>AVG Total: {% average_tot setting duration %}</td>
-                {% endfor %}
-            </tr>
-            </tfoot>
-        </table>
-
-
-
-    <a href="{% url 'add_results' %}">add result</a>
-
-</div>
     <div class="col">
 
-    <canvas id="myChart" width="400" height="300"></canvas>
+    <canvas id="myChart" width="400" height="150"></canvas>
     <script>
         const ctx = document.getElementById('myChart');
         const myChart = new Chart(ctx, {
@@ -172,33 +91,33 @@
                     {
                         borderColor: 'rgba(255, 159, 64, 1)',
                         backgroundColor: 'rgba(255, 206, 86, 1)',
-                        fill: 'origin',
+                        {#fill: 'origin',#}
                         borderWidth: 5,
                         borderCapStyle: 'round',
                         borderJoinStyle: 'round',
-                    itemRadius: 10,
+                        itemRadius: 10,
                         spanGaps: true,
                         label: 'Averages at selected timepoints',
-                    data: [{% for duration in setting.duration_set.all %} {% average_tot setting duration %},
+                    data: [
+                        {% for duration in setting.duration_set.all %} {% average_tot setting duration %},
                 {% endfor %}],
-                    {#backgroundColor: [#}
-                    {#    'rgba(255, 99, 132, 1)',#}
-                    {#    'rgba(54, 162, 235, 1)',#}
-                    {#    'rgba(255, 206, 86, 1)',#}
-                    {#    'rgba(75, 192, 192, 1)',#}
-                    {#    'rgba(153, 102, 255, 1)',#}
-                    {#    'rgba(255, 159, 64, 1)'#}
-                    {#],#}
-                    {#borderColor: [#}
-                    {#    'rgba(255, 99, 132, 1)',#}
-                    {#    'rgba(54, 162, 235, 1)',#}
-                    {#    'rgba(255, 206, 86, 1)',#}
-                    {#    'rgba(75, 192, 192, 1)',#}
-                    {#    'rgba(153, 102, 255, 1)',#}
-                    {#    'rgba(255, 159, 64, 1)'#}
-                    {#],#}
 
+                },
+                {
+                    type: 'line',
+                    label: '+SD',
+                    spanGaps: true,
+                    data: [{% for duration in setting.duration_set.all %} {% avg_tot_sd_h setting duration %},
+                {% endfor %}],
+                },
+                {
+                    type: 'line',
+                    label: '-SD',
+                    spanGaps: true,
+                    data: [{% for duration in setting.duration_set.all %} {% avg_tot_sd_l setting duration %},
+                {% endfor %}],
                 }]
+
             },
             options: {
                 scales: {
@@ -213,5 +132,91 @@
         });
     </script>
 </div>
+    <hr class="my-4">
+
+
+
+
+    </div>
+
+    <div class="row">
+    <div class="col">
+        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Add Result</button>
+    </div>
+        <div class="col">
+        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Print</button>
+    </div>
+        <div class="col">
+        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Export</button>
+    </div>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+
+<div class="col">
+        <table class="table table-hover" style="border: solid 1px black">
+            <thead class="th_results">
+            <tr>
+                <th scope="col">Subject</th>
+                {% for duration in setting.duration_set.all %}
+                    <th>{{ duration }}</th>
+                {% endfor %}
+
+            </tr>
+            </thead>
+            <tbody>
+              <tr class="total_results">
+                <td>No of subjects: {{ subjects.count }}</td>
+                {% for duration in setting.duration_set.all %}
+                    <td>
+                        AVG Total: {% average_tot setting duration %} <br>
+                        SD Total:  {% stdv_tot setting duration %} <br>
+                        CV% Total:  {% cv_tot setting duration %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% for subject in subjects %}
+
+                <tr>
+                    <th scope="row">{{ subject }}</th>
+                    {% for duration in setting.duration_set.all %}
+                        <td>
+                            {% for replicate in subject.replicate_set.all %}
+                                {% for result in replicate.result_set.all %}
+                                    {% if result.duration == duration %}
+                                        {% if result.subject == subject %}
+                                        {{ result }}<br>
+
+                                    {% endif %}
+{#TODO: Alle Werte werden bei Sub1 angezeigt#}
+
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            <hr/>
+                            AVG: {% average subject duration %}<br>
+                            SD: {% stdv subject duration %}<br>
+                            CV: {% cv subject duration %}
+                        </td>
+                    {% endfor %}
+
+                    <td></td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+
+
+
+        </table>
+
+
+
+
+
+</div>
+
 </div>
 {% endblock %}

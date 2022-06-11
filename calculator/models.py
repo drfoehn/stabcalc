@@ -62,6 +62,7 @@ class Condition(models.Model):
     other_Condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
 
     def __str__(self):
+
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_Condition}"
 
 
@@ -149,8 +150,8 @@ class Sample(models.Model):
 
     gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
 
-    # def __str__(self):
-    #     return self.sample_type
+
+
     def __str__(self):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
@@ -190,6 +191,44 @@ class Setting(models.Model):
             return "-"
         else:
             return math.ceil((statistics.mean(values))*100)/100
+
+    def stdv_tot(self, duration: 'Duration'):
+        values = self.values_tot(duration)
+        if len(values) < 2:
+            return 0
+        else:
+            return math.ceil((statistics.stdev(values))*100)/100
+
+    def avg_tot_sd_h(self, duration: 'Duration'):
+        values = self.values_tot(duration)
+        if len(values) < 2:
+            return " "
+        else:
+            return math.ceil((statistics.mean(values) + statistics.stdev(values))*100)/100
+
+    def avg_tot_sd_l(self, duration: 'Duration'):
+        values = self.values_tot(duration)
+        if len(values) < 2:
+            return " "
+        else:
+            return math.ceil((statistics.mean(values) - statistics.stdev(values))*100)/100
+
+    def cv_tot(self, duration: 'Duration'):
+
+        average = self.average_tot(duration)
+        stdv = self.stdv_tot(duration)
+
+        if average == '-':
+            return '-'
+        elif stdv == '-':
+            return '-'
+        else:
+            return math.ceil(((stdv / average) * 100)*100)/100
+
+    # def save(self, *args, **kwargs):
+    #     dur_zero = Duration.objects.create(seconds=0)
+    #     self.duration_set.add(dur_zero)
+    #     super().save(*args, **kwargs)
 
 
 class Duration(models.Model):
@@ -253,8 +292,6 @@ class Subject(models.Model):
     def values(self, duration: Duration):
         return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration)]
 
-
-
     def average(self, duration: Duration):
         values = self.values(duration)
         if not values:
@@ -281,7 +318,13 @@ class Subject(models.Model):
         else:
             return math.ceil(((stdv / average) * 100)*100)/100
 
-
+    # def deviation(self, duration: Duration):
+    #     values = self.values(duration)
+    #     baseline = self.values(duration_number=0)
+    #     if not values:
+    #         return " "
+    #     else:
+    #         return ((values - baseline)/baseline)*100
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
     # def number_of_subjects(self, setting: Setting):
@@ -293,7 +336,7 @@ class Subject(models.Model):
 
 
 class Replicate(models.Model):
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject = models.ManyToManyField(Subject)
 
     # result_set
 
