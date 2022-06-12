@@ -274,28 +274,35 @@
             {% for subject in subjects %}
 
                 <tr>
-                    <th scope="row">{{ subject }}</th>
+                    <th scope="row" rowspan="2">{{ subject }}</th>
                     {% for duration in setting.duration_set.all %}
                         <td>
+
                             {% for replicate in subject.replicate_set.all %}
                                 {% for result in replicate.result_set.all %}
                                     {% if result.duration == duration %}
                                         {% if result.subject == subject %}
-                                        {{ result }}<br>
+                                        {{ result }} {{ setting.parameter.unit }}<br>
 
                                     {% endif %}
-{#TODO: Alle Werte werden bei Sub1 angezeigt#}
 
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}
-                            <hr/>
+
+                        </td>
+                    {% endfor %}
+                </tr>
+                <tr>
+
+                    {% for duration in setting.duration_set.all %}
+                <td>
                             AVG: {% average subject duration %} {{ setting.parameter.unit}}<br>
                             SD: {% stdv subject duration %}<br>
                             CV: {% cv subject duration %}%<br>
                             DEV: {% deviation subject duration %}%<br>
-{#                            DEV%: {% deviation subject duration %}#}
-                        </td>
+
+                    </td>
                     {% endfor %}
 
                     <td></td>

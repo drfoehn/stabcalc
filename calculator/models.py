@@ -227,7 +227,12 @@ class Setting(models.Model):
         average = self.average_tot(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average_tot(duration_zero)
-        return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
+        if average == '-':
+            return '_'
+        elif average_zero == '-':
+            return '_'
+        else:
+            return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
 
 
     def save(self, *args, **kwargs):
@@ -297,7 +302,7 @@ class Subject(models.Model):
         return self.name
 
     def values(self, duration: Duration):
-        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration)]
+        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration, subject=self)]
 
     def average(self, duration: Duration):
         values = self.values(duration)
@@ -329,7 +334,12 @@ class Subject(models.Model):
         average = self.average(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average(duration_zero)
-        return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
+        if average == '-':
+            return '_'
+        elif average_zero == '-':
+            return '_'
+        else:
+            return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
     # def number_of_subjects(self, setting: Setting):

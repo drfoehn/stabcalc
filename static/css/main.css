@@ -109,4 +109,5 @@ th{
 
 .total_results{
     font-weight: bold;
+    background-color: var(--powder-blue);
 }
