@@ -14,13 +14,11 @@
     <div class="row ">
     <div class="col">
         <table class="table table-hover">
-            <thead>
-            <th class="th_analytical">Analytical Information</th>
+            <thead class="th_analytical">
+            <th>Parameter:</th>
+            <td>{{ setting.parameter.name }} ({{ setting.parameter.unit}})</td>
             </thead>
-            <tr class="parameter_name">
-                <th>Parameter:</th>
-                <td>{{ setting.parameter.name }} ({{ setting.parameter.unit}})</td>
-            </tr>
+
 
             <tr>
                 <th>Instrument:</th>
@@ -53,7 +51,7 @@
     <div class="col">
         <table class="table table-hover">
             <thead>
-                <th class="th_condition">Storage Conditions</th>
+                <th class="th_condition" colspan="2">Storage Conditions</th>
             </thead>
             <tr>
                 <th>Sample</th>
@@ -81,7 +79,7 @@
                 <td>{{ setting.condition.other_Condition }}</td>
             </tr>
                 <tr>
-                    <th>Exposure during storage to...</th>
+                    <th colspan="2">Exposure during storage to...</th>
                 </tr>
             <tr>
                 <th>...light</th>

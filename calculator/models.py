@@ -225,11 +225,11 @@ class Setting(models.Model):
         else:
             return math.ceil(((stdv / average) * 100)*100)/100
 
-    # def save(self, *args, **kwargs):
-    #     dur_zero = Duration.objects.create(seconds=0)
-    #     self.duration_set.add(dur_zero)
-    #     super().save(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
+        self.duration_set.add(dur_zero)
+        super().save(*args, **kwargs)
 
 class Duration(models.Model):
     class Meta:
@@ -282,6 +282,8 @@ class Duration(models.Model):
 
 
 
+
+
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
@@ -318,13 +320,7 @@ class Subject(models.Model):
         else:
             return math.ceil(((stdv / average) * 100)*100)/100
 
-    # def deviation(self, duration: Duration):
-    #     average = self.average(duration)
-    #     baseline = self.average()
-    #     if not average:
-    #         return " "
-    #     else:
-    #         return ((float(average) - float(baseline))/float(baseline))*100
+
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
     # def number_of_subjects(self, setting: Setting):
