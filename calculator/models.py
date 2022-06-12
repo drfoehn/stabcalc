@@ -214,10 +214,8 @@ class Setting(models.Model):
             return math.ceil((statistics.mean(values) - statistics.stdev(values))*100)/100
 
     def cv_tot(self, duration: 'Duration'):
-
         average = self.average_tot(duration)
         stdv = self.stdv_tot(duration)
-
         if average == '-':
             return '-'
         elif stdv == '-':
@@ -225,9 +223,16 @@ class Setting(models.Model):
         else:
             return math.ceil(((stdv / average) * 100)*100)/100
 
+    def deviation(self, duration: 'Duration'):
+        average = self.average_tot(duration)
+        duration_zero = Duration.objects.get(duration_number=0)
+        average_zero = self.average_tot(duration_zero)
+        return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
+
 
     def save(self, *args, **kwargs):
         dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
+        # TODO: add if not
         self.duration_set.add(dur_zero)
         super().save(*args, **kwargs)
 
@@ -320,7 +325,11 @@ class Subject(models.Model):
         else:
             return math.ceil(((stdv / average) * 100)*100)/100
 
-
+    def deviation(self, duration: 'Duration'):
+        average = self.average(duration)
+        duration_zero = Duration.objects.get(duration_number=0)
+        average_zero = self.average(duration_zero)
+        return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
     # def number_of_subjects(self, setting: Setting):

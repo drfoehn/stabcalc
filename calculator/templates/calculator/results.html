@@ -12,6 +12,9 @@
 </div>
 
     <div class="row ">
+
+{#    -------------------------------DESCRIPTION TABLE -------------------------------#}
+
     <div class="col">
         <table class="table table-hover">
             <thead class="th_analytical">
@@ -116,14 +119,18 @@
         </table>
 
     </div>
+    </div>
 
 <hr class="my-4">
-    <div class="col">
 
-    <canvas id="myChart" width="400" height="150"></canvas>
+{#    ---------------------------------GRAPHIC AVERAGES + SD ---------------------------#}
+<div class="row">
+    <div class="col">
+    <canvas id="averages_tot" width="400" height="150" aria-label="Averages Chart" role="img"></canvas>
+    <canvas id="deviation_tot" width="400" height="150" aria-label="Deviation Chart" role="img"></canvas>
     <script>
-        const ctx = document.getElementById('myChart');
-        const myChart = new Chart(ctx, {
+        const ctx1 = document.getElementById('averages_tot');
+        const average_tot_chart = new Chart(ctx1, {
             type: 'line',
             data: {
                 labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
@@ -170,8 +177,53 @@
                 }
             }
         });
+
+
+        const ctx2 = document.getElementById('deviation_tot');
+        const deviation_tot_chart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
+                datasets: [
+                    {
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 1)',
+                        {#fill: 'origin',#}
+                        borderWidth: 5,
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                        itemRadius: 10,
+                        spanGaps: true,
+                        label: 'Deviation from baseline',
+                    data: [
+                        {% for duration in setting.duration_set.all %} {% deviation_tot setting duration %},
+                {% endfor %}],
+
+                },
+                ]
+
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            text: ['lalalal'],
+                        }
+                    }
+                }
+            }
+        });
+
     </script>
 </div>
+
+
+
+
+
+
+
     <hr class="my-4">
 
 
@@ -179,6 +231,7 @@
 
     </div>
 
+{#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
     <div class="col">
         <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Add Result</button>
@@ -193,8 +246,8 @@
 
     <hr class="my-4">
 
+{#    ---------------------------------RESULT TABLE------------------------------#}
     <div class="row">
-
 <div class="col">
         <table class="table table-hover">
             <thead class="th_results">
@@ -211,9 +264,10 @@
                 <td>No of subjects: {{ subjects.count }}</td>
                 {% for duration in setting.duration_set.all %}
                     <td>
-                        AVG Total: {% average_tot setting duration %} <br>
+                        AVG Total: {% average_tot setting duration %} {{ setting.parameter.unit}}<br>
                         SD Total:  {% stdv_tot setting duration %} <br>
-                        CV% Total:  {% cv_tot setting duration %}
+                        CV Total:  {% cv_tot setting duration %} %<br>
+                        Dev Total:  {% deviation_tot setting duration %} %
                     </td>
                 {% endfor %}
             </tr>
@@ -236,9 +290,10 @@
                                 {% endfor %}
                             {% endfor %}
                             <hr/>
-                            AVG: {% average subject duration %}<br>
+                            AVG: {% average subject duration %} {{ setting.parameter.unit}}<br>
                             SD: {% stdv subject duration %}<br>
-                            CV: {% cv subject duration %}<br>
+                            CV: {% cv subject duration %}%<br>
+                            DEV: {% deviation subject duration %}%<br>
 {#                            DEV%: {% deviation subject duration %}#}
                         </td>
                     {% endfor %}

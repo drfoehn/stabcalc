@@ -36,9 +36,13 @@ def avg_tot_sd_h(setting: Setting, duration: Duration):
 def avg_tot_sd_l(setting: Setting, duration: Duration):
     return setting.avg_tot_sd_l(duration)
 
-# @register.simple_tag
-# def deviation(subject: Subject, duration: Duration):
-#     return subject.deviation(duration)
+@register.simple_tag
+def deviation(subject: Subject, duration: Duration):
+    return subject.deviation(duration)
+
+@register.simple_tag
+def deviation_tot(setting: Setting, duration: Duration):
+    return setting.deviation(duration)
 
 # def current_subject(value): # Only one argument.
 #     """Converts a string into all lowercase"""
