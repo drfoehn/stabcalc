@@ -4,6 +4,7 @@
 {% block title %}Instruments{% endblock %}
 
 {% block content %}
+    {{ script | safe }}
 
 <div class="jumbotron">
   <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
@@ -123,11 +124,18 @@
 
 <hr class="my-4">
 
+
+    <hr>
+
+    {{ div | safe }}
+
+    <hr>
 {#    ---------------------------------GRAPHIC AVERAGES + SD ---------------------------#}
 <div class="row">
     <div class="col">
-    <canvas id="averages_tot" width="400" height="150" aria-label="Averages Chart" role="img"></canvas>
-    <canvas id="deviation_tot" width="400" height="150" aria-label="Deviation Chart" role="img"></canvas>
+    <canvas id="averages_tot" width="400" height="100" aria-label="Averages Chart" role="img"></canvas>
+    <canvas id="deviation_tot" width="400" height="100" aria-label="Deviation Chart Total" role="img"></canvas>
+    <canvas id="deviation_single" width="400" height="100" aria-label="Deviation Chart Single" role="img"></canvas>
     <script>
         const ctx1 = document.getElementById('averages_tot');
         const average_tot_chart = new Chart(ctx1, {
@@ -215,6 +223,49 @@
             }
         });
 
+
+        const ctx3 = document.getElementById('deviation_single');
+        const deviation_tot_single = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
+                datasets: [
+                    {
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 1)',
+                        {#fill: 'origin',#}
+                        borderWidth: 5,
+                        borderCapStyle: 'round',
+                        borderJoinStyle: 'round',
+                        itemRadius: 10,
+                        spanGaps: true,
+                        label: 'Deviation from baseline',
+                    data: [
+                        {% for duration in setting.duration_set.all %}
+                            {% for replicate in subject.replicate_set.all %}
+                                {% for result in replicate.result_set.all %}
+
+                            {% deviation setting duration %},
+
+                                    {% endfor %}
+                       {% endfor %}
+                {% endfor %}],
+
+                },
+                ]
+
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            text: ['lalalal'],
+                        }
+                    }
+                }
+            }
+        });
     </script>
 </div>
 
@@ -322,4 +373,8 @@
 </div>
 
 </div>
+
+{#    -----------------------------Loading Bokeh Script ---------------------------------#}
+
+
 {% endblock %}
