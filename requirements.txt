@@ -3,4 +3,4 @@ django-jazzmin
 django-countries
 django-crispy-forms
 crispy-bootstrap5
-bokeh
+bokeh~=2.4.3

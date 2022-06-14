@@ -176,8 +176,8 @@ class Setting(models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
-    replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
-                                          choices=list(zip(range(1, 11), range(1, 11))))
+    # replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
+    #                                       choices=list(zip(range(1, 11), range(1, 11))))
 
     def __str__(self):
         return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
@@ -283,12 +283,14 @@ class Duration(models.Model):
         self.seconds = calc_tbl[self.duration_unit] * self.duration_number
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        unit = self.get_duration_unit_display()
-        return f"{self.duration_number}, {unit}"
+
 
     def replicates(self):
         return self.setting.replicates
+
+    def __str__(self):
+        unit = self.get_duration_unit_display()
+        return f"{self.duration_number}, {unit}"
 
 
 
@@ -368,11 +370,14 @@ class Result(models.Model):
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
-    # def subject(self):
-    #     return self.replicate.subject
+
+    def duration_cat(self):
+        return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
-        return str(self.value)
+        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}, {self.duration_cat}"
+
+
 
     # def duration(self):
     #     return self.subject.duration

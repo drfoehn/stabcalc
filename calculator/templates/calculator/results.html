@@ -4,8 +4,8 @@
 {% block title %}Instruments{% endblock %}
 
 {% block content %}
-    {{ script | safe }}
 
+{{ results_df|safe }}
 <div class="jumbotron">
   <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
   <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -125,11 +125,7 @@
 <hr class="my-4">
 
 
-    <hr>
 
-    {{ div | safe }}
-
-    <hr>
 {#    ---------------------------------GRAPHIC AVERAGES + SD ---------------------------#}
 <div class="row">
     <div class="col">
@@ -333,8 +329,11 @@
                                 {% for result in replicate.result_set.all %}
                                     {% if result.duration == duration %}
                                         {% if result.subject == subject %}
-                                        {{ result }} {{ setting.parameter.unit }}<br>
-
+                                            {% if not result.value %}
+{# FIXME: Does not work  #}                     'No results entered'
+                                                {% else %}
+                                        {{ result.value }} {{ setting.parameter.unit }} <br>
+                                                {% endif %}
                                     {% endif %}
 
                                     {% endif %}

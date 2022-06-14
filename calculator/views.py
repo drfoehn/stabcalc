@@ -8,8 +8,10 @@ from django.core import validators
 from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
-from bokeh.plotting import figure, show, output_file
-from bokeh.embed import components
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+
 
 class ResultsView(DetailView):
     template_name = 'calculator/results.html'
@@ -20,70 +22,87 @@ class ResultsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subjects = Subject.objects.filter(setting=self.object)
+        durations_val = Duration.objects.all().values()
+        durations_data = pd.DataFrame(durations_val)
+        results_val = Result.objects.all().values()
+        results_data = pd.DataFrame(results_val)
+
+        merged_res_dur = pd.merge(results_data, durations_data, left_on='duration_id', right_on='id', how='inner')
+        cols = merged_res_dur['duration_id'].nunique() # number of timepoints
+        rows = merged_res_dur['subject_id'].nunique() # number of subjects
+        data_multiline = (merged_res_dur, range(rows), range(cols))
+
+        print(data_multiline)
+        results_df = merged_res_dur.to_html
+        # duration_cat = str(merged_res_dur.duration_number) + merged_res_dur.duration_unit
+        # duration_cat2 = pd.DataFrame(duration_cat).to_html
+        # duration_cat3 = Result.duration_cat(duration_cat2)
+
+        # print(duration_cat2)
+        # df["Name"].astype('category')
+
+        # df = pd.DataFrame({"A": list("abca"), "B": list("bccd")}, dtype="category")
 
 
-        # average = Subject.average(subjects, Duration)
+        # avg_tot = results_val['value'].mean()
+        # avg_tot_duration = results_duration[duration_unit_cat.categories]
+        # print(results_duration.to_html)
+        # print(results_data['value'].std())
+        # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
+        #
+        sns.pointplot(
+            data=data_multiline,
+            x='seconds',#TODO: pass duration and unit instead of ID
+            y='value',
+            # hue='duration_id'
+        )
+        # sns.relplot(
+        #     data=results_data,
+        #     x='duration_id',  # TODO: pass duration and unit instead of ID
+        #     y='value',
+        #     hue='duration_id',
+        #     kind='line',
+        # )
+        plt.title("kaka")
+        plt.show()
 
-        # create some data
-        x1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        y1 = [0, 8, 2, 4, 6, 9, 5, 6, 25, 28, 4, 7]
-        x2 = [2, 5, 7, 15, 18, 19, 25, 28, 9, 10, 4]
-        y2 = [2, 4, 6, 9, 15, 18, 0, 8, 2, 25, 28]
-        x3 = [0, 1, 0, 8, 2, 4, 6, 9, 7, 8, 9]
-        y3 = [0, 8, 4, 6, 9, 15, 18, 19, 19, 25, 28]
+        # sns.relplot(
+        #     data=results_data.sort_values(by=[]),
+        #     x='duration_id',
+        #     y='value',
+        #     kind='line'
+        # )
+        #
+        # plt.show()
 
-        # select the tools you want
-        TOOLS = "pan,wheel_zoom,box_zoom,reset,save"
-
-        # the red and blue graphs share this data range
-        xr1 = Range1d(start=0, end=30)
-        yr1 = Range1d(start=0, end=30)
-
-        # only the green graph uses this data range
-        xr2 = Range1d(start=0, end=30)
-        yr2 = Range1d(start=0, end=30)
-
-        # build the figures
-        p1 = figure(x_range=xr1, y_range=yr1, tools=TOOLS, width=300, height=300)
-        p1.scatter(x1, y1, size=12, color="red", alpha=0.5)
-
-        p2 = figure(x_range=xr1, y_range=yr1, tools=TOOLS, width=300, height=300)
-        p2.scatter(x2, y2, size=12, color="blue", alpha=0.5)
-
-        p3 = figure(x_range=xr2, y_range=yr2, tools=TOOLS, width=300, height=300)
-        p3.scatter(x3, y3, size=12, color="green", alpha=0.5)
-
-        # plots can be a single Bokeh model, a list/tuple, or even a dictionary
-        plots = {'Red': p1, 'Blue': p2, 'Green': p3}
-
-        script, div = components(plots)
-
-
+        # titanic = sns.load_dataset('titanic')
+        #
+        # plt.figure(figsize=(8, 5))
+        # sns.boxplot(x='class', y='age', data=titanic, palette='rainbow')
+        # plt.title("Age by Passenger Class, Titanic")
+        #
+        # plt.show()
 
         context["results"] = Result.objects.all()
         context["durations"] = Duration.objects.all()
         context["replicates"] = Replicate.objects.all()
         context["subjects"] = subjects
-        context["div"] = div
-        context["script"] = script
-
-
-
-
-
+        context["results_df"] = results_df
 
         return context
+
 
 class DashboardView(ListView):
     model = Instrument
 
     def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            sample = Sample.objects.all()
-            context['samples'] = sample
-            # Add any other variables to the context here
-            ...
-            return context
+        context = super().get_context_data(**kwargs)
+        sample = Sample.objects.all()
+        context['samples'] = sample
+        # Add any other variables to the context here
+        ...
+        return context
+
 
 class InstrumentIndex(ListView):
     model = Instrument
@@ -118,14 +137,17 @@ class SampleAddView(CreateView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
+
 class SettingAddView(CreateView):
     template_name = "calculator/result_form.html"
     model = Setting
     form_class = SettingForm
     # success_url = "/dashboard"
 
+
 class ValuesAddView(TemplateView):
     template_name = "calculator/result_form.html"
+
     # model = Result
     # form_class = ResultForm
     # success_url = "/dashboard"
@@ -145,9 +167,9 @@ class ValuesAddView(TemplateView):
 
         return self.render_to_response({'value_formset': formset})
 
-
     # def post(self, request, *args, **kwargs):
     #     return super().post(request, *args, **kwargs)
+
 
 # def result_view(request):
 #     if request.method == 'POST':
@@ -181,6 +203,7 @@ class ParameterAddView(CreateView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
+
 class MultiInputView(TemplateView):
     ### TemplateResponseMixin
     template_name = 'calculator/calculator_form.html'
@@ -192,19 +215,19 @@ class MultiInputView(TemplateView):
 
         context['setting_form'] = SettingForm(
             prefix='SettingForm',
-        # Multiple 'submit' button paths should be handled in form's .save()/clean()
-        data = self.request.POST if bool(set(['SettingForm-submit',]).intersection(
-            self.request.POST)) else None,
+            # Multiple 'submit' button paths should be handled in form's .save()/clean()
+            data=self.request.POST if bool(set(['SettingForm-submit', ]).intersection(
+                self.request.POST)) else None,
         )
 
         context['duration_form'] = DurationForm(
             prefix='duration',
-        data = self.request.POST if 'Duration-submit' in self.request.POST else None,
-               files = self.request.FILES if 'Duration-submit' in self.request.POST else None
+            data=self.request.POST if 'Duration-submit' in self.request.POST else None,
+            files=self.request.FILES if 'Duration-submit' in self.request.POST else None
 
         )
 
-        context['value_form'] =ValueForm(
+        context['value_form'] = ValueForm(
             prefix='value',
             data=self.request.POST if 'Value-submit' in self.request.POST else None,
             files=self.request.FILES if 'Value-submit' in self.request.POST else None
