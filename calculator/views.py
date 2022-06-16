@@ -37,7 +37,7 @@ class ResultsView(DetailView):
         cols = merged_res_dur['duration_id'].nunique()  # number of timepoints
         rows = merged_res_dur['subject_id'].nunique()  # number of subjects
 
-        results_df = merged_res_dur.to_html
+        
 
         results_array = np.array(merged_res_dur)  # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
@@ -82,11 +82,13 @@ class ResultsView(DetailView):
         # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
 
 
-        context["results"] = Result.objects.all()
-        context["durations"] = Duration.objects.all()
-        context["replicates"] = Replicate.objects.all()
+        context.update({
+            "results": Result.objects.all(),
+            "durations": Duration.objects.all(),
+            "replicates": Replicate.objects.all(),
+            "results_df": merged_res_dur.to_html,
+        })
         context["subjects"] = subjects
-        context["results_df"] = results_df
         context["statistics_extended"] = statistics_extended
         context["reg_eq_lin"] = reg_eq_lin
         return context
