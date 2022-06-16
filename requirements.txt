@@ -3,4 +3,11 @@ django-jazzmin
 django-countries
 django-crispy-forms
 crispy-bootstrap5
-bokeh~=2.4.3
+numpy
+scipy
+matplotlib
+ipython
+jupyter
+pandas
+sympy
+nose

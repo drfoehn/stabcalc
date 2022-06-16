@@ -9,8 +9,12 @@ from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
 import seaborn as sns
+import numpy as np
+import scipy as sp
+from scipy.stats import norm
 import pandas as pd
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 
 
 class ResultsView(DetailView):
@@ -26,17 +30,37 @@ class ResultsView(DetailView):
         durations_data = pd.DataFrame(durations_val)
         results_val = Result.objects.all().values()
         results_data = pd.DataFrame(results_val)
+#https://365datascience.com/tutorials/python-tutorials/linear-regression/
 
         merged_res_dur = pd.merge(results_data, durations_data, left_on='duration_id', right_on='id', how='inner')
         cols = merged_res_dur['duration_id'].nunique() # number of timepoints
         rows = merged_res_dur['subject_id'].nunique() # number of subjects
-        data_multiline = (merged_res_dur, range(rows), range(cols))
 
-        print(data_multiline)
         results_df = merged_res_dur.to_html
-        # duration_cat = str(merged_res_dur.duration_number) + merged_res_dur.duration_unit
-        # duration_cat2 = pd.DataFrame(duration_cat).to_html
-        # duration_cat3 = Result.duration_cat(duration_cat2)
+
+        results_array = np.array(merged_res_dur) #print(results_array.size, results_array.shape)
+        # mean_panda=merged_res_dur['value'].mean()
+        # mean_numpy = np.mean(merged_res_dur, axis=0)
+        # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
+        # print(mean_numpy[1], mean_panda)
+        # print(results_array)
+        y = merged_res_dur['value'] #dependent variable
+        x1 = merged_res_dur['seconds']
+        # for timepoints in x1:
+        #     values = timepoints
+        #     print(values)
+        plt.scatter(x1, y)
+        plt.xlabel('SAT', fontsize=20)
+        plt.ylabel('GPA', fontsize=20)
+        plt.show()
+        x = sm.add_constant(x1)
+        results = sm.OLS(y, x).fit()
+        statistics_extended = results.summary()
+
+        print(results.params)
+        print(results.predict())
+
+
 
         # print(duration_cat2)
         # df["Name"].astype('category')
@@ -50,21 +74,43 @@ class ResultsView(DetailView):
         # print(results_data['value'].std())
         # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
         #
-        sns.pointplot(
-            data=data_multiline,
-            x='seconds',#TODO: pass duration and unit instead of ID
-            y='value',
-            # hue='duration_id'
-        )
+
+        context["results"] = Result.objects.all()
+        context["durations"] = Duration.objects.all()
+        context["replicates"] = Replicate.objects.all()
+        context["subjects"] = subjects
+        context["results_df"] = results_df
+        context["statistics_extended"] = statistics_extended
+
+        return context
+
+        # sns.lineplot(
+        #     data=merged_res_dur,
+        #     x='duration_id',#TODO: pass duration and unit instead of ID
+        #     y='value',
+        #     hue='subject_id',
+        #     # estimator='mean',
+        #     # ci=95,
+        #
+        # )
         # sns.relplot(
-        #     data=results_data,
+        #     data=merged_res_dur,
         #     x='duration_id',  # TODO: pass duration and unit instead of ID
         #     y='value',
-        #     hue='duration_id',
+        #     # hue='duration_id',
         #     kind='line',
+        #     err_style='band',
         # )
-        plt.title("kaka")
-        plt.show()
+        # sns.boxplot(
+        #     data=merged_res_dur,
+        #     x='duration_id',  # TODO: pass duration and unit instead of ID
+        #     y='value',
+        #
+        #
+        # )
+        #
+        # plt.title("kaka")
+        # plt.show()
 
         # sns.relplot(
         #     data=results_data.sort_values(by=[]),
@@ -83,13 +129,7 @@ class ResultsView(DetailView):
         #
         # plt.show()
 
-        context["results"] = Result.objects.all()
-        context["durations"] = Duration.objects.all()
-        context["replicates"] = Replicate.objects.all()
-        context["subjects"] = subjects
-        context["results_df"] = results_df
 
-        return context
 
 
 class DashboardView(ListView):
