@@ -232,26 +232,6 @@ class Setting(models.Model):
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
-    def secondstotext_tot(self, duration: 'Duration'):
-        r=Result.objects.filter(setting=self, duration=duration)
-        print(r)
-        return [v.duration.seconds for v in r]
-
-    def seconds_to_text(self, duration: 'Duration'): #FIXME: Does not work
-        seconds = self.secondstotext_tot(duration)
-        minutes = seconds * 60
-        hours = seconds * 60 * 60
-        days = seconds * 60 * 60 * 24
-        months = seconds * 60 * 60 * 24 * 30
-        years = seconds * 60 * 60 * 24 * 365
-        result = ("{0} year{1}, ".format(years, "s" if years != 1 else "") if years else "") + \
-                 ("{0} month{1}, ".format(months, "s" if months != 1 else "") if months else "") + \
-                 ("{0} day{1}, ".format(days, "s" if days != 1 else "") if days else "") + \
-                 ("{0} hour{1}, ".format(hours, "s" if hours != 1 else "") if hours else "") + \
-                 ("{0} minute{1}, ".format(minutes, "s" if minutes != 1 else "") if minutes else "") + \
-                 ("{0} second{1}, ".format(seconds, "s" if seconds != 1 else "") if seconds else "")
-        return result
-
     def save(self, *args, **kwargs):
         dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
         # TODO: add if not

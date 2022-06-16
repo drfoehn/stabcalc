@@ -1,24 +1,27 @@
-from bokeh.models import Range1d
+
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, TemplateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    TemplateView,
+)
 from django.core import validators
 from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
-import seaborn as sns
 import numpy as np
-import scipy as sp
-from scipy.stats import norm
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 
 class ResultsView(DetailView):
-    template_name = 'calculator/results.html'
+    template_name = "calculator/results.html"
     model = Setting
     context_object_name = "setting"
 
@@ -33,25 +36,31 @@ class ResultsView(DetailView):
         results_data = pd.DataFrame(results_val)
         # https://365datascience.com/tutorials/python-tutorials/linear-regression/
 
-        merged_res_dur = pd.merge(results_data, durations_data, left_on='duration_id', right_on='id', how='inner')
-        cols = merged_res_dur['duration_id'].nunique()  # number of timepoints
-        rows = merged_res_dur['subject_id'].nunique()  # number of subjects
+        merged_res_dur = pd.merge(
+            results_data,
+            durations_data,
+            left_on="duration_id",
+            right_on="id",
+            how="inner",
+        )
+        cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
+        rows = merged_res_dur["subject_id"].nunique()  # number of subjects
 
-        
-
-        results_array = np.array(merged_res_dur)  # print(results_array.size, results_array.shape)
+        results_array = np.array(
+            merged_res_dur
+        )  # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
         # mean_numpy = np.mean(merged_res_dur, axis=0)
         # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
         # print(mean_numpy[1], mean_panda)
         # print(results_array)
-        y = merged_res_dur['value']  # dependent variable
-        x1 = merged_res_dur['seconds']  # independent variable
+        y = merged_res_dur["value"]  # dependent variable
+        x1 = merged_res_dur["seconds"]  # independent variable
         # for timepoints in x1:
         #     values = timepoints
         #     print(values)
 
-        #MatPlotLib Scattergramm:
+        # MatPlotLib Scattergramm:
         # plt.scatter(x1, y)
         # plt.xlabel('Seconds', fontsize=20)
         # plt.ylabel('Results', fontsize=20)
@@ -59,16 +68,28 @@ class ResultsView(DetailView):
 
         x = sm.add_constant(x1)  # add a row of ones as constant
         model = sm.OLS(y, x)
-        results = model.fit() # OLS = Ordinary Least Squares
+        results = model.fit()  # OLS = Ordinary Least Squares
         statistics_extended = results.summary()
 
-        #Extract parameters from summary
+        # Extract parameters from summary
         b0 = results.params[0]  # constant coeffitient / Intercept
         b1 = results.params[1]  # seconds coefficient / Slope
-        reg_eq_lin = ('y = ' + str(b0) + ' + x1 * ' + str(b1))  # equation linear regression: y = b0 + x1*b1
-        context['p-value'] = results.f_pvalue #Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
-        #std_err =
+        b0_r = round(b0, 5)
+        b1_r = round(b1, 5)
+        reg_eq_lin = (
+            "y = " + str(b0_r) + " + x1 * " + str(b1_r)
+        )  # equation linear regression: y = b0 + x1*b1
 
+        context["slope"] = b1_r
+        context["intercept"] = b0_r
+        context[
+            "f_value"
+        ] = (
+            results.fvalue
+        )  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
+        context["f_p_value"] = results.f_pvalue
+        # context['std_err'] = results.params[0,1]
+        context["r_square"] = results.rsquared
 
         # print(duration_cat2)
         # df["Name"].astype('category')
@@ -81,13 +102,14 @@ class ResultsView(DetailView):
         # print(results_data['value'].std())
         # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
 
-
-        context.update({
-            "results": Result.objects.all(),
-            "durations": Duration.objects.all(),
-            "replicates": Replicate.objects.all(),
-            "results_df": merged_res_dur.to_html,
-        })
+        context.update(
+            {
+                "results": Result.objects.all(),
+                "durations": Duration.objects.all(),
+                "replicates": Replicate.objects.all(),
+                "results_df": merged_res_dur.to_html,
+            }
+        )
         context["subjects"] = subjects
         context["statistics_extended"] = statistics_extended
         context["reg_eq_lin"] = reg_eq_lin
@@ -145,7 +167,7 @@ class DashboardView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         sample = Sample.objects.all()
-        context['samples'] = sample
+        context["samples"] = sample
         # Add any other variables to the context here
         ...
         return context
@@ -203,7 +225,7 @@ class ValuesAddView(TemplateView):
     def get(self, *args, **kwargs):
         # Create an instance of the formset
         formset = ValueFormset(queryset=Result.objects.none())
-        return self.render_to_response({'value_formset': formset})
+        return self.render_to_response({"value_formset": formset})
 
     def post(self, *args, **kwargs):
         formset = ValueFormset(data=self.request.POST)
@@ -212,7 +234,7 @@ class ValuesAddView(TemplateView):
             formset.save()
             return redirect(reverse_lazy("add_results"))
 
-        return self.render_to_response({'value_formset': formset})
+        return self.render_to_response({"value_formset": formset})
 
     # def post(self, request, *args, **kwargs):
     #     return super().post(request, *args, **kwargs)
@@ -253,32 +275,39 @@ class ParameterAddView(CreateView):
 
 class MultiInputView(TemplateView):
     ### TemplateResponseMixin
-    template_name = 'calculator/calculator_form.html'
+    template_name = "calculator/calculator_form.html"
 
     ### ContextMixin
     def get_context_data(self, **kwargs):
-        """ Adds extra content to our template """
+        """Adds extra content to our template"""
         context = super(MultiInputView, self).get_context_data(**kwargs)
 
-        context['setting_form'] = SettingForm(
-            prefix='SettingForm',
+        context["setting_form"] = SettingForm(
+            prefix="SettingForm",
             # Multiple 'submit' button paths should be handled in form's .save()/clean()
-            data=self.request.POST if bool(set(['SettingForm-submit', ]).intersection(
-                self.request.POST)) else None,
+            data=self.request.POST
+            if bool(
+                set(
+                    [
+                        "SettingForm-submit",
+                    ]
+                ).intersection(self.request.POST)
+            )
+            else None,
         )
 
-        context['duration_form'] = DurationForm(
-            prefix='duration',
-            data=self.request.POST if 'Duration-submit' in self.request.POST else None,
-            files=self.request.FILES if 'Duration-submit' in self.request.POST else None
-
+        context["duration_form"] = DurationForm(
+            prefix="duration",
+            data=self.request.POST if "Duration-submit" in self.request.POST else None,
+            files=self.request.FILES
+            if "Duration-submit" in self.request.POST
+            else None,
         )
 
-        context['value_form'] = ValueForm(
-            prefix='value',
-            data=self.request.POST if 'Value-submit' in self.request.POST else None,
-            files=self.request.FILES if 'Value-submit' in self.request.POST else None
-
+        context["value_form"] = ValueForm(
+            prefix="value",
+            data=self.request.POST if "Value-submit" in self.request.POST else None,
+            files=self.request.FILES if "Value-submit" in self.request.POST else None,
         )
 
         # context['value_form'] = ValueForm()
@@ -288,14 +317,14 @@ class MultiInputView(TemplateView):
     def post(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
 
-        if context['setting_form'].is_valid():
-            instance = context['setting_form'].save()
+        if context["setting_form"].is_valid():
+            instance = context["setting_form"].save()
             # messages.success(request, 'Setting saved.'.format(instance.pk))
-        elif context['duration_form'].is_valid():
-            instance = context['parameter_form'].save()
+        elif context["duration_form"].is_valid():
+            instance = context["parameter_form"].save()
             # messages.success(request, 'Duration setting has been saved.'.format(instance.pk))
-        elif context['value_form'].is_valid():
-            instance = context['value_form'].save()
+        elif context["value_form"].is_valid():
+            instance = context["value_form"].save()
             # messages.success(request, 'Value has been saved.'.format(instance.pk))
             # advise of any errors
 

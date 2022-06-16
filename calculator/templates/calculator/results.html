@@ -5,14 +5,6 @@
 
 {% block content %}
 
-{{ results_df|safe }}
-    <hr>
-    <pre style="font-family: monospace, monospace">{{ statistics_extended|safe }}</pre>
-    <hr>
-    Linear regression equation: {{ reg_eq_lin }}<br>
-    y...Testresult (dependent variable) <br>
-    x1...Timepoint (independent variable) <br>
-    {{ reg_eq_lin.b0 }}
 <div class="jumbotron">
   <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
   <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -285,6 +277,45 @@
 
     </div>
 
+{#    ----------------------------------Statistics------------------------------------------#}
+
+    <hr>
+        Linear regression equation: {{ reg_eq_lin }}<br>
+    y...Testresult (dependent variable) <br>
+    x1...Timepoint (independent variable) <br>
+    <hr>
+    Slope: {{ slope | floatformat:5 }}<br>
+    Intercept: {{ intercept | floatformat:5}}<br>
+    F-value: {{ f_value | floatformat:5}}<br>
+    F p-Value: {{ f_p_value | floatformat:5}}<br>
+
+    <hr>
+
+{#    ---------------------------------MODAL - EXTENDED STATISTICS ------------------------------------#}
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal">
+  Extended Statistics
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <pre style="font-family: monospace, monospace">{{ statistics_extended|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <hr>
 {#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
     <div class="col">

@@ -4,10 +4,8 @@ django-countries
 django-crispy-forms
 crispy-bootstrap5
 numpy
-scipy
 matplotlib
 ipython
 jupyter
 pandas
-sympy
-nose
+statsmodels
