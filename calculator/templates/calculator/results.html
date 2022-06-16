@@ -6,7 +6,13 @@
 {% block content %}
 
 {{ results_df|safe }}
-    {{ statistics_extended|safe }}
+    <hr>
+    <pre style="font-family: monospace, monospace">{{ statistics_extended|safe }}</pre>
+    <hr>
+    Linear regression equation: {{ reg_eq_lin }}<br>
+    y...Testresult (dependent variable) <br>
+    x1...Timepoint (independent variable) <br>
+    {{ reg_eq_lin.b0 }}
 <div class="jumbotron">
   <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
   <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -302,7 +308,7 @@
             <tr>
                 <th scope="col">Subject</th>
                 {% for duration in setting.duration_set.all %}
-                    <th>{{ duration }}</th>
+                    <th>{{ duration.seconds | human_readable_seconds }}</th>
                 {% endfor %}
 
             </tr>
@@ -312,6 +318,7 @@
                 <td>No of subjects: {{ subjects.count }}</td>
                 {% for duration in setting.duration_set.all %}
                     <td>
+                    <br>
                         AVG Total: {% average_tot setting duration %} {{ setting.parameter.unit}}<br>
                         SD Total:  {% stdv_tot setting duration %} <br>
                         CV Total:  {% cv_tot setting duration %} %<br>

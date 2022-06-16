@@ -42,7 +42,11 @@ def deviation(subject: Subject, duration: Duration):
 
 @register.simple_tag
 def deviation_tot(setting: Setting, duration: Duration):
-    return setting.deviation(duration)
+    return setting.deviation_tot(duration)
+
+@register.simple_tag #FIXME: Does not work
+def seconds_to_text(setting: Setting, duration:Duration):
+    return setting.seconds_to_text(duration)
 
 # def current_subject(value): # Only one argument.
 #     """Converts a string into all lowercase"""

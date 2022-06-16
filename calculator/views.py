@@ -28,38 +28,46 @@ class ResultsView(DetailView):
         subjects = Subject.objects.filter(setting=self.object)
         durations_val = Duration.objects.all().values()
         durations_data = pd.DataFrame(durations_val)
+
         results_val = Result.objects.all().values()
         results_data = pd.DataFrame(results_val)
-#https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        # https://365datascience.com/tutorials/python-tutorials/linear-regression/
 
         merged_res_dur = pd.merge(results_data, durations_data, left_on='duration_id', right_on='id', how='inner')
-        cols = merged_res_dur['duration_id'].nunique() # number of timepoints
-        rows = merged_res_dur['subject_id'].nunique() # number of subjects
+        cols = merged_res_dur['duration_id'].nunique()  # number of timepoints
+        rows = merged_res_dur['subject_id'].nunique()  # number of subjects
 
         results_df = merged_res_dur.to_html
 
-        results_array = np.array(merged_res_dur) #print(results_array.size, results_array.shape)
+        results_array = np.array(merged_res_dur)  # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
         # mean_numpy = np.mean(merged_res_dur, axis=0)
         # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
         # print(mean_numpy[1], mean_panda)
         # print(results_array)
-        y = merged_res_dur['value'] #dependent variable
-        x1 = merged_res_dur['seconds']
+        y = merged_res_dur['value']  # dependent variable
+        x1 = merged_res_dur['seconds']  # independent variable
         # for timepoints in x1:
         #     values = timepoints
         #     print(values)
-        plt.scatter(x1, y)
-        plt.xlabel('SAT', fontsize=20)
-        plt.ylabel('GPA', fontsize=20)
-        plt.show()
-        x = sm.add_constant(x1)
-        results = sm.OLS(y, x).fit()
+
+        #MatPlotLib Scattergramm:
+        # plt.scatter(x1, y)
+        # plt.xlabel('Seconds', fontsize=20)
+        # plt.ylabel('Results', fontsize=20)
+        # plt.show()
+
+        x = sm.add_constant(x1)  # add a row of ones as constant
+        model = sm.OLS(y, x)
+        results = model.fit() # OLS = Ordinary Least Squares
         statistics_extended = results.summary()
 
-        print(results.params)
-        print(results.predict())
-
+        #Extract parameters from summary
+        b0 = results.params[0]  # constant coeffitient / Intercept
+        b1 = results.params[1]  # seconds coefficient / Slope
+        reg_eq_lin = ('y = ' + str(b0) + ' + x1 * ' + str(b1))  # equation linear regression: y = b0 + x1*b1
+        context['p-value'] = results.f_pvalue #Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
+        #std_err =
 
 
         # print(duration_cat2)
@@ -67,13 +75,12 @@ class ResultsView(DetailView):
 
         # df = pd.DataFrame({"A": list("abca"), "B": list("bccd")}, dtype="category")
 
-
         # avg_tot = results_val['value'].mean()
         # avg_tot_duration = results_duration[duration_unit_cat.categories]
         # print(results_duration.to_html)
         # print(results_data['value'].std())
         # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
-        #
+
 
         context["results"] = Result.objects.all()
         context["durations"] = Duration.objects.all()
@@ -81,7 +88,7 @@ class ResultsView(DetailView):
         context["subjects"] = subjects
         context["results_df"] = results_df
         context["statistics_extended"] = statistics_extended
-
+        context["reg_eq_lin"] = reg_eq_lin
         return context
 
         # sns.lineplot(
@@ -128,8 +135,6 @@ class ResultsView(DetailView):
         # plt.title("Age by Passenger Class, Titanic")
         #
         # plt.show()
-
-
 
 
 class DashboardView(ListView):

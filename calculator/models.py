@@ -62,7 +62,6 @@ class Condition(models.Model):
     other_Condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
 
     def __str__(self):
-
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_Condition}"
 
 
@@ -150,8 +149,6 @@ class Sample(models.Model):
 
     gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
 
-
-
     def __str__(self):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
@@ -176,6 +173,7 @@ class Setting(models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
+
     # replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
     #                                       choices=list(zip(range(1, 11), range(1, 11))))
 
@@ -190,28 +188,28 @@ class Setting(models.Model):
         if not values:
             return "-"
         else:
-            return math.ceil((statistics.mean(values))*100)/100
+            return math.ceil((statistics.mean(values)) * 100) / 100
 
     def stdv_tot(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
             return 0
         else:
-            return math.ceil((statistics.stdev(values))*100)/100
+            return math.ceil((statistics.stdev(values)) * 100) / 100
 
     def avg_tot_sd_h(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
             return " "
         else:
-            return math.ceil((statistics.mean(values) + statistics.stdev(values))*100)/100
+            return math.ceil((statistics.mean(values) + statistics.stdev(values)) * 100) / 100
 
     def avg_tot_sd_l(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
             return " "
         else:
-            return math.ceil((statistics.mean(values) - statistics.stdev(values))*100)/100
+            return math.ceil((statistics.mean(values) - statistics.stdev(values)) * 100) / 100
 
     def cv_tot(self, duration: 'Duration'):
         average = self.average_tot(duration)
@@ -221,9 +219,9 @@ class Setting(models.Model):
         elif stdv == '-':
             return '-'
         else:
-            return math.ceil(((stdv / average) * 100)*100)/100
+            return math.ceil(((stdv / average) * 100) * 100) / 100
 
-    def deviation(self, duration: 'Duration'):
+    def deviation_tot(self, duration: 'Duration'):
         average = self.average_tot(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average_tot(duration_zero)
@@ -232,14 +230,34 @@ class Setting(models.Model):
         elif average_zero == '-':
             return '_'
         else:
-            return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
+            return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
+    def secondstotext_tot(self, duration: 'Duration'):
+        r=Result.objects.filter(setting=self, duration=duration)
+        print(r)
+        return [v.duration.seconds for v in r]
+
+    def seconds_to_text(self, duration: 'Duration'): #FIXME: Does not work
+        seconds = self.secondstotext_tot(duration)
+        minutes = seconds * 60
+        hours = seconds * 60 * 60
+        days = seconds * 60 * 60 * 24
+        months = seconds * 60 * 60 * 24 * 30
+        years = seconds * 60 * 60 * 24 * 365
+        result = ("{0} year{1}, ".format(years, "s" if years != 1 else "") if years else "") + \
+                 ("{0} month{1}, ".format(months, "s" if months != 1 else "") if months else "") + \
+                 ("{0} day{1}, ".format(days, "s" if days != 1 else "") if days else "") + \
+                 ("{0} hour{1}, ".format(hours, "s" if hours != 1 else "") if hours else "") + \
+                 ("{0} minute{1}, ".format(minutes, "s" if minutes != 1 else "") if minutes else "") + \
+                 ("{0} second{1}, ".format(seconds, "s" if seconds != 1 else "") if seconds else "")
+        return result
 
     def save(self, *args, **kwargs):
         dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
         # TODO: add if not
         self.duration_set.add(dur_zero)
         super().save(*args, **kwargs)
+
 
 class Duration(models.Model):
     class Meta:
@@ -270,6 +288,8 @@ class Duration(models.Model):
 
     seconds = models.PositiveIntegerField(blank=True)
 
+
+
     def save(
             self, *args, **kwargs
     ):
@@ -283,7 +303,16 @@ class Duration(models.Model):
         self.seconds = calc_tbl[self.duration_unit] * self.duration_number
         super().save(*args, **kwargs)
 
-
+    # def converted_time(self):
+    #     minutes = self.seconds*60,
+    #     hours = self.seconds*60*60,
+    #     days = self.seconds*60*60*24,
+    #     months = self.seconds*60*60*24*30,
+    #     years = self.seconds*60*60*24*365,
+    #
+    #     if self.seconds >= 31536000:
+    #         return str(years) + ' years, ' + str(months) + ' months, ' + str(days) + ' days'
+    #     elif self.seconds < 31536000 and self.seconds >=
 
     def replicates(self):
         return self.setting.replicates
@@ -291,9 +320,6 @@ class Duration(models.Model):
     def __str__(self):
         unit = self.get_duration_unit_display()
         return f"{self.duration_number}, {unit}"
-
-
-
 
 
 class Subject(models.Model):
@@ -304,21 +330,22 @@ class Subject(models.Model):
         return self.name
 
     def values(self, duration: Duration):
-        return [v.value for v in Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration, subject=self)]
+        return [v.value for v in
+                Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration, subject=self)]
 
     def average(self, duration: Duration):
         values = self.values(duration)
         if not values:
             return "-"
         else:
-            return math.ceil((statistics.mean(values))*100)/100
+            return math.ceil((statistics.mean(values)) * 100) / 100
 
     def stdv(self, duration: Duration):
         values = self.values(duration)
         if len(values) < 2:
             return "-"
         else:
-            return math.ceil((statistics.stdev(values))*100)/100
+            return math.ceil((statistics.stdev(values)) * 100) / 100
 
     def cv(self, duration: Duration):
 
@@ -330,7 +357,7 @@ class Subject(models.Model):
         elif stdv == '-':
             return '-'
         else:
-            return math.ceil(((stdv / average) * 100)*100)/100
+            return math.ceil(((stdv / average) * 100) * 100) / 100
 
     def deviation(self, duration: 'Duration'):
         average = self.average(duration)
@@ -341,15 +368,16 @@ class Subject(models.Model):
         elif average_zero == '-':
             return '_'
         else:
-            return math.ceil((((average-average_zero)/average_zero)*100)*100)/100
+            return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
+
 
 # TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
-    # def number_of_subjects(self, setting: Setting):
-    #     nr = self.objects.count(setting)
-    #     if not nr:
-    #         return "-"
-    #     else:
-    #         return nr
+# def number_of_subjects(self, setting: Setting):
+#     nr = self.objects.count(setting)
+#     if not nr:
+#         return "-"
+#     else:
+#         return nr
 
 
 class Replicate(models.Model):
@@ -370,14 +398,11 @@ class Result(models.Model):
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
-
     def duration_cat(self):
         return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
         return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}, {self.duration_cat}"
-
-
 
     # def duration(self):
     #     return self.subject.duration
