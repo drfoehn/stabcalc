@@ -1,4 +1,3 @@
-
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.messages.views import SuccessMessageMixin
@@ -31,11 +30,27 @@ class ResultsView(DetailView):
         subjects = Subject.objects.filter(setting=self.object)
         durations_val = Duration.objects.all().values()
         durations_data = pd.DataFrame(durations_val)
-
-        results_val = Result.objects.all().values()
+        results = Result.objects.filter(setting=self.object)
+        results_val = results.values()
         results_data = pd.DataFrame(results_val)
+
+        # [s.duration() for s in Subject.objects.all()]
+
+        # subjects2 = subjects.model.deviation(self, durations_data)
+        # print(dev)
         # https://365datascience.com/tutorials/python-tutorials/linear-regression/
 
+        durations_dict:dict[int,dict[int,int]] = {}
+        for subject in subjects:
+            if not subject.id in durations_dict:
+                durations_dict[subject.id]={}
+            for duration in self.object.duration_set.all():
+                durations_dict[subject.id][duration.id] = subject.deviation(duration)
+
+        # panda_dur = pd.DataFrame(durations_dict)
+        print(durations_dict)
+
+        # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
             results_data,
             durations_data,
@@ -45,8 +60,8 @@ class ResultsView(DetailView):
         )
         cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
-        # ----------------Numpy-Arrays
 
+        # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
         # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
@@ -54,35 +69,39 @@ class ResultsView(DetailView):
         # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
         # print(mean_numpy[1], mean_panda)
         # print(results_array)
+
+        # -------------------Statistics absolute results
         y = merged_res_dur["value"]  # dependent variable
         x1 = merged_res_dur["seconds"]  # independent variable
         # for timepoints in x1:
         #     values = timepoints
         #     print(values)
 
-        # MatPlotLib Scattergramm:
-        # plt.scatter(x1, y)
-        # plt.xlabel('Seconds', fontsize=20)
-        # plt.ylabel('Results', fontsize=20)
-        # plt.show()
-
         x = sm.add_constant(x1)  # add a row of ones as constant
         model = sm.OLS(y, x)
         results = model.fit()  # OLS = Ordinary Least Squares
         statistics_extended = results.summary()
 
-        # Extract parameters from summary
+        # -------------------------Extract single parameters from summary
         b0 = results.params[0]  # constant coeffitient / Intercept
         b1 = results.params[1]  # seconds coefficient / Slope
         b0_r = round(b0, 5)
         b1_r = round(b1, 5)
         reg_eq_lin = (
-            "y = " + str(b0_r) + " + x1 * " + str(b1_r)
+                "y = " + str(b0_r) + " + x1 * " + str(b1_r)
         )  # equation linear regression: y = b0 + x1*b1
 
+        # --------------------MatPlotLib Scattergramm:
+        # plt.scatter(x1, y)
+        # plt.xlabel('Seconds', fontsize=20)
+        # plt.ylabel('Results', fontsize=20)
+        # plt.show()
+
+        # ------------------------Return context
         context["slope"] = b1_r
         context["intercept"] = b0_r
-        context["f_value"] = (results.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
+        context["f_value"] = (
+            results.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
         context["f_p_value"] = results.f_pvalue
         # context['std_err'] = results.params[0,1]
         context["r_square"] = results.rsquared
@@ -100,10 +119,10 @@ class ResultsView(DetailView):
 
         context.update(
             {
-                "results": Result.objects.all(),
+                "results": results,
                 "durations": Duration.objects.all(),
                 "replicates": Replicate.objects.all(),
-                "results_df": merged_res_dur.to_html,
+
             }
         )
         context["subjects"] = subjects
