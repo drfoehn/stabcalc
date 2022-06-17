@@ -276,9 +276,9 @@
 
 
     <hr>
-    lalala
+
     <div id="visualization"></div>
-    <button id="button_results_total" ></button>
+    <button id="button_results_total" ><p id="button_switch"></p></button>
     <script>
     google.charts.load('current', {'packages':['corechart']});
           google.charts.setOnLoadCallback(drawExample2);
@@ -324,8 +324,10 @@
                   google.visualization.events.addListener(chart, 'ready',
                       function () {
                           button.disabled = false;
-                          button.value = 'Switch to ' + (current ?  'Absolute' : 'Relative');
+                          button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
+                          button.innerHTML = button.value
                       });
+
                   options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
 
                   chart.draw(data[current], options);
