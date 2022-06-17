@@ -277,8 +277,8 @@
 
     <hr>
     lalala
-    <div id="visualization" style="width:400; height:300"></div>
-    <button id="b1" value="Switch to Absolute Deviation">Switch Relative Deviation</button>
+    <div id="visualization"></div>
+    <button id="button_results_total" ></button>
     <script>
     google.charts.load('current', {'packages':['corechart']});
           google.charts.setOnLoadCallback(drawExample2);
@@ -300,12 +300,14 @@
               data[1] = google.visualization.arrayToDataTable(rowData2);
 
               var options = {
-                  width: 600,
-                  height: 240,
+                  {#width: 600,#}
+                  {#height: 240,#}
                   vAxis: {title: "abs/rel Value"},
                   hAxis: {title: "Storage duration"},
                   seriesType: "line",
-                  series: {5: {type: "line"}},
+                  curveType: 'function',
+                  legend: { position: 'bottom' },
+                  {#series: {5: {type: "line"}},#}
                   animation: {
                       duration: 1000,
                       easing: 'out'
@@ -314,7 +316,7 @@
               var current = 0;
               // Create and draw the visualization.
               var chart = new google.visualization.ComboChart(document.getElementById('visualization'));
-              var button = document.getElementById('b1');
+              var button = document.getElementById('button_results_total');
 
               function drawChart() {
                   // Disabling the button while the chart is drawing.
@@ -322,7 +324,7 @@
                   google.visualization.events.addListener(chart, 'ready',
                       function () {
                           button.disabled = false;
-                          button.value = 'Switch to ' + (current ? 'Relative Deviation' : 'Absolute Deviation');
+                          button.value = 'Switch to ' + (current ?  'Absolute' : 'Relative');
                       });
                   options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
 
@@ -421,6 +423,29 @@
     F p-Value: {{ f_p_value | floatformat:5}}<br>
 
     <hr>
+
+{#    ----------------------------------CALCULATE INDIVIDUAL VALUE--------------------------------------#}
+
+<div class="row">
+<div class="col">
+    Calculate individual values based on the regression equation: <br>
+    Insert staorage duration in seconds: <input type="number" id="calc_input">
+{#    TODO: Check if input is in seconds#}
+        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+    <br>
+    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+    <script>
+function calcValue() {
+  var x = document.getElementById("calc_input").value;
+    var y = {{ intercept }} + x * {{ slope }};
+  document.getElementById("calc_result").innerHTML = y;
+}
+</script>
+
+</div>
+</div>
 
 {#    ---------------------------------MODAL - EXTENDED STATISTICS ------------------------------------#}
 
