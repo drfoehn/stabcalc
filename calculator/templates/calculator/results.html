@@ -295,47 +295,76 @@
 </div>
 </div>
 
-{#    -----------------------------------Regression Graph-------------------------------------#}
+{#    ######################################   Regression Graph   ##########################################}
     <hr>
-    <p class="graph_heading">Regression Analysis</p>
-{#    ----------------------------------Statistics------------------------------------------#}
+    <div class="row">
 
-    <hr>
-    Linear regression equation: {{ reg_eq_lin }}<br>
+    {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
+    <div class="col">
+        <p class="graph_heading">Linear Model</p>
+{#                    --------------------Graph----------------#}
+        <div class="row">
+            <div class="col">
+                <div id="linear_div"></div>
+
+    <script type="text/javascript">
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart);
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Storage Duration', 'Deviation'],
+         {% for duration in setting.duration_set.all %}
+               [{{ duration.seconds }}, {% average_tot setting duration %}],
+           {% endfor %}
+         {#[ 8,      12],#}
+         {#[ 4,      5.5],#}
+         {#[ 11,     14],#}
+         {#[ 4,      5],#}
+         {#[ 3,      3.5],#}
+         {#[ 6.5,    7]#}
+       ]);
+
+       var options = {
+         title: 'Parameter deviation at selected storage durations',
+         vAxis: {title: "Deviation"},
+         hAxis: {title: "Storage duration (seconds)"},
+         legend: 'top',
+         crosshair: { trigger: 'both', orientation: 'both' },
+         trendlines: {
+           0: {
+             type: 'linear',
+             {#degree: 3,#}
+             visibleInLegend: true,
+           }
+         }
+       };
+
+       var chart = new google.visualization.ScatterChart(document.getElementById('linear_div'));
+       chart.draw(data, options);
+     }
+   </script>
+            </div>
+        </div>
+{#                      --------------------Statistics--------------#}
+        <div class="row">
+            <div class="col">
+                <br>
+                Regression equation: {{ reg_eq_lin }}<br>
     y...Testresult (dependent variable) <br>
     x1...Timepoint (independent variable) <br>
-    <hr>
+                <br>
     Slope: {{ slope | floatformat:5 }}<br>
     Intercept: {{ intercept | floatformat:5}}<br>
     F-value: {{ f_value | floatformat:5}}<br>
     F p-Value: {{ f_p_value | floatformat:5}}<br>
 
-    <hr>
+            </div>
+        </div>
+    {#                 ------------- Button-Extended Statictics ----------------#}
+        <br>
+    <div class="row">
+        <div class="col">
 
-{#    ----------------------------------CALCULATE INDIVIDUAL VALUE--------------------------------------#}
-
-<div class="row">
-<div class="col">
-    Calculate individual values based on the regression equation: <br>
-    Insert staorage duration in seconds: <input type="number" id="calc_input">
-{#    TODO: Check if input is in seconds#}
-        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
-    <br>
-    The estimated Result at that timepoint is: <p id="calc_result"></p>
-
-
-    <script>
-function calcValue() {
-  var x = document.getElementById("calc_input").value;
-    var y = {{ intercept }} + x * {{ slope }};
-  document.getElementById("calc_result").innerHTML = y;
-}
-</script>
-
-</div>
-</div>
-
-{#    ---------------------------------MODAL - EXTENDED STATISTICS ------------------------------------#}
 
     <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal">
@@ -359,6 +388,203 @@ function calcValue() {
     </div>
   </div>
 </div>
+
+        </div>
+    </div>
+{#                        -------------------Calculator---------------#}
+        <hr>
+        <div class="row">
+            <div class="col">
+                Calculate individual values based on the regression equation: <br>
+    Insert staorage duration in seconds: <input type="number" id="calc_input">
+{#    TODO: Check if input is in seconds#}
+        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+    <br>
+    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+    <script>
+function calcValue() {
+  var x = document.getElementById("calc_input").value;
+    var y = {{ intercept }} + x * {{ slope }};
+  document.getElementById("calc_result").innerHTML = y;
+}
+</script>
+            </div>
+        </div>
+    </div>
+
+    {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
+    <div class="col">
+<p class="graph_heading">Polynomial Model 2°</p>
+        <div class="row">
+            <div class="col">
+                <div id="poly2_div"></div>
+
+    <script type="text/javascript">
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart);
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Storage Duration', 'Deviation'],
+         {% for duration in setting.duration_set.all %}
+               [{{ duration.seconds }}, {% average_tot setting duration %}],
+           {% endfor %}
+         {#[ 8,      12],#}
+         {#[ 4,      5.5],#}
+         {#[ 11,     14],#}
+         {#[ 4,      5],#}
+         {#[ 3,      3.5],#}
+         {#[ 6.5,    7]#}
+       ]);
+
+       var options = {
+         title: 'Parameter deviation at selected storage durations',
+         vAxis: {title: "Deviation"},
+         hAxis: {title: "Storage duration (seconds)"},
+         legend: 'top',
+         crosshair: { trigger: 'both', orientation: 'both' },
+         trendlines: {
+           0: {
+             type: 'polynomial',
+             degree: 2,
+             visibleInLegend: true,
+           }
+         }
+       };
+
+       var chart = new google.visualization.ScatterChart(document.getElementById('poly2_div'));
+       chart.draw(data, options);
+     }
+   </script>
+            </div>
+        </div>
+{#                      --------------------Statistics--------------#}
+        <div class="row">
+            <div class="col">
+                <br>
+                Regression equation: {{ reg_eq_lin }}<br>
+    y...Testresult (dependent variable) <br>
+    x1...Timepoint (independent variable) <br>
+                <br>
+    Slope: {{ slope | floatformat:5 }}<br>
+    Intercept: {{ intercept | floatformat:5}}<br>
+    F-value: {{ f_value | floatformat:5}}<br>
+    F p-Value: {{ f_p_value | floatformat:5}}<br>
+
+            </div>
+        </div>
+{#                        -------------------Calculator---------------#}
+        <hr>
+        <div class="row">
+            <div class="col">
+                Calculate individual values based on the regression equation: <br>
+    Insert staorage duration in seconds: <input type="number" id="calc_input">
+{#    TODO: Check if input is in seconds#}
+        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+    <br>
+    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+    <script>
+function calcValue() {
+  var x = document.getElementById("calc_input").value;
+    var y = {{ intercept }} + x * {{ slope }};
+  document.getElementById("calc_result").innerHTML = y;
+}
+</script>
+            </div>
+        </div>
+    </div>
+
+
+{#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
+    <div class="col">
+<p class="graph_heading">Ploynomial Model 3°</p>
+        <div class="row">
+            <div class="col">
+                <div id="poly3_div"></div>
+
+    <script type="text/javascript">
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart);
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Storage Duration', 'Deviation'],
+         {% for duration in setting.duration_set.all %}
+               [{{ duration.seconds }}, {% average_tot setting duration %}],
+           {% endfor %}
+         {#[ 8,      12],#}
+         {#[ 4,      5.5],#}
+         {#[ 11,     14],#}
+         {#[ 4,      5],#}
+         {#[ 3,      3.5],#}
+         {#[ 6.5,    7]#}
+       ]);
+
+       var options = {
+         title: 'Parameter deviation at selected storage durations',
+         vAxis: {title: "Deviation"},
+         hAxis: {title: "Storage duration (seconds)"},
+         legend: 'top',
+         crosshair: { trigger: 'both', orientation: 'both' },
+         trendlines: {
+           0: {
+             type: 'polynomial',
+             degree: 3,
+             visibleInLegend: true,
+           }
+         }
+       };
+
+       var chart = new google.visualization.ScatterChart(document.getElementById('poly3_div'));
+       chart.draw(data, options);
+     }
+   </script>
+            </div>
+        </div>
+{#                      --------------------Statistics--------------#}
+        <div class="row">
+            <div class="col">
+                <br>
+                Regression equation: <br>
+    y...Testresult (dependent variable) <br>
+    x1...Timepoint (independent variable) <br>
+                <br>
+    Slope: <br>
+    Intercept: <br>
+    F-value: <br>
+    F p-Value: <br>
+
+            </div>
+        </div>
+{#                        -------------------Calculator---------------#}
+        <hr>
+        <div class="row">
+            <div class="col">
+                Calculate individual values based on the regression equation: <br>
+    Insert staorage duration in seconds: <input type="number" id="calc_input">
+{#    TODO: Check if input is in seconds#}
+        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+    <br>
+    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+    <script>
+function calcValue() {
+  var x = document.getElementById("calc_input").value;
+    var y = {{ intercept }} + x * {{ slope }};
+  document.getElementById("calc_result").innerHTML = y;
+}
+</script>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
     <hr>
 {#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
