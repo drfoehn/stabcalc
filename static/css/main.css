@@ -95,7 +95,8 @@ th{
 .parameter_name,
 .th_results,
 .th_condition,
-.th_analytical{
+.th_analytical,
+.graph_heading{
     font-family: 'Ubuntu', sans-serif;
     font-size: 1.5em;
 }

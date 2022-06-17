@@ -186,38 +186,38 @@ class Setting(models.Model):
     def average_tot(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if not values:
-            return "-"
+            return ""
         else:
             return math.ceil((statistics.mean(values)) * 100) / 100
 
     def stdv_tot(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
-            return 0
+            return ""
         else:
             return math.ceil((statistics.stdev(values)) * 100) / 100
 
     def avg_tot_sd_h(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
-            return " "
+            return ""
         else:
             return math.ceil((statistics.mean(values) + statistics.stdev(values)) * 100) / 100
 
     def avg_tot_sd_l(self, duration: 'Duration'):
         values = self.values_tot(duration)
         if len(values) < 2:
-            return " "
+            return ""
         else:
             return math.ceil((statistics.mean(values) - statistics.stdev(values)) * 100) / 100
 
     def cv_tot(self, duration: 'Duration'):
         average = self.average_tot(duration)
         stdv = self.stdv_tot(duration)
-        if average == '-':
-            return '-'
-        elif stdv == '-':
-            return '-'
+        if average == '':
+            return ''
+        elif stdv == '':
+            return ''
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
@@ -225,10 +225,10 @@ class Setting(models.Model):
         average = self.average_tot(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average_tot(duration_zero)
-        if average == '-':
-            return '_'
-        elif average_zero == '-':
-            return '_'
+        if average == '':
+            return ''
+        elif average_zero == '':
+            return ''
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
@@ -316,14 +316,14 @@ class Subject(models.Model):
     def average(self, duration: Duration):
         values = self.values(duration)
         if not values:
-            return "-"
+            return ""
         else:
             return math.ceil((statistics.mean(values)) * 100) / 100
 
     def stdv(self, duration: Duration):
         values = self.values(duration)
         if len(values) < 2:
-            return "-"
+            return ""
         else:
             return math.ceil((statistics.stdev(values)) * 100) / 100
 
@@ -332,10 +332,10 @@ class Subject(models.Model):
         average = self.average(duration)
         stdv = self.stdv(duration)
 
-        if average == '-':
-            return '-'
-        elif stdv == '-':
-            return '-'
+        if average == '':
+            return ''
+        elif stdv == '':
+            return ''
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
@@ -343,10 +343,10 @@ class Subject(models.Model):
         average = self.average(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average(duration_zero)
-        if average == '-':
-            return '_'
-        elif average_zero == '-':
-            return '_'
+        if average == '':
+            return ''
+        elif average_zero == '':
+            return ''
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
@@ -378,8 +378,8 @@ class Result(models.Model):
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
-    def duration_cat(self):
-        return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
+    # def duration_cat(self):
+    #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
         return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}, {self.duration_cat}"

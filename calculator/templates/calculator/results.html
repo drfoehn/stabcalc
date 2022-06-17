@@ -123,167 +123,20 @@
 
 <hr class="my-4">
 
-
-
-{#    --------------------------------- CHART.JS GRAPHIC AVERAGES + SD ---------------------------#}
-<div class="row">
-    <div class="col">
-    <canvas id="averages_tot" aria-label="Averages Chart" role="img"></canvas>
-    </div>
-        <div class="col">
-        <canvas id="deviation_tot" aria-label="Deviation Chart Total" role="img"></canvas>
-    </div>
-    <div class="col">
-    <canvas id="deviation_single" aria-label="Deviation Chart Single" role="img"></canvas>
-    </div>
-        <script>
-        const ctx1 = document.getElementById('averages_tot');
-        const average_tot_chart = new Chart(ctx1, {
-            type: 'line',
-            data: {
-                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
-                datasets: [
-                    {
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        backgroundColor: 'rgba(255, 206, 86, 1)',
-                        {#fill: 'origin',#}
-                        borderWidth: 5,
-                        borderCapStyle: 'round',
-                        borderJoinStyle: 'round',
-                        itemRadius: 10,
-                        spanGaps: true,
-                        label: 'Averages at selected timepoints',
-                    data: [
-                        {% for duration in setting.duration_set.all %} {% average_tot setting duration %},
-                {% endfor %}],
-
-                },
-                {
-                    type: 'line',
-                    label: '+SD',
-                    spanGaps: true,
-                    data: [{% for duration in setting.duration_set.all %} {% avg_tot_sd_h setting duration %},
-                {% endfor %}],
-                },
-                {
-                    type: 'line',
-                    label: '-SD',
-                    spanGaps: true,
-                    data: [{% for duration in setting.duration_set.all %} {% avg_tot_sd_l setting duration %},
-                {% endfor %}],
-                }]
-
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            text: ['lalalal'],
-                        }
-                    }
-                }
-            }
-        });
-
-
-        const ctx2 = document.getElementById('deviation_tot');
-        const deviation_tot_chart = new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
-                datasets: [
-                    {
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        backgroundColor: 'rgba(255, 206, 86, 1)',
-                        {#fill: 'origin',#}
-                        borderWidth: 5,
-                        borderCapStyle: 'round',
-                        borderJoinStyle: 'round',
-                        itemRadius: 10,
-                        spanGaps: true,
-                        label: 'Deviation from baseline',
-                    data: [
-                        {% for duration in setting.duration_set.all %} {% deviation_tot setting duration %},
-                {% endfor %}],
-
-                },
-                ]
-
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            text: ['lalalal'],
-                        }
-                    }
-                }
-            }
-        });
-
-
-        const ctx3 = document.getElementById('deviation_single');
-        const deviation_tot_single = new Chart(ctx3, {
-            type: 'line',
-            data: {
-                labels: [{% for duration in setting.duration_set.all %} '{{ duration }}', {% endfor %}],
-                datasets: [
-                    {
-                        borderColor: 'rgba(255, 159, 64, 1)',
-                        backgroundColor: 'rgba(255, 206, 86, 1)',
-                        {#fill: 'origin',#}
-                        borderWidth: 5,
-                        borderCapStyle: 'round',
-                        borderJoinStyle: 'round',
-                        itemRadius: 10,
-                        spanGaps: true,
-                        label: 'Deviation from baseline',
-                    data: [
-                        {% for duration in setting.duration_set.all %}
-                            {% for replicate in subject.replicate_set.all %}
-                                {% for result in replicate.result_set.all %}
-
-                            {% deviation setting duration %},
-
-                                    {% endfor %}
-                       {% endfor %}
-                {% endfor %}],
-
-                },
-                ]
-
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            text: ['lalalal'],
-                        }
-                    }
-                }
-            }
-        });
-    </script>
-
-    <hr class="my-4">
-
-    </div>
-
 {#    ----------------------------------Google Charts ---------------------------------------#}
 
+{#--------------------------------------Switch Graph Total Values------------------------------#}
+<div class="row">
+<div class="col-6">
 
-    <hr>
-
+<p class="graph_heading">Overall Results</p>
     <div id="visualization"></div>
-    <button id="button_results_total" ><p id="button_switch"></p></button>
+    <button id="button_results_total" class="btn btn-outline-primary"<p id="button_switch"></p></button>
     <script>
     google.charts.load('current', {'packages':['corechart']});
-          google.charts.setOnLoadCallback(drawExample2);
+          google.charts.setOnLoadCallback(drawTotal);
 
-          function drawExample2() {
+          function drawTotal() {
               var rowData1 = [['Timepoint', 'Average Result (relative)'],
                   {% for duration in setting.duration_set.all %}
                ['{{ duration }}', {% deviation_tot setting duration %}],
@@ -306,7 +159,8 @@
                   hAxis: {title: "Storage duration"},
                   seriesType: "line",
                   curveType: 'function',
-                  legend: { position: 'bottom' },
+                  legend: { position: 'top' },
+                  interpolateNulls: true,
                   {#series: {5: {type: "line"}},#}
                   animation: {
                       duration: 1000,
@@ -341,44 +195,39 @@
               }
           }
     </script>
-    <hr>
-{#    ---------------------------------Line chart - Total average absolute---------------------------------#}
-    <div id="curve_chart" style="width:400; height:300"></div>
 
-    <script type="text/javascript">
-          google.charts.load('current', {'packages':['corechart']});
-          google.charts.setOnLoadCallback(drawChart);
 
-          function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-              ['Timepoint', 'Avg Result'],
-              {% for duration in setting.duration_set.all %}
-               ['{{ duration }}', {% average_tot setting duration %}],
-           {% endfor %}
-            ]);
+{#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
-            var options = {
-              title: 'Overall Average Stability',
-              curveType: 'function',
-              legend: { position: 'bottom' }
-            };
+    </div>
+<div class="col-6">
+<p class="graph_heading">Single Results</p>
+    <div id="visualization_single"></div>
+    <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p></button>
+    <script>
+    google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawSingle);
 
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+          function drawSingle() {
+              var rowData1 =
+                  [[
+                'Storage Duration',
+                {% for subject in subjects %}
+                    '{{ subject }}',
+                {% endfor %}
+            ],
+            {% for duration in setting.duration_set.all %}
+                [
+                    '{{ duration }}',
+                    {% for subject in subjects %}
+                        {% deviation subject duration %},
+                        {% endfor %}
+                ],
+            {% endfor %}];
 
-            chart.draw(data, options);
-          }
-        </script>
 
-    <hr>
-{#    ------------------------------------Multiline-Chart for each individual subject - absolute number----------------------------#}
-    <div id="curve_chart_new" style="width:400; height:300"></div>
-        <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-            [
+              var rowData2 = [[
                 'Storage Duration',
                 {% for subject in subjects %}
                     '{{ subject }}',
@@ -391,31 +240,68 @@
                         {% average subject duration %},
                         {% endfor %}
                 ],
-            {% endfor %}
-          {#['Year', 'Sales', 'Expenses'],#}
-          {#['2004',  1000,      400],#}
-          {#['2005',  1170,      460],#}
-          {#['2006',  660,       1120],#}
-          {#['2007',  1030,      540]#}
-        ]);
+            {% endfor %}];
 
-        var options = {
-          title: 'Storage Results (absolute)',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-            interpolateNulls: true,
-        };
+              // Create and populate the data tables.
+              var data = [];
+              data[0] = google.visualization.arrayToDataTable(rowData1);
+              data[1] = google.visualization.arrayToDataTable(rowData2);
 
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart_new'));
+              var options = {
+                  {#width: 600,#}
+                  {#height: 240,#}
+                  vAxis: {title: "abs/rel Value"},
+                  hAxis: {title: "Storage duration"},
+                  seriesType: "line",
+                  curveType: 'function',
+                  legend: { position: 'top' },
+                  interpolateNulls: true,
+                  {#series: {5: {type: "line"}},#}
+                  animation: {
+                      duration: 1000,
+                      easing: 'out'
+                  },
+              };
+              var current = 0;
+              // Create and draw the visualization.
+              var chart = new google.visualization.ComboChart(document.getElementById('visualization_single'));
+              var button = document.getElementById('button_results_single');
 
-        chart.draw(data, options);
-      }
+              function drawChart() {
+                  // Disabling the button while the chart is drawing.
+                  button.disabled = true;
+                  google.visualization.events.addListener(chart, 'ready',
+                      function () {
+                          button.disabled = false;
+                          button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
+                          button.innerHTML = button.value
+                      });
+
+                  options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
+
+                  chart.draw(data[current], options);
+              }
+
+              drawChart();
+
+              button.onclick = function () {
+                  current = 1 - current;
+                  drawChart();
+              }
+          }
     </script>
 
+
+</div>
+</div>
+
+{#    -----------------------------------Regression Graph-------------------------------------#}
+    <hr>
+    <p class="graph_heading">Regression Analysis</p>
 {#    ----------------------------------Statistics------------------------------------------#}
 
     <hr>
-        Linear regression equation: {{ reg_eq_lin }}<br>
+    Linear regression equation: {{ reg_eq_lin }}<br>
     y...Testresult (dependent variable) <br>
     x1...Timepoint (independent variable) <br>
     <hr>
