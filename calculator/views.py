@@ -47,9 +47,7 @@ class ResultsView(DetailView):
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
         # ----------------Numpy-Arrays
 
-        results_array = np.array(merged_res_dur)
-        transposed_results_array = np.transpose(merged_res_dur)
-        print(transposed_results_array)
+        context["results_array"] = np.array(merged_res_dur)
         # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
         # mean_numpy = np.mean(merged_res_dur, axis=0)
@@ -103,7 +101,6 @@ class ResultsView(DetailView):
         context.update(
             {
                 "results": Result.objects.all(),
-                "transposed_results": transposed_results_array,
                 "durations": Duration.objects.all(),
                 "replicates": Replicate.objects.all(),
                 "results_df": merged_res_dur.to_html,

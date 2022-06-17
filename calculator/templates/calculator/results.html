@@ -125,7 +125,7 @@
 
 
 
-{#    ---------------------------------GRAPHIC AVERAGES + SD ---------------------------#}
+{#    --------------------------------- CHART.JS GRAPHIC AVERAGES + SD ---------------------------#}
 <div class="row">
     <div class="col">
     <canvas id="averages_tot" aria-label="Averages Chart" role="img"></canvas>
@@ -273,83 +273,100 @@
     </div>
 
 {#    ----------------------------------Google Charts ---------------------------------------#}
+
+
     <hr>
-    pie custom
-        <div id="chart_div1" style="width:400; height:300"></div>
+    lalala
+    <div id="visualization" style="width:400; height:300"></div>
+    <button id="b1" value="Switch to Absolute Deviation">Switch Relative Deviation</button>
+    <script>
+    google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawExample2);
 
-     <script type="text/javascript">
+          function drawExample2() {
+              var rowData1 = [['Timepoint', 'Average Result (relative)'],
+                  {% for duration in setting.duration_set.all %}
+               ['{{ duration }}', {% deviation_tot setting duration %}],
+           {% endfor %}];
 
-      // Load the Visualization API and the piechart package.
-      google.charts.load('current', {'packages':['corechart']});
+              var rowData2 = [['Timepoint', 'Average Result (absolute)'],
+                  {% for duration in setting.duration_set.all %}
+               ['{{ duration }}', {% average_tot setting duration %}],
+           {% endfor %}];
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
+              // Create and populate the data tables.
+              var data = [];
+              data[0] = google.visualization.arrayToDataTable(rowData1);
+              data[1] = google.visualization.arrayToDataTable(rowData2);
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
+              var options = {
+                  width: 600,
+                  height: 240,
+                  vAxis: {title: "abs/rel Value"},
+                  hAxis: {title: "Storage duration"},
+                  seriesType: "line",
+                  series: {5: {type: "line"}},
+                  animation: {
+                      duration: 1000,
+                      easing: 'out'
+                  },
+              };
+              var current = 0;
+              // Create and draw the visualization.
+              var chart = new google.visualization.ComboChart(document.getElementById('visualization'));
+              var button = document.getElementById('b1');
 
-          var data = google.visualization.arrayToDataTable([
-       [
-           {label: 'Timepoint', id: 'time_id'},
-           {label: 'Result', id: 'resul_id', type: 'number'} // Use object notation to explicitly specify the data type.
-       ],
-{#          {% autoescape off %}#}
-       {% for duration in setting.duration_set.all %}
-           ['{{ duration }}', {% average_tot setting duration %}],
-       {% endfor %}
-{#              {% endautoescape %}#}
-          ]);
+              function drawChart() {
+                  // Disabling the button while the chart is drawing.
+                  button.disabled = true;
+                  google.visualization.events.addListener(chart, 'ready',
+                      function () {
+                          button.disabled = false;
+                          button.value = 'Switch to ' + (current ? 'Relative Deviation' : 'Absolute Deviation');
+                      });
+                  options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
 
-      // Set chart options
-      var options = {'title':'How Much Pizza I Ate Last Night',
-                     'width':400,
-                     'height':300};
+                  chart.draw(data[current], options);
+              }
 
-      // Instantiate and draw our chart, passing in some options.
-      var chart = new google.visualization.PieChart(document.getElementById('chart_div1'));
-      chart.draw(data, options);
-    }
+              drawChart();
+
+              button.onclick = function () {
+                  current = 1 - current;
+                  drawChart();
+              }
+          }
     </script>
+    <hr>
+{#    ---------------------------------Line chart - Total average absolute---------------------------------#}
+    <div id="curve_chart" style="width:400; height:300"></div>
 
+    <script type="text/javascript">
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+
+          function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['Timepoint', 'Avg Result'],
+              {% for duration in setting.duration_set.all %}
+               ['{{ duration }}', {% average_tot setting duration %}],
+           {% endfor %}
+            ]);
+
+            var options = {
+              title: 'Overall Average Stability',
+              curveType: 'function',
+              legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+          }
+        </script>
 
     <hr>
-    curve
-<div id="curve_chart" style="width:400; height:300"></div>
-
-<script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Timepoint', 'Avg Result'],
-          {% for duration in setting.duration_set.all %}
-           ['{{ duration }}', {% average_tot setting duration %}],
-       {% endfor %}
-          {#['2004',  1000,      400],#}
-          {#['2005',  1170,      460],#}
-          {#['2006',  660,       1120],#}
-          {#['2007',  1030,      540]#}
-        ]);
-
-        var options = {
-          title: 'Overall Average Stability',
-          curveType: 'function',
-          legend: { position: 'bottom' }
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-        chart.draw(data, options);
-      }
-    </script>
-
-
-
-    <hr>
-    new line
+{#    ------------------------------------Multiline-Chart for each individual subject - absolute number----------------------------#}
     <div id="curve_chart_new" style="width:400; height:300"></div>
         <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
@@ -390,6 +407,7 @@
         chart.draw(data, options);
       }
     </script>
+
 {#    ----------------------------------Statistics------------------------------------------#}
 
     <hr>
