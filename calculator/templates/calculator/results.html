@@ -335,7 +335,7 @@
         ]);
 
         var options = {
-          title: 'Stability avg',
+          title: 'Overall Average Stability',
           curveType: 'function',
           legend: { position: 'bottom' }
         };
@@ -346,6 +346,50 @@
       }
     </script>
 
+
+
+    <hr>
+    new line
+    <div id="curve_chart_new" style="width:400; height:300"></div>
+        <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+            [
+                'Storage Duration',
+                {% for subject in subjects %}
+                    '{{ subject }}',
+                {% endfor %}
+            ],
+            {% for duration in setting.duration_set.all %}
+                [
+                    '{{ duration }}',
+                    {% for subject in subjects %}
+                        {% average subject duration %},
+                        {% endfor %}
+                ],
+            {% endfor %}
+          {#['Year', 'Sales', 'Expenses'],#}
+          {#['2004',  1000,      400],#}
+          {#['2005',  1170,      460],#}
+          {#['2006',  660,       1120],#}
+          {#['2007',  1030,      540]#}
+        ]);
+
+        var options = {
+          title: 'Storage Results (absolute)',
+          curveType: 'function',
+          legend: { position: 'bottom' },
+            interpolateNulls: true,
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart_new'));
+
+        chart.draw(data, options);
+      }
+    </script>
 {#    ----------------------------------Statistics------------------------------------------#}
 
     <hr>

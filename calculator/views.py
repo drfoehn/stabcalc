@@ -45,10 +45,12 @@ class ResultsView(DetailView):
         )
         cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
+        # ----------------Numpy-Arrays
 
-        results_array = np.array(
-            merged_res_dur
-        )  # print(results_array.size, results_array.shape)
+        results_array = np.array(merged_res_dur)
+        transposed_results_array = np.transpose(merged_res_dur)
+        print(transposed_results_array)
+        # print(results_array.size, results_array.shape)
         # mean_panda=merged_res_dur['value'].mean()
         # mean_numpy = np.mean(merged_res_dur, axis=0)
         # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
@@ -82,11 +84,7 @@ class ResultsView(DetailView):
 
         context["slope"] = b1_r
         context["intercept"] = b0_r
-        context[
-            "f_value"
-        ] = (
-            results.fvalue
-        )  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
+        context["f_value"] = (results.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
         context["f_p_value"] = results.f_pvalue
         # context['std_err'] = results.params[0,1]
         context["r_square"] = results.rsquared
@@ -105,6 +103,7 @@ class ResultsView(DetailView):
         context.update(
             {
                 "results": Result.objects.all(),
+                "transposed_results": transposed_results_array,
                 "durations": Duration.objects.all(),
                 "replicates": Replicate.objects.all(),
                 "results_df": merged_res_dur.to_html,

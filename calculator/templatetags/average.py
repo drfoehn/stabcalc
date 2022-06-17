@@ -6,6 +6,8 @@ register = template.Library()
 
 @register.simple_tag
 def average(subject: Subject, duration: Duration):
+    if subject.average(duration) == "-":
+        return ""
     return subject.average(duration)
 
 @register.simple_tag
@@ -72,6 +74,6 @@ def human_readable_seconds(secs: int):
              ("{0} week{1} ".format(weeks, "s" if weeks != 1 else "") if weeks else "") + \
              ("{0} day{1} ".format(days, "s" if days != 1 else "") if days else "") + \
              ("{0} hour{1} ".format(hours, "s" if hours != 1 else "") if hours else "") + \
-             ("{0} minute{1} ".format(minutes, "s" if minutes != 1 else "") if minutes else "") + \
+             ("{0} minute{1} ".format(minutes, "s" if minutes != 1 else "") if minutes else "Baseline") + \
              ("{0} second{1} ".format(seconds, "s" if seconds != 1 else "") if seconds else "")
     return result
