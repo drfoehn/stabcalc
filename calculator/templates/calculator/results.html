@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n static average %}
 
-{% block title %}Instruments{% endblock %}
+{% block title %}Results - Stability study "{{ setting.name }}"{% endblock %}
 
 {% block content %}
 
@@ -122,6 +122,27 @@
     </div>
 
 <hr class="my-4">
+
+{#    -----------------------------------Interpretation--------------------------------#}
+    <h1 class="display-6">Interpretation</h1>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim ut tellus elementum sagittis vitae et leo. Mauris sit amet massa vitae tortor condimentum lacinia. Sapien nec sagittis aliquam malesuada. Cras sed felis eget velit aliquet. Quisque non tellus orci ac. Urna nunc id cursus metus. Erat nam at lectus urna duis convallis convallis tellus. Nulla facilisi cras fermentum odio. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Pharetra convallis posuere morbi leo urna. Vulputate ut pharetra sit amet aliquam id. Vitae elementum curabitur vitae nunc sed velit dignissim. Tellus mauris a diam maecenas sed enim. Vestibulum sed arcu non odio euismod lacinia at. Vivamus at augue eget arcu dictum varius duis at. Nascetur ridiculus mus mauris vitae. Urna neque viverra justo nec. Sit amet nisl purus in mollis. Enim nunc faucibus a pellentesque sit amet.
+
+Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel fringilla est ullamcorper eget. Semper risus in hendrerit gravida. Ut venenatis tellus in metus vulputate eu. Enim neque volutpat ac tincidunt. Ac auctor augue mauris augue. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl. Tempus iaculis urna id volutpat lacus laoreet non curabitur. Blandit aliquam etiam erat velit. Semper feugiat nibh sed pulvinar proin gravida. Et leo duis ut diam quam nulla. Cursus vitae congue mauris rhoncus aenean vel elit scelerisque mauris. Nec sagittis aliquam malesuada bibendum. Sapien pellentesque habitant morbi tristique senectus et netus et malesuada.
+    <hr class="my-4">
+
+        <hr>
+{#    --------------------------------BUTTONS--------------------------------#}
+    <div class="row">
+    <div class="col">
+        <i class="bi bi-printer">Print</i>
+        <i class="bi bi-box-arrow-down">Save/Export</i>
+        <i class="bi bi-plus-circle" href="{% url 'add_results' %}">Add result</i>
+
+    </div>
+    </div>
+
+
+    <hr class="my-4">
 
 {#    ----------------------------------Google Charts ---------------------------------------#}
 
@@ -297,6 +318,7 @@
 
 {#    ######################################   Regression Graph   ##########################################}
     <hr>
+    <h1 class="display-6">Regression Analysis</h1>
     <div class="row">
 
     {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
@@ -349,14 +371,52 @@
         <div class="row">
             <div class="col">
                 <br>
-                Regression equation: {{ reg_eq_lin }}<br>
-    y...Testresult (dependent variable) <br>
-    x1...Timepoint (independent variable) <br>
-                <br>
-    Slope: {{ slope | floatformat:5 }}<br>
-    Intercept: {{ intercept | floatformat:5}}<br>
-    F-value: {{ f_value | floatformat:5}}<br>
-    F p-Value: {{ f_p_value | floatformat:5}}<br>
+                <table>
+                   <tr>
+                       <th>
+                           Regression equation: {{ reg_eq_lin }}
+                       </th>
+                   </tr>
+                    <tr>
+                        <td>
+                           y...Testresult (dependent variable) <br>
+                            x1...Storage Duration (independent variable)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Slope:
+                        </td>
+                        <td>
+                            {{ slope | floatformat:5 }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Intercept
+                        </td>
+                        <td>
+                            {{ intercept | floatformat:5}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            F-Value
+                        </td>
+                        <td>
+                            {{ f_value | floatformat:5}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            F p-Value
+                        </td>
+                        <td>
+                            {{ f_p_value | floatformat:5}}
+                        </td>
+                    </tr>
+                </table>
+
 
             </div>
         </div>
@@ -585,23 +645,9 @@ function calcValue() {
 
 
 
-    <hr>
-{#    --------------------------------BUTTONS--------------------------------#}
-    <div class="row">
-    <div class="col">
-        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Add Result</button>
-    </div>
-        <div class="col">
-        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Print</button>
-    </div>
-        <div class="col">
-        <button type="button" class="btn btn-primary" href="{% url 'add_results' %}">Export</button>
-    </div>
-    </div>
-
-    <hr class="my-4">
 
 {#    ---------------------------------RESULT TABLE------------------------------#}
+    <h1 class="display-6">Single results</h1>
     <div class="row">
 <div class="col">
         <table class="table table-hover">
