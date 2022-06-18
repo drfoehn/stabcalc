@@ -26,6 +26,7 @@ class ResultsView(DetailView):
 
     # extra_context={'subjects': Subject.objects.all()}, {'results': Result.objects.all()}
     def get_context_data(self, **kwargs):
+        global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
         subjects = Subject.objects.filter(setting=self.object)
         durations_val = Duration.objects.all().values()
@@ -40,15 +41,37 @@ class ResultsView(DetailView):
         # print(dev)
         # https://365datascience.com/tutorials/python-tutorials/linear-regression/
 
-        durations_dict:dict[int,dict[int,int]] = {}
+        # ---------------------------Get deviation data for each subject setting and time individually
+        deviation_dict: dict[int, dict[int, int]] = {}
         for subject in subjects:
-            if not subject.id in durations_dict:
-                durations_dict[subject.id]={}
+            if not subject.id in deviation_dict:
+                deviation_dict[subject.id] = {}
             for duration in self.object.duration_set.all():
-                durations_dict[subject.id][duration.id] = subject.deviation(duration)
+                deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
 
-        # panda_dur = pd.DataFrame(durations_dict)
-        print(durations_dict)
+
+        deviation_array = pd.DataFrame(deviation_dict)
+        deviation_array.index.name = "duration"
+        # print(deviation_array)
+
+        #https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
+        y_rel = []
+        x1_rel = []
+        for (duration, results) in deviation_array.iterrows():
+            for result in results:
+                y_rel.append(duration)
+                x1_rel.append(result)
+        print(y_rel)
+        print(x1_rel)
+
+
+            # print(results.values)
+            # single_results_duration = duration
+            # single_results_value = results.values
+
+        # for i in deviation_array:
+        #     for j in deviation_array[i]:
+        #         print(j, deviation_array[i][j])
 
         # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
@@ -71,20 +94,34 @@ class ResultsView(DetailView):
         # print(results_array)
 
         # -------------------Statistics absolute results
-        y = merged_res_dur["value"]  # dependent variable
-        x1 = merged_res_dur["seconds"]  # independent variable
+        y_abs = merged_res_dur["value"]  # dependent variable
+        x1_abs = merged_res_dur["seconds"]  # independent variable
+        # y_rel = single_results_value
+        # x1_rel = single_results_duration
+        #
+
+
+        # print(y_rel)
+        # print(x_rel)
         # for timepoints in x1:
         #     values = timepoints
         #     print(values)
 
-        x = sm.add_constant(x1)  # add a row of ones as constant
-        model = sm.OLS(y, x)
-        results = model.fit()  # OLS = Ordinary Least Squares
-        statistics_extended = results.summary()
+        x_abs = sm.add_constant(x1_abs)  # add a row of ones as constant
+        model = sm.OLS(y_abs, x_abs)
+        results_abs = model.fit()  # OLS = Ordinary Least Squares
+        statistics_extended = results_abs.summary()
+
+        # x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
+        # model = sm.OLS(y_rel, x_rel)
+        # results_rel = model.fit()  # OLS = Ordinary Least Squares
+        # statistics_extended = results_rel.summary()
+        #
+        # print(statistics_extended)
 
         # -------------------------Extract single parameters from summary
-        b0 = results.params[0]  # constant coeffitient / Intercept
-        b1 = results.params[1]  # seconds coefficient / Slope
+        b0 = results_abs.params[0]  # constant coeffitient / Intercept
+        b1 = results_abs.params[1]  # seconds coefficient / Slope
         b0_r = round(b0, 5)
         b1_r = round(b1, 5)
         reg_eq_lin = (
@@ -92,19 +129,19 @@ class ResultsView(DetailView):
         )  # equation linear regression: y = b0 + x1*b1
 
         # --------------------MatPlotLib Scattergramm:
-        # plt.scatter(x1, y)
-        # plt.xlabel('Seconds', fontsize=20)
-        # plt.ylabel('Results', fontsize=20)
-        # plt.show()
+        plt.scatter(x1_rel, y_rel)
+        plt.xlabel('Seconds', fontsize=20)
+        plt.ylabel('Results', fontsize=20)
+        plt.show()
 
         # ------------------------Return context
         context["slope"] = b1_r
         context["intercept"] = b0_r
         context["f_value"] = (
-            results.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
-        context["f_p_value"] = results.f_pvalue
+            results_abs.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
+        context["f_p_value"] = results_abs.f_pvalue
         # context['std_err'] = results.params[0,1]
-        context["r_square"] = results.rsquared
+        context["r_square"] = results_abs.rsquared
 
         # print(duration_cat2)
         # df["Name"].astype('category')

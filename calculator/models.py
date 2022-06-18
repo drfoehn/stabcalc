@@ -268,8 +268,6 @@ class Duration(models.Model):
 
     seconds = models.PositiveIntegerField(blank=True)
 
-
-
     def save(
             self, *args, **kwargs
     ):
