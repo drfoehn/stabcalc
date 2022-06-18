@@ -1,55 +1,74 @@
 from django import template
 from calculator.models import *
+import math
 
 register = template.Library()
 
 
 @register.simple_tag
 def average(subject: Subject, duration: Duration):
-    if subject.average(duration) == "-":
+    if subject.average(duration) is None:
         return ""
     return subject.average(duration)
 
 @register.simple_tag
 def average_tot(setting: Setting, duration: Duration):
-    return setting.average_tot(duration)| ""
+    if setting.average_tot(duration) is None:
+        return ""
+    return setting.average_tot(duration)
 
 @register.simple_tag
 def stdv(subject: Subject, duration: Duration):
-    return subject.stdv(duration)| ""
+    if subject.stdv(duration) is None:
+        return ""
+    return subject.stdv(duration)
 
 @register.simple_tag
 def stdv_tot(setting: Setting, duration: Duration):
-    return setting.stdv_tot(duration) | ""
+    if setting.stdv_tot(duration) is None:
+        return ""
+    return setting.stdv_tot(duration)
 
 @register.simple_tag
 def cv(subject: Subject, duration: Duration):
-    return subject.cv(duration) | ""
+    if subject.cv(duration) is None:
+        return ""
+    return subject.cv(duration)
 
 @register.simple_tag
 def cv_tot(setting: Setting, duration: Duration):
-    return setting.cv_tot(duration) | ""
+    if setting.cv_tot(duration) is None:
+        return ""
+    return setting.cv_tot(duration)
 
 @register.simple_tag
 def avg_tot_sd_h(setting: Setting, duration: Duration):
-    return setting.avg_tot_sd_h(duration) | ""
+    if setting.avg_tot_sd_h(duration) is None:
+        return ""
+    return setting.avg_tot_sd_h(duration)
 
 @register.simple_tag
 def avg_tot_sd_l(setting: Setting, duration: Duration):
-    return setting.avg_tot_sd_l(duration) | ""
+    if setting.avg_tot_sd_l(duration) is None:
+        return ""
+    return setting.avg_tot_sd_l(duration)
 
 @register.simple_tag
 def deviation(subject: Subject, duration: Duration):
-    return subject.deviation(duration) | ""
+    if subject.deviation(duration) is None:
+        return ""
+    return subject.deviation(duration)
 
 
 @register.simple_tag
 def deviation_tot(setting: Setting, duration: Duration):
+    if setting.deviation_tot(duration) is None:
+        return ""
     return setting.deviation_tot(duration)
 
-@register.simple_tag #FIXME: Does not work
-def seconds_to_text(setting: Setting, duration:Duration):
-    return setting.seconds_to_text(duration)
+# @register.simple_tag #FIXME: Does not work
+# def seconds_to_text(setting: Setting, duration:Duration):
+#     return setting.seconds_to_text(duration)
 
 # def current_subject(value): # Only one argument.
 #     """Converts a string into all lowercase"""

@@ -49,20 +49,20 @@ class ResultsView(DetailView):
             for duration in self.object.duration_set.all():
                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
 
-
+        print(deviation_dict)
         deviation_array = pd.DataFrame(deviation_dict)
         deviation_array.index.name = "duration"
         # print(deviation_array)
-
+        print(deviation_array)
         #https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
         y_rel = []
         x1_rel = []
         for (duration, results) in deviation_array.iterrows():
             for result in results:
-                y_rel.append(duration)
-                x1_rel.append(result)
-        print(y_rel)
-        print(x1_rel)
+                if not math.isnan(result): #pandas converts None-values to "nan" - this function excludes those values
+                    y_rel.append(result)
+                    x1_rel.append(duration)
+
 
 
             # print(results.values)
@@ -96,9 +96,7 @@ class ResultsView(DetailView):
         # -------------------Statistics absolute results
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
-        # y_rel = single_results_value
-        # x1_rel = single_results_duration
-        #
+
 
 
         # print(y_rel)
@@ -110,14 +108,17 @@ class ResultsView(DetailView):
         x_abs = sm.add_constant(x1_abs)  # add a row of ones as constant
         model = sm.OLS(y_abs, x_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
-        statistics_extended = results_abs.summary()
+        statistics_extended_abs = results_abs.summary()
 
-        # x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
-        # model = sm.OLS(y_rel, x_rel)
-        # results_rel = model.fit()  # OLS = Ordinary Least Squares
-        # statistics_extended = results_rel.summary()
-        #
-        # print(statistics_extended)
+        x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
+        model = sm.OLS(y_rel, x_rel)
+        results_rel = model.fit()  # OLS = Ordinary Least Squares
+        statistics_extended_rel = results_rel.summary()
+
+        # print(y_rel)
+        # print(str(x1_rel))
+        # # print(statistics_extended_abs)
+        # print(statistics_extended_rel)
 
         # -------------------------Extract single parameters from summary
         b0 = results_abs.params[0]  # constant coeffitient / Intercept
@@ -129,10 +130,10 @@ class ResultsView(DetailView):
         )  # equation linear regression: y = b0 + x1*b1
 
         # --------------------MatPlotLib Scattergramm:
-        plt.scatter(x1_rel, y_rel)
-        plt.xlabel('Seconds', fontsize=20)
-        plt.ylabel('Results', fontsize=20)
-        plt.show()
+        # plt.scatter(x1_rel, y_rel)
+        # plt.xlabel('Seconds', fontsize=20)
+        # plt.ylabel('Results', fontsize=20)
+        # plt.show()
 
         # ------------------------Return context
         context["slope"] = b1_r
@@ -163,54 +164,9 @@ class ResultsView(DetailView):
             }
         )
         context["subjects"] = subjects
-        context["statistics_extended"] = statistics_extended
+        context["statistics_extended"] = statistics_extended_rel
         context["reg_eq_lin"] = reg_eq_lin
         return context
-
-        # sns.lineplot(
-        #     data=merged_res_dur,
-        #     x='duration_id',#TODO: pass duration and unit instead of ID
-        #     y='value',
-        #     hue='subject_id',
-        #     # estimator='mean',
-        #     # ci=95,
-        #
-        # )
-        # sns.relplot(
-        #     data=merged_res_dur,
-        #     x='duration_id',  # TODO: pass duration and unit instead of ID
-        #     y='value',
-        #     # hue='duration_id',
-        #     kind='line',
-        #     err_style='band',
-        # )
-        # sns.boxplot(
-        #     data=merged_res_dur,
-        #     x='duration_id',  # TODO: pass duration and unit instead of ID
-        #     y='value',
-        #
-        #
-        # )
-        #
-        # plt.title("kaka")
-        # plt.show()
-
-        # sns.relplot(
-        #     data=results_data.sort_values(by=[]),
-        #     x='duration_id',
-        #     y='value',
-        #     kind='line'
-        # )
-        #
-        # plt.show()
-
-        # titanic = sns.load_dataset('titanic')
-        #
-        # plt.figure(figsize=(8, 5))
-        # sns.boxplot(x='class', y='age', data=titanic, palette='rainbow')
-        # plt.title("Age by Passenger Class, Titanic")
-        #
-        # plt.show()
 
 
 class DashboardView(ListView):
