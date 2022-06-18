@@ -336,7 +336,7 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
        var data = google.visualization.arrayToDataTable([
          ['Storage Duration', 'Deviation'],
          {% for duration in setting.duration_set.all %}
-               [{{ duration.seconds }}, {% average_tot setting duration %}],
+               [{{ duration.seconds }}, {% deviation_tot setting duration %}],
            {% endfor %}
          {#[ 8,      12],#}
          {#[ 4,      5.5],#}
@@ -488,7 +488,7 @@ function calcValue() {
        var data = google.visualization.arrayToDataTable([
          ['Storage Duration', 'Deviation'],
          {% for duration in setting.duration_set.all %}
-               [{{ duration.seconds }}, {% average_tot setting duration %}],
+               [{{ duration.seconds }}, {% deviation_tot setting duration %}],
            {% endfor %}
          {#[ 8,      12],#}
          {#[ 4,      5.5],#}
@@ -572,7 +572,7 @@ function calcValue() {
        var data = google.visualization.arrayToDataTable([
          ['Storage Duration', 'Deviation'],
          {% for duration in setting.duration_set.all %}
-               [{{ duration.seconds }}, {% average_tot setting duration %}],
+               [{{ duration.seconds }}, {% deviation_tot setting duration %}],
            {% endfor %}
          {#[ 8,      12],#}
          {#[ 4,      5.5],#}
