@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+from sklearn.preprocessing import PolynomialFeatures
 import math
 
 
@@ -100,35 +101,80 @@ class ResultsView(DetailView):
 
 
 
-        # print(y_rel)
-        # print(x_rel)
-        # for timepoints in x1:
-        #     values = timepoints
-        #     print(values)
+        # print(y_rel) print(x_rel) for timepoints in x1: values = timepoints print(values)
+        # --------------------------------Linear regression --------------------Explanation of statistics summary:
+        # https://medium.com/swlh/interpreting-linear-regression-through-statsmodels-summary-4796d359035a
 
-        x_abs = sm.add_constant(x1_abs)  # add a row of ones as constant
-        model = sm.OLS(y_abs, x_abs)
+
+
+        #TODO: Necessary ?  x1_abs = sm.add_constant(x1_abs)  # add a row of ones as constant
+        model = sm.OLS(y_abs, x1_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
         statistics_extended_abs = results_abs.summary()
 
         x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
         model = sm.OLS(y_rel, x_rel)
         results_rel = model.fit()  # OLS = Ordinary Least Squares
-        statistics_extended_rel = results_rel.summary()
+        context["statistics_extended_rel_lin"] = results_rel.summary()
 
-        # print(y_rel)
-        # print(str(x1_rel))
-        # # print(statistics_extended_abs)
-        # print(statistics_extended_rel)
-
-        # -------------------------Extract single parameters from summary
-        b0 = results_rel.params[0]  # constant coefficient / Intercept
-        b1 = results_rel.params[1]  # seconds coefficient / Slope
-        b0_r = round(b0, 5)
-        b1_r = round(b1, 5)
+        # -------------------------Extract single parameters from summary - linear regression
+        b0_lin = results_rel.params[0]  # constant coefficient / Intercept
+        b1_lin = results_rel.params[1]  # seconds coefficient / Slope
+        b0_r_lin = round(b0_lin, 5)
+        b1_r_lin = round(b1_lin, 5)
         reg_eq_lin = (
-                "y = " + str(b0_r) + " + x1 * " + str(b1_r)
+                "y = " + str(b0_r_lin) + " + x1 * " + str(b1_r_lin)
         )  # equation linear regression: y = b0 + x1*b1
+
+        # -----------------------------Polynomial regression 2°
+
+        polynomial_features_2 = PolynomialFeatures(degree=2)
+        xp2 = polynomial_features_2.fit_transform(x_rel)
+        model = sm.OLS(y_rel, xp2)
+        results_rel_poly2 = model.fit()
+
+        # ypred = results_rel_poly2.predict(xp)  #Curve fitting points
+        context["statistics_extended_rel_poly2"] = results_rel_poly2.summary()
+
+        # -------------------------Extract single parameters from summary - Polynomial regression 2°
+        b0_2 = results_rel_poly2.params[0]  # constant coefficient / Intercept
+        b1_2 = results_rel_poly2.params[1]  # seconds coefficient / Slope
+        b2_2 = results_rel_poly2.params
+        b0_r_2 = round(b0_2, 5)
+        b1_r_2 = round(b1_2, 5)
+        # b2_r_2 = round(b2_2, 5)
+
+        print(results_rel_poly2.params)
+
+
+        reg_eq_2 = (
+                "y = " + str(b0_r_2) + " + x1 * " + str(b1_r_2)
+        )  # equation linear regression: y = b0 + x1*b1 + b2*x1^2
+
+# -----------------------------Polynomial regression 3°
+
+        polynomial_features3 = PolynomialFeatures(degree=3)
+        xp3 = polynomial_features3.fit_transform(x_rel)
+        model = sm.OLS(y_rel, xp3)
+        results_rel_poly3 = model.fit()
+
+        # ypred = results_rel_poly3.predict(xp)  #Curve fitting points
+        context["statistics_extended_rel_poly3"] = results_rel_poly3.summary()
+
+        # -------------------------Extract single parameters from summary - Polynomial regression 3°
+        b0_3 = results_rel_poly2.params[0]  # constant coefficient / Intercept
+        b1_3 = results_rel_poly2.params[1]  # seconds coefficient / Slope
+        b2_3 = results_rel_poly2.params
+        b0_r_3 = round(b0_3, 5)
+        b1_r_3 = round(b1_3, 5)
+        # b2_r_3 = round(b2_3, 5)
+
+        reg_eq_3 = (
+                "y = " + str(b0_r_3) + " + x1 * " + str(b1_r_3)
+        )  # equation linear regression: y = b0 + x1*b1 + b2*x1^2 + b3*x1^3
+
+        # TODO: k-fold cross validation to predict the best fitting model: https://medium.com/geekculture/cross-validation-f05b885f2d70
+
 
         # --------------------MatPlotLib Scattergramm:
         # plt.scatter(x1_rel, y_rel)
@@ -137,8 +183,8 @@ class ResultsView(DetailView):
         # plt.show()
 
         # ------------------------Return context
-        context["slope"] = b1_r
-        context["intercept"] = b0_r
+        context["slope"] = b1_r_lin
+        context["intercept"] = b0_r_lin
         context["f_value"] = (
             results_abs.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
         context["f_p_value"] = results_abs.f_pvalue
@@ -165,7 +211,6 @@ class ResultsView(DetailView):
             }
         )
         context["subjects"] = subjects
-        context["statistics_extended"] = statistics_extended_rel
         context["reg_eq_lin"] = reg_eq_lin
         return context
 

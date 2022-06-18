@@ -436,11 +436,11 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics</h5>
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <pre style="font-family: monospace, monospace">{{ statistics_extended|safe }}</pre>
+            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin|safe }}</pre>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -534,33 +534,72 @@ function calcValue() {
 
             </div>
         </div>
+
+            {#                 ------------- Button-Extended Statictics ----------------#}
+        <br>
+    <div class="row">
+        <div class="col">
+
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal_poly2">
+  Extended Statistics
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="statisticsModal_poly2" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Polynomial model 2° (Quadratic)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_poly2|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+    </div>
 {#                        -------------------Calculator---------------#}
         <hr>
-        <div class="row">
-            <div class="col">
-                Calculate individual values based on the regression equation: <br>
-    Insert staorage duration in seconds: <input type="number" id="calc_input">
-{#    TODO: Check if input is in seconds#}
-        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
-    <br>
-    The estimated Result at that timepoint is: <p id="calc_result"></p>
-
-
-    <script>
+    Calculate individual values based on the regression equation
+    <form>
+  <div class="form-row align-items-center">
+    <div class="col-auto">
+      <label class="sr-only" for="inlineFormInput">Seconds</label>
+      <input type="text" class="form-control mb-2" id="inlineFormInput" placeholder="Insert storage time in seconds">
+    </div>
+    <div class="col-auto">
+      <button id="button_calc" value="here goes result" onclick="calcValue()" class="btn btn-outline-primary">Calculate</button>
+    </div>
+  </div>
+</form>
+    <div class="row">
+        <div class="col">
+            <span class="calc_result">The estimated Result at that storage time is: <p id="calc_result"></p></span>
+        </div>
+    </div>
+        <script>
 function calcValue() {
   var x = document.getElementById("calc_input").value;
     var y = {{ intercept }} + x * {{ slope }};
   document.getElementById("calc_result").innerHTML = y;
 }
 </script>
-            </div>
-        </div>
+
+
     </div>
 
 
 {#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
     <div class="col">
-<p class="graph_heading">Ploynomial Model 3°</p>
+<p class="graph_heading">Ploynomial Model 3° (Cubic)</p>
         <div class="row">
             <div class="col">
                 <div id="poly3_div"></div>
@@ -618,6 +657,38 @@ function calcValue() {
 
             </div>
         </div>
+
+        {#                 ------------- Button-Extended Statictics ----------------#}
+        <br>
+    <div class="row">
+        <div class="col">
+
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal_poly3">
+  Extended Statistics
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="statisticsModal_poly3" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Polynomial model 3° (Cubic)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_poly3|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+    </div>
 {#                        -------------------Calculator---------------#}
         <hr>
         <div class="row">

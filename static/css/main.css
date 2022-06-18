@@ -112,3 +112,12 @@ th{
     font-weight: bold;
     background-color: var(--powder-blue);
 }
+
+.calc_result{
+    font-size: large;
+    font-weight: bold;
+}
+
+.modal-body{
+    text-align: center;
+}
