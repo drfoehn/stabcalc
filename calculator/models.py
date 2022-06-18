@@ -311,40 +311,36 @@ class Subject(models.Model):
         return [v.value for v in
                 Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration, subject=self)]
 
-    def average(self, duration: Duration):
+    def average(self, duration: Duration) -> float | None:
         values = self.values(duration)
         if not values:
-            return ""
+            return None
         else:
             return math.ceil((statistics.mean(values)) * 100) / 100
 
-    def stdv(self, duration: Duration):
+    def stdv(self, duration: Duration) -> float | None:
         values = self.values(duration)
         if len(values) < 2:
-            return ""
+            return None
         else:
             return math.ceil((statistics.stdev(values)) * 100) / 100
 
-    def cv(self, duration: Duration):
+    def cv(self, duration: Duration) -> float | None:
 
         average = self.average(duration)
         stdv = self.stdv(duration)
 
-        if average == '':
-            return ''
-        elif stdv == '':
-            return ''
+        if not average or not stdv:
+            return None
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
-    def deviation(self, duration: 'Duration'):
+    def deviation(self, duration: Duration) -> float | None:
         average = self.average(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average(duration_zero)
-        if average == '':
-            return ''
-        elif average_zero == '':
-            return ''
+        if not average or not average_zero:
+            return None
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
