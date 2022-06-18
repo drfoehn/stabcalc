@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
+import math
 
 
 class ResultsView(DetailView):
@@ -121,8 +122,8 @@ class ResultsView(DetailView):
         # print(statistics_extended_rel)
 
         # -------------------------Extract single parameters from summary
-        b0 = results_abs.params[0]  # constant coeffitient / Intercept
-        b1 = results_abs.params[1]  # seconds coefficient / Slope
+        b0 = results_rel.params[0]  # constant coefficient / Intercept
+        b1 = results_rel.params[1]  # seconds coefficient / Slope
         b0_r = round(b0, 5)
         b1_r = round(b1, 5)
         reg_eq_lin = (

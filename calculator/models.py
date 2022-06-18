@@ -180,55 +180,51 @@ class Setting(models.Model):
     def __str__(self):
         return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
 
-    def values_tot(self, duration: 'Duration'):
+    def values_tot(self, duration: 'Duration') -> list[float]:
         return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
 
-    def average_tot(self, duration: 'Duration'):
+    def average_tot(self, duration: 'Duration') -> float | None:
         values = self.values_tot(duration)
         if not values:
-            return ""
+            return None
         else:
             return math.ceil((statistics.mean(values)) * 100) / 100
 
-    def stdv_tot(self, duration: 'Duration'):
+    def stdv_tot(self, duration: 'Duration') -> float | None:
         values = self.values_tot(duration)
         if len(values) < 2:
-            return ""
+            return None
         else:
             return math.ceil((statistics.stdev(values)) * 100) / 100
 
-    def avg_tot_sd_h(self, duration: 'Duration'):
+    def avg_tot_sd_h(self, duration: 'Duration') -> float | None:
         values = self.values_tot(duration)
         if len(values) < 2:
-            return ""
+            return None
         else:
             return math.ceil((statistics.mean(values) + statistics.stdev(values)) * 100) / 100
 
-    def avg_tot_sd_l(self, duration: 'Duration'):
+    def avg_tot_sd_l(self, duration: 'Duration') -> float | None:
         values = self.values_tot(duration)
         if len(values) < 2:
-            return ""
+            return None
         else:
             return math.ceil((statistics.mean(values) - statistics.stdev(values)) * 100) / 100
 
-    def cv_tot(self, duration: 'Duration'):
+    def cv_tot(self, duration: 'Duration') -> float | None:
         average = self.average_tot(duration)
         stdv = self.stdv_tot(duration)
-        if average == '':
-            return ''
-        elif stdv == '':
-            return ''
+        if not average or not stdv:
+            return None
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
-    def deviation_tot(self, duration: 'Duration'):
+    def deviation_tot(self, duration: 'Duration') -> float | None:
         average = self.average_tot(duration)
         duration_zero = Duration.objects.get(duration_number=0)
         average_zero = self.average_tot(duration_zero)
-        if average == '':
-            return ''
-        elif average_zero == '':
-            return ''
+        if not average or not average_zero:
+            return None
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
