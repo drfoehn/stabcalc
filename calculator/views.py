@@ -37,11 +37,8 @@ class ResultsView(DetailView):
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
 
-        # [s.duration() for s in Subject.objects.all()]
 
-        # subjects2 = subjects.model.deviation(self, durations_data)
-        # print(dev)
-        # https://365datascience.com/tutorials/python-tutorials/linear-regression/
+
 
         # ---------------------------Get deviation data for each subject setting and time individually
         deviation_dict: dict[int, dict[int, int]] = {}
@@ -51,12 +48,15 @@ class ResultsView(DetailView):
             for duration in self.object.duration_set.all():
                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
 
-        print(deviation_dict)
+
         deviation_array = pd.DataFrame(deviation_dict)
         deviation_array.index.name = "duration"
-        # print(deviation_array)
-        print(deviation_array)
+
         #https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
+
+        #################################### VARIABLES ######################################
+
+        # ---------------------------Relative Deviation from Baseline
         y_rel = []
         x1_rel = []
         for (duration, results) in deviation_array.iterrows():
@@ -65,16 +65,7 @@ class ResultsView(DetailView):
                     y_rel.append(result)
                     x1_rel.append(duration)
 
-
-
-            # print(results.values)
-            # single_results_duration = duration
-            # single_results_value = results.values
-
-        # for i in deviation_array:
-        #     for j in deviation_array[i]:
-        #         print(j, deviation_array[i][j])
-
+        # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
             results_data,
@@ -83,34 +74,70 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
+        # print(results_data)
+        # print(durations_data)
         cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
 
         # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
-        # print(results_array.size, results_array.shape)
-        # mean_panda=merged_res_dur['value'].mean()
-        # mean_numpy = np.mean(merged_res_dur, axis=0)
-        # # mean_scipy = sp.stats.norm.mean(merged_res_dur, axis=1)
-        # print(mean_numpy[1], mean_panda)
-        # print(results_array)
 
-        # -------------------Statistics absolute results
+
+        # -------------------Variable absolute results
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
 
 
+        # --------------------------Log transformation
+        x1_rel_log = []
+        for xr in x1_rel:
+            if xr:
+                xr = math.log(xr)
+            x1_rel_log.append(xr)
 
-        # print(y_rel) print(x_rel) for timepoints in x1: values = timepoints print(values)
-        # --------------------------------Linear regression --------------------Explanation of statistics summary:
+        # print(x1_rel_log)
+
+        x1_abs_log = []
+        for xa in x1_abs:
+            if xa:
+                xa = math.log(xa)
+            x1_abs_log.append(xa)
+
+        print(x1_abs_log)
+        print(x1_abs)
+        print(y_abs)
+
+
+        ################################# REGRESSION ANALYSIS ######################################
+
+        # https://365datascience.com/tutorials/python-tutorials/linear-regression/
+
+        ## --------------------Explanation of statistics summary:
         # https://medium.com/swlh/interpreting-linear-regression-through-statsmodels-summary-4796d359035a
 
 
+        # -----------------------LINEAR----------------------------------------
 
-        #TODO: Necessary ?  x1_abs = sm.add_constant(x1_abs)  # add a row of ones as constant
+        # ------------------------Absolute
+
+        x1_abs = sm.add_constant(x1_abs)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
         model = sm.OLS(y_abs, x1_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
-        statistics_extended_abs = results_abs.summary()
+        context["statistics_extended_abs_lin"] = results_abs.summary()
+
+        # -------------------------Extract single parameters from summary - linear regression
+        b0_abs_lin = results_abs.params[0]  # constant coefficient / Intercept
+        b1_abs_lin = results_abs.params[1]  # seconds coefficient / Slope
+        b0_r_abs_lin = round(b0_abs_lin, 5)
+        context["intercept_abs_lin"] = b0_r_abs_lin
+        b1_r_abs_lin = round(b1_abs_lin, 5)
+        context["slope_abs_lin"] = b1_r_abs_lin
+        context["reg_eq_abs_lin"] = (
+                "y = " + str(b0_r_abs_lin) + " + x1 * " + str(b1_r_abs_lin)
+        )  # equation linear regression: y = b0 + x1*b1
+
+
+        # --------------------------relative
 
         x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
         model = sm.OLS(y_rel, x_rel)
@@ -118,15 +145,54 @@ class ResultsView(DetailView):
         context["statistics_extended_rel_lin"] = results_rel.summary()
 
         # -------------------------Extract single parameters from summary - linear regression
-        b0_lin = results_rel.params[0]  # constant coefficient / Intercept
-        b1_lin = results_rel.params[1]  # seconds coefficient / Slope
-        b0_r_lin = round(b0_lin, 5)
-        b1_r_lin = round(b1_lin, 5)
-        reg_eq_lin = (
-                "y = " + str(b0_r_lin) + " + x1 * " + str(b1_r_lin)
+        b0_rel_lin = results_rel.params[0]  # constant coefficient / Intercept
+        b1_rel_lin = results_rel.params[1]  # seconds coefficient / Slope
+        b0_r_rel_lin = round(b0_rel_lin, 5)
+        context["intercept_rel_lin"] = b0_r_rel_lin
+        b1_r_rel_lin = round(b1_rel_lin, 5)
+        context["slope_rel_lin"] = b1_r_rel_lin
+        context["reg_eq_rel_lin"] = (
+                "y = " + str(b0_r_rel_lin) + " + x1 * " + str(b1_r_rel_lin)
         )  # equation linear regression: y = b0 + x1*b1
 
-        # -----------------------------Polynomial regression 2°
+        # ------------------------Absolute log
+
+        x1_abs_log = sm.add_constant(x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        model = sm.OLS(y_abs, x1_abs_log)
+        results_abs_log = model.fit()  # OLS = Ordinary Least Squares
+        context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
+
+        # -------------------------Extract single parameters from summary - linear regression
+        b0_abs_lin_log = results_abs_log.params[0]  # constant coefficient / Intercept
+        b1_abs_lin_log = results_abs_log.params[1]  # seconds coefficient / Slope
+        b0_r_abs_lin_log = round(b0_abs_lin_log, 5)
+        context["intercept_abs_lin_log"] = b0_r_abs_lin_log
+        b1_r_abs_lin_log = round(b1_abs_lin_log, 5)
+        context["slope_abs_lin_log"] = b1_r_abs_lin_log
+        context["reg_eq_abs_lin"] = (
+                "y = " + str(b0_r_abs_lin_log) + " + x1 * " + str(b1_r_abs_lin_log)
+        )  # equation linear regression: y = b0 + x1*b1
+
+
+        # --------------------------relative log
+
+        x_rel_log = sm.add_constant(x1_rel_log)  # add a row of ones as constant
+        model = sm.OLS(y_rel, x_rel_log)
+        results_rel_log = model.fit()  # OLS = Ordinary Least Squares
+        context["statistics_extended_rel_lin_log"] = results_rel_log.summary()
+
+        # -------------------------Extract single parameters from summary - linear regression
+        b0_rel_lin_log = results_rel_log.params[0]  # constant coefficient / Intercept
+        b1_rel_lin_log = results_rel_log.params[1]  # seconds coefficient / Slope
+        b0_r_rel_lin_log = round(b0_rel_lin_log, 5)
+        context["intercept_rel_lin_log"] = b0_r_rel_lin_log
+        b1_r_rel_lin_log = round(b1_rel_lin_log, 5)
+        context["slope_rel_lin_log"] = b1_r_rel_lin_log
+        context["reg_eq_lin_log"] = (
+                "y = " + str(b0_r_rel_lin_log) + " + x1 * " + str(b1_r_rel_lin_log)
+        )  # equation linear regression: y = b0 + x1*b1
+
+        # -----------------------------Polynomial regression 2°------------------------------
 
         polynomial_features_2 = PolynomialFeatures(degree=2)
         xp2 = polynomial_features_2.fit_transform(x_rel)
@@ -144,14 +210,11 @@ class ResultsView(DetailView):
         b1_r_2 = round(b1_2, 5)
         # b2_r_2 = round(b2_2, 5)
 
-        print(results_rel_poly2.params)
-
-
         reg_eq_2 = (
                 "y = " + str(b0_r_2) + " + x1 * " + str(b1_r_2)
         )  # equation linear regression: y = b0 + x1*b1 + b2*x1^2
 
-# -----------------------------Polynomial regression 3°
+# -----------------------------Polynomial regression 3°----------------------------------------
 
         polynomial_features3 = PolynomialFeatures(degree=3)
         xp3 = polynomial_features3.fit_transform(x_rel)
@@ -183,25 +246,12 @@ class ResultsView(DetailView):
         # plt.show()
 
         # ------------------------Return context
-        context["slope"] = b1_r_lin
-        context["intercept"] = b0_r_lin
+
         context["f_value"] = (
             results_abs.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
         context["f_p_value"] = results_abs.f_pvalue
         # context['std_err'] = results.params[0,1]
         context["r_square"] = results_abs.rsquared
-
-        # print(duration_cat2)
-        # df["Name"].astype('category')
-
-        # df = pd.DataFrame({"A": list("abca"), "B": list("bccd")}, dtype="category")
-
-        # avg_tot = results_val['value'].mean()
-        # avg_tot_duration = results_duration[duration_unit_cat.categories]
-        # print(results_duration.to_html)
-        # print(results_data['value'].std())
-        # print(duration_data.sort_values(by='seconds', ascending=True).to_html)
-
         context.update(
             {
                 "results": results,
@@ -211,7 +261,7 @@ class ResultsView(DetailView):
             }
         )
         context["subjects"] = subjects
-        context["reg_eq_lin"] = reg_eq_lin
+
         return context
 
 

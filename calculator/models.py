@@ -372,7 +372,7 @@ class Result(models.Model):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
-        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}, {self.duration_cat}"
+        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}"
 
     # def duration(self):
     #     return self.subject.duration

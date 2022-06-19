@@ -374,7 +374,7 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
                 <table>
                    <tr>
                        <th>
-                           Regression equation: {{ reg_eq_lin }}
+                           Regression equation: {{ reg_eq_rel_lin }}
                        </th>
                    </tr>
                     <tr>
@@ -388,7 +388,7 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
                             Slope:
                         </td>
                         <td>
-                            {{ slope | floatformat:5 }}
+                            {{ slope_rel_lin | floatformat:5 }}
                         </td>
                     </tr>
                     <tr>
@@ -396,7 +396,7 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
                             Intercept
                         </td>
                         <td>
-                            {{ intercept | floatformat:5}}
+                            {{ intercept_rel_lin | floatformat:5}}
                         </td>
                     </tr>
                     <tr>
@@ -713,7 +713,155 @@ function calcValue() {
     </div>
     </div>
 
+<div class="row">
+    {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
+    <div class="col">
+        <p class="graph_heading">Log transformed model</p>
+{#                    --------------------Graph----------------#}
+        <div class="row">
+            <div class="col">
+                <div id="log_div"></div>
 
+    <script type="text/javascript">
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart);
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['Storage Duration', 'Deviation'],
+         {% for duration in setting.duration_set.all %}
+               [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+           {% endfor %}
+       ]);
+
+       var options = {
+         title: 'Parameter deviation at selected storage durations',
+         vAxis: {title: "Deviation"},
+         hAxis: {title: "Storage duration - log(seconds)"},
+         legend: 'top',
+         crosshair: { trigger: 'both', orientation: 'both' },
+         trendlines: {
+           0: {
+             type: 'linear',
+             {#degree: 3,#}
+             visibleInLegend: true,
+           }
+         }
+       };
+
+       var chart = new google.visualization.ScatterChart(document.getElementById('log_div'));
+       chart.draw(data, options);
+     }
+   </script>
+            </div>
+        </div>
+{#                      --------------------Statistics--------------#}
+        <div class="row">
+            <div class="col">
+                <br>
+                <table>
+                   <tr>
+                       <th>
+                           Regression equation: {{ reg_eq_lin_log }}
+                       </th>
+                   </tr>
+                    <tr>
+                        <td>
+                           y...Testresult (dependent variable) <br>
+                            x1...Storage Duration (independent variable)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Slope:
+                        </td>
+                        <td>
+                            {{ slope_rel_lin_log | floatformat:5 }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Intercept
+                        </td>
+                        <td>
+                            {{ intercept_rel_lin_log | floatformat:5}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            F-Value
+                        </td>
+                        <td>
+{#                            {{ f_value | floatformat:5}}#}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            F p-Value
+                        </td>
+                        <td>
+{#                            {{ f_p_value | floatformat:5}}#}
+                        </td>
+                    </tr>
+                </table>
+
+
+            </div>
+        </div>
+    {#                 ------------- Button-Extended Statictics ----------------#}
+        <br>
+    <div class="row">
+        <div class="col">
+
+
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal">
+  Extended Statistics
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+    </div>
+{#                        -------------------Calculator---------------#}
+        <hr>
+        <div class="row">
+            <div class="col">
+                Calculate individual values based on the regression equation: <br>
+    Insert staorage duration in seconds: <input type="number" id="calc_input">
+{#    TODO: Check if input is in seconds#}
+        <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+    <br>
+    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+    <script>
+function calcValue() {
+  var x = document.getElementById("calc_input").value;
+    var y = {{ intercept }} + x * {{ slope }};
+  document.getElementById("calc_result").innerHTML = y;
+}
+</script>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 
 
