@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headadditional %}
+{% endblock %}
+
+{% block title %}Stability Calculator - Upload{% endblock %}
+
+{% block content %}
+  <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
+    <h2 class="display-4">Upload Stability Data</h2>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <form method="POST">
+        {% csrf_token %}
+          {{ form.as_p }}
+          <input type="submit" value="Submit">
+
+      </form>
+    </div>
+
+  </div>
+{% endblock content %}

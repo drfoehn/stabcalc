@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.contrib.messages.views import SuccessMessageMixin
+
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -20,6 +20,9 @@ import statsmodels.api as sm
 from sklearn.preprocessing import PolynomialFeatures
 import math
 from patsy.highlevel import dmatrices
+
+
+
 
 
 class ResultsView(DetailView):
@@ -337,6 +340,65 @@ class ResultsView(DetailView):
 
 
 
+        ###################################  Data import / export ####################################
+
+        # ---------------------------Import
+        # def upload_stability_data(request):
+        #     if request.method == "POST":
+        #         form = UploadExcelForm(request.POST, request.FILES)
+        #         if form.is_valid():
+        #             kappa = request.FILES['file']
+        #             # Do work on kappa/excel file here with Pandas
+        #             output = io.BytesIO()
+        #             writer = pd.ExcelWriter(output, engine='xlsxwriter')
+        #             kappa.to_excel(writer, index=False)
+        #             writer.save()
+        #             output.seek(0)
+        #             response = HttpResponse(output,
+        #                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        #         response['Content-Disposition'] = 'attachment; filename=%s.xlsx' % 'Download'
+        #         return response
+        #     else:
+        #         form = UploadExcelForm()
+        #
+        #     return render(request, 'calculator/upload_form.html', {'form': form})
+
+
+
+
+
+        # -----------------------------Export
+
+        from datetime import datetime
+        #https://stackoverflow.com/questions/35267585/django-pandas-to-http-response-download-file
+        #https://djangoadventures.com/how-to-create-file-download-links-in-django/
+    #
+
+        MDATA = datetime.now().strftime('%Y-%m-%d')
+
+        def data_export_xlsx(pk):
+            data = merged_res_dur
+            slug = parameter.values('name')[0]['name']
+
+            df = pd.DataFrame(merged_res_dur)
+            # Convertendo data para o formato correto
+            # df['dataset__created'] = df['dataset__created'].apply(
+            #     lambda x: x.strftime('%Y-%m-%d %H:%M'))
+            # df['dataset__modified'] = df['dataset__modified'].apply(
+            #     lambda x: x.strftime('%Y-%m-%d %H:%M'))
+
+            filename = f'stability_data_{slug}_{MDATA}.xlsx'
+
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix='.xlsx') as tmp:
+                df.to_excel(tmp.name, sheet_name=f'stability_data_{slug}')
+                tmp.flush()
+                tmp.seek(0)
+                data = tmp.read()
+            return (data, filename)
+
+        # context["export_data_excel"] = data_export_xlsx(id(self))
+
 
         # --------------------MatPlotLib Scattergramm:
         # plt.scatter(x1_rel, y_rel)
@@ -362,6 +424,11 @@ class ResultsView(DetailView):
         context["subjects"] = subjects
 
         return context
+
+from django.http import HttpResponse
+def upload_view(request):
+    form = UploadExcelForm
+    return render(request, 'calculator/upload_form.html', {"form": form})
 
 
 class DashboardView(ListView):

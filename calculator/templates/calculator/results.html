@@ -141,7 +141,7 @@
     <div class="row">
         <div class="col">
             <a href="#" class="bi bi-printer result_buttons"></a>
-            <a href="#" class="bi bi-box-arrow-down result_buttons"></a>
+            <a href="{{ export_data_excel }}" class="bi bi-box-arrow-down result_buttons"></a>
             <a href="{% url 'add_results' %}" class="bi bi-plus-circle result_buttons"></a>
 
         </div>
@@ -465,6 +465,7 @@
                 <div class="col">
 
                     {#    TODO: Check if input is in seconds#}
+                    {% csrf_token %}
                     <form>
                         <div class="form-row align-items-center">
                             <div class="col-auto">
@@ -616,6 +617,7 @@
             <hr>
             <div class="row">
                 <div class="col">
+                    {% csrf_token %}
                     <form>
                         <div class="form-row align-items-center">
                             <div class="col-auto">
@@ -730,6 +732,8 @@
                 {#                        -------------------Calculator---------------#}
                 <hr>
                 Calculate individual values based on the regression equation
+
+                {% csrf_token %}
                 <form>
                     <div class="form-row align-items-center">
                         <div class="col-auto">
@@ -841,6 +845,7 @@
                 {#                        -------------------Calculator---------------#}
                 <hr>
                 Calculate individual values based on the regression equation
+                {% csrf_token %}
                 <form>
                     <div class="form-row align-items-center">
                         <div class="col-auto">

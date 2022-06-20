@@ -1,5 +1,6 @@
 from django.core import validators
 from django.forms import formset_factory, modelformset_factory
+from django.http import request
 
 from .models import *
 from django import forms
@@ -27,10 +28,6 @@ class ParameterForm(forms.ModelForm):
         fields = '__all__'
 
 
-
-
-
-
 class SettingForm(forms.ModelForm):
     class Meta:
         model = Setting
@@ -40,6 +37,14 @@ class DurationForm(forms.ModelForm):
     class Meta:
         model = Duration
         fields = '__all__'
+
+class UploadExcelForm(forms.Form):
+        stability_data_excel = forms.FileField(
+            label='Upload Excel File',
+            help_text='Please be sure to use the correct template and filetype'
+        )
+
+
 
 # class ValueForm(forms.ModelForm):
 #     class Meta:
