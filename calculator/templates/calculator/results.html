@@ -4,7 +4,7 @@
 {% block title %}Results - Stability study "{{ setting.name }}"{% endblock %}
 
 {% block content %}
-    {{ lala |safe }}
+
     <div class="jumbotron">
         <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
         <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
@@ -128,6 +128,10 @@
     <h1 class="display-6">Interpretation</h1>
     The model fitting best to your data is {{ best_fit_model }}, explaining {{ best_fit }} of your ....<br>
     The prediction value of this equation is ............... <br>
+    Valid for linear model only: {{ interpretation_1 }}
+    <br>
+    <br>
+
 
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
     aliqua. Enim ut tellus elementum sagittis vitae et leo. Mauris sit amet massa vitae tortor condimentum lacinia.

@@ -37,6 +37,8 @@ class ResultsView(DetailView):
         results = Result.objects.filter(setting=self.object)
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
+        parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
+
 
         # ---------------------------Get deviation data for each subject setting and time individually
         deviation_dict: dict[int, dict[int, int]] = {}
@@ -71,7 +73,7 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
-        context["lala"] = merged_res_dur.to_html
+
         cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
 
@@ -272,17 +274,18 @@ class ResultsView(DetailView):
         best_fit= max(r_sq_list)
         context["best_fit"] = str(str(round(best_fit*100, 2)) + " %")
 
-        def best_fit_model():
+        def best_fit_model() -> str:
             if r_squared_lin == best_fit:
-                print('Linear Regression Model')
+                return 'Linear Regression Model'
             elif r_squared_poly2 == best_fit:
-                print('Polynomial Regression Model 2° degree')
+                return 'Polynomial Regression Model 2° degree'
             else:
-                print('Polynomial Regression Model 3° degree')
+                return 'Polynomial Regression Model 3° degree'
 
-        b = best_fit_model()
-        context["best_fit_model"] = str(b)
-        #FIXME: wird im template nicht ausgegeben
+        context["best_fit_model"] = best_fit_model()
+
+        context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(parameter.values('name')[0]['name']) +  ' level to change by ' + str(round(res.params[1]*3600, 3)) + ' ' +str(parameter.values('unit')[0]['unit'])
+
 
 
         # --------------------MatPlotLib Scattergramm:
