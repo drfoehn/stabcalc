@@ -124,13 +124,12 @@
 
     <hr class="my-4">
 
+
     {#    -----------------------------------Interpretation--------------------------------#}
     <h1 class="display-6">Interpretation</h1>
-    Rainbow-Test: F: {{ rainbow_f | floatformat:3}} / p: {{ rainbow_p | floatformat:3}}<br>
-    Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
-    {{ ksstat | floatformat:3 }} / p: {{ksstat_p | floatformat:3}}
+
     <br>
-    <br>
+    {{ interpretation_dist }} <br>
     The model fitting best to your data is {{ best_fit_model }}, explaining {{ best_fit }} of your ....<br>
     The prediction value of this equation is ............... <br>
     Valid for linear model only: {{ interpretation_1 }}
@@ -138,17 +137,25 @@
     <br>
 <hr class="my-4">
 
-    <hr>
     {#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
         <div class="col">
-            <i class="bi bi-printer">Print</i>
-            <i class="bi bi-box-arrow-down">Save/Export</i>
-            <i class="bi bi-plus-circle" href="{% url 'add_results' %}">Add result</i>
+            <a href="#" class="bi bi-printer result_buttons"></a>
+            <a href="#" class="bi bi-box-arrow-down result_buttons"></a>
+            <a href="{% url 'add_results' %}" class="bi bi-plus-circle result_buttons"></a>
 
         </div>
     </div>
-
+<hr class="my-4">
+{#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
+    <p class="graph_heading">Data</p>
+    Number of Subjects: {{ subjects_n }}<br>
+    Number of tested storage durations: {{ timepoints_n }}<br>
+    <br>
+    Rainbow-Test: F: {{ rainbow_f | floatformat:3}} / p: {{ rainbow_p | floatformat:3}}<br>
+    Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
+    {{ ksstat | floatformat:3 }} / p: {{ksstat_p | floatformat:3}}
+    <br>
 
     <hr class="my-4">
 

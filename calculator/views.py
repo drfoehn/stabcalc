@@ -74,8 +74,8 @@ class ResultsView(DetailView):
             how="inner",
         )
 
-        cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
-        rows = merged_res_dur["subject_id"].nunique()  # number of subjects
+        context["timepoints_n"] = merged_res_dur["duration_id"].nunique()  # number of timepoints
+        context["subjects_n"] = merged_res_dur["subject_id"].nunique()  # number of subjects
 
         # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
@@ -163,10 +163,6 @@ class ResultsView(DetailView):
         context["r_squared_poly3"] = r_squared_poly3
 
 
-
-
-
-
         # TODO: Predicting values from regression: https://towardsdatascience.com/linear-regression-with-python-and-numpy-25d0e1dd220d
         # TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
 
@@ -227,6 +223,7 @@ class ResultsView(DetailView):
 
         ks = sm.stats.diagnostic.kstest_normal(y, dist='norm', pvalmethod='table')
         context["ksstat"] = ks[0]
+        ksstat_p = ks[1]
         context["ksstat_p"] = ks[1]
         #TODO. Provide explanation
 
@@ -273,8 +270,7 @@ class ResultsView(DetailView):
         # # ------------------------Absolute log
         #
         # x1_abs_log = sm.add_constant(
-        #     x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
-        # model = sm.OLS(y_abs, x1_abs_log)
+ # model = sm.OLS(y_abs, x1_abs_log)
         # results_abs_log = model.fit()  # OLS = Ordinary Least Squares
         # context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
         #
@@ -309,6 +305,8 @@ class ResultsView(DetailView):
         #
         # #
 
+######################################INTERPRETATION ################################################
+
         # --------------------------Calculate best fitting model
 
         r_sq_list =[r_squared_lin, r_squared_poly2, r_squared_poly3]
@@ -326,6 +324,17 @@ class ResultsView(DetailView):
         context["best_fit_model"] = best_fit_model()
 
         context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(parameter.values('name')[0]['name']) +  ' level to change by ' + str(round(res.params[1]*3600, 3)) + ' ' +str(parameter.values('unit')[0]['unit'])
+
+        # -------------------------- Normal distribution
+
+        def distrib() -> str:
+            if ksstat_p <= 0.05:
+                return 'The data IS NOT normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
+            else:
+                return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
+
+        context["interpretation_dist"] = distrib()
+
 
 
 
