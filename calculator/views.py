@@ -21,6 +21,7 @@ from sklearn.preprocessing import PolynomialFeatures
 import math
 from patsy.highlevel import dmatrices
 
+
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
     model = Setting
@@ -37,9 +38,6 @@ class ResultsView(DetailView):
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
 
-
-
-
         # ---------------------------Get deviation data for each subject setting and time individually
         deviation_dict: dict[int, dict[int, int]] = {}
         for subject in subjects:
@@ -48,11 +46,10 @@ class ResultsView(DetailView):
             for duration in self.object.duration_set.all():
                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
 
-
         deviation_array = pd.DataFrame(deviation_dict)
         deviation_array.index.name = "duration"
 
-        #https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
+        # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
 
         #################################### VARIABLES ######################################
 
@@ -61,7 +58,7 @@ class ResultsView(DetailView):
         x1_rel = []
         for (duration, results) in deviation_array.iterrows():
             for result in results:
-                if not math.isnan(result): #pandas converts None-values to "nan" - this function excludes those values
+                if not math.isnan(result):  # pandas converts None-values to "nan" - this function excludes those values
                     y_rel.append(result)
                     x1_rel.append(duration)
 
@@ -81,11 +78,9 @@ class ResultsView(DetailView):
         # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
 
-
         # -------------------Variable absolute results
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
-
 
         # --------------------------Log transformation
         x1_rel_log = []
@@ -106,7 +101,6 @@ class ResultsView(DetailView):
         # print(x1_abs)
         # print(y_abs)
 
-
         ################################# REGRESSION ANALYSIS ######################################
 
         # https://365datascience.com/tutorials/python-tutorials/linear-regression/
@@ -126,35 +120,43 @@ class ResultsView(DetailView):
         # print(res.summary())  # Summarize model
 
         # print(res.params)
-        context["r_squared_lin"] = res.rsquared
-        context["r_squared_lin_adj"] = res.rsquared_adj
-        X = merged_res_dur.iloc[:, 1] #seconds
-        y = merged_res_dur.iloc[:, 0] #value
+        r_squared_lin = res.rsquared
+        context["r_squared_lin"] = r_squared_lin
+        r_squared_lin_adj = res.rsquared_adj
+        context["r_squared_lin_adj"] = r_squared_lin_adj
+        X = merged_res_dur.iloc[:, 1]  # seconds
+        y = merged_res_dur.iloc[:, 0]  # value
 
         # # Calculate Regression equation - polynomial 2rd degree
         # eq_model_lin = np.poly1d(np.polyfit(X, y, 1))
         # a = eq_model_lin
 
-
-
         # Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
-        eq_model_poly2 = np.poly1d(np.polyfit(X, y, 2))
+
+        eq2 = np.poly1d(np.polyfit(X, y, 2))
+        context["eq_model_poly2"] = str("y = " + str(round(eq2[3], 5)) + " * x^3 + " + str(round(eq2[2], 5))
+                                        + " * x^2 + " + str(round(eq2[1], 5)) + " * x + " + str(round(eq2[0], 5)))
+        # FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
 
         # Calculate r_squared
         results = {}
         coeffs = np.polyfit(X, y, 2)
         p = np.poly1d(coeffs)
-        #calculate r-squared
+        # calculate r-squared
         yhat = p(X)
-        ybar = np.sum(y)/len(y)
-        ssreg = np.sum((yhat-ybar)**2)
-        sstot = np.sum((y - ybar)**2)
+        ybar = np.sum(y) / len(y)
+        ssreg = np.sum((yhat - ybar) ** 2)
+        sstot = np.sum((y - ybar) ** 2)
         r_squared_poly2 = ssreg / sstot
 
         context["r_squared_poly2"] = r_squared_poly2
 
         # Calculate Regression equation - polynomial 3rd degree
-        eq_model_poly3 = np.poly1d(np.polyfit(X, y, 3))
+
+        eq3 = np.poly1d(np.polyfit(X, y, 3))
+        context["eq_model_poly3"] = str("y = " + str(round(eq3[3], 5)) + " * x^3 + " + str(round(eq3[2], 5))
+                                        + " * x^2 + " + str(round(eq3[1], 5)) + " * x + " + str(round(eq3[0], 5)))
+        #FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
 
         # Calculate r_squared
         results = {}
@@ -185,15 +187,13 @@ class ResultsView(DetailView):
 
         # print(ks)
 
-
-
-
-
-        #TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
+        # TODO: Predicting values from regression: https://towardsdatascience.com/linear-regression-with-python-and-numpy-25d0e1dd220d
+        # TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
 
         # ------------------------Absolute
 
-        x1_abs = sm.add_constant(x1_abs)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        x1_abs = sm.add_constant(
+            x1_abs)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
         model = sm.OLS(y_abs, x1_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
         context["statistics_extended_abs_lin"] = results_abs.summary()
@@ -208,7 +208,6 @@ class ResultsView(DetailView):
         context["reg_eq_abs_lin"] = (
                 "y = " + str(b0_r_abs_lin) + " + x1 * " + str(b1_r_abs_lin)
         )  # equation linear regression: y = b0 + x1*b1
-
 
         # --------------------------relative
 
@@ -230,7 +229,8 @@ class ResultsView(DetailView):
 
         # ------------------------Absolute log
 
-        x1_abs_log = sm.add_constant(x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        x1_abs_log = sm.add_constant(
+            x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
         model = sm.OLS(y_abs, x1_abs_log)
         results_abs_log = model.fit()  # OLS = Ordinary Least Squares
         context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
@@ -245,7 +245,6 @@ class ResultsView(DetailView):
         context["reg_eq_abs_lin"] = (
                 "y = " + str(b0_r_abs_lin_log) + " + x1 * " + str(b1_r_abs_lin_log)
         )  # equation linear regression: y = b0 + x1*b1
-
 
         # --------------------------relative log
 
@@ -265,51 +264,25 @@ class ResultsView(DetailView):
                 "y = " + str(b0_r_rel_lin_log) + " + x1 * " + str(b1_r_rel_lin_log)
         )  # equation linear regression: y = b0 + x1*b1
 
-        # -----------------------------Polynomial regression 2°------------------------------
+        #
 
-        polynomial_features_2 = PolynomialFeatures(degree=2)
-        xp2 = polynomial_features_2.fit_transform(x_rel)
-        model = sm.OLS(y_rel, xp2)
-        results_rel_poly2 = model.fit()
+        # --------------------------Calculate best fitting model
 
-        # ypred = results_rel_poly2.predict(xp)  #Curve fitting points
-        context["statistics_extended_rel_poly2"] = results_rel_poly2.summary()
+        r_sq_list =[r_squared_lin, r_squared_poly2, r_squared_poly3]
+        best_fit= max(r_sq_list)
+        context["best_fit"] = str(str(round(best_fit*100, 2)) + " %")
 
-        # -------------------------Extract single parameters from summary - Polynomial regression 2°
-        b0_2 = results_rel_poly2.params[0]  # constant coefficient / Intercept
-        b1_2 = results_rel_poly2.params[1]  # seconds coefficient / Slope
-        b2_2 = results_rel_poly2.params
-        b0_r_2 = round(b0_2, 5)
-        b1_r_2 = round(b1_2, 5)
-        # b2_r_2 = round(b2_2, 5)
+        def best_fit_model():
+            if r_squared_lin == best_fit:
+                print('Linear Regression Model')
+            elif r_squared_poly2 == best_fit:
+                print('Polynomial Regression Model 2° degree')
+            else:
+                print('Polynomial Regression Model 3° degree')
 
-        reg_eq_2 = (
-                "y = " + str(b0_r_2) + " + x1 * " + str(b1_r_2)
-        )  # equation linear regression: y = b0 + x1*b1 + b2*x1^2
-
-# -----------------------------Polynomial regression 3°----------------------------------------
-
-        polynomial_features3 = PolynomialFeatures(degree=3)
-        xp3 = polynomial_features3.fit_transform(x_rel)
-        model = sm.OLS(y_rel, xp3)
-        results_rel_poly3 = model.fit()
-
-        # ypred = results_rel_poly3.predict(xp)  #Curve fitting points
-        context["statistics_extended_rel_poly3"] = results_rel_poly3.summary()
-
-        # -------------------------Extract single parameters from summary - Polynomial regression 3°
-        b0_3 = results_rel_poly2.params[0]  # constant coefficient / Intercept
-        b1_3 = results_rel_poly2.params[1]  # seconds coefficient / Slope
-        b2_3 = results_rel_poly2.params
-        b0_r_3 = round(b0_3, 5)
-        b1_r_3 = round(b1_3, 5)
-        # b2_r_3 = round(b2_3, 5)
-
-        reg_eq_3 = (
-                "y = " + str(b0_r_3) + " + x1 * " + str(b1_r_3)
-        )  # equation linear regression: y = b0 + x1*b1 + b2*x1^2 + b3*x1^3
-
-        # TODO: k-fold cross validation to predict the best fitting model: https://medium.com/geekculture/cross-validation-f05b885f2d70
+        b = best_fit_model()
+        context["best_fit_model"] = str(b)
+        #FIXME: wird im template nicht ausgegeben
 
 
         # --------------------MatPlotLib Scattergramm:
