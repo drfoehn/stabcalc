@@ -84,24 +84,11 @@ class ResultsView(DetailView):
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
 
-        # --------------------------Log transformation
-        x1_rel_log = []
-        for xr in x1_rel:
-            if xr:
-                xr = math.log(xr)
-            x1_rel_log.append(xr)
 
-        # print(x1_rel_log)
 
-        x1_abs_log = []
-        for xa in x1_abs:
-            if xa:
-                xa = math.log(xa)
-            x1_abs_log.append(xa)
 
-        # print(x1_abs_log)
-        # print(x1_abs)
-        # print(y_abs)
+
+
 
         ################################# REGRESSION ANALYSIS ######################################
 
@@ -119,7 +106,7 @@ class ResultsView(DetailView):
         y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod = sm.OLS(y, X)  # Describe model
         res = mod.fit()  # Fit model
-        # print(res.summary())  # Summarize model
+        context["statistics_extended_abs_lin"] = res.summary()
 
         # print(res.params)
         r_squared_lin = res.rsquared
@@ -129,14 +116,16 @@ class ResultsView(DetailView):
         X = merged_res_dur.iloc[:, 1]  # seconds
         y = merged_res_dur.iloc[:, 0]  # value
 
-        # # Calculate Regression equation - polynomial 2rd degree
-        # eq_model_lin = np.poly1d(np.polyfit(X, y, 1))
-        # a = eq_model_lin
+        # Calculate Regression equation - linear
+        eq1 = np.poly1d(np.polyfit(X, y, 1))
+        context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
-        # Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
+
+
+        # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
         eq2 = np.poly1d(np.polyfit(X, y, 2))
-        context["eq_model_poly2"] = str("y = " + str(round(eq2[3], 5)) + " * x^3 + " + str(round(eq2[2], 5))
+        context["eq_model_poly2"] = str("y = " + str(round(eq2[2], 5))
                                         + " * x^2 + " + str(round(eq2[1], 5)) + " * x + " + str(round(eq2[0], 5)))
         # FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
 
@@ -153,7 +142,7 @@ class ResultsView(DetailView):
 
         context["r_squared_poly2"] = r_squared_poly2
 
-        # Calculate Regression equation - polynomial 3rd degree
+        # ---------------------------------Calculate Regression equation - polynomial 3rd degree
 
         eq3 = np.poly1d(np.polyfit(X, y, 3))
         context["eq_model_poly3"] = str("y = " + str(round(eq3[3], 5)) + " * x^3 + " + str(round(eq3[2], 5))
@@ -173,10 +162,61 @@ class ResultsView(DetailView):
 
         context["r_squared_poly3"] = r_squared_poly3
 
+
+
+
+
+
+        # TODO: Predicting values from regression: https://towardsdatascience.com/linear-regression-with-python-and-numpy-25d0e1dd220d
+        # TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
+
+        # -----------------------LOG-LINEAR----------------------------------------
+
+        def log_func(x):
+                if not x:
+                    return 0
+                else:
+                    x = np.log(x)
+                return x
+
+        merged_res_dur['seconds'] = merged_res_dur['seconds'].apply(log_func)
+        print(merged_res_dur)
+        y, X_log = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
+        mod_log = sm.OLS(y, X_log)  # Describe model
+        res_log = mod_log.fit()  # Fit model
+        print(res_log.summary())
+        context["statistics_extended_log"] = res_log.summary()
+
+        print(res_log.params)
+        r_squared_log = res_log.rsquared
+        context["r_squared_log"] = r_squared_log
+        r_squared_log_adj = res_log.rsquared_adj
+        context["r_squared_log_adj"] = r_squared_log_adj
+        #
+        # # Calculate Regression equation - lin log
+        # #y = a + b*ln(x)
+
+
+        print(X)
+        print(X_log)
+        vars = ['seconds']
+        X_log = X_log[vars]
+        X_log = X_log.dropna()
+        # X_log_a = np.delete(X_log, 0, axis=0)
+        print(X_log)
+        # eq_model_log = np.polyfit(X_log, y, 1)
+        # context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
+        # print(eq_model_log)
+        # print(res_log)
+
+
+        #############################Overall statistical tests for the datatable ###########################
         # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);
         # first number is an F-statistic and that the second is the p-value.
 
         rainbow_test = sm.stats.linear_rainbow(res)
+        context["rainbow_f"] = rainbow_test[0]
+        context["rainbow_p"] = rainbow_test[1]
 
         # print(rainbow_test)
 
@@ -186,11 +226,12 @@ class ResultsView(DetailView):
         # second number: pvaluefloat   If  the pvalue is lower  than some threshold, e.g. 0.05, then  we can  reject the   Null hypothesis  that  the  sample comes from a normal distribution.
 
         ks = sm.stats.diagnostic.kstest_normal(y, dist='norm', pvalmethod='table')
+        context["ksstat"] = ks[0]
+        context["ksstat_p"] = ks[1]
+        #TODO. Provide explanation
 
-        # print(ks)
 
-        # TODO: Predicting values from regression: https://towardsdatascience.com/linear-regression-with-python-and-numpy-25d0e1dd220d
-        # TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
+
 
         # ------------------------Absolute
 
@@ -216,7 +257,7 @@ class ResultsView(DetailView):
         x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
         model = sm.OLS(y_rel, x_rel)
         results_rel = model.fit()  # OLS = Ordinary Least Squares
-        context["statistics_extended_rel_lin"] = results_rel.summary()
+        # context["statistics_extended_rel_lin"] = results_rel.summary()
 
         # -------------------------Extract single parameters from summary - linear regression
         b0_rel_lin = results_rel.params[0]  # constant coefficient / Intercept
@@ -229,44 +270,44 @@ class ResultsView(DetailView):
                 "y = " + str(b0_r_rel_lin) + " + x1 * " + str(b1_r_rel_lin)
         )  # equation linear regression: y = b0 + x1*b1
 
-        # ------------------------Absolute log
-
-        x1_abs_log = sm.add_constant(
-            x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
-        model = sm.OLS(y_abs, x1_abs_log)
-        results_abs_log = model.fit()  # OLS = Ordinary Least Squares
-        context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
-
-        # -------------------------Extract single parameters from summary - linear regression
-        b0_abs_lin_log = results_abs_log.params[0]  # constant coefficient / Intercept
-        b1_abs_lin_log = results_abs_log.params[1]  # seconds coefficient / Slope
-        b0_r_abs_lin_log = round(b0_abs_lin_log, 5)
-        context["intercept_abs_lin_log"] = b0_r_abs_lin_log
-        b1_r_abs_lin_log = round(b1_abs_lin_log, 5)
-        context["slope_abs_lin_log"] = b1_r_abs_lin_log
-        context["reg_eq_abs_lin"] = (
-                "y = " + str(b0_r_abs_lin_log) + " + x1 * " + str(b1_r_abs_lin_log)
-        )  # equation linear regression: y = b0 + x1*b1
-
-        # --------------------------relative log
-
-        x_rel_log = sm.add_constant(x1_rel_log)  # add a row of ones as constant
-        model = sm.OLS(y_rel, x_rel_log)
-        results_rel_log = model.fit()  # OLS = Ordinary Least Squares
-        context["statistics_extended_rel_lin_log"] = results_rel_log.summary()
-
-        # -------------------------Extract single parameters from summary - linear regression
-        b0_rel_lin_log = results_rel_log.params[0]  # constant coefficient / Intercept
-        b1_rel_lin_log = results_rel_log.params[1]  # seconds coefficient / Slope
-        b0_r_rel_lin_log = round(b0_rel_lin_log, 5)
-        context["intercept_rel_lin_log"] = b0_r_rel_lin_log
-        b1_r_rel_lin_log = round(b1_rel_lin_log, 5)
-        context["slope_rel_lin_log"] = b1_r_rel_lin_log
-        context["reg_eq_lin_log"] = (
-                "y = " + str(b0_r_rel_lin_log) + " + x1 * " + str(b1_r_rel_lin_log)
-        )  # equation linear regression: y = b0 + x1*b1
-
+        # # ------------------------Absolute log
         #
+        # x1_abs_log = sm.add_constant(
+        #     x1_abs_log)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        # model = sm.OLS(y_abs, x1_abs_log)
+        # results_abs_log = model.fit()  # OLS = Ordinary Least Squares
+        # context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
+        #
+        # # -------------------------Extract single parameters from summary - linear regression
+        # b0_abs_lin_log = results_abs_log.params[0]  # constant coefficient / Intercept
+        # b1_abs_lin_log = results_abs_log.params[1]  # seconds coefficient / Slope
+        # b0_r_abs_lin_log = round(b0_abs_lin_log, 5)
+        # context["intercept_abs_lin_log"] = b0_r_abs_lin_log
+        # b1_r_abs_lin_log = round(b1_abs_lin_log, 5)
+        # context["slope_abs_lin_log"] = b1_r_abs_lin_log
+        # context["reg_eq_abs_lin"] = (
+        #         "y = " + str(b0_r_abs_lin_log) + " + x1 * " + str(b1_r_abs_lin_log)
+        # )  # equation linear regression: y = b0 + x1*b1
+        #
+        # # --------------------------relative log
+        #
+        # x_rel_log = sm.add_constant(x1_rel_log)  # add a row of ones as constant
+        # model = sm.OLS(y_rel, x_rel_log)
+        # results_rel_log = model.fit()  # OLS = Ordinary Least Squares
+        # context["statistics_extended_rel_lin_log"] = results_rel_log.summary()
+        #
+        # # -------------------------Extract single parameters from summary - linear regression
+        # b0_rel_lin_log = results_rel_log.params[0]  # constant coefficient / Intercept
+        # b1_rel_lin_log = results_rel_log.params[1]  # seconds coefficient / Slope
+        # b0_r_rel_lin_log = round(b0_rel_lin_log, 5)
+        # context["intercept_rel_lin_log"] = b0_r_rel_lin_log
+        # b1_r_rel_lin_log = round(b1_rel_lin_log, 5)
+        # context["slope_rel_lin_log"] = b1_r_rel_lin_log
+        # context["reg_eq_lin_log"] = (
+        #         "y = " + str(b0_r_rel_lin_log) + " + x1 * " + str(b1_r_rel_lin_log)
+        # )  # equation linear regression: y = b0 + x1*b1
+        #
+        # #
 
         # --------------------------Calculate best fitting model
 

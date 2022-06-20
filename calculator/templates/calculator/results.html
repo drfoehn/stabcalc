@@ -126,30 +126,17 @@
 
     {#    -----------------------------------Interpretation--------------------------------#}
     <h1 class="display-6">Interpretation</h1>
+    Rainbow-Test: F: {{ rainbow_f | floatformat:3}} / p: {{ rainbow_p | floatformat:3}}<br>
+    Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
+    {{ ksstat | floatformat:3 }} / p: {{ksstat_p | floatformat:3}}
+    <br>
+    <br>
     The model fitting best to your data is {{ best_fit_model }}, explaining {{ best_fit }} of your ....<br>
     The prediction value of this equation is ............... <br>
     Valid for linear model only: {{ interpretation_1 }}
     <br>
     <br>
-
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-    aliqua. Enim ut tellus elementum sagittis vitae et leo. Mauris sit amet massa vitae tortor condimentum lacinia.
-    Sapien nec sagittis aliquam malesuada. Cras sed felis eget velit aliquet. Quisque non tellus orci ac. Urna nunc id
-    cursus metus. Erat nam at lectus urna duis convallis convallis tellus. Nulla facilisi cras fermentum odio. Fusce ut
-    placerat orci nulla pellentesque dignissim enim sit amet. Pharetra convallis posuere morbi leo urna. Vulputate ut
-    pharetra sit amet aliquam id. Vitae elementum curabitur vitae nunc sed velit dignissim. Tellus mauris a diammaecenas
-    sed enim. Vestibulum sed arcu non odio euismod lacinia at. Vivamus at augue eget arcu dictum varius duisat. Nascetur
-    ridiculus mus mauris vitae. Urna neque viverra justo nec. Sit amet nisl purus in mollis. Enim nuncfaucibus a
-    pellentesque sit amet.
-
-    Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel fringilla est ullamcorper eget.
-    Semper risus in hendrerit gravida. Ut venenatis tellus in metus vulputate eu. Enim neque volutpat ac tincidunt. Ac
-    auctor augue mauris augue. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl. Tempus iaculis urna id
-    volutpat lacus laoreet non curabitur. Blandit aliquam etiam erat velit. Semper feugiat nibh sed pulvinar proin
-    gravida. Et leo duis ut diam quam nulla. Cursus vitae congue mauris rhoncus aenean vel elit scelerisque mauris. Nec
-    sagittis aliquam malesuada bibendum. Sapien pellentesque habitant morbi tristique senectus et netus et malesuada.
-    <hr class="my-4">
+<hr class="my-4">
 
     <hr>
     {#    --------------------------------BUTTONS--------------------------------#}
@@ -416,7 +403,7 @@
                             <td>Regression equation: <br></td>
                         </tr>
                         <tr>
-                            <td>{{ reg_eq_rel_lin }} <br></td>
+                            <td>{{ eq_model_lin}} <br></td>
                         </tr>
                         <tr>
                             <td>
@@ -437,32 +424,166 @@
 
 
                     <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#statisticsModal">
-                        Extended Statistics
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#linearModal">
+  Extended Statistics
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="linearModal" tabindex="-1" aria-labelledby="linearModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="linearModalLabel">Stability study
+                                        "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre style="font-family: monospace, monospace">{{ statistics_extended_abs_lin|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+          <a href="javascript:window.print()" class="bi bi-printer print"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+                </div>
+            </div>
+            {#                        -------------------Calculator---------------#}
+            <hr>
+            <div class="row">
+                <div class="col">
+                    Calculate individual values based on the regression equation: <br>
+                    Insert staorage duration in seconds: <input type="number" id="calc_input">
+                    {#    TODO: Check if input is in seconds#}
+                    <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
+                    <br>
+                    The estimated Result at that timepoint is: <p id="calc_result"></p>
+
+
+                    <script>
+                        function calcValue() {
+                            var x = document.getElementById("calc_input").value;
+                            var y = {{ intercept }} +x * {{ slope }};
+                            document.getElementById("calc_result").innerHTML = y;
+                        }
+                    </script>
+                </div>
+            </div>
+        </div>
+                {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
+        <div class="col">
+            <p class="graph_heading">Log transformed model</p>
+            {#                    --------------------Graph----------------#}
+            <div class="row">
+                <div class="col">
+                    <div id="log_div"></div>
+
+                    <script type="text/javascript">
+                        google.charts.load("current", {packages: ["corechart"]});
+                        google.charts.setOnLoadCallback(drawChart);
+
+                        function drawChart() {
+                            var data = google.visualization.arrayToDataTable([
+                                ['Storage Duration', 'Deviation'],
+                                {% for duration in setting.duration_set.all %}
+                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                {% endfor %}
+                            ]);
+
+                            var options = {
+                                title: 'Parameter deviation at selected storage durations',
+                                vAxis: {title: "Deviation"},
+                                hAxis: {title: "Storage duration - log(seconds)"},
+                                legend: 'top',
+                                crosshair: {trigger: 'both', orientation: 'both'},
+                                trendlines: {
+                                    0: {
+                                        type: 'linear',
+                                        {#degree: 3,#}
+                                        visibleInLegend: true,
+                                    }
+                                }
+                            };
+
+                            var chart = new google.visualization.ScatterChart(document.getElementById('log_div'));
+                            chart.draw(data, options);
+                        }
+                    </script>
+                </div>
+            </div>
+            {#                      --------------------Statistics--------------#}
+            <div class="row">
+                <div class="col">
+                    <br>
+                    <table>
+
+                        <tr>
+                            <td>
+                                R2
+                            </td>
+                            <td>
+                                {{ r_squared_log | floatformat:4 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                R2 adjusted
+                            </td>
+                            <td>
+                                {{ r_squared_log_adj  | floatformat:4 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Regression equation: <br></td>
+                        </tr>
+                        <tr>
+                            <td> <br></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr>
+                                y...Testresult (dependent variable) <br>
+                                x1...Storage Duration (independent variable)
+                            </td>
+                        </tr>
+                    </table>
+
+
+
+                </div>
+            </div>
+            {#                 ------------- Button-Extended Statictics ----------------#}
+            <br>
+            <div class="row">
+                <div class="col">
+
+
+                    <!-- Button trigger modal -->
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#logModal">
+                      Extended Statistics
                     </button>
 
                     <!-- Modal -->
-                    <div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="statisticsModalLabel">Stability study
-                                        "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin|safe }}</pre>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logModalLabel">Stability study
+                                        "{{ setting.name }}" <br> Extended Statistics - Logarithmic model</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <pre style="font-family: monospace, monospace">{{ statistics_extended_log|safe }}</pre>
+      </div>
+      <div class="modal-footer">
+          <a href="javascript:window.print()" class="bi bi-printer print"></a>
+      </div>
+    </div>
+  </div>
+</div>
 
                 </div>
             </div>
@@ -489,6 +610,7 @@
             </div>
         </div>
 
+    <div class="row">
         {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
         <div class="col">
             <p class="graph_heading">Polynomial Model 2°</p>
@@ -702,144 +824,6 @@
         </div>
     </div>
 
-    <div class="row">
-        {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
-        <div class="col">
-            <p class="graph_heading">Log transformed model</p>
-            {#                    --------------------Graph----------------#}
-            <div class="row">
-                <div class="col">
-                    <div id="log_div"></div>
-
-                    <script type="text/javascript">
-                        google.charts.load("current", {packages: ["corechart"]});
-                        google.charts.setOnLoadCallback(drawChart);
-
-                        function drawChart() {
-                            var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'Deviation'],
-                                {% for duration in setting.duration_set.all %}
-                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}],
-                                {% endfor %}
-                            ]);
-
-                            var options = {
-                                title: 'Parameter deviation at selected storage durations',
-                                vAxis: {title: "Deviation"},
-                                hAxis: {title: "Storage duration - log(seconds)"},
-                                legend: 'top',
-                                crosshair: {trigger: 'both', orientation: 'both'},
-                                trendlines: {
-                                    0: {
-                                        type: 'linear',
-                                        {#degree: 3,#}
-                                        visibleInLegend: true,
-                                    }
-                                }
-                            };
-
-                            var chart = new google.visualization.ScatterChart(document.getElementById('log_div'));
-                            chart.draw(data, options);
-                        }
-                    </script>
-                </div>
-            </div>
-            {#                      --------------------Statistics--------------#}
-            <div class="row">
-                <div class="col">
-                    <br>
-                    <table>
-                        <tr>
-                            <th>
-                                Regression equation: {{ reg_eq_lin_log }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>
-                                y...Testresult (dependent variable) <br>
-                                x1...Storage Duration (independent variable)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                R2:
-                            </td>
-                            <td>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Adjusted R2:
-                            </td>
-                            <td>
-
-                            </td>
-                        </tr>
-
-                    </table>
-
-
-                </div>
-            </div>
-            {#                 ------------- Button-Extended Statictics ----------------#}
-            <br>
-            <div class="row">
-                <div class="col">
-
-
-                    <!-- Button trigger modal -->
-
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#statisticsModal">
-                        Extended Statistics
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="statisticsModal" tabindex="-1" aria-labelledby="statisticsModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="statisticsModalLabel">Stability study
-                                        "{{ setting.name }}" <br> Extended Statistics - Logtransformed</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin_log|safe }}</pre>
-                                </div>
-                                <div class="modal-footer">
-                                    {#        TODO: Does not show in template: <a href="javascript:window.print()" class="btn btn-primary pull-right">Print</a>#}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            {#                        -------------------Calculator---------------#}
-            <hr>
-            <div class="row">
-                <div class="col">
-                    Calculate individual values based on the regression equation: <br>
-                    Insert staorage duration in seconds: <input type="number" id="calc_input">
-                    {#    TODO: Check if input is in seconds#}
-                    <button id="button_calc" value="here goes result" onclick="calcValue()">Calculate</button>
-                    <br>
-                    The estimated Result at that timepoint is: <p id="calc_result"></p>
-
-
-                    <script>
-                        function calcValue() {
-                            var x = document.getElementById("calc_input").value;
-                            var y = {{ intercept }} +x * {{ slope }};
-                            document.getElementById("calc_result").innerHTML = y;
-                        }
-                    </script>
-                </div>
-            </div>
-        </div>
 
     </div>
 

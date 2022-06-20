@@ -90,7 +90,9 @@ th{
 
 /*---------------------------------Resultpage------------------------------------*/
 
-
+.print{
+    font-size: 2em;
+}
 
 .parameter_name,
 .th_results,
