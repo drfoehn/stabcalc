@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from sklearn.preprocessing import PolynomialFeatures
 import math
-
+from patsy.highlevel import dmatrices
 
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
@@ -74,8 +74,7 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
-        # print(results_data)
-        # print(durations_data)
+        context["lala"] = merged_res_dur.to_html
         cols = merged_res_dur["duration_id"].nunique()  # number of timepoints
         rows = merged_res_dur["subject_id"].nunique()  # number of subjects
 
@@ -114,9 +113,43 @@ class ResultsView(DetailView):
 
         ## --------------------Explanation of statistics summary:
         # https://medium.com/swlh/interpreting-linear-regression-through-statsmodels-summary-4796d359035a
-
+        # TODO: But why are there four different versions of Region when we only input one? Simply put, the formula expects continuous values in the form of numbers. By inputting region with data points as strings, the formula separates each string into categories and analyzes the category separately. Formatting your data ahead of time can help you organize and analyze this properly.
 
         # -----------------------LINEAR----------------------------------------
+
+        vars = ['value', 'seconds']
+        merged_res_dur = merged_res_dur[vars]
+        merged_res_dur = merged_res_dur.dropna()
+        y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
+        mod = sm.OLS(y, X)  # Describe model
+        res = mod.fit()  # Fit model
+        print(res.summary())  # Summarize model
+
+        print(res.params)
+        print(res.rsquared)
+        print(res.rsquared_adj)
+
+        # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);
+        # first number is an F-statistic and that the second is the p-value.
+
+        rainbow_test = sm.stats.linear_rainbow(res)
+
+        print(rainbow_test)
+
+        # Test assumed normal or exponential distribution using Lilliefors’ test.        #
+        # Lilliefors’ test is a Kolmogorov - Smirnov test with estimated parameters.
+        # first number: ksstatfloat Kolmogorov - Smirnov test  statistic with estimated mean and variance.
+        # second number: pvaluefloat   If  the pvalue is lower  than some threshold, e.g. 0.05, then  we can  reject the   Null hypothesis  that  the  sample comes from a normal distribution.
+
+        ks = sm.stats.diagnostic.kstest_normal(y, dist='norm', pvalmethod='table')
+
+        print(ks)
+
+
+
+
+
+        #TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
 
         # ------------------------Absolute
 

@@ -4,7 +4,7 @@
 {% block title %}Results - Stability study "{{ setting.name }}"{% endblock %}
 
 {% block content %}
-
+{{ lala |safe}}
 <div class="jumbotron">
   <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
   <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -125,6 +125,9 @@
 
 {#    -----------------------------------Interpretation--------------------------------#}
     <h1 class="display-6">Interpretation</h1>
+    The model fitting best to your data is XXXXXXXXXXXXXXXX (adjusted R2 of )<br>
+    The prediction value of this equation is ............... <br>
+
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Enim ut tellus elementum sagittis vitae et leo. Mauris sit amet massa vitae tortor condimentum lacinia. Sapien nec sagittis aliquam malesuada. Cras sed felis eget velit aliquet. Quisque non tellus orci ac. Urna nunc id cursus metus. Erat nam at lectus urna duis convallis convallis tellus. Nulla facilisi cras fermentum odio. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Pharetra convallis posuere morbi leo urna. Vulputate ut pharetra sit amet aliquam id. Vitae elementum curabitur vitae nunc sed velit dignissim. Tellus mauris a diam maecenas sed enim. Vestibulum sed arcu non odio euismod lacinia at. Vivamus at augue eget arcu dictum varius duis at. Nascetur ridiculus mus mauris vitae. Urna neque viverra justo nec. Sit amet nisl purus in mollis. Enim nunc faucibus a pellentesque sit amet.
 
 Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel fringilla est ullamcorper eget. Semper risus in hendrerit gravida. Ut venenatis tellus in metus vulputate eu. Enim neque volutpat ac tincidunt. Ac auctor augue mauris augue. Nisi quis eleifend quam adipiscing vitae proin sagittis nisl. Tempus iaculis urna id volutpat lacus laoreet non curabitur. Blandit aliquam etiam erat velit. Semper feugiat nibh sed pulvinar proin gravida. Et leo duis ut diam quam nulla. Cursus vitae congue mauris rhoncus aenean vel elit scelerisque mauris. Nec sagittis aliquam malesuada bibendum. Sapien pellentesque habitant morbi tristique senectus et netus et malesuada.
@@ -772,36 +775,21 @@ function calcValue() {
                     </tr>
                     <tr>
                         <td>
-                            Slope:
+                            R2:
                         </td>
                         <td>
-                            {{ slope_rel_lin_log | floatformat:5 }}
+
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            Intercept
+                            Adjusted R2:
                         </td>
                         <td>
-                            {{ intercept_rel_lin_log | floatformat:5}}
+
                         </td>
                     </tr>
-                    <tr>
-                        <td>
-                            F-Value
-                        </td>
-                        <td>
-{#                            {{ f_value | floatformat:5}}#}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            F p-Value
-                        </td>
-                        <td>
-{#                            {{ f_p_value | floatformat:5}}#}
-                        </td>
-                    </tr>
+
                 </table>
 
 
@@ -814,6 +802,7 @@ function calcValue() {
 
 
     <!-- Button trigger modal -->
+
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#statisticsModal">
   Extended Statistics
 </button>
@@ -823,14 +812,14 @@ function calcValue() {
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
+        <h5 class="modal-title" id="statisticsModalLabel">Stability study "{{ setting.name }}" <br> Extended Statistics - Logtransformed</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin|safe }}</pre>
+            <pre style="font-family: monospace, monospace">{{ statistics_extended_rel_lin_log|safe }}</pre>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+{#        TODO: Does not show in template: <a href="javascript:window.print()" class="btn btn-primary pull-right">Print</a>#}
       </div>
     </div>
   </div>

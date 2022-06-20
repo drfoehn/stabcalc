@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_countries',
     "crispy_forms",
     "crispy_bootstrap5",
+    "patsy",
 
 
 ]
