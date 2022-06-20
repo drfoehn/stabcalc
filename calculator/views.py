@@ -102,9 +102,9 @@ class ResultsView(DetailView):
                 xa = math.log(xa)
             x1_abs_log.append(xa)
 
-        print(x1_abs_log)
-        print(x1_abs)
-        print(y_abs)
+        # print(x1_abs_log)
+        # print(x1_abs)
+        # print(y_abs)
 
 
         ################################# REGRESSION ANALYSIS ######################################
@@ -123,18 +123,58 @@ class ResultsView(DetailView):
         y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod = sm.OLS(y, X)  # Describe model
         res = mod.fit()  # Fit model
-        print(res.summary())  # Summarize model
+        # print(res.summary())  # Summarize model
 
-        print(res.params)
-        print(res.rsquared)
-        print(res.rsquared_adj)
+        # print(res.params)
+        context["r_squared_lin"] = res.rsquared
+        context["r_squared_lin_adj"] = res.rsquared_adj
+        X = merged_res_dur.iloc[:, 1] #seconds
+        y = merged_res_dur.iloc[:, 0] #value
+
+        # # Calculate Regression equation - polynomial 2rd degree
+        # eq_model_lin = np.poly1d(np.polyfit(X, y, 1))
+        # a = eq_model_lin
+
+
+
+        # Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
+        eq_model_poly2 = np.poly1d(np.polyfit(X, y, 2))
+
+        # Calculate r_squared
+        results = {}
+        coeffs = np.polyfit(X, y, 2)
+        p = np.poly1d(coeffs)
+        #calculate r-squared
+        yhat = p(X)
+        ybar = np.sum(y)/len(y)
+        ssreg = np.sum((yhat-ybar)**2)
+        sstot = np.sum((y - ybar)**2)
+        r_squared_poly2 = ssreg / sstot
+
+        context["r_squared_poly2"] = r_squared_poly2
+
+        # Calculate Regression equation - polynomial 3rd degree
+        eq_model_poly3 = np.poly1d(np.polyfit(X, y, 3))
+
+        # Calculate r_squared
+        results = {}
+        coeffs = np.polyfit(X, y, 3)
+        p = np.poly1d(coeffs)
+        # calculate r-squared
+        yhat = p(X)
+        ybar = np.sum(y) / len(y)
+        ssreg = np.sum((yhat - ybar) ** 2)
+        sstot = np.sum((y - ybar) ** 2)
+        r_squared_poly3 = ssreg / sstot
+
+        context["r_squared_poly3"] = r_squared_poly3
 
         # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);
         # first number is an F-statistic and that the second is the p-value.
 
         rainbow_test = sm.stats.linear_rainbow(res)
 
-        print(rainbow_test)
+        # print(rainbow_test)
 
         # Test assumed normal or exponential distribution using Lilliefors’ test.        #
         # Lilliefors’ test is a Kolmogorov - Smirnov test with estimated parameters.
@@ -143,7 +183,7 @@ class ResultsView(DetailView):
 
         ks = sm.stats.diagnostic.kstest_normal(y, dist='norm', pvalmethod='table')
 
-        print(ks)
+        # print(ks)
 
 
 

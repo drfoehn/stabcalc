@@ -375,11 +375,32 @@ Urna neque viverra justo nec ultrices. Enim praesent elementum facilisis leo vel
             <div class="col">
                 <br>
                 <table>
-                   <tr>
-                       <th>
-                           Regression equation: {{ reg_eq_rel_lin }}
-                       </th>
+
+                       <tr>
+                       <td>
+                           R2
+                       </td>
+                           <td>
+                               {{ r_squared_lin | floatformat:4}}
+                           </td>
                    </tr>
+                    <tr>
+                        <td>
+                            R2 adjusted
+                        </td>
+                        <td>
+                            {{ r_squared_lin_adj  | floatformat:4}}
+                        </td>
+                    </tr>
+                    <tr>
+
+                           <td>Regression equation: <br></td>
+
+
+                    </tr>
+                    <tr>
+                        <td>{{ reg_eq_rel_lin }}</td>
+                    </tr>
                     <tr>
                         <td>
                            y...Testresult (dependent variable) <br>
@@ -526,7 +547,8 @@ function calcValue() {
         <div class="row">
             <div class="col">
                 <br>
-                Regression equation: {{ reg_eq_lin }}<br>
+                R2: {{ r_squared_poly2 |floatformat:4 }} <br>
+                Regression equation: {{ eq_model_poly2}}<br>
     y...Testresult (dependent variable) <br>
     x1...Timepoint (independent variable) <br>
                 <br>
@@ -649,14 +671,10 @@ function calcValue() {
         <div class="row">
             <div class="col">
                 <br>
-                Regression equation: <br>
-    y...Testresult (dependent variable) <br>
-    x1...Timepoint (independent variable) <br>
-                <br>
-    Slope: <br>
-    Intercept: <br>
-    F-value: <br>
-    F p-Value: <br>
+                R2: {{ r_squared_poly3 |floatformat:4 }} <br>
+                Regression equation: {{ eq_model_poly3 }}<br>
+                    y...Testresult (dependent variable) <br>
+                    x1...Timepoint (independent variable) <br>
 
             </div>
         </div>
