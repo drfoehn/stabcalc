@@ -12,13 +12,13 @@ from .forms import *
     # change_form_template = "photo/admin/my_change_form.html"
 
 
-class LabUserInline(admin.StackedInline):
-    model = LabUser
-    can_delete = False
+# class LabUserInline(admin.StackedInline):
+#     model = LabUser
+#     can_delete = False
 
-# Define a new User admin
-class UserAdmin(BaseUserAdmin):
-    inlines = (LabUserInline,)
+# # Define a new User admin
+# class UserAdmin(BaseUserAdmin):
+#     inlines = (LabUserInline,)
 
 
 
@@ -93,8 +93,8 @@ class UserAdminArea(admin.AdminSite):
 user_dashboard = UserAdminArea(name='UserAdmin')
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+# admin.site.unregister(User)
+# admin.site.register(User, UserAdmin)
 admin.site.register(Parameter)
 admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)

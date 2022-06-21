@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'calculator',
+    'users',
     'django_countries',
     "crispy_forms",
     "crispy_bootstrap5",
@@ -102,7 +103,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-# AUTH_USER_MODEL = 'calculator.LabUser'
+AUTH_USER_MODEL = 'users.LabUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

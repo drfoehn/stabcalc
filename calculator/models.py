@@ -13,18 +13,19 @@ import statistics
 
 # Create your models here.
 
-class LabUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you',
-                              verbose_name='E-Mail')
-    laboratory = models.CharField(_('Name of Laboratory'), max_length=255)
-    country = CountryField(verbose_name='Country')
-    city = models.CharField(max_length=255, verbose_name='City')
-    REQUIRED_FIELDS = ['email', 'laboratory', 'country', 'city']
+# class LabUser(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you',
+#                               verbose_name='E-Mail')
+#     laboratory = models.CharField(_('Name of Laboratory'), max_length=255)
+#     country = CountryField(verbose_name='Country')
+#     city = models.CharField(max_length=255, verbose_name='City')
+#     REQUIRED_FIELDS = ['email', 'laboratory', 'country', 'city']
+import users.models
 
 
 class Instrument(models.Model):
-    author = models.ForeignKey(LabUser, on_delete=models.CASCADE, related_name="todolist", null=True)
+    author = models.ForeignKey(users.models.LabUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
