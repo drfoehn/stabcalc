@@ -443,37 +443,48 @@ class DashboardView(ListView):
         return context
 
 
-class InstrumentIndex(ListView):
-    model = Instrument
-
-
-# class InstrumentAddView(CreateView, SuccessMessageMixin):
-#     # template_name = "xxx.html"
+# class InstrumentIndex(ListView):
 #     model = Instrument
-#     form = InstrumentForm
-#     fields = ['name', 'manufacturer']
-#     success_message = "Instrument saved"
-#
-#     def post(self, request, *args, **kwargs):
-#         return super().post(request, *args, **kwargs)
 
-    # def get_success_url(self):
-    #     return HttpResponseRedirect('/')
+def create_instrument(request):
+    form = InstrumentForm(request.POST or None)
+    instrument = Instrument
 
-def InstrumentAddView(request):
     if request.method == 'POST':
-        form = InstrumentForm(request.POST)
-
         if form.is_valid():
             name = form.cleaned_data["name"]
             manufacturer = form.cleaned_data['manufacturer']
             instrument = Instrument(name=name, manufacturer=manufacturer)
             instrument.save()
-            # messages.success(request, _('New Instrument saved'))
-            # return redirect('add_parameter')
-    else:
-        form = InstrumentForm
-    return render(request, 'calculator/instrument_form.html', {'form': form})
+            return redirect('instrument_detail', pk=instrument.id)
+        else:
+            return render(request, 'calculator/partials/instrument_form.html', context={
+                'form': form
+            })
+
+    context = {
+        'form': form,
+        'instrument': instrument,
+    }
+
+    return render(request, 'calculator/instrument_list.html', context)
+
+
+def add_instrument_form(request):
+    form = InstrumentForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/instrument_form.html', context)
+
+def instrument_detail(request, pk):
+    instrument = Instrument.objects.get(pk=pk)
+    context = {
+        "instrument": instrument
+    }
+    return render(request, 'calculator/partials/instrument_detail.html', context)
+
+
 
 class InstrumentUpdateView(UpdateView):
     model = Instrument

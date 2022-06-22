@@ -2,25 +2,36 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}Instruments{% endblock %}
+{% block title %}List/Add Instruments{% endblock %}
 
 {% block content %}
 
+    <h4>Add Instrument</h4>
 
-    {% if object_list %}
-        <div class="row d-flex justify-content-center">
-            {% for instrument in object_list %}
-                <div>
-                {{ instrument.name }}<br>
-                {{ instrument.manufacturer }}<br>
-                <a href="{% url 'edit_instrument' instrument.id %}">update</a>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No instruments saved</p>
-    {% endif %}
-    <a href="{% url 'add_instrument' %}">add instrument</a>
+         <button hx-get="{% url 'create-instrument-form' %}" hx-swap="beforeend" hx-target="#instrument_form">Add additional Instrument</button>
+
+{#    {% if object_list %}#}
+{#        <div class="row d-flex justify-content-center">#}
+{#            {% for instrument in object_list %}#}
+{#                <div>#}
+{#                    {{ instrument.name }}<br>#}
+{#                    {{ instrument.manufacturer }}<br>#}
+{#                    {% include "calculator/partials/instrument_detail.html" %}#}
+{#                    <a href="{% url 'edit_instrument' instrument.id %}">update</a>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#         </div>#}
+{#    {% else %}#}
+{#        <p>No instruments saved</p>#}
+{#    {% endif %}#}
+
+    <div class="row" id="instrument_form"></div>
+
+
+
+{##}
+{##}
+{#<a href="{% url 'add_parameter' %}">Next (Parameters)</a>#}
 
 {% endblock %}
 
