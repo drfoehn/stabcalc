@@ -10,16 +10,18 @@
     <title>{% block title %}{% endblock %}</title>
 
     {% block css %}
-{#        ------------------------Bootstrap 5----------------------------#}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-            <!-- Bootstrap Font Icon CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-{#       ---------------------------Local CSS -----------------------------#}
+        {#        ------------------------Bootstrap 5----------------------------#}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+              crossorigin="anonymous">
+        <!-- Bootstrap Font Icon CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        {#       ---------------------------Local CSS -----------------------------#}
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
     {% endblock %}
 
     {% block js %}
-{#        ------------------------Google Charts - https://developers.google.com/chart/interactive/docs/gallery#}
+        {#        ------------------------Google Charts - https://developers.google.com/chart/interactive/docs/gallery#}
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     {% endblock %}
 
@@ -39,19 +41,20 @@
                     {% include "includes/navigation.html" %}
 
 
-                      {% if messages %}
-                          <div class="alert alert-warning alert-dismissible fade show" role="alert" id="messages">
-                      <ul class="messages">
-                          {% for message in messages %}
+                    {% if messages %}
+                        <div class="alert alert-warning alert-dismissible fade show" role="alert" id="messages">
+                            <ul class="messages">
+                                {% for message in messages %}
 
-                          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                              <strong>{{ message }}</strong>
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                          </li>
-                          {% endfor %}
-                      </ul>
-                          </div>
-                      {% endif %}
+                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                                        <strong>{{ message }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                aria-label="Close"></button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
 
 
                     {% block content %}
@@ -67,15 +70,17 @@
 </div>
 <div id="footer">
     <div id="footer-content" class="d-flex justify-content-center">
-{#        <a href="{% url '#' %}">Datenschutz</a>#}
-{#        |#}
-{#        <a href="{% url '#' %}">{% trans "About us" %}</a>#}
-{#        |#}
-{#        <a href="{% url '#' %}">{% trans "Contact" %}</a>#}
-Terms and Conditions | About | Contact
+        {#        <a href="{% url '#' %}">Datenschutz</a>#}
+        {#        |#}
+        {#        <a href="{% url '#' %}">{% trans "About us" %}</a>#}
+        {#        |#}
+        {#        <a href="{% url '#' %}">{% trans "Contact" %}</a>#}
+        Terms and Conditions | About | Contact
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
 </body>
 </html>
