@@ -448,7 +448,7 @@ class DashboardView(ListView):
 
 def create_instrument(request):
     form = InstrumentForm(request.POST or None)
-    instrument = Instrument
+    instruments = Instrument.objects.filter()
 
     if request.method == 'POST':
         if form.is_valid():
@@ -464,7 +464,7 @@ def create_instrument(request):
 
     context = {
         'form': form,
-        'instrument': instrument,
+        'instruments': instruments,
     }
 
     return render(request, 'calculator/instrument_list.html', context)

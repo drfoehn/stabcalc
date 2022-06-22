@@ -9,7 +9,18 @@
     <h4>Add Instrument</h4>
 
          <button hx-get="{% url 'create-instrument-form' %}" hx-swap="beforeend" hx-target="#instrument_form">Add additional Instrument</button>
+            {% if object_list %}
+                {% for instrument in object_list %}
+                    {{ instrument.name }}
 
+                {% endfor %}
+                {% else %}
+                lulu
+            {% endif %}
+
+    {% for instrument in instruments %}
+                {% include 'calculator/partials/instrument_detail.html' %}
+            {% endfor %}
 {#    {% if object_list %}#}
 {#        <div class="row d-flex justify-content-center">#}
 {#            {% for instrument in object_list %}#}
