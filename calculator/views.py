@@ -486,6 +486,60 @@ def instrument_detail(request, pk):
 
 
 
+def create_parameter(request):
+    form = ParameterForm(request.POST or None)
+    parameters = Parameter.objects.filter()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            unit = form.cleaned_data["unit"]
+            reagent_name = form.cleaned_data["reagent_name"]
+            reagent_manufacturer = form.cleaned_data["reagent_manufacturer"]
+            CV_intra = form.cleaned_data["CV_intra"]
+            CV_inter = form.cleaned_data["CV_inter"]
+            method_hand = form.cleaned_data["method_hand"]
+
+            parameter = Parameter(
+                name=name,
+                unit=unit,
+                reagent_name=reagent_name,
+                reagent_manufacturer=reagent_manufacturer,
+                CV_intra=CV_intra,
+                CV_inter=CV_inter,
+                method_hand=method_hand
+            )
+            parameter.save()
+            return redirect('parameter-detail', pk=parameter.id)
+        else:
+            return render(request, 'calculator/partials/parameter_form.html', context={
+                'form': form
+            })
+
+    context = {
+        'form': form,
+        'parameters': parameters,
+    }
+
+    return render(request, 'calculator/parameter_list.html', context)
+
+
+def add_parameter_form(request):
+    form = ParameterForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/parameter_form.html', context)
+
+def parameter_detail(request, pk):
+    parameter = Parameter.objects.get(pk=pk)
+    context = {
+        "parameter": parameter
+    }
+    return render(request, 'calculator/partials/parameter_detail.html', context)
+
+
+
 class InstrumentUpdateView(UpdateView):
     model = Instrument
     form_class = InstrumentForm

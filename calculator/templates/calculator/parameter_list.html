@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add Parameters{% endblock %}
+
+{% block content %}
+
+    <h4>Add Parameter</h4>
+
+
+         <button hx-get="{% url 'create-parameter-form' %}" hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</button>
+<div class="row" id="parameter_form"></div>
+    {% if parameters %}
+
+    {% for parameter in parameters %}
+                {% include 'calculator/partials/parameter_detail.html' %}
+            {% endfor %}
+            {% else %}
+                Currently no parameters
+            {% endif %}
+{#    {% if object_list %}#}
+{#        <div class="row d-flex justify-content-center">#}
+{#            {% for parameter in object_list %}#}
+{#                <div>#}
+{#                    {{ parameter.name }}<br>#}
+{#                    {{ parameter.manufacturer }}<br>#}
+{#                    {% include "calculator/partials/parameter_detail.html" %}#}
+{#                    <a href="{% url 'edit_parameter' parameter.id %}">update</a>#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#         </div>#}
+{#    {% else %}#}
+{#        <p>No parameters saved</p>#}
+{#    {% endif %}#}
+
+
+
+
+
+{##}
+{##}
+{#<a href="{% url 'add_parameter' %}">Next (Parameters)</a>#}
+
+{% endblock %}
+
+
