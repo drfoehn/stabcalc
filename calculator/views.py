@@ -456,7 +456,7 @@ def create_instrument(request):
             manufacturer = form.cleaned_data['manufacturer']
             instrument = Instrument(name=name, manufacturer=manufacturer)
             instrument.save()
-            return redirect('instrument_detail', pk=instrument.id)
+            return redirect('instrument-detail', pk=instrument.id)
         else:
             return render(request, 'calculator/partials/instrument_form.html', context={
                 'form': form

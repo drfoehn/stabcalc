@@ -8,11 +8,11 @@ from django.views.generic import TemplateView
 urlpatterns = [
 
     # path('', TemplateView.as_view(template_name="calculator/instrument_list.html"), name='create-instrument'),
-    path('instruments', create_instrument, name='create-instrument'),
-    path('calculator/instrument/<pk>/', instrument_detail, name="instrument-detail"),
+    path('instruments/', create_instrument, name='create-instrument'),
+    path('instruments/instrument/<pk>/', instrument_detail, name="instrument-detail"),
     # path('instrument/<pk>/update/', update_book, name="update-book"),
     # path('instrument/<pk>/delete/', delete_book, name="delete-book"),
-    path('calculator/create-instrument-form/', add_instrument_form, name='create-instrument-form'),
+    path('instruments/create-instrument-form/', add_instrument_form, name='create-instrument-form'),
 
     # path("add-instrument-form/", views.add_instrument_form, name="add_instrument_form"),
     # path("instrument-detail/<pk>/", views.instrument_detail, name="instrument_detail"),
