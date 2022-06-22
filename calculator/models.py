@@ -25,15 +25,12 @@ import users.models
 
 
 class Instrument(models.Model):
-    author = models.ForeignKey(users.models.LabUser, on_delete=models.CASCADE)
+    # author = models.ForeignKey(users.models.LabUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
     def __str__(self):
         return f"{self.name}, {self.manufacturer}"
-
-    def get_absolute_url(self):
-        return reverse('dashboard')
 
 
 class Condition(models.Model):

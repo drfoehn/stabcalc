@@ -447,18 +447,33 @@ class InstrumentIndex(ListView):
     model = Instrument
 
 
-class InstrumentAddView(CreateView, SuccessMessageMixin):
-    # template_name = "xxx.html"
-    model = Instrument
-    form_class = InstrumentForm
-    success_message = "Instrument saved"
-
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+# class InstrumentAddView(CreateView, SuccessMessageMixin):
+#     # template_name = "xxx.html"
+#     model = Instrument
+#     form = InstrumentForm
+#     fields = ['name', 'manufacturer']
+#     success_message = "Instrument saved"
+#
+#     def post(self, request, *args, **kwargs):
+#         return super().post(request, *args, **kwargs)
 
     # def get_success_url(self):
     #     return HttpResponseRedirect('/')
 
+def InstrumentAddView(request):
+    if request.method == 'POST':
+        form = InstrumentForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            manufacturer = form.cleaned_data['manufacturer']
+            instrument = Instrument(name=name, manufacturer=manufacturer)
+            instrument.save()
+            # messages.success(request, _('New Instrument saved'))
+            # return redirect('add_parameter')
+    else:
+        form = InstrumentForm
+    return render(request, 'calculator/instrument_form.html', {'form': form})
 
 class InstrumentUpdateView(UpdateView):
     model = Instrument

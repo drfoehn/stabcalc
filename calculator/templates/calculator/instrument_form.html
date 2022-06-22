@@ -8,17 +8,23 @@
 
 {% block content %}
   <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
-    <h2 class="display-4">Input Instruments</h2>
+    <h2 class="display-4">New Instrument</h2>
   </div>
   <div class="container-fluid">
     <div class="row">
       <form method="POST">
         {% csrf_token %}
-          {{ form }}
+          {{ form.as_p}}
           <input type="submit" value="Submit">
+          <br>
+          <br>
+
           {#                    {% include "includes/form_template.html" %}#}
       </form>
     </div>
+  <div class="row">
+      <button type="submit" class="btn btn-primary">Next (Add Parameter)</button>
+  </div>
 
   </div>
 {% endblock content %}

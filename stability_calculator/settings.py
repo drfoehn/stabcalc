@@ -52,7 +52,7 @@ INSTALLED_APPS = [
 
 
 ]
-
+AUTH_USER_MODEL = 'users.LabUser'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -103,7 +103,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'users.LabUser'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {

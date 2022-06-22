@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headadditional %}
+{% endblock %}
+
+{% block title %}Stability Calculator - Register{% endblock %}
+
+{% block content %}
+    <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
+        <h2 class="display-4">Stability Calculator - Register</h2>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            {% if form.errors %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>There was an error with the form.</strong>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+            <p>
+
+            </p>
+            {% endif %}
+            <div class="col shadow p-4 mb-5 bg-body rounded">
+                <form action="{% url 'register_user' %}" method="post">
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+                    <br/><br/>
+                    <input type="submit" value="Submit" class="btn btn-secondary">
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
