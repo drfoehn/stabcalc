@@ -19,6 +19,11 @@ urlpatterns = [
     path('parameters/parameter/<pk>/edit', edit_parameter, name="edit-parameter"),
     path('parameters/create-parameter-form/', add_parameter_form, name='create-parameter-form'),
 
+    path('samples/', create_sample, name='create-sample'),
+    path('samples/sample/<pk>/', sample_detail, name="sample-detail"),
+    path('samples/sample/<pk>/delete', delete_sample, name="delete-sample"),
+    path('samples/sample/<pk>/edit', edit_sample, name="edit-sample"),
+    path('samples/create-sample-form/', add_sample_form, name='create-sample-form'),
 
     #
     # path("instrument/<pk>/edit", views.InstrumentUpdateView.as_view(), name="edit_instrument"),

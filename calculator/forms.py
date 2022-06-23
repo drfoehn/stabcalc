@@ -31,7 +31,7 @@ class ParameterForm(forms.ModelForm):
     CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}), required=False)
-    instrument = forms.ModelChoiceField(queryset=(Instrument.objects.filter()), empty_label='Select instrument')
+    instrument = forms.ModelChoiceField(queryset=(Instrument.objects.all()), empty_label='Select instrument')
 
     # instrument = models.ForeignKey(Instrument)
     # sample = models.ForeignKey(Sample)
@@ -72,12 +72,12 @@ class ParameterForm(forms.ModelForm):
 
 
 class SampleForm(forms.ModelForm):
-    sample_type = forms.ChoiceField()
-    container_additive = forms.ChoiceField()
-    container_dimension = forms.ChoiceField()
+    sample_type = forms.Select()
+    container_additive = forms.Select()
+    container_dimension = forms.Select()
     container_fillingvolume = forms.FloatField()
-    container_material = forms.ChoiceField()
-    gel = forms.BooleanField()
+    container_material = forms.Select()
+    gel = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
 
     class Meta:
         model = Sample
@@ -89,6 +89,15 @@ class SampleForm(forms.ModelForm):
             'container_material',
             'gel',
         )
+
+    def __init__(self, *args, **kwargs):
+        super(SampleForm, self).__init__(*args, **kwargs)
+        self.fields['sample_type'].widget.attrs['class'] = 'form-select'
+        self.fields['container_dimension'].widget.attrs['class'] = 'form-select'
+        self.fields['container_additive'].widget.attrs['class'] = 'form-select'
+        self.fields['container_fillingvolume'].widget.attrs['class'] = 'form-control'
+        self.fields['container_material'].widget.attrs['class'] = 'form-select'
+        self.fields['gel'].widget.attrs['class'] = 'check-input'
 
 
 class SettingForm(forms.ModelForm):

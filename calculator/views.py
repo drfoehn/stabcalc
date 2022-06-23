@@ -491,7 +491,7 @@ def delete_instrument(request, pk):
 def create_parameter(request):
 
     form = ParameterForm(request.POST or None)
-    parameters = Parameter.objects.filter()
+    parameters = Parameter.objects.all()
 
 
     if request.method == 'POST':
@@ -526,7 +526,7 @@ def create_parameter(request):
         else:
             context = {
                 'form': form,
-                'instrument': Instrument.objects.filter()
+                'parameters': Parameter.objects.filter()
             }
             return render(request, 'calculator/partials/parameter_form.html', context)
 
@@ -538,14 +538,12 @@ def create_parameter(request):
 
     return render(request, 'calculator/parameter_list.html', context)
 
-
 def add_parameter_form(request):
     form = ParameterForm()
     context = {
         "form": form
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
-
 
 def parameter_detail(request, pk):
     parameter = Parameter.objects.get(pk=pk)
@@ -575,6 +573,92 @@ def delete_parameter(request, pk):
     parameter.delete()
     return HttpResponse('')
 
+# --------------------------------------SAMPLE----------------------------------------
+
+def create_sample(request):
+
+    form = SampleForm(request.POST or None)
+    samples = Sample.objects.all()
+
+
+    if request.method == 'POST':
+        if form.is_valid():
+            # parameter = form.save(commit=False)
+            # parameter.instrument = Instrument.objects.get(instrument=request.POST[Instrument.pk])
+            # name = form.cleaned_data["name"]
+            # unit = form.cleaned_data["unit"]
+            # reagent_name = form.cleaned_data["reagent_name"]
+            # reagent_manufacturer = form.cleaned_data["reagent_manufacturer"]
+            # CV_intra = form.cleaned_data["CV_intra"]
+            # CV_inter = form.cleaned_data["CV_inter"]
+            # method_hand = form.cleaned_data["method_hand"]
+            #
+            # # instrument = request.POST.get(Instrument.objects.get('name'))
+            #
+            # parameter = Parameter(
+            #     name=name,
+            #     unit=unit,
+            #     reagent_name=reagent_name,
+            #     reagent_manufacturer=reagent_manufacturer,
+            #     CV_intra=CV_intra,
+            #     CV_inter=CV_inter,
+            #     method_hand=method_hand,
+            #     instrument=parameter.instrument
+            #     # instrument=request.POST.get('instrument',  Instrument.objects.get(instrument=instrument))
+            #     # instrument=Instrument.objects.get(instrument=request.POST[instrument.id])
+            # )
+            # parameter.save()
+            sample = form.save()
+            return redirect('sample-detail', pk=sample.id)
+        else:
+            context = {
+                'form': form,
+                'samples': Sample.objects.all()
+            }
+            return render(request, 'calculator/partials/sample_form.html', context)
+
+    context = {
+        'form': form,
+        'samples': samples,
+
+    }
+
+    return render(request, 'calculator/sample_list.html', context)
+
+def add_sample_form(request):
+    form = SampleForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/sample_form.html', context)
+
+def sample_detail(request, pk):
+    sample = Sample.objects.get(pk=pk)
+    context = {
+        "sample": sample
+    }
+    return render(request, 'calculator/partials/sample_detail.html', context)
+
+def edit_sample(request, pk):
+    sample = Sample.objects.get(pk=pk)
+    form = SampleForm(request.POST or None, instance=sample)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            sample=form.save()
+            return redirect('sample-detail', pk=sample.id)
+
+    context = {
+        "form": form,
+        "sample": sample,
+    }
+    return render(request, 'calculator/partials/parameter_form.html', context)
+
+def delete_sample(request, pk):
+    sample = Sample.objects.get(pk=pk)
+    sample.delete()
+    return HttpResponse('')
 
 
 
