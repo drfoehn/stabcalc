@@ -28,9 +28,9 @@ class ParameterForm(forms.ModelForm):
     unit = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}))
+    CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}), required=False)
     instrument = forms.ModelChoiceField(queryset=(Instrument.objects.filter()), empty_label='Select instrument')
 
     # instrument = models.ForeignKey(Instrument)
@@ -71,7 +71,7 @@ class ParameterForm(forms.ModelForm):
         return feedback
 
 
-class SampleForm(forms.Form):
+class SampleForm(forms.ModelForm):
     sample_type = forms.ChoiceField()
     container_additive = forms.ChoiceField()
     container_dimension = forms.ChoiceField()

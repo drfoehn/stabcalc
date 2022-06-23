@@ -13,35 +13,17 @@
 <div class="row" id="instrument_form"></div>
     {% if instruments %}
 
-    {% for instrument in instruments %}
-                {% include 'calculator/partials/instrument_detail.html' %}
-            {% endfor %}
-            {% else %}
-                Currently no instruments
-            {% endif %}
-{#    {% if object_list %}#}
-{#        <div class="row d-flex justify-content-center">#}
-{#            {% for instrument in object_list %}#}
-{#                <div>#}
-{#                    {{ instrument.name }}<br>#}
-{#                    {{ instrument.manufacturer }}<br>#}
-{#                    {% include "calculator/partials/instrument_detail.html" %}#}
-{#                    <a href="{% url 'edit_instrument' instrument.id %}">update</a>#}
-{#                </div>#}
-{#            {% endfor %}#}
-{#         </div>#}
-{#    {% else %}#}
-{#        <p>No instruments saved</p>#}
-{#    {% endif %}#}
-
-
-
-
-
-{##}
-{##}
-{#<a href="{% url 'add_parameter' %}">Next (Parameters)</a>#}
-
+        {% for instrument in instruments %}
+            {% include 'calculator/partials/instrument_detail.html' %}
+        {% endfor %}
+    {% else %}
+        Currently no instruments
+    {% endif %}
+    <div class="row">
+    <div class="col-2">
+        <a href="{% url 'create-parameter' %}">Next (Add parameters)</a>
+    </div>
+    </div>
 {% endblock %}
 
 
