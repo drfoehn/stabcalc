@@ -467,9 +467,17 @@ def instrument_detail(request, pk):
 
 def edit_instrument(request, pk):
     instrument = Instrument.objects.get(pk=pk)
-    form = InstrumentForm(instance=instrument)
+    form = InstrumentForm(request.POST or None, instance=instrument)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            instrument= form.save()
+            return redirect('instrument-detail', pk=instrument.id)
+
     context = {
-        "form": form
+        "form": form,
+        "instrument": instrument,
     }
     return render(request, 'calculator/partials/instrument_form.html', context)
 
