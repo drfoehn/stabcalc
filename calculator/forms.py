@@ -17,20 +17,33 @@ class InstrumentForm(forms.Form):
 
     class Meta:
         model = Instrument
-        fields = ('name', 'manufacturer')
+        fields = (
+            'name',
+            'manufacturer',
+        )
 
 
 class ParameterForm(forms.Form):
-    name = models.CharField(max_length=255)
-    unit = models.CharField(max_length=15)
-    reagent_name = models.CharField(max_length=255)
-    reagent_manufacturer = models.CharField(max_length=255)
-    CV_intra = models.FloatField()
-    CV_inter = models.FloatField()
-    method_hand = models.BooleanField()
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    unit = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    reagent_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    reagent_manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}))
+    instrument = forms.ModelChoiceField(queryset=(Instrument.objects.filter()), empty_label='Select instrument')
 
     # instrument = models.ForeignKey(Instrument)
     # sample = models.ForeignKey(Sample)
+
+    # ----------------------Botcatcher-------------------------
+    # TODO: Check if working: Bots should not get an error. It should silently fail.
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
+    # -----------------------------------------------------------
 
     class Meta:
         model = Parameter
@@ -42,8 +55,20 @@ class ParameterForm(forms.Form):
             'CV_intra',
             'CV_inter',
             'method_hand',
-
+            'instrument',
         )
+
+    def __init__(self, *args, **kwargs):
+        super(ParameterForm, self).__init__(*args, **kwargs)
+        self.fields['instrument'].widget.attrs['class'] = 'form-select'
+
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
 
 
 class SampleForm(forms.Form):

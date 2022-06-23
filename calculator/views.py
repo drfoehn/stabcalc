@@ -22,9 +22,6 @@ import math
 from patsy.highlevel import dmatrices
 
 
-
-
-
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
     model = Setting
@@ -41,7 +38,6 @@ class ResultsView(DetailView):
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
         parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
-
 
         # ---------------------------Get deviation data for each subject setting and time individually
         deviation_dict: dict[int, dict[int, int]] = {}
@@ -87,12 +83,6 @@ class ResultsView(DetailView):
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
 
-
-
-
-
-
-
         ################################# REGRESSION ANALYSIS ######################################
 
         # https://365datascience.com/tutorials/python-tutorials/linear-regression/
@@ -123,8 +113,6 @@ class ResultsView(DetailView):
         eq1 = np.poly1d(np.polyfit(X, y, 1))
         context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
-
-
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
         eq2 = np.poly1d(np.polyfit(X, y, 2))
@@ -150,7 +138,7 @@ class ResultsView(DetailView):
         eq3 = np.poly1d(np.polyfit(X, y, 3))
         context["eq_model_poly3"] = str("y = " + str(round(eq3[3], 5)) + " * x^3 + " + str(round(eq3[2], 5))
                                         + " * x^2 + " + str(round(eq3[1], 5)) + " * x + " + str(round(eq3[0], 5)))
-        #FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
+        # FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
 
         # Calculate r_squared
         results = {}
@@ -165,18 +153,17 @@ class ResultsView(DetailView):
 
         context["r_squared_poly3"] = r_squared_poly3
 
-
         # TODO: Predicting values from regression: https://towardsdatascience.com/linear-regression-with-python-and-numpy-25d0e1dd220d
         # TODO:  ANOVA: https://www.statsmodels.org/dev/examples/notebooks/generated/interactions_anova.html
 
         # -----------------------LOG-LINEAR----------------------------------------
 
         def log_func(x):
-                if not x:
-                    return 0
-                else:
-                    x = np.log(x)
-                return x
+            if not x:
+                return 0
+            else:
+                x = np.log(x)
+            return x
 
         merged_res_dur['seconds'] = merged_res_dur['seconds'].apply(log_func)
         print(merged_res_dur)
@@ -195,7 +182,6 @@ class ResultsView(DetailView):
         # # Calculate Regression equation - lin log
         # #y = a + b*ln(x)
 
-
         print(X)
         print(X_log)
         vars = ['seconds']
@@ -207,7 +193,6 @@ class ResultsView(DetailView):
         # context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
         # print(eq_model_log)
         # print(res_log)
-
 
         #############################Overall statistical tests for the datatable ###########################
         # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);
@@ -228,10 +213,7 @@ class ResultsView(DetailView):
         context["ksstat"] = ks[0]
         ksstat_p = ks[1]
         context["ksstat_p"] = ks[1]
-        #TODO. Provide explanation
-
-
-
+        # TODO. Provide explanation
 
         # ------------------------Absolute
 
@@ -273,7 +255,7 @@ class ResultsView(DetailView):
         # # ------------------------Absolute log
         #
         # x1_abs_log = sm.add_constant(
- # model = sm.OLS(y_abs, x1_abs_log)
+        # model = sm.OLS(y_abs, x1_abs_log)
         # results_abs_log = model.fit()  # OLS = Ordinary Least Squares
         # context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
         #
@@ -308,13 +290,13 @@ class ResultsView(DetailView):
         #
         # #
 
-######################################INTERPRETATION ################################################
+        ######################################INTERPRETATION ################################################
 
         # --------------------------Calculate best fitting model
 
-        r_sq_list =[r_squared_lin, r_squared_poly2, r_squared_poly3]
-        best_fit= max(r_sq_list)
-        context["best_fit"] = str(str(round(best_fit*100, 2)) + " %")
+        r_sq_list = [r_squared_lin, r_squared_poly2, r_squared_poly3]
+        best_fit = max(r_sq_list)
+        context["best_fit"] = str(str(round(best_fit * 100, 2)) + " %")
 
         def best_fit_model() -> str:
             if r_squared_lin == best_fit:
@@ -326,7 +308,9 @@ class ResultsView(DetailView):
 
         context["best_fit_model"] = best_fit_model()
 
-        context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(parameter.values('name')[0]['name']) +  ' level to change by ' + str(round(res.params[1]*3600, 3)) + ' ' +str(parameter.values('unit')[0]['unit'])
+        context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
+            parameter.values('name')[0]['name']) + ' level to change by ' + str(
+            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
 
         # -------------------------- Normal distribution
 
@@ -337,8 +321,6 @@ class ResultsView(DetailView):
                 return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
 
         context["interpretation_dist"] = distrib()
-
-
 
         ###################################  Data import / export ####################################
 
@@ -363,16 +345,12 @@ class ResultsView(DetailView):
         #
         #     return render(request, 'calculator/upload_form.html', {'form': form})
 
-
-
-
-
         # -----------------------------Export
 
         from datetime import datetime
-        #https://stackoverflow.com/questions/35267585/django-pandas-to-http-response-download-file
-        #https://djangoadventures.com/how-to-create-file-download-links-in-django/
-    #
+        # https://stackoverflow.com/questions/35267585/django-pandas-to-http-response-download-file
+        # https://djangoadventures.com/how-to-create-file-download-links-in-django/
+        #
 
         MDATA = datetime.now().strftime('%Y-%m-%d')
 
@@ -399,7 +377,6 @@ class ResultsView(DetailView):
 
         # context["export_data_excel"] = data_export_xlsx(id(self))
 
-
         # --------------------MatPlotLib Scattergramm:
         # plt.scatter(x1_rel, y_rel)
         # plt.xlabel('Seconds', fontsize=20)
@@ -425,7 +402,10 @@ class ResultsView(DetailView):
 
         return context
 
+
 from django.http import HttpResponse
+
+
 def upload_view(request):
     form = UploadExcelForm
     return render(request, 'calculator/upload_form.html', {"form": form})
@@ -477,6 +457,7 @@ def add_instrument_form(request):
     }
     return render(request, 'calculator/partials/instrument_form.html', context)
 
+
 def instrument_detail(request, pk):
     instrument = Instrument.objects.get(pk=pk)
     context = {
@@ -485,13 +466,15 @@ def instrument_detail(request, pk):
     return render(request, 'calculator/partials/instrument_detail.html', context)
 
 
-
 def create_parameter(request):
     form = ParameterForm(request.POST or None)
     parameters = Parameter.objects.filter()
+    instruments = Instrument.objects.all()
 
     if request.method == 'POST':
         if form.is_valid():
+
+
             name = form.cleaned_data["name"]
             unit = form.cleaned_data["unit"]
             reagent_name = form.cleaned_data["reagent_name"]
@@ -499,6 +482,7 @@ def create_parameter(request):
             CV_intra = form.cleaned_data["CV_intra"]
             CV_inter = form.cleaned_data["CV_inter"]
             method_hand = form.cleaned_data["method_hand"]
+            instrument = request.POST.get('instrument')
 
             parameter = Parameter(
                 name=name,
@@ -507,18 +491,22 @@ def create_parameter(request):
                 reagent_manufacturer=reagent_manufacturer,
                 CV_intra=CV_intra,
                 CV_inter=CV_inter,
-                method_hand=method_hand
+                method_hand=method_hand,
+                instrument=instrument,
             )
             parameter.save()
             return redirect('parameter-detail', pk=parameter.id)
         else:
-            return render(request, 'calculator/partials/parameter_form.html', context={
-                'form': form
-            })
+            context = {
+                'form': form,
+                'instrument': Instrument.objects.all()
+            }
+            return render(request, 'calculator/partials/parameter_form.html', context)
 
     context = {
         'form': form,
         'parameters': parameters,
+
     }
 
     return render(request, 'calculator/parameter_list.html', context)
@@ -531,13 +519,13 @@ def add_parameter_form(request):
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
 
+
 def parameter_detail(request, pk):
     parameter = Parameter.objects.get(pk=pk)
     context = {
         "parameter": parameter
     }
     return render(request, 'calculator/partials/parameter_detail.html', context)
-
 
 
 class InstrumentUpdateView(UpdateView):
