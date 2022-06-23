@@ -465,11 +465,25 @@ def instrument_detail(request, pk):
     }
     return render(request, 'calculator/partials/instrument_detail.html', context)
 
+def edit_instrument(request, pk):
+    instrument = Instrument.objects.get(pk=pk)
+    form = InstrumentForm(instance=instrument)
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/instrument_form.html', context)
+
+def delete_instrument(request, pk):
+    instrument = Instrument.objects.get(pk=pk)
+    instrument.delete()
+    return HttpResponse('')
+
+
 
 def create_parameter(request):
     form = ParameterForm(request.POST or None)
     parameters = Parameter.objects.filter()
-    instruments = Instrument.objects.all()
+    # instrument = Instrument.objects.get(pk=Instrument.)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -482,7 +496,9 @@ def create_parameter(request):
             CV_intra = form.cleaned_data["CV_intra"]
             CV_inter = form.cleaned_data["CV_inter"]
             method_hand = form.cleaned_data["method_hand"]
-            instrument = request.POST.get('instrument')
+
+            instrument = form.instrument.clean(pk=Instrument.pk)
+            # instrument = request.POST.get(Instrument.objects.get('name'))
 
             parameter = Parameter(
                 name=name,
@@ -492,14 +508,16 @@ def create_parameter(request):
                 CV_intra=CV_intra,
                 CV_inter=CV_inter,
                 method_hand=method_hand,
-                instrument=instrument,
+                instrument=instrument
+                # instrument=request.POST.get('instrument',  Instrument.objects.get(instrument=instrument))
+                # instrument=Instrument.objects.get(instrument=request.POST[instrument.id])
             )
             parameter.save()
             return redirect('parameter-detail', pk=parameter.id)
         else:
             context = {
                 'form': form,
-                'instrument': Instrument.objects.all()
+                'instrument': Instrument.objects.filter()
             }
             return render(request, 'calculator/partials/parameter_form.html', context)
 

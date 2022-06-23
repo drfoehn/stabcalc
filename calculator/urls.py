@@ -7,16 +7,16 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
 
-    # path('', TemplateView.as_view(template_name="calculator/instrument_list.html"), name='create-instrument'),
     path('instruments/', create_instrument, name='create-instrument'),
     path('instruments/instrument/<pk>/', instrument_detail, name="instrument-detail"),
-    # path('instrument/<pk>/update/', update_book, name="update-book"),
-    # path('instrument/<pk>/delete/', delete_book, name="delete-book"),
+    path('instruments/instrument/<pk>/delete', delete_instrument, name="delete-instrument"),
+    path('instruments/instrument/<pk>/edit', edit_instrument, name="edit-instrument"),
     path('instruments/create-instrument-form/', add_instrument_form, name='create-instrument-form'),
 
     # path('', TemplateView.as_view(template_name="calculator/instrument_list.html"), name='create-instrument'),
     path('parameters/', create_parameter, name='create-parameter'),
     path('parameters/parameter/<pk>/', parameter_detail, name="parameter-detail"),
+
     # path('instrument/<pk>/update/', update_book, name="update-book"),
     # path('instrument/<pk>/delete/', delete_book, name="delete-book"),
     path('parameters/create-parameter-form/', add_parameter_form, name='create-parameter-form'),

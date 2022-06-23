@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add samples{% endblock %}
+
+{% block content %}
+
+    <h4>Add sample</h4>
+
+
+
+
+    <button hx-get="{% url 'create-sample-form' %}" hx-swap="beforeend" hx-target="#sample_form">Add additional
+        sample
+    </button>
+
+    <div class="row" id="sample_form"></div>
+
+    {% if samples %}
+
+        {% for sample in samples %}
+            {% include 'calculator/partials/sample_detail.html' %}
+        {% endfor %}
+    {% else %}
+        Currently no samples
+    {% endif %}
+    {#    {% if object_list %}#}
+    {#        <div class="row d-flex justify-content-center">#}
+    {#            {% for sample in object_list %}#}
+    {#                <div>#}
+    {#                    {{ sample.name }}<br>#}
+    {#                    {{ sample.manufacturer }}<br>#}
+    {#                    {% include "calculator/partials/sample_detail.html" %}#}
+    {#                    <a href="{% url 'edit_sample' sample.id %}">update</a>#}
+    {#                </div>#}
+    {#            {% endfor %}#}
+    {#         </div>#}
+    {#    {% else %}#}
+    {#        <p>No samples saved</p>#}
+    {#    {% endif %}#}
+
+
+
+
+
+    {##}
+    {##}
+    {#<a href="{% url 'add_sample' %}">Next (samples)</a>#}
+
+{% endblock %}
+
+
