@@ -25,6 +25,24 @@ urlpatterns = [
     path('samples/sample/<pk>/edit', edit_sample, name="edit-sample"),
     path('samples/create-sample-form/', add_sample_form, name='create-sample-form'),
 
+    path('settings/', create_setting, name='create-setting'),
+    path('settings/setting/<pk>/', setting_detail, name="setting-detail"),
+    path('settings/setting/<pk>/delete', delete_setting, name="delete-setting"),
+    path('settings/setting/<pk>/edit', edit_setting, name="edit-setting"),
+    path('settings/create-setting-form/', add_setting_form, name='create-setting-form'),
+
+    path('conditions/', create_condition, name='create-condition'),
+    path('conditions/condition/<pk>/', condition_detail, name="condition-detail"),
+    path('conditions/condition/<pk>/delete', delete_condition, name="delete-condition"),
+    path('conditions/condition/<pk>/edit', edit_condition, name="edit-condition"),
+    path('conditions/create-condition-form/', add_condition_form, name='create-condition-form'),
+
+    path('durations/', create_duration, name='create-duration'),
+    path('durations/duration/<pk>/', duration_detail, name="duration-detail"),
+    path('durations/duration/<pk>/delete', delete_duration, name="delete-duration"),
+    path('durations/duration/<pk>/edit', edit_duration, name="edit-duration"),
+    path('durations/create-duration-form/', add_duration_form, name='create-duration-form'),
+
     #
     # path("instrument/<pk>/edit", views.InstrumentUpdateView.as_view(), name="edit_instrument"),
     # path("add-sample/", views.SampleAddView.as_view(), name="add_sample"),

@@ -57,10 +57,10 @@ class Condition(models.Model):
     light = models.BooleanField(verbose_name='Exposure to light during storage')
     air = models.BooleanField(verbose_name='Exposure to air during storage')
     agitation = models.BooleanField(verbose_name='Agitation during storage')
-    other_Condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
+    other_condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
 
     def __str__(self):
-        return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_Condition}"
+        return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
 
 
 class Sample(models.Model):
@@ -176,7 +176,7 @@ class Setting(models.Model):
     #                                       choices=list(zip(range(1, 11), range(1, 11))))
 
     def __str__(self):
-        return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_Condition} / Replicates: {self.replicates}) "
+        return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}) "
 
     def values_tot(self, duration: 'Duration') -> list[float]:
         return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
@@ -235,7 +235,7 @@ class Setting(models.Model):
 
 class Duration(models.Model):
     class Meta:
-        unique_together = ["duration_number", "duration_unit"]
+        # unique_together = ["duration_number", "duration_unit"]
         ordering = ["seconds"]
 
     duration_number = models.PositiveIntegerField(blank=True, null=True)
@@ -258,7 +258,7 @@ class Duration(models.Model):
         max_length=1
     )
 
-    setting = models.ManyToManyField(Setting)
+    setting = models.ManyToManyField(Setting, blank=True)
 
     seconds = models.PositiveIntegerField(blank=True)
 

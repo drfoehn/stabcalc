@@ -496,31 +496,6 @@ def create_parameter(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            # parameter = form.save(commit=False)
-            # parameter.instrument = Instrument.objects.get(instrument=request.POST[Instrument.pk])
-            # name = form.cleaned_data["name"]
-            # unit = form.cleaned_data["unit"]
-            # reagent_name = form.cleaned_data["reagent_name"]
-            # reagent_manufacturer = form.cleaned_data["reagent_manufacturer"]
-            # CV_intra = form.cleaned_data["CV_intra"]
-            # CV_inter = form.cleaned_data["CV_inter"]
-            # method_hand = form.cleaned_data["method_hand"]
-            #
-            # # instrument = request.POST.get(Instrument.objects.get('name'))
-            #
-            # parameter = Parameter(
-            #     name=name,
-            #     unit=unit,
-            #     reagent_name=reagent_name,
-            #     reagent_manufacturer=reagent_manufacturer,
-            #     CV_intra=CV_intra,
-            #     CV_inter=CV_inter,
-            #     method_hand=method_hand,
-            #     instrument=parameter.instrument
-            #     # instrument=request.POST.get('instrument',  Instrument.objects.get(instrument=instrument))
-            #     # instrument=Instrument.objects.get(instrument=request.POST[instrument.id])
-            # )
-            # parameter.save()
             parameter = form.save()
             return redirect('parameter-detail', pk=parameter.id)
         else:
@@ -653,7 +628,7 @@ def edit_sample(request, pk):
         "form": form,
         "sample": sample,
     }
-    return render(request, 'calculator/partials/parameter_form.html', context)
+    return render(request, 'calculator/partials/sample_form.html', context)
 
 def delete_sample(request, pk):
     sample = Sample.objects.get(pk=pk)
@@ -661,11 +636,195 @@ def delete_sample(request, pk):
     return HttpResponse('')
 
 
+# -------------------------------------SETTING----------------------------------------
+
+def create_setting(request):
+
+    form = SettingForm(request.POST or None)
+    settings = Setting.objects.all()
 
 
+    if request.method == 'POST':
+        if form.is_valid():
 
 
+            setting = form.save()
+            return redirect('setting-detail', pk=setting.id)
+        else:
+            context = {
+                'form': form,
+                'settings': Setting.objects.all()
+            }
+            return render(request, 'calculator/partials/setting_form.html', context)
 
+    context = {
+        'form': form,
+        'settings': settings,
+
+    }
+
+    return render(request, 'calculator/setting_list.html', context)
+
+def add_setting_form(request):
+    form = SettingForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/setting_form.html', context)
+
+def setting_detail(request, pk):
+    setting = Setting.objects.get(pk=pk)
+    context = {
+        "setting": setting
+    }
+    return render(request, 'calculator/partials/setting_detail.html', context)
+
+def edit_setting(request, pk):
+    setting = Setting.objects.get(pk=pk)
+    form = SettingForm(request.POST or None, instance=setting)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            setting=form.save()
+            return redirect('setting-detail', pk=setting.id)
+
+    context = {
+        "form": form,
+        "setting": setting,
+    }
+    return render(request, 'calculator/partials/setting_form.html', context)
+
+def delete_setting(request, pk):
+    setting = Setting.objects.get(pk=pk)
+    setting.delete()
+    return HttpResponse('')
+
+
+# -------------------------------------CONDITION----------------------------------------
+
+def create_condition(request):
+
+    form = ConditionForm(request.POST or None)
+    conditions = Condition.objects.all()
+
+
+    if request.method == 'POST':
+        if form.is_valid():
+            condition = form.save()
+            return redirect('condition-detail', pk=condition.id)
+        else:
+            context = {
+                'form': form,
+                'conditions': Condition.objects.all()
+            }
+            return render(request, 'calculator/partials/condition_form.html', context)
+
+    context = {
+        'form': form,
+        'conditions': conditions,
+
+    }
+
+    return render(request, 'calculator/condition_list.html', context)
+
+def add_condition_form(request):
+    form = ConditionForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/condition_form.html', context)
+
+def condition_detail(request, pk):
+    condition = Condition.objects.get(pk=pk)
+    context = {
+        "condition": condition
+    }
+    return render(request, 'calculator/partials/condition_detail.html', context)
+
+def edit_condition(request, pk):
+    condition = Condition.objects.get(pk=pk)
+    form = ConditionForm(request.POST or None, instance=condition)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            condition=form.save()
+            return redirect('condition-detail', pk=condition.id)
+
+    context = {
+        "form": form,
+        "condition": condition,
+    }
+    return render(request, 'calculator/partials/condition_form.html', context)
+
+def delete_condition(request, pk):
+    condition = Condition.objects.get(pk=pk)
+    condition.delete()
+    return HttpResponse('')
+
+
+# -------------------------------------DURATION----------------------------------------
+
+def create_duration(request):
+
+    form = DurationForm(request.POST or None)
+    durations = Duration.objects.all()
+
+
+    if request.method == 'POST':
+        if form.is_valid():
+            duration = form.save()
+            return redirect('duration-detail', pk=duration.id)
+        else:
+            context = {
+                'form': form,
+                'durations': Duration.objects.all()
+            }
+            return render(request, 'calculator/partials/duration_form.html', context)
+
+    context = {
+        'form': form,
+        'durations': durations,
+
+    }
+
+    return render(request, 'calculator/duration_list.html', context)
+
+def add_duration_form(request):
+    form = DurationForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/duration_form.html', context)
+
+def duration_detail(request, pk):
+    duration = Duration.objects.get(pk=pk)
+    context = {
+        "duration": duration
+    }
+    return render(request, 'calculator/partials/duration_detail.html', context)
+
+def edit_duration(request, pk):
+    duration = Duration.objects.get(pk=pk)
+    form = DurationForm(request.POST or None, instance=duration)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            duration=form.save()
+            return redirect('duration-detail', pk=duration.id)
+
+    context = {
+        "form": form,
+        "duration": duration,
+    }
+    return render(request, 'calculator/partials/duration_form.html', context)
+
+def delete_duration(request, pk):
+    duration = Duration.objects.get(pk=pk)
+    duration.delete()
+    return HttpResponse('')
 
 
 

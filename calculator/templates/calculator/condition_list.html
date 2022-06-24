@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add conditions{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">List / Add conditions</h4>
+
+
+
+
+    <button hx-get="{% url 'create-condition-form' %}" class="btn btn-primary" role="button" data-bs-toggle="button" hx-swap="beforeend" hx-target="#condition_form">Add additional
+        condition
+    </button>
+
+    <div class="row" id="condition_form"></div>
+
+    {% if conditions %}
+
+        {% for condition in conditions %}
+            {% include 'calculator/partials/condition_detail.html' %}
+        {% endfor %}
+    {% else %}
+        Currently no conditions
+    {% endif %}
+    {#    {% if object_list %}#}
+    {#        <div class="row d-flex justify-content-center">#}
+    {#            {% for condition in object_list %}#}
+    {#                <div>#}
+    {#                    {{ condition.name }}<br>#}
+    {#                    {{ condition.manufacturer }}<br>#}
+    {#                    {% include "calculator/partials/condition_detail.html" %}#}
+    {#                    <a href="{% url 'edit_condition' condition.id %}">update</a>#}
+    {#                </div>#}
+    {#            {% endfor %}#}
+    {#         </div>#}
+    {#    {% else %}#}
+    {#        <p>No conditions saved</p>#}
+    {#    {% endif %}#}
+
+
+
+
+
+    {##}
+    {##}
+    {#<a href="{% url 'add_condition' %}">Next (conditions)</a>#}
+
+{% endblock %}
+
+

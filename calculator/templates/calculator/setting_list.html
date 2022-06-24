@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add settings{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">List / Add Settings</h4>
+
+    <button hx-get="{% url 'create-setting-form' %}" class="btn btn-primary" role="button" data-bs-toggle="button" hx-swap="beforeend" hx-target="#setting_form">Add additional
+        setting
+    </button>
+
+    <div class="row" id="setting_form"></div>
+    {% if settings %}
+        {% for setting in settings %}
+            {% include 'calculator/partials/setting_detail.html' %}
+        {% endfor %}
+    {% else %}
+        Currently no samples
+    {% endif %}
+
+{% endblock %}
+
+

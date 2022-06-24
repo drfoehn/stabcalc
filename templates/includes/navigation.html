@@ -16,7 +16,17 @@
         </li>
       </ul>
         {% if user.is_authenticated %}
-            {{ user.user_name }} - <a href="{%  url 'logout' %}">Logout</a>
+            <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ user.user_name }} <i class="bi bi-person-lines-fill"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">My Dashboard</a></li>
+            <li><a class="dropdown-item" href="#">My Profile</a></li>
+            <li><a class="dropdown-item" href="{%  url 'logout' %}">Logout</a></li>
+          </ul>
+        </div>
+
         {% else %}
             <a href="{%  url 'register_user' %}">Register </a> or
             <a href="{%  url 'login' %}"> Login</a>

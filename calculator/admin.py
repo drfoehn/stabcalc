@@ -34,7 +34,7 @@ class InstrumentAdmin(admin.ModelAdmin):
 
 class ConditionAdmin(admin.ModelAdmin):
     model = Condition
-    list_display = ['temperature', 'light', 'air', 'agitation', 'other_Condition']
+    list_display = ['temperature', 'light', 'air', 'agitation', 'other_condition']
 
 class SubjectInline(admin.TabularInline):
     model = Subject

@@ -97,19 +97,125 @@ class SampleForm(forms.ModelForm):
         self.fields['container_additive'].widget.attrs['class'] = 'form-select'
         self.fields['container_fillingvolume'].widget.attrs['class'] = 'form-control'
         self.fields['container_material'].widget.attrs['class'] = 'form-select'
-        self.fields['gel'].widget.attrs['class'] = 'check-input'
+        self.fields['gel'].widget.attrs['class'] = 'form-check-input'
 
 
 class SettingForm(forms.ModelForm):
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
+    condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
+    duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()), widget = forms.CheckboxSelectMultiple)
+
+    # ----------------------Botcatcher-------------------------
+    # TODO: Check if working: Bots should not get an error. It should silently fail.
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
+    # -----------------------------------------------------------
+
     class Meta:
         model = Setting
-        fields = '__all__'
+        fields = (
+            'name',
+            'parameter',
+            'condition',
+            'duration'
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(SettingForm, self).__init__(*args, **kwargs)
+        self.fields['parameter'].widget.attrs['class'] = 'form-select'
+        self.fields['condition'].widget.attrs['class'] = 'form-select'
+        self.fields['duration'].widget.attrs['class'] = 'form-check-input'
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
+
+
+class ConditionForm(forms.ModelForm):
+    temperature = forms.Select()
+    light = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    air = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    agitation = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    other_condition = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+
+    # ----------------------Botcatcher-------------------------
+    # TODO: Check if working: Bots should not get an error. It should silently fail.
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
+    # -----------------------------------------------------------
+
+    class Meta:
+        model = Condition
+        fields = (
+            'temperature',
+            'light',
+            'air',
+            'agitation',
+            'other_condition',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(ConditionForm, self).__init__(*args, **kwargs)
+        self.fields['temperature'].widget.attrs['class'] = 'form-select'
+        self.fields['light'].widget.attrs['class'] = 'form-check-input'
+        self.fields['air'].widget.attrs['class'] = 'form-check-input'
+        self.fields['agitation'].widget.attrs['class'] = 'form-check-input'
+        self.fields['other_condition'].widget.attrs['class'] = 'form-check-input'
+
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
 
 
 class DurationForm(forms.ModelForm):
+    duration_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    duration_unit = forms.Select()
+    # setting = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
+
+
+    # ----------------------Botcatcher-------------------------
+    # TODO: Check if working: Bots should not get an error. It should silently fail.
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
+    # -----------------------------------------------------------
+
     class Meta:
         model = Duration
-        fields = '__all__'
+        fields = (
+            'duration_number',
+            'duration_unit',
+            # 'setting'
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(DurationForm, self).__init__(*args, **kwargs)
+        self.fields['duration_unit'].widget.attrs['class'] = 'form-select'
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
+
+
 
 
 class UploadExcelForm(forms.Form):

@@ -2,11 +2,11 @@
 {##}
 <div hx-target="this" hx-swap='outerHTML' class="mt-3 py-3 px-3 bg-white shadow border border-gray-100">
 
-    <h3>{{ instrument.name }}</h3>
-    {{ instrument.manufacturer }}<br>
+    <h3>{{ duration.duration_number }} {{ duration.get_duration_unit_display }}</h3>
 
-    <button hx-get="{% url 'edit-instrument' instrument.id %}"><i class="bi bi-pencil"></i></button>
-    <button hx-post="{% url 'delete-instrument' instrument.id %}" hx-confirm="Are you sure you want to delete '{{ instrument.name }}'?"><i class="bi bi-trash"></i></button>
+    <button hx-get="{% url 'edit-duration' duration.id %}">Edit</button>
+    <button hx-post="{% url 'delete-duration' duration.id %}" hx-confirm="Are you sure?">Delete</button>
+
 
     {#    <div class="mt-2">#}
 {#        <button hx-get="{% url 'update-book' book.id %}" hx-swap="outerHTML"#}
@@ -20,12 +20,12 @@
 {#    </div>#}
 {##}
 {##}
-{#    <div class="row" id="instrument_form"></div>#}
+{#    <div class="row" id="duration_form"></div>#}
 {##}
-{#    <button hx-get="{% url 'add_instrument' %}" hx-swap="outerHTML" hx-target="#instrument_form">Add additional Instrument</button>#}
+{#    <button hx-get="{% url 'add_duration' %}" hx-swap="outerHTML" hx-target="#duration_form">Add additional duration</button>#}
 {##}
 {##}
-{#<a href="{% url 'add_parameter' %}">Next (Parameters)</a>#}
+{#<a href="{% url 'add_duration' %}">Next (durations)</a>#}
 {##}
 {##}
 </div>
