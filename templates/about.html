@@ -7,82 +7,50 @@
 
 
     <div class="header_static">
-        <h2 class="display-4">Über uns</h2>
-    </div>
-    <!-- SVG Path created with https://yqnn.github.io/svg-path-editor/ -->
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 1">
-        <path d="M 0 0 C 0 0 0 1 1 1 C 2.3333 1 2.455 0.523 4.013 0.505 C 7 1 6 0 9.065 0.089 C 10.532 0.143 11 1 12 1 C 14 1 14 0 16 0.107 C 18 0 18 1 20 1 C 20 1 21 1 21 0"
-              fill="#785C9D"/>
-    </svg>
-
-
-    <div class="row">
-    <div class="col-sm-8">
-    <div class="display-5">
-            Wer wir sind und was wir wollen.
+        <h2 class="display-4">About this Project</h2>
+        <div class="row">
+            <div class="col">
+                <p class="about_subheading">About the EFLM</p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quisque sagittis purus sit amet volutpat consequat mauris nunc. Amet massa vitae tortor condimentum lacinia quis vel. Commodo elit at imperdiet dui accumsan. Aliquet nibh praesent tristique magna sit. Eget nullam non nisi est sit amet facilisis magna etiam. Urna molestie at elementum eu. Risus ultricies tristique nulla aliquet enim tortor at auctor urna. Faucibus pulvinar elementum integer enim neque. Sed odio morbi quis commodo odio aenean sed adipiscing diam. Dolor sit amet consectetur adipiscing elit. Pellentesque elit ullamcorper dignissim cras tincidunt lobortis feugiat vivamus at. Nullam vehicula ipsum a arcu cursus vitae congue mauris rhoncus. In est ante in nibh mauris cursus mattis molestie a. Elit at imperdiet dui accumsan sit amet nulla facilisi morbi. Aliquet sagittis id consectetur purus ut faucibus pulvinar elementum integer. In massa tempor nec feugiat nisl pretium fusce id velit. Adipiscing enim eu turpis egestas. Gravida in fermentum et sollicitudin ac orci phasellus egestas tellus. Diam quis enim lobortis scelerisque fermentum dui faucibus.
+            </div>
         </div>
-        <div class="display-6">
-            Wer sind wir?
-        </div>
-        <div>
-            Wir sind zwei Väter mit jeweils 3 Kindern. Dadurch sind wir immer sehr gefordert das entsprechende
-            Freizeitprogramm zu gestalten. Da wir dachten, dass wir da sicher nicht die einzigen sind und
-            praktischerweise auch eine Freude damit haben solche Webseiten zu basteln, kam uns die Idee für diese
-            Plattform.
-        </div>
-        <div class="display-6">
-            Was ist der Zweck dieser Seite?
-        </div>
-        <div>
-            Diese Seite versteht sich als Netzwerk, in welchem Eltern und Kinder ihre Tipps für Freizeitaktivitäten mit
-            anderen Salzburgern teilen können.<br>
-            Das heißt es braucht <span style="font-weight: bold; font-size: 120%; color: red">DEINE HILFE</span>, damit diese Plattform funktionieren kann.
-            <ul>
-                        <li><a href="{% url 'leisuretips:add' %}">Freizeittipp vorschlagen</a></li>
-                        <li><a href="{% url 'hikes:add' %}">Wanderung vorschlagen</a></li>
-                        <li><a href="{% url 'events:add' %}">Veranstaltung vorschagen</a></li>
-            </ul>
-        </div>
-        <div class="display-6">
-            Kooperation mit dem Wandaverlag
-        </div>
-        <div>
-            Alle Eltern im Salzburger Raum (und darüber hinaus) kennen die tollen Kinderwagen-Wanderbücher von Elisabeth
-            Göllner-Kampel und ihren <a href="https://www.wandaverlag.com/">Ein-Frau-Wandaverlag.</a><br>
-            Seit Jänner 2015 hat sich eine super Kooperation mit Elisabeth ergeben, durch welche sie unserer Plattform
-            (und somit Dir) sukzessive Wege aus ihren Büchern zur Verfügung stellt! - Insgesamt werden es über 100 Tipps
-            sein!<br>
-            Diese Zusammenarbeit ist eine Bereicherung für beide Seiten. Die Bücher werden durch digitale Möglichkeiten
-            (Karten, Auswahlfunktion) aufgewertet und unsere Plattform durch vielfach erprobte und verlässliche Touren
-            und Ausflugtipps bereichert.<br>
-            Die gebundenen Bücher bieten euch zusätzliche Vorteile wie genauere Angaben, Wandertagebuch, die Möglichkeit
-            für persönliche Notizen u.v.m.
-        </div>
-        <div class="display-6">
-            Was unterscheidet diese Seite von anderen ähnlichen Seiten?
-        </div>
-        <div>
-            <ol>
-            <li>Kindisch.at ist ausschließlich für den Salzburger Raum gedacht.</li>
-            <li>Kinidsch.at enthält ausschließlich persönliche Beiträge, die bereits von Eltern und deren Kindern besucht
-            wurden. Es ist somit keine Linksammlung von aus dem Internet kopierten Tips (ausgenommen natürlich
-            Veranstaltungen, die in der Zukunft liegen). Daher findest du zu jedem Beitrag auch persönliche Bilder der
-            Eltern, die den jeweiligen Beitrag geteilt haben.</li>
-            <li>Kindisch.at ist eine gemeinnützige Seite, die nicht auf Gewinn ausgerichtet ist (Grundidee war durch den
-            Aufbau einer solchen Plattform selbst mehr Tipps von anderen zu bekommen, was wir mit unseren Kindern in
-            Salzburg machen können)</li>
-            <li>Kindisch.at ist optimiert für die Ansicht auf Smartphones. D.h. der Inhalt sowie die Menüführung der Seite
-            passt sich an die Größe deines Bildschirms an.</li>
-                </ol>
-            <p>Viel Spaß beim Mitmachen!</p>
-        </div>
-    </div>
-    <div class="col-sm-4">
-             <img src="{% static 'images/hello.png' %}" alt="hello" width="100%" style="float: right">
-             <p class="attribution_image"><a href="https://storyset.com/people">Illustration by Freepik Storyset</a></p>
+        <br>
+    <div class="row ">
+    <div class="col references"></div>
+        <p class="about_subheading">This calculator was developed, based on the following references:</p>
+    <ul>
+        <li>
+            Pum JKW. Evaluating sample stability in the clinical laboratory with the help of linear and non-linear regression analysis. Clin Chem Lab Med. 2020 Jan 28;58(2):188-196. doi:
+            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html" target="_blank">10.1515/cclm-2019-0596</a>. PMID: 31702996.
+            <br/>
+            <br/>
+        </li>
+        <li>
+            Cornes M, Simundic AM, Cadamuro J, Costelloe SJ, Baird G, Kristensen GBB, von Meyer A, Nybo M, Gómez Rioja R. The CRESS checklist for reporting stability studies: on behalf of the European Federation of Clinical Chemistry and Laboratory Medicine (EFLM) Working Group for the Preanalytical Phase (WG-PRE). Clin Chem Lab Med. 2020 Jul 25;59(1):59-69. doi:
+            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2020-0061/html" target="_blank">10.1515/cclm-2020-0061</a>. PMID: 32710715.
+            <br/>
+            <br/>
+        </li>
+        <li>
+            CLSI. Evaluation of stability of in vitro diagnostic reagents; approved guideline. CLSI document EP25-A. Wayne, PA: Clinical and Laboratory Standards Institute, 2009.
+            <br/>
+            <br/>
+        </li>
+    </ul>
+        <br/>
+            All statistical calculations were performed with the python <a href="https://www.statsmodels.org/dev/index.html#table-of-contents" target="_blank">statsmodels</a> and <a href="https://numpy.org/" target="_blank">numpy</a>  packages<br>
+        <br>
+    <ul>
+        <li>
+                <i>Seabold, Skipper, and Josef Perktold. “statsmodels: Econometric and statistical modeling with python.” Proceedings of the 9th Python in Science Conference. 2010.</i>
+        <br/>
+            <br/>
+        </li>
+        <li>
+                <i>Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., … Oliphant, T. E. (2020). Array programming with NumPy. Nature, 585, 357–362. https://doi.org/10.1038/s41586-020-2649-2</i>
+        </li>
+    </ul>
     </div>
 
     </div>
-
-
 {% endblock %}

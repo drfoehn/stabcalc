@@ -75,12 +75,8 @@
 </div>
 <div id="footer">
     <div id="footer-content" class="d-flex justify-content-center">
-        {#        <a href="{% url '#' %}">Datenschutz</a>#}
-        {#        |#}
-        {#        <a href="{% url '#' %}">{% trans "About us" %}</a>#}
-        {#        |#}
-        {#        <a href="{% url '#' %}">{% trans "Contact" %}</a>#}
-        Terms and Conditions | About | Contact
+
+        <a href="">{% trans 'Terms and Conditions' %} |</a> | <a href="{% url 'about' %}"> {% trans 'About' %} | </a>  <a href=""> {% trans 'Contact' %}</a>
     </div>
 </div>
 {#--------------------------------HTMX - Eventlistener----------------------------------#}

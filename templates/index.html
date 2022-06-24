@@ -6,54 +6,31 @@
 {% block content %}
 
 
-    <div class="header_index">
+    <div class="header_index row">
+    <div class="col-2 d-flex justify-content-center">
+        <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="" >
+    </div>
+        <div class="col-10">
         <h2 class="display-4">Stability Calculator</h2>
         <p class="lead">
             EFLM Working Group "Preanalytical Phase" (WG-PRE)
         </p>
+            </div>
     </div>
     <div class="row">
-    <div class="col">
-        <h4 class="display-4">Input data</h4>
+        <div class="col-2"></div>
+        <div class="col-3">
+            <a href="{% url 'create-instrument' %}"><img src="{% static 'images/folder_input.png' %}" alt="" ></a><br>
+            <h4 class="display-4">Input data</h4>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-3">
+            <img src="{% static 'images/folder_open.png' %}" alt=""><br>
+            <h4 class="display-4">View Data</h4>
+        </div>
+        <div class="col-2"></div>
     </div>
-    <div class="col">
-        <h4 class="display-4">View Data</h4>
-    </div>
-    </div>
-
-    <div class="row ">
-    <div class="col references"></div>
-    This calculator was developed, based on the following references:
-    <ul>
-        <li>
-            Pum JKW. Evaluating sample stability in the clinical laboratory with the help of linear and non-linear regression analysis. Clin Chem Lab Med. 2020 Jan 28;58(2):188-196. doi:
-            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html" target="_blank">10.1515/cclm-2019-0596</a>. PMID: 31702996.
-            <br/>
-            <br/>
-        </li>
-        <li>
-            Cornes M, Simundic AM, Cadamuro J, Costelloe SJ, Baird G, Kristensen GBB, von Meyer A, Nybo M, Gómez Rioja R. The CRESS checklist for reporting stability studies: on behalf of the European Federation of Clinical Chemistry and Laboratory Medicine (EFLM) Working Group for the Preanalytical Phase (WG-PRE). Clin Chem Lab Med. 2020 Jul 25;59(1):59-69. doi:
-            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2020-0061/html" target="_blank">10.1515/cclm-2020-0061</a>. PMID: 32710715.
-            <br/>
-            <br/>
-        </li>
-        <li>
-            CLSI. Evaluation of stability of in vitro diagnostic reagents; approved guideline. CLSI document EP25-A. Wayne, PA: Clinical and Laboratory Standards Institute, 2009.
-            <br/>
-            <br/>
-        </li>
-    </ul>
 
 
-
-    <br>
-    <br>
-    All statistical calculations were performed with the python <i><a href="https://www.statsmodels.org/dev/index.html#table-of-contents">statsmodels</a></i> and <i><a href="https://numpy.org/">numpy</a></i>  packages<br>
-    <br/>
-    <i>Seabold, Skipper, and Josef Perktold. “statsmodels: Econometric and statistical modeling with python.” Proceedings of the 9th Python in Science Conference. 2010.</i>
-    <br/>
-    <i>Harris, C. R., Millman, K. J., van der Walt, S. J., Gommers, R., Virtanen, P., Cournapeau, D., … Oliphant, T. E. (2020). Array programming with NumPy. Nature, 585, 357–362. https://doi.org/10.1038/s41586-020-2649-2</i>
-
-    </div>
     </div>
 {% endblock %}
