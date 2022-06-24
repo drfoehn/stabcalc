@@ -88,6 +88,51 @@ body{
 th{
     font-weight: normal;
 }
+/*-----------------------------------NAVBAR---------------------------------------*/
+.dropdown-toggle::after {
+    display: none !important;
+}
+
+.nav-item{
+    font-size: 1.2em  !important;,
+}
+
+/*----------------------------------LIST/ADD PAGES-------------------------------------*/
+
+.icon_edit,
+.icon_delete{
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+/*FIXME: Kommt nicht an*/
+.icon-delete{
+    color: var(--imperial-red);
+}
+
+.object-list-div{
+    background-color: white;
+    box-shadow: 0 1px 10px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    margin-top: 1em;
+    padding: 1em
+}
+
+.edit-delete-div{
+        margin-top: 1em;
+}
+
+.object-btn-save{
+    margin-top: 1em;
+}
+
+.btn-next{
+    margin-top: 1em;
+}
+
+.btn-add{
+
+}
+
 
 /*---------------------------------Resultpage------------------------------------*/
 .result_buttons,
