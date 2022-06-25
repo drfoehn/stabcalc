@@ -6,42 +6,6 @@
 
 {% block content %}
 
-    <div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML">
-        <div class="tab-list">
-            <a hx-get="/tab1" class="selected">Tab 1</a>
-            <a hx-get="/tab2">Tab 2</a>
-            <a hx-get="/tab3">Tab 3</a>
-        </div>
-
-        <div class="tab-content" id="tab2">
-            Commodo normcore truffaut VHS duis gluten-free keffiyeh iPhone taxidermy godard ramps anim pour-over.
-            Pitchfork vegan mollit umami quinoa aute aliquip kinfolk eiusmod live-edge cardigan ipsum locavore.
-            Polaroid duis occaecat narwhal small batch food truck.
-            PBR&B venmo shaman small batch you probably haven't heard of them hot chicken readymade.
-            Enim tousled cliche woke, typewriter single-origin coffee hella culpa.
-            Art party readymade 90's, asymmetrical hell of fingerstache ipsum.
-        </div>
-        <div  class="tab-content" id="tab3">
-            lklkmlmsfd
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="row">
         <!--
         Define here the variables, you can delete this comment afterwords:
@@ -60,15 +24,14 @@
                             data-bs-target="#nav-{{duration.seconds }}"
                             type="button"
                             role="tab"
-                            aria-controls="nav-{{ . }}"
+                            aria-controls="nav-{{ duration.seconds }}"
                             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-                            {% if not duration.enabled %}disabled{% endif %}
+{#                            {% if not duration.enabled %}disabled{% endif %}#}
                     >
                     {% if duration.seconds == 0 %}
                         Baseline
                     {% else %}
-
-                        {{duration.duration_number}} {{ duration.get_duration_unit_display }}
+                        {{duration }}
                     {% endif %}
                     </button>
                 {% endfor %}
@@ -82,11 +45,14 @@
                      aria-labelledby="nav-{{duration.seconds}}-tab"
                      tabindex="0"
                 >
-
+                                    {{ duration }}
                 </div>
             {% endfor %}
         </div>
     </div>
+
+
+
 {% endblock %}
 
 
