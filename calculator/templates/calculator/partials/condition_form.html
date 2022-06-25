@@ -1,7 +1,81 @@
 <div hx-target="this" hx-swap="outerHTML" >
     <form method="POST">
+
         {% csrf_token %}
-        {{ form }}
+{#        {{ form }}#}
+             <table>
+            <tr>
+                <th>
+                    {{ form.temperature.label_tag }}
+                </th>
+                <th>
+                    {{ form.temperature_other.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.temperature }}
+                </td>
+                <td>
+                    {{ form.temperature_other }}
+                </td>
+                <td>
+                    {{ form.temperature.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    Exposure during storage to .....
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.light.label_tag }}
+                </td>
+                <td>
+                    {{ form.air.label_tag}}
+                </td>
+                <td>
+                    {{ form.agitation.label_tag }}
+                </td>
+            </tr>
+                 <tr>
+                <td>
+                    {{ form.light }}
+                </td>
+                <td>
+                    {{ form.air}}
+                </td>
+                <td>
+                    {{ form.agitation }}
+                </td>
+            </tr>
+                 <tr>
+                <td>
+                    {{ form.light.errors }}
+                </td>
+                <td>
+                    {{ form.air.errors}}
+                </td>
+                <td>
+                    {{ form.agitation.errors }}
+                </td>
+            </tr>
+                 <tr>
+                <th>
+                    {{ form.other_condition.label_tag }}
+                </th>
+                 </tr>
+                     <tr>
+                     <td>
+                    {{ form.other_condition }}
+                </td>
+                     <td>
+                    {{ form.other_condition.errors }}
+                </td>
+            </tr>
+             </table>
+
 {#    If statement to prevent edit-view from creating more objects#}
         {% if condition %}     {#  Passed in from Edit-condition-view #}
             <button type="submit" hx-post="{% url 'edit-condition' condition.id %}"
@@ -15,3 +89,4 @@
         {% endif %}
     </form>
 </div>
+

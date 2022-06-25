@@ -73,26 +73,35 @@ class ParameterForm(forms.ModelForm):
 
 class SampleForm(forms.ModelForm):
     sample_type = forms.Select()
+    sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     container_additive = forms.Select()
+    container_additive_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     container_dimension = forms.Select()
-    container_fillingvolume = forms.FloatField()
+    container_dimension_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    container_fillingvolume = forms.FloatField(required=False)
     container_material = forms.Select()
+    container_material_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     gel = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
 
     class Meta:
         model = Sample
         fields = (
             'sample_type',
+            'sample_type_other',
             'container_additive',
+            'container_additive_other',
             'container_dimension',
+            'container_dimension_other',
             'container_fillingvolume',
             'container_material',
+            'container_material_other',
             'gel',
         )
 
     def __init__(self, *args, **kwargs):
         super(SampleForm, self).__init__(*args, **kwargs)
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
+        self.fields['sample_type'].widget.attrs['onchange'] = "showMe(\"idShowMe\")"
         self.fields['container_dimension'].widget.attrs['class'] = 'form-select'
         self.fields['container_additive'].widget.attrs['class'] = 'form-select'
         self.fields['container_fillingvolume'].widget.attrs['class'] = 'form-control'
@@ -140,10 +149,11 @@ class SettingForm(forms.ModelForm):
 
 class ConditionForm(forms.ModelForm):
     temperature = forms.Select()
+    temperature_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     light = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     air = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     agitation = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    other_condition = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    other_condition = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
@@ -158,6 +168,7 @@ class ConditionForm(forms.ModelForm):
         model = Condition
         fields = (
             'temperature',
+            'temperature_other',
             'light',
             'air',
             'agitation',
@@ -170,7 +181,9 @@ class ConditionForm(forms.ModelForm):
         self.fields['light'].widget.attrs['class'] = 'form-check-input'
         self.fields['air'].widget.attrs['class'] = 'form-check-input'
         self.fields['agitation'].widget.attrs['class'] = 'form-check-input'
-        self.fields['other_condition'].widget.attrs['class'] = 'form-check-input'
+
+
+
 
 
     # -------------------Botcatcher-------------------------------------

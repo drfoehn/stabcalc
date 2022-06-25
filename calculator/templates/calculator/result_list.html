@@ -6,25 +6,87 @@
 
 {% block content %}
 
+    <div id="tabs" hx-get="/tab1" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML">
+        <div class="tab-list">
+            <a hx-get="/tab1" class="selected">Tab 1</a>
+            <a hx-get="/tab2">Tab 2</a>
+            <a hx-get="/tab3">Tab 3</a>
+        </div>
 
-    {% if object_list %}
-        <div class="row d-flex justify-content-center">
-            {% for result in object_list %}
-                <div>
-                {{ result.value }}<br>
-{#                {{ result.average }}<br>#}
-                    {{ result.duration}}<br>
-                    {{ result.setting }}<br>
-                    {{ result.subject }}<br>
-{#                <a href="{% url 'edit_results' result.id %}">update</a>#}
+        <div class="tab-content" id="tab2">
+            Commodo normcore truffaut VHS duis gluten-free keffiyeh iPhone taxidermy godard ramps anim pour-over.
+            Pitchfork vegan mollit umami quinoa aute aliquip kinfolk eiusmod live-edge cardigan ipsum locavore.
+            Polaroid duis occaecat narwhal small batch food truck.
+            PBR&B venmo shaman small batch you probably haven't heard of them hot chicken readymade.
+            Enim tousled cliche woke, typewriter single-origin coffee hella culpa.
+            Art party readymade 90's, asymmetrical hell of fingerstache ipsum.
+        </div>
+        <div  class="tab-content" id="tab3">
+            lklkmlmsfd
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="row">
+        <!--
+        Define here the variables, you can delete this comment afterwords:
+            object_list for the "items" to loo over: a
+            single object: a
+            machine name attrof the object: a
+            display title ttr of the object: a
+        -->
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                {% for duration in durations  %}
+                    <button
+                            class="nav-link{% if forloop.first %} active{% endif %}"
+                            id="nav-{{duration.seconds}}-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#nav-{{duration.seconds }}"
+                            type="button"
+                            role="tab"
+                            aria-controls="nav-{{ . }}"
+                            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                            {% if not duration.enabled %}disabled{% endif %}
+                    >
+                    {% if duration.seconds == 0 %}
+                        Baseline
+                    {% else %}
+
+                        {{duration.duration_number}} {{ duration.get_duration_unit_display }}
+                    {% endif %}
+                    </button>
+                {% endfor %}
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            {% for duration in durations %}
+                <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+                     id="nav-{{duration.seconds}}"
+                     role="tabpanel"
+                     aria-labelledby="nav-{{duration.seconds}}-tab"
+                     tabindex="0"
+                >
+
                 </div>
             {% endfor %}
         </div>
-    {% else %}
-        <p>No results saved</p>
-    {% endif %}
-    <a href="{% url 'add_results' %}">add result</a>
-
+    </div>
 {% endblock %}
 
 

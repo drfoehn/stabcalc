@@ -1,7 +1,111 @@
 <div hx-target="this" hx-swap="outerHTML" >
     <form method="POST">
         {% csrf_token %}
-        {{ form }}
+        <table>
+            <tr>
+                <th>
+                    {{ form.sample_type.label_tag }}
+                </th>
+                <th>
+                    {{ form.sample_type_other.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.sample_type }}
+                </td>
+                <td>
+                    {{ form.sample_type_other }}
+                </td>
+                <td>
+                    {{ form.sample_type.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.container_additive.label_tag }}
+                </th>
+                <th>
+                    {{ form.container_additive_other.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.container_additive }}
+                </td>
+                <td>
+                    {{ form.container_additive_other }}
+                </td>
+                <td>
+                    {{ form.container_additive.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.container_fillingvolume.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.container_fillingvolume }}
+                </td>
+                <td>
+                    {{ form.container_fillingvolume.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.container_dimension.label_tag }}
+                </th>
+                <th>
+                    {{ form.container_dimension_other.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.container_dimension }}
+                </td>
+                <td>
+                    {{ form.container_dimension_other }}
+                </td>
+                <td>
+                    {{ form.container_dimension.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.container_material.label_tag }}
+                </th>
+                <th>
+                    {{ form.container_material_other.label_tag }}
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    {{ form.container_material }}
+                </td>
+                <td>
+                    {{ form.container_material_other }}
+                </td>
+                <td>
+                    {{ form.container_material.errors }}
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    {{ form.gel.label_tag }}
+                </th>
+                <td>
+                    {{ form.gel }}
+                </td>
+                <td>
+                    {{ form.gel.errors }}
+                </td>
+            </tr>
+        </table>
+
+
+{#        {{ form }}#}
 {#    If statement to prevent edit-view from creating more objects#}
         {% if sample %}     {#  Passed in from Edit-sample-view #}
             <button type="submit" hx-post="{% url 'edit-sample' sample.id %}"

@@ -53,11 +53,12 @@ class Condition(models.Model):
         default=FRIDGE,
         verbose_name='Temperature'
     )
+    temperature_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Temperature'))
 
     light = models.BooleanField(verbose_name='Exposure to light during storage')
     air = models.BooleanField(verbose_name='Exposure to air during storage')
     agitation = models.BooleanField(verbose_name='Agitation during storage')
-    other_condition = models.CharField(max_length=255, null=True, blank=True, verbose_name='Other Condition')
+    other_condition = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Condition'))
 
     def __str__(self):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
@@ -87,6 +88,7 @@ class Sample(models.Model):
         default=VENOUS_BLOOD,
         verbose_name='Sample Type'
     )
+    sample_type_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Sampletype'))
 
     PLASTIC = 1
     GLASS = 2
@@ -102,6 +104,7 @@ class Sample(models.Model):
         default=PLASTIC,
         verbose_name='Container Material'
     )
+    container_material_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Containermaterial'))
 
     SMALL = 1
     MIDDLE = 2
@@ -121,7 +124,9 @@ class Sample(models.Model):
         , blank=True, null=True
     )
 
-    container_fillingvolume = models.FloatField(verbose_name='Container Fillingvolume', blank=True, null=True)
+    container_dimension_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Containerdimension'))
+
+    container_fillingvolume = models.FloatField(verbose_name='Container Fillingvolume (in mL)', blank=True, null=True)
 
     NONE = 0
     EDTA = 1
@@ -144,7 +149,7 @@ class Sample(models.Model):
         # default=HOURS,
         verbose_name='Container Additive', blank=True, null=True
     )
-
+    container_additive_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Additive'))
     gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
 
     def __str__(self):

@@ -97,6 +97,22 @@ th{
     font-size: 1.2em  !important;,
 }
 
+/*FIXME: Linkfarbe*/
+#navbarDropdown a:link,
+#navbarDropdown a:visited{
+    color: gray; !important;
+}
+/*a:link,*/
+/*a:visited {*/
+/*    color: gray;*/
+/*}*/
+
+/*a:hover,*/
+/*a:active {*/
+/*    color: darkgray;*/
+/*}*/
+
+
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
 
 .icon_edit,
