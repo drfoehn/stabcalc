@@ -231,11 +231,11 @@ class Setting(models.Model):
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
-    def save(self, *args, **kwargs):
-        dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
-        # TODO: add if not
-        self.duration_set.add(dur_zero)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
+    #     # TODO: add if not
+    #     self.duration_set.add(dur_zero)
+    #     super().save(*args, **kwargs)
 
 
 class Duration(models.Model):

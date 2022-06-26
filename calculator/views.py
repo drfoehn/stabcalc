@@ -465,6 +465,7 @@ def instrument_detail(request, pk):
     }
     return render(request, 'calculator/partials/instrument_detail.html', context)
 
+
 def edit_instrument(request, pk):
     instrument = Instrument.objects.get(pk=pk)
     form = InstrumentForm(request.POST or None, instance=instrument)
@@ -472,7 +473,7 @@ def edit_instrument(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            instrument= form.save()
+            instrument = form.save()
             return redirect('instrument-detail', pk=instrument.id)
 
     context = {
@@ -481,18 +482,18 @@ def edit_instrument(request, pk):
     }
     return render(request, 'calculator/partials/instrument_form.html', context)
 
+
 def delete_instrument(request, pk):
     instrument = Instrument.objects.get(pk=pk)
     instrument.delete()
     return HttpResponse('')
 
+
 # ------------------------------------PARAMETER---------------------------------------
 
 def create_parameter(request):
-
     form = ParameterForm(request.POST or None)
     parameters = Parameter.objects.all()
-
 
     if request.method == 'POST':
         if form.is_valid():
@@ -513,12 +514,14 @@ def create_parameter(request):
 
     return render(request, 'calculator/parameter_list.html', context)
 
+
 def add_parameter_form(request):
     form = ParameterForm()
     context = {
         "form": form
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
+
 
 def parameter_detail(request, pk):
     parameter = Parameter.objects.get(pk=pk)
@@ -527,6 +530,7 @@ def parameter_detail(request, pk):
     }
     return render(request, 'calculator/partials/parameter_detail.html', context)
 
+
 def edit_parameter(request, pk):
     parameter = Parameter.objects.get(pk=pk)
     form = ParameterForm(request.POST or None, instance=parameter)
@@ -534,7 +538,7 @@ def edit_parameter(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            parameter=form.save()
+            parameter = form.save()
             return redirect('parameter-detail', pk=parameter.id)
 
     context = {
@@ -543,15 +547,16 @@ def edit_parameter(request, pk):
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
 
+
 def delete_parameter(request, pk):
     parameter = Parameter.objects.get(pk=pk)
     parameter.delete()
     return HttpResponse('')
 
+
 # --------------------------------------SAMPLE----------------------------------------
 
 def create_sample(request):
-
     form = SampleForm(request.POST)
     samples = Sample.objects.all()
     if request.method == 'POST':
@@ -573,12 +578,14 @@ def create_sample(request):
 
     return render(request, 'calculator/sample_list.html', context)
 
+
 def add_sample_form(request):
     form = SampleForm()
     context = {
         "form": form
     }
     return render(request, 'calculator/partials/sample_form.html', context)
+
 
 def sample_detail(request, pk):
     sample = Sample.objects.get(pk=pk)
@@ -587,6 +594,7 @@ def sample_detail(request, pk):
     }
     return render(request, 'calculator/partials/sample_detail.html', context)
 
+
 def edit_sample(request, pk):
     sample = Sample.objects.get(pk=pk)
     form = SampleForm(request.POST or None, instance=sample)
@@ -594,7 +602,7 @@ def edit_sample(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            sample=form.save()
+            sample = form.save()
             return redirect('sample-detail', pk=sample.id)
 
     context = {
@@ -602,6 +610,7 @@ def edit_sample(request, pk):
         "sample": sample,
     }
     return render(request, 'calculator/partials/sample_form.html', context)
+
 
 def delete_sample(request, pk):
     sample = Sample.objects.get(pk=pk)
@@ -611,32 +620,30 @@ def delete_sample(request, pk):
 
 # -------------------------------------SETTING----------------------------------------
 
-def create_setting(request):
-
+def create_setting(request, duration_id):
     form = SettingForm(request.POST or None)
-    settings = Setting.objects.all()
-
-
+    durations = Duration.objects.filter(pk=duration_id)
     if request.method == 'POST':
         if form.is_valid():
-
-
             setting = form.save()
             return redirect('setting-detail', pk=setting.id)
         else:
             context = {
                 'form': form,
-                'settings': Setting.objects.all()
+                'settings': Setting.objects.all(),
+                'durations': durations
             }
             return render(request, 'calculator/partials/setting_form.html', context)
 
     context = {
         'form': form,
-        'settings': settings,
+        'durations': durations
+
 
     }
 
     return render(request, 'calculator/setting_list.html', context)
+
 
 def add_setting_form(request):
     form = SettingForm()
@@ -645,12 +652,14 @@ def add_setting_form(request):
     }
     return render(request, 'calculator/partials/setting_form.html', context)
 
+
 def setting_detail(request, pk):
     setting = Setting.objects.get(pk=pk)
     context = {
         "setting": setting
     }
     return render(request, 'calculator/partials/setting_detail.html', context)
+
 
 def edit_setting(request, pk):
     setting = Setting.objects.get(pk=pk)
@@ -659,7 +668,7 @@ def edit_setting(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            setting=form.save()
+            setting = form.save()
             return redirect('setting-detail', pk=setting.id)
 
     context = {
@@ -667,6 +676,7 @@ def edit_setting(request, pk):
         "setting": setting,
     }
     return render(request, 'calculator/partials/setting_form.html', context)
+
 
 def delete_setting(request, pk):
     setting = Setting.objects.get(pk=pk)
@@ -677,10 +687,8 @@ def delete_setting(request, pk):
 # -------------------------------------CONDITION----------------------------------------
 
 def create_condition(request):
-
     form = ConditionForm(request.POST or None)
     conditions = Condition.objects.all()
-
 
     if request.method == 'POST':
         if form.is_valid():
@@ -701,12 +709,14 @@ def create_condition(request):
 
     return render(request, 'calculator/condition_list.html', context)
 
+
 def add_condition_form(request):
     form = ConditionForm()
     context = {
         "form": form
     }
     return render(request, 'calculator/partials/condition_form.html', context)
+
 
 def condition_detail(request, pk):
     condition = Condition.objects.get(pk=pk)
@@ -715,6 +725,7 @@ def condition_detail(request, pk):
     }
     return render(request, 'calculator/partials/condition_detail.html', context)
 
+
 def edit_condition(request, pk):
     condition = Condition.objects.get(pk=pk)
     form = ConditionForm(request.POST or None, instance=condition)
@@ -722,7 +733,7 @@ def edit_condition(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            condition=form.save()
+            condition = form.save()
             return redirect('condition-detail', pk=condition.id)
 
     context = {
@@ -730,6 +741,7 @@ def edit_condition(request, pk):
         "condition": condition,
     }
     return render(request, 'calculator/partials/condition_form.html', context)
+
 
 def delete_condition(request, pk):
     condition = Condition.objects.get(pk=pk)
@@ -740,10 +752,8 @@ def delete_condition(request, pk):
 # -------------------------------------DURATION----------------------------------------
 
 def create_duration(request):
-
     form = DurationForm(request.POST or None)
     durations = Duration.objects.all()
-
 
     if request.method == 'POST':
         if form.is_valid():
@@ -759,10 +769,10 @@ def create_duration(request):
     context = {
         'form': form,
         'durations': durations,
-
     }
 
     return render(request, 'calculator/duration_list.html', context)
+
 
 def add_duration_form(request):
     form = DurationForm()
@@ -771,12 +781,14 @@ def add_duration_form(request):
     }
     return render(request, 'calculator/partials/duration_form.html', context)
 
+
 def duration_detail(request, pk):
     duration = Duration.objects.get(pk=pk)
     context = {
         "duration": duration
     }
     return render(request, 'calculator/partials/duration_detail.html', context)
+
 
 def edit_duration(request, pk):
     duration = Duration.objects.get(pk=pk)
@@ -785,7 +797,7 @@ def edit_duration(request, pk):
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
         if form.is_valid():
-            duration=form.save()
+            duration = form.save()
             return redirect('duration-detail', pk=duration.id)
 
     context = {
@@ -794,33 +806,28 @@ def edit_duration(request, pk):
     }
     return render(request, 'calculator/partials/duration_form.html', context)
 
+
 def delete_duration(request, pk):
     duration = Duration.objects.get(pk=pk)
     duration.delete()
     return HttpResponse('')
 
 
-
-
-
-
 # -------------------------------------RESULTS---------------------------------
 
-def create_result(request):
+def create_result(request, setting_pk):
+    setting = Setting.objects.get(pk=setting_pk)
+    # durations = Duration.objects.all(pk=setting.duration_set.all())
+    durations = Duration.objects.filter(setting=setting_pk)
+    subjects = Subject.objects.all()
 
-    results = Result.objects.all()
-    durations = Duration.objects.all()
     context = {
-        'results': results,
-        'durations': durations
+        'durations': durations,
+        'setting': setting,
+        'subjects': subjects
     }
 
     return render(request, 'calculator/result_list.html', context)
-
-
-
-
-
 
 
 class InstrumentUpdateView(UpdateView):

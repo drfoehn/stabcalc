@@ -6,6 +6,8 @@
 
 {% block content %}
 
+        {{ setting.name }}
+    {{ result }}
     <div class="row">
         <!--
         Define here the variables, you can delete this comment afterwords:
@@ -44,8 +46,10 @@
                      role="tabpanel"
                      aria-labelledby="nav-{{duration.seconds}}-tab"
                      tabindex="0"
-                >
+                >                   {{ duration.duration_number }} / {{ duration.get_duration_unit_display }}
+                    <br> {{ duration.id }} / {{ duration.pk }}<br>
                                     {{ duration }}
+                                    {{ duration.setting.name }}<br>
                 </div>
             {% endfor %}
         </div>
