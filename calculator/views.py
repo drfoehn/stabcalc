@@ -819,7 +819,7 @@ def create_result(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
     # durations = Duration.objects.all(pk=setting.duration_set.all())
     durations = Duration.objects.filter(setting=setting_pk)
-    subjects = Subject.objects.all()
+    subjects = Subject.objects.filter(setting=setting_pk)
 
     context = {
         'durations': durations,

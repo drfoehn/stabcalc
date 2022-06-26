@@ -2,11 +2,18 @@
 {% load i18n %}
 {% load static %}
 
-{% block title %}Instruments{% endblock %}
+{% block title %}Insert Results to {{ setting.name }}{% endblock %}
 
 {% block content %}
 
-        {{ setting.name }}
+    <h4 class="display-5">List / Add results</h4>
+    <h4 class="display6">of/to setting: "{{ setting.name }}"</h4>
+        Parameter: {{ setting.parameter.name }}<br>
+        Temperature: {{ setting.condition.get_temperature_display }}<br>
+    <br>
+
+
+
     {{ result }}
     <div class="row">
         <!--
@@ -46,10 +53,17 @@
                      role="tabpanel"
                      aria-labelledby="nav-{{duration.seconds}}-tab"
                      tabindex="0"
-                >                   {{ duration.duration_number }} / {{ duration.get_duration_unit_display }}
-                    <br> {{ duration.id }} / {{ duration.pk }}<br>
-                                    {{ duration }}
-                                    {{ duration.setting.name }}<br>
+                >
+                    {% for subject in subjects %}
+                        <div class="row">
+                        <div class="col">
+                        {{ subject }} <br>
+                        </div>
+                        <div class="col">
+                            Hier kommt die Form rein for replicate in replcates ...
+                        </div>
+                        </div>
+                    {% endfor %}
                 </div>
             {% endfor %}
         </div>
