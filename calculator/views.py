@@ -830,6 +830,80 @@ def create_result(request, setting_pk):
     return render(request, 'calculator/result_list.html', context)
 
 
+
+# -------------------------------------SUBJECT----------------------------------------
+
+def create_subject(request):
+    form = SubjectForm(request.POST or None)
+    subjects = Subject.objects.all()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            subject = form.save()
+            return redirect('subject-detail', pk=subject.id)
+        else:
+            context = {
+                'form': form,
+                'subjects': Subject.objects.all()
+            }
+            return render(request, 'calculator/partials/subject_form.html', context)
+
+    context = {
+        'form': form,
+        'subjects': subjects,
+    }
+
+    return render(request, 'calculator/subject_list.html', context)
+
+
+def add_subject_form(request):
+    form = SubjectForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/subject_form.html', context)
+
+
+def subject_detail(request, pk):
+    subject = Subject.objects.get(pk=pk)
+    context = {
+        "subject": subject
+    }
+    return render(request, 'calculator/partials/subject_detail.html', context)
+
+
+def edit_subject(request, pk):
+    subject = Subject.objects.get(pk=pk)
+    form = SubjectForm(request.POST or None, instance=subject)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            subject = form.save()
+            return redirect('subject-detail', pk=subject.id)
+
+    context = {
+        "form": form,
+        "subject": subject,
+    }
+    return render(request, 'calculator/partials/subject_form.html', context)
+
+
+def delete_subject(request, pk):
+    subject = Subject.objects.get(pk=pk)
+    subject.delete()
+    return HttpResponse('')
+
+
+
+
+
+
+
+
+
+
+
 class InstrumentUpdateView(UpdateView):
     model = Instrument
     form_class = InstrumentForm

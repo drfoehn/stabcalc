@@ -43,6 +43,12 @@ urlpatterns = [
     path('durations/duration/<pk>/edit', edit_duration, name="edit-duration"),
     path('durations/create-duration-form/', add_duration_form, name='create-duration-form'),
 
+    path('subjects/', create_subject, name='create-subject'),
+    path('subjects/subject/<pk>/', subject_detail, name="subject-detail"),
+    path('subjects/subject/<pk>/delete', delete_subject, name="delete-subject"),
+    path('subjects/subject/<pk>/edit', edit_subject, name="edit-subject"),
+    path('subjects/create-subject-form/', add_subject_form, name='create-subject-form'),
+
     path('setting/<setting_pk>/results/', create_result, name='create-result'),
     # path("instrument/<pk>/edit", views.InstrumentUpdateView.as_view(), name="edit_instrument"),
     # path("add-sample/", views.SampleAddView.as_view(), name="add_sample"),

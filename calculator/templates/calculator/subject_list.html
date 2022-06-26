@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add subjects{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">List / Add subjects</h4>
+
+
+
+
+    <button hx-get="{% url 'create-subject-form' %}" class="btn btn-primary" role="button" data-bs-toggle="button"  hx-swap="beforeend" hx-target="#subject_form">Add additional
+        subject
+    </button>
+
+    <div class="row" id="subject_form"></div>
+
+    {% if subjects %}
+
+        {% for subject in subjects %}
+            {% include 'calculator/partials/subject_detail.html' %}
+        {% endfor %}
+    {% else %}
+        Currently no subjects
+    {% endif %}
+
+{% endblock %}
+
+
