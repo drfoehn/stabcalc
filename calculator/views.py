@@ -62,6 +62,8 @@ class ResultsView(DetailView):
                 if not math.isnan(result):  # pandas converts None-values to "nan" - this function excludes those values
                     y_rel.append(result)
                     x1_rel.append(duration)
+        print(y_rel)
+        print(x1_rel)
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
@@ -620,9 +622,9 @@ def delete_sample(request, pk):
 
 # -------------------------------------SETTING----------------------------------------
 
-def create_setting(request, duration_id):
+def create_setting(request):
     form = SettingForm(request.POST or None)
-    durations = Duration.objects.filter(pk=duration_id)
+    settings = Setting.objects.all()
     if request.method == 'POST':
         if form.is_valid():
             setting = form.save()
@@ -631,14 +633,12 @@ def create_setting(request, duration_id):
             context = {
                 'form': form,
                 'settings': Setting.objects.all(),
-                'durations': durations
             }
             return render(request, 'calculator/partials/setting_form.html', context)
 
     context = {
         'form': form,
-        'durations': durations
-
+        'settings': settings
 
     }
 
@@ -836,6 +836,7 @@ def create_result(request, setting_pk):
 def create_subject(request):
     form = SubjectForm(request.POST or None)
     subjects = Subject.objects.all()
+    replicates = Replicate.objects.all()
 
     if request.method == 'POST':
         if form.is_valid():
@@ -851,6 +852,7 @@ def create_subject(request):
     context = {
         'form': form,
         'subjects': subjects,
+        'replicates': replicates
     }
 
     return render(request, 'calculator/subject_list.html', context)
@@ -893,9 +895,6 @@ def delete_subject(request, pk):
     subject = Subject.objects.get(pk=pk)
     subject.delete()
     return HttpResponse('')
-
-
-
 
 
 

@@ -113,7 +113,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
-    duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()), widget = forms.CheckboxSelectMultiple)
+    duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
 
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
@@ -137,7 +137,7 @@ class SettingForm(forms.ModelForm):
         super(SettingForm, self).__init__(*args, **kwargs)
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
-        self.fields['duration'].widget.attrs['class'] = 'form-check-input'
+        # self.fields['duration'].widget.attrs['class'] = 'form-check-input'
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
@@ -220,7 +220,7 @@ class DurationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DurationForm, self).__init__(*args, **kwargs)
         self.fields['duration_unit'].widget.attrs['class'] = 'form-select'
-        self.fields['setting'].widget.attrs['class'] = 'form-check-input'
+        # self.fields['setting'].widget.attrs['class'] = 'form-check-input'
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
@@ -232,28 +232,20 @@ class DurationForm(forms.ModelForm):
 
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()), widget=forms.CheckboxSelectMultiple)
-
-
-    # ----------------------Botcatcher-------------------------
-    # TODO: Check if working: Bots should not get an error. It should silently fail.
-    feedback = forms.CharField(
-        widget=forms.HiddenInput,
-        required=False,
-        validators=[validators.MaxLengthValidator(0)],
-    )
-    # -----------------------------------------------------------
+    setting = forms.ModelChoiceField(queryset=(Setting.objects.all()))
+    replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
 
     class Meta:
         model = Subject
         fields = (
             'name',
-            'setting'
+            'setting',
+            'replicate'
         )
 
-    def __init__(self, *args, **kwargs):
-        super(SubjectForm, self).__init__(*args, **kwargs)
-        self.fields['setting'].widget.attrs['class'] = 'form-check-input'
+    # def __init__(self, *args, **kwargs):
+    #     super(SubjectForm, self).__init__(*args, **kwargs)
+        # self.fields['setting'].widget.attrs['class'] = 'form-check-input'
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):

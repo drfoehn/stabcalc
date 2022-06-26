@@ -13,12 +13,13 @@
     </button>
 
     <div class="row" id="setting_form"></div>
+
     {% if settings %}
         {% for setting in settings %}
             {% include 'calculator/partials/setting_detail.html' %}
         {% endfor %}
     {% else %}
-        Currently no samples
+        Currently no settings
     {% endif %}
 
 {% endblock %}

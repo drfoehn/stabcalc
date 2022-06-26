@@ -8,8 +8,8 @@ from .views import *
 urlpatterns = [
     path('login_user/', views.login_user, name='login'),
     path('logout_user/', views.logout_user, name='logout'),
-    path('register_user/', views.register_user, name='register_user')
-
+    path('register_user/', views.register_user, name='register_user'),
+    path('dashboard/', views.user_dashboard, name="dashboard"),
 
     #URLs for Password reset
     #TODO: set up an email backend for the reset link to actually work.

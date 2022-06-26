@@ -8,9 +8,6 @@
 
     <h4 class="display-5">List / Add durations</h4>
 
-
-
-
     <button hx-get="{% url 'create-duration-form' %}" class="btn btn-primary" role="button" data-bs-toggle="button" hx-swap="beforeend" hx-target="#duration_form">Add additional
         duration
     </button>
@@ -24,29 +21,6 @@
         {% endfor %}
 
     {% endif %}
-    {#    {% if object_list %}#}
-    {#        <div class="row d-flex justify-content-center">#}
-    {#            {% for duration in object_list %}#}
-    {#                <div>#}
-    {#                    {{ duration.name }}<br>#}
-    {#                    {{ duration.manufacturer }}<br>#}
-    {#                    {% include "calculator/partials/duration_detail.html" %}#}
-    {#                    <a href="{% url 'edit_duration' duration.id %}">update</a>#}
-    {#                </div>#}
-    {#            {% endfor %}#}
-    {#         </div>#}
-    {#    {% else %}#}
-    {#        <p>No durations saved</p>#}
-    {#    {% endif %}#}
-
-
-
-
-
-    {##}
-    {##}
-    {#<a href="{% url 'add_duration' %}">Next (durations)</a>#}
-
 {% endblock %}
 
 

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import *
 from django.utils.translation import gettext_lazy as _
-
+from calculator.models import *
 
 def login_user(request):
     if request.method == 'POST':
@@ -42,3 +42,29 @@ def register_user(request):
         form = CustomUserCreationForm()
 
     return render(request, 'users/register_user.html', {'form': form})
+
+
+def user_dashboard(request):
+    settings = Setting.objects.all()
+    parameters= Parameter.objects.all()
+    subjects= Subject.objects.all()
+    durations= Duration.objects.all()
+    samples= Sample.objects.all()
+    conditions= Condition.objects.all()
+    instruments= Instrument.objects.all()
+
+    context = {
+        'settings': settings,
+        'parameters': parameters,
+        'subjects': subjects,
+        'durations': durations,
+        'samples': samples,
+        'conditions': conditions,
+        'instruments': instruments,
+    }
+
+    return render(request, 'users/dashboard.html', context)
+
+
+
+

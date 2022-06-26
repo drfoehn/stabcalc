@@ -2,7 +2,7 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form }}
+    {{ form}}
 
 {#    If statement to prevent edit-view from creating more objects#}
         {% if subject %}     {#  Passed in from Edit-instrument-view #}

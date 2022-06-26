@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Insert Results to {{ setting.name }}{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">{{ user.user_name }}'s Dashboard</h4>
+    <div class="row">
+    <div class="col-6">
+        <div>
+            <h4 class="display-6">My Settings</h4>
+        </div>
+        {% for setting in settings %}
+        {{ setting }}<br>
+    {% endfor %}
+    </div>
+    <div class="col-6">
+        <div>
+            <h4 class="display-6">My Instruments</h4>
+        </div>
+        {% for instrument in instruments %}
+        {{ instrument.name }} / {{ instrument.manufacturer }}<br>
+    {% endfor %}
+    </div>
+    </div>
+
+{#'settings': settings,#}
+{#        'parameters': parameters,#}
+{#        'subjects': subjects,#}
+{#        'durations': durations,#}
+{#        'samples': samples,#}
+{#        'conditions': conditions,#}
+{#        'instruments': instruments,#}
+
+
+
+{% endblock %}
