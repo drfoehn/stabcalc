@@ -58,7 +58,7 @@ class ReplicateInline(admin.TabularInline):
 class SettingAdmin(admin.ModelAdmin):
     model = Setting
     exclude = ('subject',)
-    inlines = [SubjectInline]
+    # inlines = [SubjectInline]
 
 class SubjectAdmin(admin.ModelAdmin):
     model = Subject

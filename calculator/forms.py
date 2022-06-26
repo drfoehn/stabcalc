@@ -232,7 +232,7 @@ class DurationForm(forms.ModelForm):
 
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    setting = forms.ModelChoiceField(queryset=(Setting.objects.all()))
+    setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
     replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
 
     class Meta:

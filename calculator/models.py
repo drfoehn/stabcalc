@@ -299,14 +299,14 @@ class Duration(models.Model):
         return f"{self.duration_number}, {unit}"
 
 
-duration, created = Duration.objects.get_or_create(
-        seconds=0,
-        defaults={'duration_number': 0, 'duration_unit': '1'},
-    )
+# duration, created = Duration.objects.get_or_create(
+#         seconds=0,
+#         defaults={'duration_number': 0, 'duration_unit': '1'},
+#     )
 
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, null=True)
+    setting = models.ManyToManyField(Setting, blank=True, null=True)
 
     def __str__(self):
         return self.name

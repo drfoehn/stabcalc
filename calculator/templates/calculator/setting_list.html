@@ -6,22 +6,31 @@
 
 {% block content %}
 
-    <h4 class="display-5">List / Add Settings</h4>
+    <h4 class="display-5">List / Add settings</h4>
 
-    <button hx-get="{% url 'create-setting-form' %}" class="btn btn-primary" role="button" data-bs-toggle="button" hx-swap="beforeend" hx-target="#setting_form">Add additional
-        setting
-    </button>
 
+    <a hx-get="{% url 'create-setting-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#setting_form">Add additional setting</a>
     <div class="row" id="setting_form"></div>
-
     {% if settings %}
         {% for setting in settings %}
             {% include 'calculator/partials/setting_detail.html' %}
         {% endfor %}
     {% else %}
-        Currently no settings
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no settings saved - <a hx-get="{% url 'create-setting-form' %}" hx-swap="beforeend"
+                                                hx-target="#setting_form" class="alert-link">Create your first
+            setting</a>.
+        </div>
     {% endif %}
+    <div class="row">
 
+            <br>
+            <a href="{% url 'create-parameter' %}" class="btn btn-outline-secondary btn-next" role="button" data-bs-toggle="button">Next
+                (Add parameters) <i class="bi bi-arrow-right"></i></a>
+
+    </div>
 {% endblock %}
 
 
