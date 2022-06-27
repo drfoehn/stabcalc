@@ -258,6 +258,8 @@ class SubjectForm(forms.ModelForm):
         return feedback
 
 
+
+
 class ResultForm(forms.ModelForm):
     value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     setting = forms.ModelChoiceField(queryset=Setting.objects.all())
@@ -281,6 +283,10 @@ class ResultForm(forms.ModelForm):
         if len(feedback) > 0:
             raise forms.ValidationError("We don´t serve your kind here!")
         return feedback
+
+
+# ResultFormSet = formset_factory(ResultForm, extra=3)
+
 
 
 class UploadExcelForm(forms.Form):

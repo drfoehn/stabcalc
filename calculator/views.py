@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -627,9 +628,7 @@ def create_setting(request):
     settings = Setting.objects.all()
     if request.method == 'POST':
         if form.is_valid():
-            setting = Setting.objects.create(
-                name=request.POST['name']
-            )
+            setting = form.cleaned_data['name']
             setting.duration_set.add(setting)
             setting.subject_set.add(setting)
             setting.save()
@@ -834,6 +833,7 @@ def create_result(request, setting_pk):
     results = Result.objects.all()
     replicates = Replicate.objects.all()
 
+
     if request.method == 'POST':
         if form.is_valid():
             result = form.save()
@@ -858,12 +858,36 @@ def create_result(request, setting_pk):
 
     return render(request, 'calculator/result_list.html', context)
 
+from django.forms import modelformset_factory
+
 def add_result_form(request):
-    form = ResultForm()
-    context = {
-        "form": form
-    }
-    return render(request, 'calculator/partials/result_form.html', context)
+    ResultFormSet = modelformset_factory(Result, fields=('value','setting', 'replicate', 'duration', 'subject'), extra=5)
+    # formset = ResultFormSet(queryset=Result.objects.none())
+
+    if request.method == 'POST':
+        formset = ResultFormSet(request.POST or None)
+        if formset.is_valid():
+            formset.save()
+            # print(formset)
+            # for form in formset:
+            #     print(form.cleaned_data)
+    #
+        # instances = form.save(commit=False)
+        # for instance in instances:
+        # instance.save()
+        # instances = form.save()
+        # form.save.m2m()
+
+    form = ResultFormSet()
+
+    return render(request, 'calculator/partials/result_form.html', {'form': form})
+
+# def add_result_form(request):
+#     form = ResultForm()
+#     context = {
+#         "form": form
+#     }
+#     return render(request, 'calculator/partials/result_form.html', context)
 
 
 def result_detail(request, pk):
