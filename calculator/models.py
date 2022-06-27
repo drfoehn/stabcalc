@@ -299,10 +299,10 @@ class Duration(models.Model):
         return f"{self.duration_number}, {unit}"
 
 
-# duration, created = Duration.objects.get_or_create(
-#         seconds=0,
-#         defaults={'duration_number': 0, 'duration_unit': '1'},
-#     )
+duration, created = Duration.objects.get_or_create(
+        seconds=0,
+        defaults={'duration_number': 0, 'duration_unit': '1'},
+    )
 
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)

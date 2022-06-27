@@ -114,7 +114,7 @@ class SettingForm(forms.ModelForm):
     parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
-
+    # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
     feedback = forms.CharField(
@@ -197,7 +197,6 @@ class ConditionForm(forms.ModelForm):
 class DurationForm(forms.ModelForm):
     duration_number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     duration_unit = forms.Select()
-    setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
 
 
     # ----------------------Botcatcher-------------------------
@@ -214,13 +213,12 @@ class DurationForm(forms.ModelForm):
         fields = (
             'duration_number',
             'duration_unit',
-            'setting'
         )
 
     def __init__(self, *args, **kwargs):
         super(DurationForm, self).__init__(*args, **kwargs)
         self.fields['duration_unit'].widget.attrs['class'] = 'form-select'
-        # self.fields['setting'].widget.attrs['class'] = 'form-check-input'
+
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
@@ -233,14 +231,14 @@ class DurationForm(forms.ModelForm):
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
-    replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
+    # replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
 
     class Meta:
         model = Subject
         fields = (
             'name',
             'setting',
-            'replicate'
+            # 'replicate'
         )
 
     # def __init__(self, *args, **kwargs):

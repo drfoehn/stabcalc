@@ -635,6 +635,7 @@ def create_setting(request):
                 'settings': Setting.objects.all(),
             }
             return render(request, 'calculator/partials/setting_form.html', context)
+    # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
 
     context = {
         'form': form,
