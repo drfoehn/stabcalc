@@ -2,24 +2,7 @@
 {##}
 <div hx-target="this" hx-swap='outerHTML' class="mt-3 py-3 px-3 bg-white shadow border border-gray-100">
 
-    {% if result.result_type_other %}
-        <h3>{{ result.result_type_other }}</h3>
-    {% else %}
-    <h3>{{ result.get_result_type_display }}</h3>
-{% endif %}
-
-    {% if result.container_additive_other %}
-        {{ result.container_additive_other }}
-        {% else %}
-    {{ result.get_container_additive_display}}
-    {% endif %} |
-
-    {% if result.gel == True %}
-        with Gel/Seperator
-    {% else %}
-        without Gel/Seperator
-    {% endif %} |
-    {{ result.container_fillingvolume }} mL<br>
+    {{ result.value }} {{ result.setting.parameter.unit }}
 
     <button hx-get="{% url 'edit-result' result.id %}">Edit</button>
     <button hx-post="{% url 'delete-result' result.id %}" hx-confirm="Are you sure?">Delete</button>

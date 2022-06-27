@@ -20,7 +20,7 @@ import statsmodels.api as sm
 from sklearn.preprocessing import PolynomialFeatures
 import math
 from patsy.highlevel import dmatrices
-
+from django.http import HttpResponse
 
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
@@ -405,7 +405,7 @@ class ResultsView(DetailView):
         return context
 
 
-from django.http import HttpResponse
+
 
 
 def upload_view(request):
@@ -413,16 +413,16 @@ def upload_view(request):
     return render(request, 'calculator/upload_form.html', {"form": form})
 
 
-class DashboardView(ListView):
-    model = Instrument
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        sample = Sample.objects.all()
-        context["samples"] = sample
-        # Add any other variables to the context here
-        ...
-        return context
+# class DashboardView(ListView):
+#     model = Instrument
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         sample = Sample.objects.all()
+#         context["samples"] = sample
+#         # Add any other variables to the context here
+#         ...
+#         return context
 
 
 # class InstrumentIndex(ListView):
@@ -627,7 +627,12 @@ def create_setting(request):
     settings = Setting.objects.all()
     if request.method == 'POST':
         if form.is_valid():
-            setting = form.save()
+            setting = Setting.objects.create(
+                name=request.POST['name']
+            )
+            setting.duration_set.add(setting)
+            setting.subject_set.add(setting)
+            setting.save()
             return redirect('setting-detail', pk=setting.id)
         else:
             context = {
@@ -821,16 +826,76 @@ def create_result(request, setting_pk):
     # durations = Duration.objects.all(pk=setting.duration_set.all())
     durations = Duration.objects.filter(setting=setting_pk)
     subjects = Subject.objects.filter(setting=setting_pk)
+    # results = Result.objects.filter(setting=setting_pk)
+    # replicates = Replicate.objects.filter(result=results)
+
+    form = ResultForm(request.POST or None)
+    results = Result.objects.all()
+    replicates = Replicate.objects.all()
+
+    if request.method == 'POST':
+        if form.is_valid():
+            result = form.save()
+            return redirect('result-detail', pk=result.id)
+        else:
+            context = {
+                'form': form,
+                'results': Result.objects.all()
+            }
+            return render(request, 'calculator/partials/result_form.html', context)
+
 
     context = {
+        'form': form,
         'durations': durations,
         'setting': setting,
-        'subjects': subjects
+        'subjects': subjects,
+        'results': results,
+        'replicates': replicates
     }
+
 
     return render(request, 'calculator/result_list.html', context)
 
+def add_result_form(request):
+    form = ResultForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/result_form.html', context)
 
+
+def result_detail(request, pk):
+    result = Result.objects.get(pk=pk)
+    # duration = Duration.objects.get(pk=duration_pk)
+    context = {
+        "result": result,
+        # "duration": duration,
+    }
+    return render(request, 'calculator/partials/result_detail.html', context)
+
+
+def edit_result(request, pk):
+    result = Result.objects.get(pk=pk)
+    form = ResultForm(request.POST or None, instance=result)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            result = form.save()
+            return redirect('result-detail', pk=result.id)
+
+    context = {
+        "form": form,
+        "result": result,
+    }
+    return render(request, 'calculator/partials/result_form.html', context)
+
+
+def delete_result(request, pk):
+    result = Result.objects.get(pk=pk)
+    result.delete()
+    return HttpResponse('')
 
 # -------------------------------------SUBJECT----------------------------------------
 

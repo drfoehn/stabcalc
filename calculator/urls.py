@@ -50,11 +50,11 @@ urlpatterns = [
     path('subjects/create-subject-form/', add_subject_form, name='create-subject-form'),
 
     path('setting/<setting_pk>/results/', create_result, name='create-result'),
-    # path("instrument/<pk>/edit", views.InstrumentUpdateView.as_view(), name="edit_instrument"),
-    # path("add-sample/", views.SampleAddView.as_view(), name="add_sample"),
-    # path("add-parameter/", views.ParameterAddView.as_view(), name="add_parameter"),
-    # path("add-results/", views.ValuesAddView.as_view(), name="add_results"),
-    # path("input/", views.MultiInputView.as_view(), name="input"),
+    path('results/result/<pk>/', result_detail, name="result-detail"),
+    path('results/result/<pk>/delete', delete_result, name="delete-result"),
+    path('results/result/<pk>/edit', edit_result, name="edit-result"),
+    path('results/create-result-form/', add_result_form, name='create-result-form'),
+
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
     # path("upload/", views.upload_view, name="upload"),
 

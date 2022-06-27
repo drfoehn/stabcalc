@@ -181,7 +181,7 @@ class Setting(models.Model):
     #                                       choices=list(zip(range(1, 11), range(1, 11))))
 
     def __str__(self):
-        return f"{self.name} ({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}) "
+        return f"({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}) "
 
     def values_tot(self, duration: 'Duration') -> list[float]:
         return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
@@ -306,7 +306,7 @@ duration, created = Duration.objects.get_or_create(
 
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
-    setting = models.ManyToManyField(Setting, blank=True, null=True)
+    setting = models.ManyToManyField(Setting, blank=True)
 
     def __str__(self):
         return self.name
@@ -374,7 +374,7 @@ class Result(models.Model):
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
     replicate = models.ForeignKey(Replicate, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject = models.ManyToManyField(Subject)
 
     # def duration_cat(self):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()

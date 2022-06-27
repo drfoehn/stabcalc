@@ -114,6 +114,8 @@ class SettingForm(forms.ModelForm):
     parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
+    subject = forms.ModelMultipleChoiceField(queryset=(Subject.objects.all()))
+
     # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
@@ -130,7 +132,8 @@ class SettingForm(forms.ModelForm):
             'name',
             'parameter',
             'condition',
-            'duration'
+            'duration',
+            'subject',
         )
 
     def __init__(self, *args, **kwargs):
@@ -230,7 +233,7 @@ class DurationForm(forms.ModelForm):
 
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
+    # setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
     # replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
 
     class Meta:
@@ -244,6 +247,31 @@ class SubjectForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
     #     super(SubjectForm, self).__init__(*args, **kwargs)
         # self.fields['setting'].widget.attrs['class'] = 'form-check-input'
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
+
+
+class ResultForm(forms.ModelForm):
+    value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    setting = forms.ModelChoiceField(queryset=Setting.objects.all())
+    replicate = forms.ModelChoiceField(queryset=Replicate.objects.all())
+    duration = forms.ModelChoiceField(queryset=Duration.objects.all())
+    subject = forms.ModelChoiceField(queryset=Subject.objects.all())
+
+    class Meta:
+        model = Result
+        fields = (
+            'value',
+            'setting',
+            'replicate',
+            'duration',
+            'subject'
+        )
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
