@@ -825,10 +825,11 @@ def create_result(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
     # durations = Duration.objects.all(pk=setting.duration_set.all())
     durations = Duration.objects.filter(setting=setting_pk)
-    subjects = Subject.objects.filter(setting=setting_pk)
+    # subjects = Subject.objects.filter(setting=setting_pk)
     # results = Result.objects.filter(setting=setting_pk)
     # replicates = Replicate.objects.filter(result=results)
 
+    # form = ResultForm(request.POST or None, initial={'setting': 2})
     form = ResultForm(request.POST or None)
     results = Result.objects.all()
     replicates = Replicate.objects.all()
@@ -849,7 +850,7 @@ def create_result(request, setting_pk):
         'form': form,
         'durations': durations,
         'setting': setting,
-        'subjects': subjects,
+        # 'subjects': subjects,
         'results': results,
         'replicates': replicates
     }

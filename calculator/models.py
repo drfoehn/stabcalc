@@ -177,8 +177,8 @@ class Setting(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
 
-    # replicates = models.SmallIntegerField(help_text='How many replicate measurements did you perform per sample?',
-    #                                       choices=list(zip(range(1, 11), range(1, 11))))
+    rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
+                                          choices=list(zip(range(1, 11), range(1, 11))), default=2)
 
     def __str__(self):
         return f"({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}) "
@@ -380,7 +380,7 @@ class Result(models.Model):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
-        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject}, {self.setting_id}"
+        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject.name}, {self.setting_id}"
 
     # def duration(self):
     #     return self.subject.duration

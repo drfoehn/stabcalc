@@ -115,6 +115,7 @@ class SettingForm(forms.ModelForm):
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
     subject = forms.ModelMultipleChoiceField(queryset=(Subject.objects.all()))
+    rerun = forms.Select()
 
     # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
     # ----------------------Botcatcher-------------------------
@@ -134,6 +135,7 @@ class SettingForm(forms.ModelForm):
             'condition',
             'duration',
             'subject',
+            'rerun',
         )
 
     def __init__(self, *args, **kwargs):
@@ -261,7 +263,7 @@ class ResultForm(forms.ModelForm):
     setting = forms.ModelChoiceField(queryset=Setting.objects.all())
     replicate = forms.ModelChoiceField(queryset=Replicate.objects.all())
     duration = forms.ModelChoiceField(queryset=Duration.objects.all())
-    subject = forms.ModelChoiceField(queryset=Subject.objects.all())
+    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all())
 
     class Meta:
         model = Result

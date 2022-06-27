@@ -55,34 +55,35 @@
                      tabindex="0"
                 >
 
-                    {% for subject in subjects %}
+                    {% for subject in setting.subject_set.all %}
                         <div class="row">
                         <div class="col-2">
                             <h4 class="display6">{{ subject }}</h4> <br>
                         </div>
                         <div class="col-3">
 
-{#                            {% for result in subject.result_set.all %}#}
-{#                                {% if subject == subject. %}#}
-{#                                {{ result.value }} / {{ subject }} / {{ result.duration }}<br>#}
-{#                                {% endif %}#}
-{#                            {% endfor %}#}
-
                                 <a hx-get="{% url 'create-result-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
-                                   hx-swap="beforeend" hx-target="#result_form">Add additional result</a>
-                                <div class="row" id="result_form"></div>
+                                   hx-swap="beforeend" hx-target="#result_form-{{ duration.seconds }}">Add additional result</a>
+                                <div class="row" id="result_form-{{ duration.seconds }}"></div>
+
                                 {% if results %}
                                     {% for result in results %}
+                                        {{ result.subject.id.all }} / {{ subject.id }}<br>
                                         {% if result.duration == duration %}
+{#                                            {% if result.subject == subject %}#}
+{#                                            FIXME: result.subject.name returns "None" also in admin when looking at results, subject says none, although subject is selected. In admin when looking at Subject, the name shows up as it should.#}
+
+
                                         {% include 'calculator/partials/result_detail.html' %}
+{#                                                {% endif %}#}
                                         {% endif %}
                                     {% endfor %}
                                 {% else %}
                                     <br>
                                     <div class="alert alert-primary" role="alert">
                                         Currently no results saved - <a hx-get="{% url 'create-result-form' %}" hx-swap="beforeend"
-                                                                            hx-target="#result_form" class="alert-link">Create your first
-                                        sample</a>.
+                                                                            hx-target="#result_form" class="alert-link">Insert first
+                                        result</a>.
                                     </div>
                                 {% endif %}
 
