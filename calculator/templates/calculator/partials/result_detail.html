@@ -4,7 +4,7 @@
 
     {{ result.value }} {{ result.setting.parameter.unit }}
 
-    <button hx-get="{% url 'edit-result' result.id %}">Edit</button>
+
     <button hx-post="{% url 'delete-result' result.id %}" hx-confirm="Are you sure?">Delete</button>
 
 

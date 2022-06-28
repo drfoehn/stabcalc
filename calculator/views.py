@@ -46,7 +46,7 @@ class ResultsView(DetailView):
         for subject in subjects:
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
-            for duration in self.object.duration_set.all():
+            for duration in self.object.duration.all():
                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
 
         deviation_array = pd.DataFrame(deviation_dict)
@@ -76,9 +76,13 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
+        print(results_data)
+        print(durations_data)
+        print(merged_res_dur)
+        context["results_data222"] = merged_res_dur.to_html
 
         context["timepoints_n"] = merged_res_dur["duration_id"].nunique()  # number of timepoints
-        context["subjects_n"] = merged_res_dur["subject_id"].nunique()  # number of subjects
+        # context["subjects_n"] = merged_res_dur["subject_id"].nunique()  # number of subjects
 
         # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
@@ -829,15 +833,24 @@ def create_result(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(setting=setting_pk)
     subjects = Subject.objects.filter(setting=setting_pk)
+
     results = Result.objects.filter(setting=setting_pk)
-    replicates = Replicate.objects.filter(result=results)
+    # sub_id = []
+    # for subject in subjects.all():
+    #     sub_id.append(subject.id)
+    #
+    # res_sub_id = []
+    # for result in results:
+    #     res_sub_id.append(result._get_pk_val(subject))
     ResultFormSet = modelformset_factory(Result, fields=('value', 'setting', 'replicate', 'duration', 'subject'),
                                          extra=1)
     # formset = ResultFormSet(queryset=Result.objects.none())
 
     if request.method == 'POST':
         formset = ResultFormSet(request.POST or None)
+
         if formset.is_valid():
+
             results = formset.save()
             # TODO: Show success message after save that fades automatically: https://stackoverflow.com/questions/61153261/make-success-message-disappear-after-few-seconds-of-django-form-submission-and-d
             # messages.add_message(request, messages.SUCCESS, 'Entry saved')
@@ -860,7 +873,7 @@ def create_result(request, setting_pk):
         'setting': setting,
         'subjects': subjects,
         'results': results,
-        'replicates': replicates
+
     }
 
 

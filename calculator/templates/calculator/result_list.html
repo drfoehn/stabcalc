@@ -55,10 +55,12 @@
                      tabindex="0"
                 >
 
+
                     {% for subject in setting.subject.all %}
                         <div class="row">
                         <div class="col-2">
                             <h4 class="display6">{{ subject }}</h4> <br>
+                            {{ subject.result_set.all }}
                         </div>
                         <div class="col-3">
 
@@ -67,17 +69,17 @@
                                 <div class="row" id="result_form-{{ duration.seconds }}"></div>
                                 {% include 'calculator/partials/result_form.html' %}
 
+
                                 {% if results %}
-                                    {% for result in results %}
-                                        {{ result.subject.id.all }} / {{ subject.id }}<br>
-                                        {% if result.duration == duration %}
-{#                                            {% if result.subject == subject %}#}
+
+                                    {% for result in subject.result_set.all %}
+
+                                        {{ result.duration }} / {{ result.subject }}
+
+
 {#                                            FIXME: result.subject.name returns "None" also in admin when looking at results, subject says none, although subject is selected. In admin when looking at Subject, the name shows up as it should.#}
-
-
                                         {% include 'calculator/partials/result_detail.html' %}
-{#                                                {% endif %}#}
-                                        {% endif %}
+
                                     {% endfor %}
                                 {% endif %}
 

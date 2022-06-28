@@ -64,7 +64,7 @@ class DurationAdmin(admin.ModelAdmin):
 
 class ResultAdmin(admin.ModelAdmin):
     model = Result
-    list_display = ['value', 'setting', 'duration']
+    # list_display = ['value', 'setting','duration']
 
 
 class ReplicateAdmin(admin.ModelAdmin):
