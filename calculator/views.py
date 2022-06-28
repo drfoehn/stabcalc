@@ -34,22 +34,26 @@ class ResultsView(DetailView):
         global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
         subjects = Subject.objects.filter(setting=self.object)
-        durations_val = Duration.objects.all().values()
+        durations = Duration.objects.filter(setting=self.object)
+        durations_val = durations.values()
         durations_data = pd.DataFrame(durations_val)
         results = Result.objects.filter(setting=self.object)
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
         parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
+        setting = self.object
 
-        # ---------------------------Get deviation data for each subject setting and time individually
+
+        # ---------------------------Get deviation data for each subject setting and time individually in a dict
         deviation_dict: dict[int, dict[int, int]] = {}
         for subject in subjects:
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
             for duration in self.object.duration.all():
                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
-
+        # FIXME: Deviation calculation not correct. current setting is not included - all durations of subjects are beinig calculATED
         deviation_array = pd.DataFrame(deviation_dict)
+        context["devia"] = deviation_array.to_html
         deviation_array.index.name = "duration"
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/

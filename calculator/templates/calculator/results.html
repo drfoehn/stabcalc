@@ -4,7 +4,8 @@
 {% block title %}Results - Stability study "{{ setting.name }}"{% endblock %}
 
 {% block content %}
-
+    {{ results_data222|safe }}
+    {{ devia | safe}}
     <div class="jumbotron">
         <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
         <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
@@ -175,12 +176,12 @@
 
                 function drawTotal() {
                     var rowData1 = [['Timepoint', 'Average Result (relative)'],
-                        {% for duration in setting.duration_set.all %}
+                        {% for duration in setting.duration.all %}
                             ['{{ duration }}', {% deviation_tot setting duration %}],
                         {% endfor %}];
 
                     var rowData2 = [['Timepoint', 'Average Result (absolute)'],
-                        {% for duration in setting.duration_set.all %}
+                        {% for duration in setting.duration.all %}
                             ['{{ duration }}', {% average_tot setting duration %}],
                         {% endfor %}];
 
@@ -255,12 +256,15 @@
                             {% endfor %}
                         ],
                             {% for duration in setting.duration_set.all %}
+                                {% deviation subject duration as dev_ %}
+                                {% if dev_ %}
                                 [
                                     '{{ duration }}',
                                     {% for subject in subjects %}
                                         {% deviation subject duration %},
                                     {% endfor %}
                                 ],
+                                {% endif %}
                             {% endfor %}];
 
 
@@ -271,12 +275,14 @@
                         {% endfor %}
                     ],
                         {% for duration in setting.duration_set.all %}
+
                             [
                                 '{{ duration }}',
                                 {% for subject in subjects %}
                                     {% average subject duration %},
                                 {% endfor %}
                             ],
+
                         {% endfor %}];
 
                     // Create and populate the data tables.
@@ -352,8 +358,11 @@
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
                                 ['Storage Duration', 'Deviation'],
-                                {% for duration in setting.duration_set.all %}
+                                {% for duration in setting.duration.all %}
+                                    {% deviation_tot setting duration as dev_tot %}
+                                        {% if dev_tot %}
                                     [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                    {% endif %}
                                 {% endfor %}
                                 {#[ 8,      12],#}
                                 {#[ 4,      5.5],#}
@@ -513,8 +522,11 @@
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
                                 ['Storage Duration', 'Deviation'],
-                                {% for duration in setting.duration_set.all %}
+                                {% for duration in setting.duration.all %}
+                                    {% deviation_tot setting duration as dev_tot %}
+                                        {% if dev_tot %}
                                     [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                {% endif %}
                                 {% endfor %}
                             ]);
 
@@ -668,8 +680,11 @@
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
                                     ['Storage Duration', 'Deviation'],
-                                    {% for duration in setting.duration_set.all %}
+                                    {% for duration in setting.duration.all %}
+                                        {% deviation_tot setting duration as dev_tot %}
+                                        {% if dev_tot %}
                                         [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                    {% endif %}
                                     {% endfor %}
                                     {#[ 8,      12],#}
                                     {#[ 4,      5.5],#}
@@ -770,6 +785,8 @@
 
 
             {#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
+
+
             <div class="col">
                 <p class="graph_heading">Ploynomial Model 3° (Cubic)</p>
                 <div class="row">
@@ -783,15 +800,23 @@
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
                                     ['Storage Duration', 'Deviation'],
-                                    {% for duration in setting.duration_set.all %}
+                                    {% for duration in setting.duration.all %}
+                                        {% deviation_tot setting duration as dev_tot %}
+                                        {% if dev_tot %}
                                         [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                        {% endif %}
                                     {% endfor %}
-                                    {#[ 8,      12],#}
-                                    {#[ 4,      5.5],#}
-                                    {#[ 11,     14],#}
-                                    {#[ 4,      5],#}
-                                    {#[ 3,      3.5],#}
-                                    {#[ 6.5,    7]#}
+{#                                    [ 8,      12],#}
+{#                                    [ 4,      5.5],#}
+{#                                    [ 11,     14],#}
+{#                                    [ 4,      5],#}
+{#                                    [ 3,      3.5],#}
+{#                                    [ 6.5,    7]#}
+{#                                        [0, 0.0],#}
+{#                                        [3600, 44.52],#}
+{#                                        [259200, 70.33],#}
+{#                                        [12960000, 90],#}
+
                                 ]);
 
                                 var options = {
@@ -805,6 +830,7 @@
                                             type: 'polynomial',
                                             degree: 3,
                                             visibleInLegend: true,
+                                            interpolateNulls: true,
                                         }
                                     }
                                 };
@@ -891,7 +917,7 @@
                 <thead class="th_results">
                 <tr>
                     <th scope="col">Subject</th>
-                    {% for duration in setting.duration_set.all %}
+                    {% for duration in setting.duration.all %}
                         <th>{{ duration.seconds | human_readable_seconds }}</th>
                     {% endfor %}
 
@@ -900,7 +926,7 @@
                 <tbody>
                 <tr class="total_results">
                     <td>No of subjects: {{ subjects.count }}</td>
-                    {% for duration in setting.duration_set.all %}
+                    {% for duration in setting.duration.all %}
                         <td>
                             <br>
                             AVG Total: {% average_tot setting duration %} {{ setting.parameter.unit }}<br>
@@ -914,7 +940,7 @@
 
                     <tr>
                         <th scope="row" rowspan="2">{{ subject }}</th>
-                        {% for duration in setting.duration_set.all %}
+                        {% for duration in setting.duration.all %}
                             <td>
 
                                 {% for replicate in subject.replicate_set.all %}
@@ -937,7 +963,7 @@
                     </tr>
                     <tr>
 
-                        {% for duration in setting.duration_set.all %}
+                        {% for duration in setting.duration.all %}
                             <td>
                                 AVG: {% average subject duration %} {{ setting.parameter.unit }}<br>
                                 SD: {% stdv subject duration %}<br>
@@ -961,7 +987,6 @@
 
     </div>
 
-    {#    -----------------------------Loading Bokeh Script ---------------------------------#}
 
 
 {% endblock %}

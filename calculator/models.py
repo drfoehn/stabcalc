@@ -292,8 +292,8 @@ class Duration(models.Model):
     #         return str(years) + ' years, ' + str(months) + ' months, ' + str(days) + ' days'
     #     elif self.seconds < 31536000 and self.seconds >=
 
-    def replicates(self):
-        return self.setting.replicates
+    # def replicates(self):
+    #     return self.setting.replicates
 
     def __str__(self):
         unit = self.get_duration_unit_display()
@@ -314,7 +314,7 @@ class Subject(models.Model):
 
     def values(self, duration: Duration):
         return [v.value for v in
-                Result.objects.filter(replicate__in=self.replicate_set.all(), duration=duration, subject=self)]
+                Result.objects.filter(duration=duration, subject=self)]
 
     def average(self, duration: Duration) -> float|None:
         values = self.values(duration)
