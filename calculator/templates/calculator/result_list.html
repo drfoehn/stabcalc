@@ -55,7 +55,7 @@
                      tabindex="0"
                 >
 
-                    {% for subject in setting.subject_set.all %}
+                    {% for subject in setting.subject.all %}
                         <div class="row">
                         <div class="col-2">
                             <h4 class="display6">{{ subject }}</h4> <br>
@@ -65,6 +65,7 @@
                                 <a hx-get="{% url 'create-result-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
                                    hx-swap="beforeend" hx-target="#result_form-{{ duration.seconds }}">Add additional result</a>
                                 <div class="row" id="result_form-{{ duration.seconds }}"></div>
+                                {% include 'calculator/partials/result_form.html' %}
 
                                 {% if results %}
                                     {% for result in results %}
@@ -78,13 +79,6 @@
 {#                                                {% endif %}#}
                                         {% endif %}
                                     {% endfor %}
-                                {% else %}
-                                    <br>
-                                    <div class="alert alert-primary" role="alert">
-                                        Currently no results saved - <a hx-get="{% url 'create-result-form' %}" hx-swap="beforeend"
-                                                                            hx-target="#result_form" class="alert-link">Insert first
-                                        result</a>.
-                                    </div>
                                 {% endif %}
 
 

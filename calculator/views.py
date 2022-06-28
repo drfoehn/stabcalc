@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.forms import modelformset_factory #is grey but still needed for the result_add_view
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -644,7 +645,6 @@ def create_setting(request):
                 'settings': Setting.objects.all(),
             }
             return render(request, 'calculator/partials/setting_form.html', context)
-    # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
 
     context = {
         'form': form,
@@ -827,35 +827,38 @@ def delete_duration(request, pk):
 
 def create_result(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
-    # durations = Duration.objects.all(pk=setting.duration_set.all())
     durations = Duration.objects.filter(setting=setting_pk)
-    # subjects = Subject.objects.filter(setting=setting_pk)
-    # results = Result.objects.filter(setting=setting_pk)
-    # replicates = Replicate.objects.filter(result=results)
-
-    # form = ResultForm(request.POST or None, initial={'setting': 2})
-    form = ResultForm(request.POST or None)
-    results = Result.objects.all()
-    replicates = Replicate.objects.all()
-
+    subjects = Subject.objects.filter(setting=setting_pk)
+    results = Result.objects.filter(setting=setting_pk)
+    replicates = Replicate.objects.filter(result=results)
+    ResultFormSet = modelformset_factory(Result, fields=('value', 'setting', 'replicate', 'duration', 'subject'),
+                                         extra=1)
+    # formset = ResultFormSet(queryset=Result.objects.none())
 
     if request.method == 'POST':
-        if form.is_valid():
-            result = form.save()
-            return redirect('result-detail', pk=result.id)
+        formset = ResultFormSet(request.POST or None)
+        if formset.is_valid():
+            results = formset.save()
+            # TODO: Show success message after save that fades automatically: https://stackoverflow.com/questions/61153261/make-success-message-disappear-after-few-seconds-of-django-form-submission-and-d
+            # messages.add_message(request, messages.SUCCESS, 'Entry saved')
+            for result in results:
+                sid=result.setting.id
+            # return redirect('result-detail', pk=rid)
+            return redirect('create-result', setting_pk=sid)
+
         else:
             context = {
-                'form': form,
-                'results': Result.objects.all()
+                'form': formset,
+                'results': results
             }
             return render(request, 'calculator/partials/result_form.html', context)
-
+    form = ResultFormSet(queryset=Result.objects.none())
 
     context = {
         'form': form,
         'durations': durations,
         'setting': setting,
-        # 'subjects': subjects,
+        'subjects': subjects,
         'results': results,
         'replicates': replicates
     }
@@ -863,29 +866,15 @@ def create_result(request, setting_pk):
 
     return render(request, 'calculator/result_list.html', context)
 
-from django.forms import modelformset_factory
+
 
 def add_result_form(request):
-    ResultFormSet = modelformset_factory(Result, fields=('value','setting', 'replicate', 'duration', 'subject'), extra=5)
-    # formset = ResultFormSet(queryset=Result.objects.none())
-
-    if request.method == 'POST':
-        formset = ResultFormSet(request.POST or None)
-        if formset.is_valid():
-            formset.save()
-            # print(formset)
-            # for form in formset:
-            #     print(form.cleaned_data)
-    #
-        # instances = form.save(commit=False)
-        # for instance in instances:
-        # instance.save()
-        # instances = form.save()
-        # form.save.m2m()
-
-    form = ResultFormSet()
-
-    return render(request, 'calculator/partials/result_form.html', {'form': form})
+    ResultFormSet = modelformset_factory(Result, fields=('value','setting', 'replicate', 'duration', 'subject'), extra=1)
+    form = ResultFormSet(queryset=Result.objects.none())
+    context = {
+        'form': form,
+    }
+    return render(request, 'calculator/partials/result_form.html', context)
 
 # def add_result_form(request):
 #     form = ResultForm()

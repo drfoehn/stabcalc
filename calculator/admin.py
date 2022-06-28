@@ -41,8 +41,13 @@ class ConditionAdmin(admin.ModelAdmin):
 # TODO: Prepopulate Duration filed with all durautions from the setting (Custom validation? Override initial?)
 
 
+class ResultInline(admin.StackedInline):
+    model = Result
+    extra = 1
+
 class SettingAdmin(admin.ModelAdmin):
     model = Setting
+    inlines = (ResultInline,)
     list_display = ['name', 'parameter', 'condition', 'rerun']
 
 class SubjectAdmin(admin.ModelAdmin):
@@ -52,6 +57,7 @@ class SampleAdmin(admin.ModelAdmin):
     model = Sample
     list_display = ['sample_type', 'container_additive','container_material', 'container_dimension', 'container_fillingvolume']
 
+
 class DurationAdmin(admin.ModelAdmin):
     model = Duration
 
@@ -59,11 +65,6 @@ class DurationAdmin(admin.ModelAdmin):
 class ResultAdmin(admin.ModelAdmin):
     model = Result
     list_display = ['value', 'setting', 'duration']
-
-
-class ResultInline(admin.StackedInline):
-    model = Result
-    extra = 1
 
 
 class ReplicateAdmin(admin.ModelAdmin):
