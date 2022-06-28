@@ -628,10 +628,15 @@ def create_setting(request):
     settings = Setting.objects.all()
     if request.method == 'POST':
         if form.is_valid():
-            setting = form.cleaned_data['name']
-            setting.duration_set.add(setting)
-            setting.subject_set.add(setting)
+            setting = form.save(commit=False)
             setting.save()
+            for duration in setting.duration.all():
+                setting.duration.pk.add(setting)
+
+            for subject in setting.subject.all():
+                setting.subject.pk.add(setting)
+            setting.save()
+            form.save_m2m()
             return redirect('setting-detail', pk=setting.id)
         else:
             context = {
@@ -901,20 +906,32 @@ def result_detail(request, pk):
 
 
 def edit_result(request, pk):
-    result = Result.objects.get(pk=pk)
-    form = ResultForm(request.POST or None, instance=result)
-
-    # This part is so that the update does not produce more objects
-    if request.method == 'POST':
-        if form.is_valid():
-            result = form.save()
-            return redirect('result-detail', pk=result.id)
-
+    obj = Result.objects.get(pk=pk)
+    ResultFormSet = modelformset_factory(Result, fields=('value','setting', 'replicate', 'duration', 'subject'))
+    form = ResultFormSet(request.POST or None, queryset=obj)
+    if form.is_valid():
+        form.save()
     context = {
-        "form": form,
-        "result": result,
+        'form': form
     }
     return render(request, 'calculator/partials/result_form.html', context)
+
+
+# def edit_result(request, pk):
+#     result = Result.objects.get(pk=pk)
+#     form = ResultForm(request.POST or None, instance=result)
+#
+#     # This part is so that the update does not produce more objects
+#     if request.method == 'POST':
+#         if form.is_valid():
+#             result = form.save()
+#             return redirect('result-detail', pk=result.id)
+#
+#     context = {
+#         "form": form,
+#         "result": result,
+#     }
+#     return render(request, 'calculator/partials/result_form.html', context)
 
 
 def delete_result(request, pk):

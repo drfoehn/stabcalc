@@ -242,7 +242,7 @@ class SubjectForm(forms.ModelForm):
         model = Subject
         fields = (
             'name',
-            'setting',
+            # 'setting',
             # 'replicate'
         )
 

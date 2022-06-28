@@ -176,12 +176,13 @@ class Setting(models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
-
+    subject = models.ManyToManyField('Subject', blank=True)
+    duration = models.ManyToManyField('Duration', blank=True)
     rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
                                           choices=list(zip(range(1, 11), range(1, 11))), default=2)
 
     def __str__(self):
-        return f"({self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}) "
+        return f"{self.name}: {self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}"
 
     def values_tot(self, duration: 'Duration') -> list[float]:
         return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
@@ -263,7 +264,7 @@ class Duration(models.Model):
         max_length=1
     )
 
-    setting = models.ManyToManyField(Setting, blank=True)
+
 
     seconds = models.PositiveIntegerField(blank=True)
 
@@ -306,7 +307,7 @@ duration, created = Duration.objects.get_or_create(
 
 class Subject(models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
-    setting = models.ManyToManyField(Setting, blank=True)
+
 
     def __str__(self):
         return self.name
@@ -380,7 +381,7 @@ class Result(models.Model):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
-        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject.name}, {self.setting_id}"
+        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject.name}, {self.setting_id}, {self.id}"
 
     # def duration(self):
     #     return self.subject.duration

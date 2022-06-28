@@ -26,63 +26,48 @@ from .forms import *
 
 class ParameterAdmin(admin.ModelAdmin):
     model = Parameter
+    list_display = ['name', 'unit']
 
 class InstrumentAdmin(admin.ModelAdmin):
     model = Instrument
-    exclude = ('author',)
     list_display = ['name', 'manufacturer']
 
 class ConditionAdmin(admin.ModelAdmin):
     model = Condition
     list_display = ['temperature', 'light', 'air', 'agitation', 'other_condition']
 
-class SubjectInline(admin.TabularInline):
-    model = Subject
-    extra = 1
+
 
 # TODO: Prepopulate Duration filed with all durautions from the setting (Custom validation? Override initial?)
 
 
-class DurationInline(admin.TabularInline):
+class SettingAdmin(admin.ModelAdmin):
+    model = Setting
+    list_display = ['name', 'parameter', 'condition', 'rerun']
+
+class SubjectAdmin(admin.ModelAdmin):
+    model = Subject
+
+class SampleAdmin(admin.ModelAdmin):
+    model = Sample
+    list_display = ['sample_type', 'container_additive','container_material', 'container_dimension', 'container_fillingvolume']
+
+class DurationAdmin(admin.ModelAdmin):
     model = Duration
-    extra = 1
+
+
+class ResultAdmin(admin.ModelAdmin):
+    model = Result
+    list_display = ['value', 'setting', 'duration']
+
 
 class ResultInline(admin.StackedInline):
     model = Result
     extra = 1
 
-class ReplicateInline(admin.TabularInline):
-    model = Replicate
-    extra = 1
-
-class SettingAdmin(admin.ModelAdmin):
-    model = Setting
-    exclude = ('subject',)
-    # inlines = [SubjectInline]
-
-class SubjectAdmin(admin.ModelAdmin):
-    model = Subject
-    # inlines = [ResultInline]
-    # inlines = [DurationInline]
-    exclude = ('duration',)
-
-class DurationAdmin(admin.ModelAdmin):
-    model = Duration
-    exclude = ('value', 'subject')
-    # ordering = ["seconds"]
-    # inlines = [ResultInline]
-
-class ResultAdmin(admin.ModelAdmin):
-    model = Result
-
 
 class ReplicateAdmin(admin.ModelAdmin):
     inlines = [ResultInline]
-
-# class InstrumentAdmin(admin.ModelAdmin):
-#     form = InstrumentForm
-#     add_form_template = "calculator/instrument_form.html"
-#     change_form_template = "calculator/instrument_update.html"
 
 
 class UserAdminArea(admin.AdminSite):
@@ -90,7 +75,7 @@ class UserAdminArea(admin.AdminSite):
     site_title = 'EFLM Stability Calculator Dashboard'
 
 
-user_dashboard = UserAdminArea(name='UserAdmin')
+# user_dashboard = UserAdminArea(name='UserAdmin')
 
 
 # admin.site.unregister(User)
@@ -98,7 +83,7 @@ user_dashboard = UserAdminArea(name='UserAdmin')
 admin.site.register(Parameter)
 admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)
-admin.site.register(Sample)
+admin.site.register(Sample, SampleAdmin)
 admin.site.register(Duration, DurationAdmin)
 # admin.site.register(Population)
 admin.site.register(Setting, SettingAdmin)
@@ -107,12 +92,12 @@ admin.site.register(Result, ResultAdmin)
 admin.site.register(Replicate,ReplicateAdmin)
 
 
-user_dashboard.register(Parameter)
-user_dashboard.register(Instrument, InstrumentAdmin)
-user_dashboard.register(Condition, ConditionAdmin)
-user_dashboard.register(Sample)
-user_dashboard.register(Duration, DurationAdmin)
-# user_dashboard.register(Population)
-user_dashboard.register(Setting, SettingAdmin)
-user_dashboard.register(Subject, SubjectAdmin)
-user_dashboard.register(Result, ResultAdmin)
+# user_dashboard.register(Parameter)
+# user_dashboard.register(Instrument, InstrumentAdmin)
+# user_dashboard.register(Condition, ConditionAdmin)
+# user_dashboard.register(Sample)
+# user_dashboard.register(Duration, DurationAdmin)
+# # user_dashboard.register(Population)
+# user_dashboard.register(Setting, SettingAdmin)
+# user_dashboard.register(Subject, SubjectAdmin)
+# user_dashboard.register(Result, ResultAdmin)

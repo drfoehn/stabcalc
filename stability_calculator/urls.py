@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from calculator import views
 from calculator.views import *
-from calculator.admin import user_dashboard
+# from calculator.admin import user_dashboard
 # from django.contrib.auth import views as auth_views
 
 urlpatterns = [
