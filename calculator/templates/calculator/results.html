@@ -11,10 +11,19 @@
             featured content or information.</p>
         <hr class="my-4">
     </div>
+    {#    --------------------------------BUTTONS--------------------------------#}
+    <div class="row">
+        <div class="col d-flex justify-content-end">
+            <a href="#" class="bi bi-printer result_buttons"></a>
+            <a href="{{ export_data_excel }}" class="bi bi-box-arrow-down result_buttons"></a>
+            <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons"></a>
 
+        </div>
+    </div>
+    <hr class="my-4">
+
+    {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
     <div class="row ">
-
-        {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
 
         <div class="col">
             <table class="table table-hover">
@@ -137,19 +146,11 @@
     <br>
     <hr class="my-4">
 
-    {#    --------------------------------BUTTONS--------------------------------#}
-    <div class="row">
-        <div class="col">
-            <a href="#" class="bi bi-printer result_buttons"></a>
-            <a href="{{ export_data_excel }}" class="bi bi-box-arrow-down result_buttons"></a>
-            <a href="#" class="bi bi-plus-circle result_buttons"></a>
 
-        </div>
-    </div>
-    <hr class="my-4">
     {#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
     <p class="graph_heading">Data</p>
     Number of Subjects: {{ subjects_n }}<br>
+{#    FIXME: Number of subjects#}
     Number of tested storage durations: {{ timepoints_n }}<br>
     <br>
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
@@ -506,6 +507,7 @@
             </div>
         </div>
         {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
+{#       FIXME: Does not seem to be log#}
         <div class="col">
             <p class="graph_heading">Log transformed model</p>
             {#                    --------------------Graph----------------#}
