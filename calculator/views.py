@@ -881,9 +881,9 @@ def create_result(request, setting_pk):
 
     if request.method == 'POST':
         if form.is_valid():
-            result = form.save()
-            return redirect('result-detail', pk=result.id)
-        # FIXME: Redirect not correct
+            form.save()
+            # result = form.save()
+            # return redirect('result-detail', pk=result.id)
         else:
             context = {
                 'form': form,
