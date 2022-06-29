@@ -4,8 +4,7 @@
 {% block title %}Results - Stability study "{{ setting.name }}"{% endblock %}
 
 {% block content %}
-    {{ results_data222|safe }}
-    {{ devia | safe}}
+
     <div class="jumbotron">
         <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
         <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
@@ -942,19 +941,20 @@
                         {% for duration in setting.duration.all %}
                             <td>
 
-                                {% for replicate in subject.replicate_set.all %}
-                                    {% for result in replicate.result_set.all %}
+{#                                {% for replicate in subject.replicate_set.all %}#}
+                                    {% for result in subject.result_set.all %}
                                         {% if result.duration == duration %}
-                                            {% if result.subject == subject %}
-                                                {% if not result.value %}
-                                                    {# FIXME: Does not work  #}                     'No results entered'
-                                                {% else %}
+                                            {% if result.setting == setting %}
+{#                                            {% if result.subject == subject %}#}
+{#                                                {% if not result.value %}#}
+                                                    {# FIXME: Does not work                      'No results entered'#}
+{#                                                {% else %}#}
                                                     {{ result.value }} {{ setting.parameter.unit }} <br>
                                                 {% endif %}
                                             {% endif %}
-
-                                        {% endif %}
-                                    {% endfor %}
+{##}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
                                 {% endfor %}
 
                             </td>
@@ -964,11 +964,11 @@
 
                         {% for duration in setting.duration.all %}
                             <td>
+{#                            FIXME: Average takes in all values of subject X disregarding the setting#}
                                 AVG: {% average subject duration %} {{ setting.parameter.unit }}<br>
                                 SD: {% stdv subject duration %}<br>
                                 CV: {% cv subject duration %}%<br>
                                 DEV: {% deviation subject duration %}%<br>
-
                             </td>
                         {% endfor %}
 

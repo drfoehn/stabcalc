@@ -372,7 +372,7 @@ class Replicate(models.Model):
 
 class Result(models.Model):
     value = models.FloatField()
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE)
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True)
     replicate = models.ForeignKey(Replicate, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ManyToManyField(Subject)

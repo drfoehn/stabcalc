@@ -8,22 +8,69 @@
 
     <h4 class="display-5">{{ user.user_name }}'s Dashboard</h4>
     <div class="row">
-    <div class="col-6">
+    <div class="col-1"></div>
+    <div class="col-8">
         <div>
-            <h4 class="display-6">My Settings</h4>
+            <h4 class="display-6">My Stability studies</h4>
         </div>
+    <table class="table table-hover dashboard-table">
+            <tr>
+        <th>Name</th>
+
+        <th>Storage conditions</th>
+                <th>Storage durations</th>
+                <th>Study subjects/volunteers/samples (n)</th>
+                <th>Results (n)</th>
+            </tr>
         {% for setting in settings %}
-        {{ setting }}<br>
+        <tr>
+            <td><a href="{% url 'results' setting.pk %}">{{ setting.name }}</a></td>
+
+        <td>
+
+        {% if setting.condition.other_condition %}
+             Other condition: {{ setting.condition.other_condition }}
+            {% endif %}
+            <br>
+            {{ setting.condition.get_temperature_display }}
+            <br>
+            Light: {{ setting.condition.light }}
+            <br>
+            Air: {{ setting.condition.air }}
+            <br>
+            Agitation: {{ setting.condition.agitation }}
+
+        </td>
+        <td>
+            {% for duration in setting.duration.all %}
+                {% if duration.seconds == 0%}
+                Baseline <br>
+            {% else %}
+            {{ duration }} <br>
+                {% endif %}
+            {% endfor %}
+
+
+        </td>
+            <td>{{ subjects.count }}</td>
+        <td>{{ setting.result_set.count }}</td>
+            </tr>
     {% endfor %}
+    </table>
     </div>
-    <div class="col-6">
-        <div>
-            <h4 class="display-6">My Instruments</h4>
-        </div>
-        {% for instrument in instruments %}
-        {{ instrument.name }} / {{ instrument.manufacturer }}<br>
-    {% endfor %}
-    </div>
+
+    <div class="col-2">
+     <h4 class="display-6">Add / Edit / Delete</h4>
+
+       <div><a href="{% url 'create-parameter' %}">Parameters / Lab tests</a></div>
+    <div><a href="{% url 'create-instrument' %}">Instruments</a></div>
+    <div><a href="{% url 'create-setting' %}">Settings</a></div>
+    <div><a href="{% url 'create-condition' %}">Conditions</a></div>
+    <div><a href="{% url 'create-sample' %}">Samples</a></div>
+    <div><a href="{% url 'create-duration' %}">Storage durations</a></div>
+    <div><a href="{% url 'create-subject' %}">Study subjects/volunteers/samples</a></div>
+
+     <div class="col-1"></div>
     </div>
 
 {#'settings': settings,#}

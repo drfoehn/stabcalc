@@ -262,10 +262,10 @@ class SubjectForm(forms.ModelForm):
 
 class ResultForm(forms.ModelForm):
     value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    setting = forms.ModelChoiceField(queryset=Setting.objects.all())
-    replicate = forms.ModelChoiceField(queryset=Replicate.objects.all())
-    duration = forms.ModelChoiceField(queryset=Duration.objects.all())
-    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all())
+    setting = forms.ModelChoiceField(queryset=Setting.objects.all(), required=False)
+    replicate = forms.ModelChoiceField(queryset=Replicate.objects.all(), required=False)
+    duration = forms.ModelChoiceField(queryset=Duration.objects.all(), required=False)
+    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False)
 
     class Meta:
         model = Result

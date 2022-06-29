@@ -50,7 +50,7 @@ class ResultsView(DetailView):
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
             for duration in self.object.duration.all():
-                deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
+                    deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
         # FIXME: Deviation calculation not correct. current setting is not included - all durations of subjects are beinig calculATED
         deviation_array = pd.DataFrame(deviation_dict)
         context["devia"] = deviation_array.to_html
@@ -881,8 +881,12 @@ def create_result(request, setting_pk):
 
     if request.method == 'POST':
         if form.is_valid():
-            form.save()
-            # result = form.save()
+            result = form.save(commit=False)
+            result.setting = setting
+            result.duration = duration
+            # result.subject.set(subject)
+            #FIXME: Define current subject for asignment
+            result.save()
             # return redirect('result-detail', pk=result.id)
         else:
             context = {
