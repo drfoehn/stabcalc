@@ -8,13 +8,10 @@
 
     <h4 class="display-5">List / Add results</h4>
     <h4 class="display6">of/to setting: "{{ setting.name }}"</h4>
-        Parameter: {{ setting.parameter.name }}<br>
-        Temperature: {{ setting.condition.get_temperature_display }}<br>
+    Parameter: {{ setting.parameter.name }}<br>
+    Temperature: {{ setting.condition.get_temperature_display }}<br>
     <br>
 
-
-
-    {{ result }}
     <div class="row">
         <!--
         Define here the variables, you can delete this comment afterwords:
@@ -25,23 +22,23 @@
         -->
         <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                {% for duration in durations  %}
+                {% for duration in durations %}
                     <button
                             class="nav-link{% if forloop.first %} active{% endif %}"
-                            id="nav-{{duration.seconds}}-tab"
+                            id="nav-{{ duration.seconds }}-tab"
                             data-bs-toggle="tab"
-                            data-bs-target="#nav-{{duration.seconds }}"
+                            data-bs-target="#nav-{{ duration.seconds }}"
                             type="button"
                             role="tab"
                             aria-controls="nav-{{ duration.seconds }}"
                             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-{#                            {% if not duration.enabled %}disabled{% endif %}#}
+                            {#                            {% if not duration.enabled %}disabled{% endif %}#}
                     >
-                    {% if duration.seconds == 0 %}
-                        Baseline
-                    {% else %}
-                        {{duration }}
-                    {% endif %}
+                        {% if duration.seconds == 0 %}
+                            Baseline
+                        {% else %}
+                            {{ duration }}
+                        {% endif %}
                     </button>
                 {% endfor %}
             </div>
@@ -49,42 +46,37 @@
         <div class="tab-content" id="nav-tabContent">
             {% for duration in durations %}
                 <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
-                     id="nav-{{duration.seconds}}"
+                     id="nav-{{ duration.seconds }}"
                      role="tabpanel"
-                     aria-labelledby="nav-{{duration.seconds}}-tab"
+                     aria-labelledby="nav-{{ duration.seconds }}-tab"
                      tabindex="0"
                 >
-
-
                     {% for subject in setting.subject.all %}
                         <div class="row">
-                        <div class="col-2">
-                            <h4 class="display6">{{ subject }}</h4> <br>
-                            {{ subject.result_set.all }}
-                        </div>
-                        <div class="col-3">
+                            <div class="col-2">
+                                <h4 class="display6">{{ subject }} </h4> <br>
+                            </div>
+                            <div class="col-3">
 
-                                <a hx-get="{% url 'create-result-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
-                                   hx-swap="beforeend" hx-target="#result_form-{{ duration.seconds }}">Add additional result</a>
+                                <a hx-get="{% url 'create-result-form' %}" class="btn btn-outline-secondary btn-add"
+                                   role="button" data-bs-toggle="button"
+                                   hx-swap="beforeend" hx-target="#result_form-{{ duration.seconds }}">Add result</a>
                                 <div class="row" id="result_form-{{ duration.seconds }}"></div>
-                                {% include 'calculator/partials/result_form.html' %}
+                                {##}
+                                {#                                {% include 'calculator/partials/result_form.html' %}#}
+                                {##}
 
+                                {% for result in subject.result_set.all %}
+                                    {% if result.setting == setting %}
+                                        {% if result.duration == duration %}
+                                            {% if result %}
+                                                {% include 'calculator/partials/result_detail.html' %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
 
-                                {% if results %}
-
-                                    {% for result in subject.result_set.all %}
-
-                                        {{ result.duration }} / {{ result.subject }}
-
-
-{#                                            FIXME: result.subject.name returns "None" also in admin when looking at results, subject says none, although subject is selected. In admin when looking at Subject, the name shows up as it should.#}
-                                        {% include 'calculator/partials/result_detail.html' %}
-
-                                    {% endfor %}
-                                {% endif %}
-
-
-                        </div>
+                            </div>
                         </div>
                         <hr>
                     {% endfor %}

@@ -255,16 +255,15 @@
                                 '{{ subject }}',
                             {% endfor %}
                         ],
-                            {% for duration in setting.duration_set.all %}
-                                {% deviation subject duration as dev_ %}
-                                {% if dev_ %}
+                            {% for duration in setting.duration.all %}
+
                                 [
                                     '{{ duration }}',
                                     {% for subject in subjects %}
                                         {% deviation subject duration %},
                                     {% endfor %}
                                 ],
-                                {% endif %}
+
                             {% endfor %}];
 
 
@@ -274,7 +273,7 @@
                             '{{ subject }}',
                         {% endfor %}
                     ],
-                        {% for duration in setting.duration_set.all %}
+                        {% for duration in setting.duration.all %}
 
                             [
                                 '{{ duration }}',

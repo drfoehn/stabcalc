@@ -17,6 +17,8 @@
         {{result_formset.management_form}}
         {% for form in value_formset %}
         <div class="value-form">
+        {{ form.value }}
+            <div id=""></div>
         {{form.as_p}}
         </div>
         {% endfor %}
