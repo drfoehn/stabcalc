@@ -52,7 +52,7 @@ class ResultsView(DetailView):
                 for duration in self.object.duration.all():
                     if setting == self.object:
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
-        # FIXME: Deviation calculation not correct. current setting is not included - all durations of subjects are beinig calculATED
+
         deviation_array = pd.DataFrame(deviation_dict)
         context["devia"] = deviation_array.to_html
         deviation_array.index.name = "duration"
@@ -69,8 +69,8 @@ class ResultsView(DetailView):
                 if not math.isnan(result):  # pandas converts None-values to "nan" - this function excludes those values
                     y_rel.append(result)
                     x1_rel.append(duration)
-        print(y_rel)
-        print(x1_rel)
+        # print(y_rel)
+        # print(x1_rel)
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
@@ -81,9 +81,9 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
-        print(results_data)
-        print(durations_data)
-        print(merged_res_dur)
+        # print(results_data)
+        # print(durations_data)
+        # print(merged_res_dur)
         context["results_data222"] = merged_res_dur.to_html
 
         context["timepoints_n"] = merged_res_dur["duration_id"].nunique()  # number of timepoints
@@ -192,21 +192,21 @@ class ResultsView(DetailView):
         r_squared_log_adj = res_log.rsquared_adj
         context["r_squared_log_adj"] = r_squared_log_adj
         #
-        # Calculate Regression equation - lin log
+        # -------Calculate Regression equation - lin log
         # y = a + b*ln(x)
-
-        # print(X)
-        # print(X_log)
+        # -- Reshape Dataframe into 1D-Array for calculations
         vars = ['seconds']
         X_log = X_log[vars]
-        X_log = X_log.dropna()
-        # X_log_a = np.delete(X_log, 0, axis=0)
-        # print(X_log)
-        # eq_model_log = np.polyfit(X_log, y, 1)
-        # print(eq_model_log)
-        # context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
-        # print(eq_model_log)
-        # print(res_log)
+
+        X_log_a = np.array(X_log)
+        X_log_1D = X_log_a.ravel()
+        y_a = np.array(y)
+        y_1D = y_a.ravel()
+
+        # --Calcualting equation
+        eq_model_log = np.polyfit(X_log_1D, y_1D, 1)
+        context["eq_model_log"] = str("y = " + str(round(eq_model_log[0], 5)) + " * log(x) + " + str(round(eq_model_log[1], 5)))
+
 
         #############################Overall statistical tests for the datatable ###########################
         # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);

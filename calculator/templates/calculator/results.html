@@ -577,7 +577,7 @@
                             <td>Regression equation: <br></td>
                         </tr>
                         <tr>
-                            <td><br></td>
+                            <td>{{ eq_model_log }}<br></td>
                         </tr>
                         <tr>
                             <td>
@@ -966,7 +966,7 @@
 
                         {% for duration in setting.duration.all %}
                             <td>
-{#                            FIXME: Average takes in all values of subject X disregarding the setting#}
+
                                 AVG: {% average subject duration setting %} {{ setting.parameter.unit }}<br>
                                 SD: {% stdv subject duration setting %}<br>
                                 CV: {% cv subject duration setting %}%<br>
