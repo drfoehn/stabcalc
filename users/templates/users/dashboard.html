@@ -28,7 +28,15 @@
         {% for setting in settings %}
         <tr>
             <td id="table-dashboard-settingname">{{ setting.name }} <br>
-                <a href="{% url 'results' setting.pk %}">Show results</a></td>
+
+
+    <div class="display6"
+    {% if setting.result_set.count < 10 %}
+           onclick="alert10()"><a href="
+    {% else %}
+       ><a href="{% url 'results' setting.id %}
+        {% endif %}
+    ">Show statistical evaluation</a></div></td>
 
         <td id="table-dashboard-condition">
 
@@ -89,6 +97,10 @@
 {#        'conditions': conditions,#}
 {#        'instruments': instruments,#}
 
-
+<script type = "text/javascript">
+            function alert10() {
+               alert ("Please insert at least 10 results for a statistical evaluation");
+            }
+      </script>
 
 {% endblock %}

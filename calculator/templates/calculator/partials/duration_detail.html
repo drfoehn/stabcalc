@@ -7,7 +7,7 @@
     <div class="col-2 edit-delete-div">
     <div hx-get="{% url 'edit-duration' duration.id %}"><i class="bi bi-pencil icon_edit"></i></div>
     <div hx-post="{% url 'delete-duration' duration.id %}"
-         hx-confirm="Are you sure you want to delete '{{ duration.duration_number }} {{ duration.get_duration_unit_display }}'?"><i class="bi bi-trash icon_delete"></i></div>
+         hx-confirm="Are you sure you want to delete '{{ duration.duration_number }} {{ duration.get_duration_unit_display }}'?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
     </div>
 
 {##}

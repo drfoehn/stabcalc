@@ -7,7 +7,7 @@
  </div>
 <div class="col-2 edit-delete-div">
     <div hx-get="{% url 'edit-parameter' parameter.id %}"><i class="bi bi-pencil icon_edit"></i></div>
-    <div hx-post="{% url 'delete-parameter' parameter.id %}" hx-confirm="Are you sure?"><i class="bi bi-trash icon_delete"></i></div>
+    <div hx-post="{% url 'delete-parameter' parameter.id %}" hx-confirm="Are you sure?"  class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
 </div>
 
     {#    <div class="mt-2">#}

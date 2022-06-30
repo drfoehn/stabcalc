@@ -148,7 +148,10 @@ th{
     cursor: pointer;
 }
 
-/*FIXME: Kommt nicht an*/
+.icon_edit{
+    color: var(--celadon-blue)
+}
+
 .icon-delete{
     color: var(--imperial-red);
 }
