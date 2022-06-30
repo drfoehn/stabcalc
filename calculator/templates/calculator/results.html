@@ -260,7 +260,7 @@
                                 [
                                     '{{ duration }}',
                                     {% for subject in subjects %}
-                                        {% deviation subject duration %},
+                                        {% deviation subject duration setting %},
                                     {% endfor %}
                                 ],
 
@@ -278,7 +278,7 @@
                             [
                                 '{{ duration }}',
                                 {% for subject in subjects %}
-                                    {% average subject duration %},
+                                    {% average subject duration setting %},
                                 {% endfor %}
                             ],
 
@@ -533,7 +533,7 @@
                             var options = {
                                 title: 'Parameter deviation at selected storage durations',
                                 vAxis: {title: "Deviation"},
-                                hAxis: {title: "Storage duration - log(seconds)"},
+                                hAxis: {title: "Storage duration - log(seconds)", logscale: true},
                                 legend: 'top',
                                 crosshair: {trigger: 'both', orientation: 'both'},
                                 trendlines: {
@@ -967,10 +967,10 @@
                         {% for duration in setting.duration.all %}
                             <td>
 {#                            FIXME: Average takes in all values of subject X disregarding the setting#}
-                                AVG: {% average subject duration %} {{ setting.parameter.unit }}<br>
-                                SD: {% stdv subject duration %}<br>
-                                CV: {% cv subject duration %}%<br>
-                                DEV: {% deviation subject duration %}%<br>
+                                AVG: {% average subject duration setting %} {{ setting.parameter.unit }}<br>
+                                SD: {% stdv subject duration setting %}<br>
+                                CV: {% cv subject duration setting %}%<br>
+                                DEV: {% deviation subject duration setting %}%<br>
                             </td>
                         {% endfor %}
 

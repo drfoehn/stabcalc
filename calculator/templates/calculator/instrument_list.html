@@ -1,16 +1,16 @@
-{% extends "base.html" %}
-{% load i18n %}
-{% load static %}
-
-{% block title %}List/Add Instruments{% endblock %}
-
-{% block content %}
+{#{% extends "base.html" %}#}
+{#{% load i18n %}#}
+{#{% load static %}#}
+{##}
+{#{% block title %}List/Add Instruments{% endblock %}#}
+{##}
+{#{% block content %}#}
 
     <h4 class="display-5">List / Add Instruments</h4>
 
 
     <a hx-get="{% url 'create-instrument-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
-       hx-swap="beforeend" hx-target="#instrument_form">Add additional Instrument</a>
+       hx-swap="beforebegin" hx-target="#instrument_form">Add additional Instrument</a>
     <div class="row" id="instrument_form"></div>
     {% if instruments %}
         {% for instrument in instruments %}
@@ -24,13 +24,13 @@
             instrument</a>.
         </div>
     {% endif %}
-    <div class="row">
-
-            <br>
-            <a href="{% url 'create-parameter' %}" class="btn btn-outline-secondary btn-next" role="button" data-bs-toggle="button">Next
-                (Add parameters) <i class="bi bi-arrow-right"></i></a>
-
-    </div>
-{% endblock %}
+{#    <div class="row">#}
+{##}
+{#            <br>#}
+{#            <a href="{% url 'create-parameter' %}" class="btn btn-outline-secondary btn-next" role="button" data-bs-toggle="button">Next#}
+{#                (Add parameters) <i class="bi bi-arrow-right"></i></a>#}
+{##}
+{#    </div>#}
+{#{% endblock %}#}
 
 

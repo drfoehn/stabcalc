@@ -311,39 +311,39 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.name
-
-    def values(self, duration: Duration):
+        
+    def _results(self, duration: Duration, setting: Setting):
         return [v.value for v in
-                Result.objects.filter(duration=duration, subject=self)]
+                Result.objects.filter(duration=duration, subject=self, setting=setting)]
 
-    def average(self, duration: Duration) -> float|None:
-        values = self.values(duration)
+    def average(self, duration: Duration, setting: Setting) -> float|None:
+        values = self._results(duration, setting)
         if not values:
             return None
         else:
             return math.ceil((statistics.mean(values)) * 100) / 100
 
-    def stdv(self, duration: Duration) -> float|None:
-        values = self.values(duration)
+    def stdv(self, duration: Duration, setting: Setting) -> float|None:
+        values = self._results(duration, setting)
         if len(values) < 2:
             return None
         else:
             return math.ceil((statistics.stdev(values)) * 100) / 100
 
-    def cv(self, duration: Duration) -> float|None:
+    def cv(self, duration: Duration, setting: Setting) -> float|None:
 
-        average = self.average(duration)
-        stdv = self.stdv(duration)
+        average = self.average(duration, setting)
+        stdv = self.stdv(duration, setting)
 
         if not average or not stdv:
             return None
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
-    def deviation(self, duration: Duration) -> float|None:
-        average = self.average(duration)
+    def deviation(self, duration: Duration, setting: Setting) -> float|None:
+        average = self.average(duration, setting)
         duration_zero = Duration.objects.get(duration_number=0)
-        average_zero = self.average(duration_zero)
+        average_zero = self.average(duration_zero, setting)
         if not average or not average_zero:
             return None
         else:

@@ -49,8 +49,9 @@ class ResultsView(DetailView):
         for subject in subjects:
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
-            for duration in self.object.duration.all():
-                    deviation_dict[subject.id][duration.seconds] = subject.deviation(duration)
+                for duration in self.object.duration.all():
+                    if setting == self.object:
+                        deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
         # FIXME: Deviation calculation not correct. current setting is not included - all durations of subjects are beinig calculATED
         deviation_array = pd.DataFrame(deviation_dict)
         context["devia"] = deviation_array.to_html
@@ -178,30 +179,31 @@ class ResultsView(DetailView):
             return x
 
         merged_res_dur['seconds'] = merged_res_dur['seconds'].apply(log_func)
-        print(merged_res_dur)
+        # print(merged_res_dur)
         y, X_log = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod_log = sm.OLS(y, X_log)  # Describe model
         res_log = mod_log.fit()  # Fit model
-        print(res_log.summary())
+        # print(res_log.summary())
         context["statistics_extended_log"] = res_log.summary()
 
-        print(res_log.params)
+        # print(res_log.params)
         r_squared_log = res_log.rsquared
         context["r_squared_log"] = r_squared_log
         r_squared_log_adj = res_log.rsquared_adj
         context["r_squared_log_adj"] = r_squared_log_adj
         #
-        # # Calculate Regression equation - lin log
-        # #y = a + b*ln(x)
+        # Calculate Regression equation - lin log
+        # y = a + b*ln(x)
 
-        print(X)
-        print(X_log)
+        # print(X)
+        # print(X_log)
         vars = ['seconds']
         X_log = X_log[vars]
         X_log = X_log.dropna()
         # X_log_a = np.delete(X_log, 0, axis=0)
-        print(X_log)
+        # print(X_log)
         # eq_model_log = np.polyfit(X_log, y, 1)
+        # print(eq_model_log)
         # context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
         # print(eq_model_log)
         # print(res_log)
@@ -884,7 +886,7 @@ def create_result(request, setting_pk):
             result = form.save(commit=False)
             result.setting = setting
             result.duration = duration
-            # result.subject.set(subject)
+            result.subjects.add(subject)
             #FIXME: Define current subject for asignment
             result.save()
             # return redirect('result-detail', pk=result.id)
@@ -1034,6 +1036,28 @@ def delete_subject(request, pk):
 
 
 
+def item_lists(request):
+    settings = Setting.objects.all()
+    parameters = Parameter.objects.all()
+    subjects = Subject.objects.all()
+    durations = Duration.objects.all()
+    samples = Sample.objects.all()
+    conditions = Condition.objects.all()
+    instruments = Instrument.objects.all()
+
+    context ={
+        'settings': settings,
+        'parameters': parameters,
+        'subjects': subjects,
+        'durations': durations,
+        'samples': samples,
+        'conditions': conditions,
+        'instruments': instruments,
+    }
+    return render (request, 'itemlists.html', context)
+
+
+
 
 
 
@@ -1180,3 +1204,5 @@ def delete_subject(request, pk):
 #             # messages.error('Error(s) encountered during form processing, please review below and re-submit')
 #             pass
 #         return self.render_to_response(context)
+
+

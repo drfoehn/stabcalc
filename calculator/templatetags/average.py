@@ -6,10 +6,10 @@ register = template.Library()
 
 
 @register.simple_tag
-def average(subject: Subject, duration: Duration):
-    if subject.average(duration) is None:
+def average(subject: Subject, duration: Duration, setting: Setting):
+    if subject.average(duration, setting) is None:
         return ""
-    return subject.average(duration)
+    return subject.average(duration, setting)
 
 @register.simple_tag
 def average_tot(setting: Setting, duration: Duration):
@@ -18,10 +18,10 @@ def average_tot(setting: Setting, duration: Duration):
     return setting.average_tot(duration)
 
 @register.simple_tag
-def stdv(subject: Subject, duration: Duration):
-    if subject.stdv(duration) is None:
+def stdv(subject: Subject, duration: Duration, setting: Setting):
+    if subject.stdv(duration, setting) is None:
         return ""
-    return subject.stdv(duration)
+    return subject.stdv(duration, setting)
 
 @register.simple_tag
 def stdv_tot(setting: Setting, duration: Duration):
@@ -30,10 +30,10 @@ def stdv_tot(setting: Setting, duration: Duration):
     return setting.stdv_tot(duration)
 
 @register.simple_tag
-def cv(subject: Subject, duration: Duration):
-    if subject.cv(duration) is None:
+def cv(subject: Subject, duration: Duration, setting: Setting):
+    if subject.cv(duration, setting) is None:
         return ""
-    return subject.cv(duration)
+    return subject.cv(duration, setting)
 
 @register.simple_tag
 def cv_tot(setting: Setting, duration: Duration):
@@ -54,10 +54,10 @@ def avg_tot_sd_l(setting: Setting, duration: Duration):
     return setting.avg_tot_sd_l(duration)
 
 @register.simple_tag
-def deviation(subject: Subject, duration: Duration):
-    if subject.deviation(duration) is None:
+def deviation(subject: Subject, duration: Duration, setting: Setting):
+    if subject.deviation(duration, setting) is None:
         return ""
-    return subject.deviation(duration)
+    return subject.deviation(duration, setting)
 
 
 @register.simple_tag

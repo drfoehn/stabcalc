@@ -11,6 +11,7 @@ urlpatterns = [
     path('register_user/', views.register_user, name='register_user'),
     path('dashboard/', views.user_dashboard, name="dashboard"),
 
+
     #URLs for Password reset
     #TODO: set up an email backend for the reset link to actually work.
     # path('admin/password_reset/',auth_views.PasswordResetView.as_view(),name='admin_password_reset',),

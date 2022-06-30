@@ -32,6 +32,7 @@ urlpatterns = [
     path("calculator/", include('calculator.urls')),
     path('users/', include('django.contrib.auth.urls')),
     path('users/', include('users.urls')),
+    path('itemlists/', views.item_lists, name="itemlists")
 
 
 ]
