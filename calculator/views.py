@@ -54,7 +54,6 @@ class ResultsView(DetailView):
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 
         deviation_array = pd.DataFrame(deviation_dict)
-        context["devia"] = deviation_array.to_html
         deviation_array.index.name = "duration"
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
@@ -178,25 +177,44 @@ class ResultsView(DetailView):
                 x = np.log(x)
             return x
 
+
+
         merged_res_dur['seconds'] = merged_res_dur['seconds'].apply(log_func)
-        # print(merged_res_dur)
         y, X_log = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod_log = sm.OLS(y, X_log)  # Describe model
         res_log = mod_log.fit()  # Fit model
-        # print(res_log.summary())
         context["statistics_extended_log"] = res_log.summary()
 
-        # print(res_log.params)
         r_squared_log = res_log.rsquared
         context["r_squared_log"] = r_squared_log
         r_squared_log_adj = res_log.rsquared_adj
         context["r_squared_log_adj"] = r_squared_log_adj
         #
+
+        # --------Log seconds for graph
+
+        deviation_df = pd.DataFrame(deviation_array)
+        deviation_df.reset_index(inplace=True)
+        dev_log_sec = deviation_df['duration'].apply(log_func)
+        context['seconds_log'] = dev_log_sec
+
+
+
+        # duration_dev_log = duration_dev.apply(log_func)
+        # print(duration_dev)
+        # seconds_dev_log = seconds_dev.apply(log_func)
+        # print(seconds_dev_log)
+
+        # context["devia"] = deviation_array.to_html
+
         # -------Calculate Regression equation - lin log
         # y = a + b*ln(x)
         # -- Reshape Dataframe into 1D-Array for calculations
         vars = ['seconds']
+
         X_log = X_log[vars]
+
+
 
         X_log_a = np.array(X_log)
         X_log_1D = X_log_a.ravel()

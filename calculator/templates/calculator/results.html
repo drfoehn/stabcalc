@@ -522,10 +522,13 @@
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
                                 ['Storage Duration', 'Deviation'],
+                                {% for sec_log in seconds_log %}
+                                    [{{ sec_log }},
+                                {% endfor %}
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                         {% deviation_tot setting duration %}],
                                 {% endif %}
                                 {% endfor %}
                             ]);
@@ -533,14 +536,16 @@
                             var options = {
                                 title: 'Parameter deviation at selected storage durations',
                                 vAxis: {title: "Deviation"},
-                                hAxis: {title: "Storage duration - log(seconds)", logscale: true},
+                                hAxis: {
+                                    title: "Storage duration - log(seconds)",
+                                    logscale: true
+                                },
                                 legend: 'top',
                                 crosshair: {trigger: 'both', orientation: 'both'},
                                 trendlines: {
                                     0: {
-                                        type: 'linear',
-                                        {#degree: 3,#}
-                                        visibleInLegend: true,
+                                        type: 'exponential',
+                                        visibleInLegend: false,
                                     }
                                 }
                             };
