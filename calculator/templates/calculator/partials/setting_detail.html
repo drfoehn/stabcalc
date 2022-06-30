@@ -1,11 +1,16 @@
-
+{% load static %}
 {##}
 <div hx-target="this" hx-swap='outerHTML' class="row">
- <div class="col-7 object-list-div">
+ <div class="col-5 object-list-div">
+
     <h3>{{ setting.name }}</h3>
         {{ setting.parameter.name }}<br>
         {{ setting.condition.get_temperature_display }}<br>
  </div>
+    <div class="col-2  object-list-div">
+        <img src="{% static 'images/icon/8.png' %}" alt="" class="number-icons"><br>
+        Input Results
+    </div>
     <div class="col-2 edit-delete-div">
     <div hx-get="{% url 'edit-setting' setting.id %}"><i class="bi bi-pencil icon_edit"></i></div>
     <div hx-post="{% url 'delete-setting' setting.id %}" hx-confirm="Are you sure?"><i class="bi bi-trash icon_delete"></i></div>

@@ -137,6 +137,11 @@ th{
 
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
 
+.number-icons{
+    width: 48px;
+    height: 48px;
+}
+
 .icon_edit,
 .icon_delete{
     font-size: 1.5em;
