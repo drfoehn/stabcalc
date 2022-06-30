@@ -125,6 +125,10 @@ class ResultsView(DetailView):
         eq1 = np.poly1d(np.polyfit(X, y, 1))
         context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
+        predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
+        predition_lin.predict(exog=new_values_dict)
+
+
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
         eq2 = np.poly1d(np.polyfit(X, y, 2))
@@ -199,14 +203,6 @@ class ResultsView(DetailView):
         context['seconds_log'] = dev_log_sec
 
 
-
-        # duration_dev_log = duration_dev.apply(log_func)
-        # print(duration_dev)
-        # seconds_dev_log = seconds_dev.apply(log_func)
-        # print(seconds_dev_log)
-
-        # context["devia"] = deviation_array.to_html
-
         # -------Calculate Regression equation - lin log
         # y = a + b*ln(x)
         # -- Reshape Dataframe into 1D-Array for calculations
@@ -246,6 +242,8 @@ class ResultsView(DetailView):
         ksstat_p = ks[1]
         context["ksstat_p"] = ks[1]
         # TODO. Provide explanation
+        #kurtosistest only valid for n>=20
+
 
         # ------------------------Absolute
 
@@ -343,7 +341,7 @@ class ResultsView(DetailView):
         context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
             parameter.values('name')[0]['name']) + ' level to change by ' + str(
             round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
-
+        print(res.params[1])
         # -------------------------- Normal distribution
 
         def distrib() -> str:

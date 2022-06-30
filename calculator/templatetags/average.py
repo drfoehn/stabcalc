@@ -11,11 +11,13 @@ def average(subject: Subject, duration: Duration, setting: Setting):
         return ""
     return subject.average(duration, setting)
 
+
 @register.simple_tag
 def average_tot(setting: Setting, duration: Duration):
     if setting.average_tot(duration) is None:
         return ""
     return setting.average_tot(duration)
+
 
 @register.simple_tag
 def stdv(subject: Subject, duration: Duration, setting: Setting):
@@ -23,11 +25,13 @@ def stdv(subject: Subject, duration: Duration, setting: Setting):
         return ""
     return subject.stdv(duration, setting)
 
+
 @register.simple_tag
 def stdv_tot(setting: Setting, duration: Duration):
     if setting.stdv_tot(duration) is None:
         return ""
     return setting.stdv_tot(duration)
+
 
 @register.simple_tag
 def cv(subject: Subject, duration: Duration, setting: Setting):
@@ -35,11 +39,13 @@ def cv(subject: Subject, duration: Duration, setting: Setting):
         return ""
     return subject.cv(duration, setting)
 
+
 @register.simple_tag
 def cv_tot(setting: Setting, duration: Duration):
     if setting.cv_tot(duration) is None:
         return ""
     return setting.cv_tot(duration)
+
 
 @register.simple_tag
 def avg_tot_sd_h(setting: Setting, duration: Duration):
@@ -47,11 +53,13 @@ def avg_tot_sd_h(setting: Setting, duration: Duration):
         return ""
     return setting.avg_tot_sd_h(duration)
 
+
 @register.simple_tag
 def avg_tot_sd_l(setting: Setting, duration: Duration):
     if setting.avg_tot_sd_l(duration) is None:
         return ""
     return setting.avg_tot_sd_l(duration)
+
 
 @register.simple_tag
 def deviation(subject: Subject, duration: Duration, setting: Setting):
@@ -65,6 +73,7 @@ def deviation_tot(setting: Setting, duration: Duration):
     if setting.deviation_tot(duration) is None:
         return ""
     return setting.deviation_tot(duration)
+
 
 # @register.simple_tag #FIXME: Does not work
 # def seconds_to_text(setting: Setting, duration:Duration):
@@ -83,8 +92,8 @@ def deviation_tot(setting: Setting, duration: Duration):
 @register.filter(name="human_readable_seconds")
 def human_readable_seconds(secs: int):
     years = secs // (86400 * 365)  # TODO: muss ich noch neu berechnen
-    months = secs // (86400 * 30)   # TODO: muss ich noch neu berechnen
-    weeks = secs // (86400*7)
+    months = secs // (86400 * 30)  # TODO: muss ich noch neu berechnen
+    weeks = secs // (86400 * 7)
     days = secs // 86400
     hours = (secs - days * 86400) // 3600
     minutes = (secs - days * 86400 - hours * 3600) // 60
@@ -94,6 +103,9 @@ def human_readable_seconds(secs: int):
              ("{0} week{1} ".format(weeks, "s" if weeks != 1 else "") if weeks else "") + \
              ("{0} day{1} ".format(days, "s" if days != 1 else "") if days else "") + \
              ("{0} hour{1} ".format(hours, "s" if hours != 1 else "") if hours else "") + \
-             ("{0} minute{1} ".format(minutes, "s" if minutes != 1 else "") if minutes else "Baseline") + \
+             ("{0} minute{1} ".format(minutes, "s" if minutes != 1 else "") if minutes else "") + \
              ("{0} second{1} ".format(seconds, "s" if seconds != 1 else "") if seconds else "")
-    return result
+    if secs == 0:
+        return "Baseline"
+    else:
+        return result
