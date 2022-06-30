@@ -113,11 +113,33 @@ th{
 /*}*/
 
 
+/*------------------------------------DASHBOARD--------------------------------------*/
+.table-header{
+    margin-top: 2em;
+    background-color: var(--celadon-blue);
+    color: var(--cultured);
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 1.5em;
+}
+
+.table-dashboard-td{
+    text-align: center;
+}
+
+.table-dashboard-td,
+#table-dashboard-condition{
+
+}
+
+#table-dashboard-settingname{
+    font-size: 1.5em  ;
+}
+
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
 
 .icon_edit,
 .icon_delete{
-    font-size: 1.2em;
+    font-size: 1.5em;
     cursor: pointer;
 }
 

@@ -28,7 +28,6 @@ urlpatterns = [
     # path('dashboard/', user_dashboard.urls),
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     path("about/", TemplateView.as_view(template_name="about.html"), name='about'),
-    # # path("dashboard/", TemplateView.as_view(template_name="dashboard.html"), name="dashboard")
     path("calculator/", include('calculator.urls')),
     path('users/', include('django.contrib.auth.urls')),
     path('users/', include('users.urls')),

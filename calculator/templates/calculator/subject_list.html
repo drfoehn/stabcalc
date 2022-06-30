@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "itemlists.html" %}
 {% load i18n %}
 {% load static %}
 
 {% block title %}List/Add subjects{% endblock %}
 
-{% block content %}
+{% block item %}
 
     <h4 class="display-5">List / Add subjects</h4>
 
@@ -24,13 +24,7 @@
             subject</a>.
         </div>
     {% endif %}
-    <div class="row">
 
-            <br>
-            <a href="{% url 'create-parameter' %}" class="btn btn-outline-secondary btn-next" role="button" data-bs-toggle="button">Next
-                (Add parameters) <i class="bi bi-arrow-right"></i></a>
-
-    </div>
 {% endblock %}
 
 

@@ -5,7 +5,7 @@
     {{ result.value }} {{ result.setting.parameter.unit }}
 
 
-    <button hx-post="{% url 'delete-result' result.id %}" hx-confirm="Are you sure?">Delete</button>
+    <button hx-post="{% url 'delete-result' result.id %}" hx-confirm="Are you sure?"><i class="bi bi-trash icon_delete"></i></button>
 
 
     {#    <div class="mt-2">#}

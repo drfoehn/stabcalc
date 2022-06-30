@@ -1,13 +1,13 @@
 
 <div hx-target="this" hx-swap='outerHTML' class="row ">
-    <div class="col-1"></div>
     <div class="col-7 object-list-div">
     <h3>{{ duration.duration_number }} {{ duration.get_duration_unit_display }}</h3>
     </div>
-    <div class="col-1 edit-delete-div">
+
+    <div class="col-2 edit-delete-div">
     <div hx-get="{% url 'edit-duration' duration.id %}"><i class="bi bi-pencil icon_edit"></i></div>
     <div hx-post="{% url 'delete-duration' duration.id %}"
          hx-confirm="Are you sure you want to delete '{{ duration.duration_number }} {{ duration.get_duration_unit_display }}'?"><i class="bi bi-trash icon_delete"></i></div>
     </div>
-    <div class="col-3"></div>
+
 {##}

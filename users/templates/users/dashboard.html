@@ -8,7 +8,7 @@
 
     <h4 class="display-5">{{ user.user_name }}'s Dashboard</h4>
     <div class="row">
-    <h4 class="display-7"><a href="{% url 'create-instrument' %}">Start new stability study (Setup wizard)</a></h4>
+    <h4 class="display-6 d-flex justify-content-center"><a href="{% url 'create-instrument' %}">Start new stability study (Setup wizard)</a></h4>
     </div>
     <div class="row">
     <div class="col-1"></div>
@@ -17,7 +17,7 @@
             <h4 class="display-6">My Stability studies</h4>
         </div>
     <table class="table table-hover dashboard-table">
-            <tr>
+            <tr class="table-header">
         <th>Name</th>
 
         <th>Storage conditions</th>
@@ -27,9 +27,10 @@
             </tr>
         {% for setting in settings %}
         <tr>
-            <td><a href="{% url 'results' setting.pk %}">{{ setting.name }}</a></td>
+            <td id="table-dashboard-settingname">{{ setting.name }} <br>
+                <a href="{% url 'results' setting.pk %}">Show results</a></td>
 
-        <td>
+        <td id="table-dashboard-condition">
 
         {% if setting.condition.other_condition %}
              Other condition: {{ setting.condition.other_condition }}
@@ -44,7 +45,7 @@
             Agitation: {{ setting.condition.agitation }}
 
         </td>
-        <td>
+        <td class="table-dashboard-td">
             {% for duration in setting.duration.all %}
                 {% if duration.seconds == 0%}
                 Baseline <br>
@@ -55,8 +56,12 @@
 
 
         </td>
-            <td>{{ subjects.count }}</td>
-        <td>{{ setting.result_set.count }}</td>
+            <td  class="table-dashboard-td">{{ subjects.count }}</td>
+        <td  class="table-dashboard-td">
+            {{ setting.result_set.count }}<br>
+            <a href="{% url 'create-result' setting.id %}">Add Results</a>
+        </td>
+
             </tr>
     {% endfor %}
     </table>
