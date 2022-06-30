@@ -1,10 +1,10 @@
-{#{% extends "base.html" %}#}
-{#{% load i18n %}#}
-{#{% load static %}#}
-{##}
-{#{% block title %}List/Add Instruments{% endblock %}#}
-{##}
-{#{% block content %}#}
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add Instruments{% endblock %}
+
+{% block item %}
 
     <h4 class="display-5">List / Add Instruments</h4>
 
@@ -31,6 +31,6 @@
 {#                (Add parameters) <i class="bi bi-arrow-right"></i></a>#}
 {##}
 {#    </div>#}
-{#{% endblock %}#}
+{% endblock %}
 
 

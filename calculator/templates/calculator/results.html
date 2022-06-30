@@ -523,14 +523,15 @@
                             var data = google.visualization.arrayToDataTable([
                                 ['Storage Duration', 'Deviation'],
                                 {% for sec_log in seconds_log %}
-                                    [{{ sec_log }},
+                                    {{ sec_log }},
                                 {% endfor %}
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                         {% deviation_tot setting duration %}],
+                                         {% deviation_tot setting duration %},
                                 {% endif %}
                                 {% endfor %}
+                            {##FIXME - Gonzo: combine log_sec with acording dev-value#}
                             ]);
 
                             var options = {
