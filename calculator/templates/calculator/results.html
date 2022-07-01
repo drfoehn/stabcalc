@@ -949,7 +949,7 @@
                         {% for duration in setting.duration.all %}
                             <td>
 
-{#                                {% for replicate in subject.replicate_set.all %}#}
+
                                     {% for result in subject.result_set.all %}
                                         {% if result.duration == duration %}
                                             {% if result.setting == setting %}

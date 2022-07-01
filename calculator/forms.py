@@ -236,14 +236,14 @@ class DurationForm(forms.ModelForm):
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     # setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
-    # replicate = forms.ModelMultipleChoiceField(queryset=(Replicate.objects.all()))
+
 
     class Meta:
         model = Subject
         fields = (
             'name',
             # 'setting',
-            # 'replicate'
+
         )
 
     # def __init__(self, *args, **kwargs):
@@ -263,7 +263,6 @@ class SubjectForm(forms.ModelForm):
 class ResultForm(forms.ModelForm):
     value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     setting = forms.ModelChoiceField(queryset=Setting.objects.all(), required=False)
-    replicate = forms.ModelChoiceField(queryset=Replicate.objects.all(), required=False)
     duration = forms.ModelChoiceField(queryset=Duration.objects.all(), required=False)
     subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False)
 
@@ -272,7 +271,6 @@ class ResultForm(forms.ModelForm):
         fields = (
             'value',
             'setting',
-            'replicate',
             'duration',
             'subject'
         )

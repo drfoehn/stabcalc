@@ -292,8 +292,6 @@ class Duration(models.Model):
     #         return str(years) + ' years, ' + str(months) + ' months, ' + str(days) + ' days'
     #     elif self.seconds < 31536000 and self.seconds >=
 
-    # def replicates(self):
-    #     return self.setting.replicates
 
     def __str__(self):
         unit = self.get_duration_unit_display()
@@ -359,21 +357,9 @@ class Subject(models.Model):
 #         return nr
 
 
-class Replicate(models.Model):
-    subject = models.ManyToManyField(Subject)
-
-    # result_set
-
-    # TODO: Pro Replicate darf nur eine Duration eingegeben werden
-
-    def __str__(self):
-        return str(self.id)  # FIXME: Zahl des Replicates ausgeben
-
-
 class Result(models.Model):
     value = models.FloatField()
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True)
-    replicate = models.ForeignKey(Replicate, on_delete=models.CASCADE)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ManyToManyField(Subject)
 
@@ -381,7 +367,7 @@ class Result(models.Model):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()
 
     def __str__(self):
-        return f"{self.value}, {self.replicate}, {self.duration}, {self.subject.name}, {self.setting_id}, {self.id}"
+        return f"{self.value}, {self.duration}, {self.subject.name}, {self.setting_id}, {self.id}"
 
     # def duration(self):
     #     return self.subject.duration

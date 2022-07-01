@@ -179,6 +179,9 @@ th{
 
 }
 
+#addresults-button{
+    margin: 1em
+}
 
 /*---------------------------------Resultpage------------------------------------*/
 .result_buttons,

@@ -125,8 +125,8 @@ class ResultsView(DetailView):
         eq1 = np.poly1d(np.polyfit(X, y, 1))
         context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
-        predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
-        predition_lin.predict(exog=new_values_dict)
+        # predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
+        # predition_lin.predict(exog=new_values_dict)
 
 
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
@@ -424,7 +424,7 @@ class ResultsView(DetailView):
             {
                 "results": results,
                 "durations": Duration.objects.all(),
-                "replicates": Replicate.objects.all(),
+
 
             }
         )
@@ -857,7 +857,7 @@ def delete_duration(request, pk):
 #     subjects = Subject.objects.filter(setting=setting)
 #     results = Result.objects.filter(setting=setting)
 #
-#     ResultFormSet = modelformset_factory(Result, fields=('value', 'setting', 'replicate', 'duration', 'subject'),
+#     ResultFormSet = modelformset_factory(Result, fields=('value', 'setting', 'duration', 'subject'),
 #                                          extra=1)
 #
 #     if request.method == 'POST':
@@ -951,13 +951,18 @@ def result_detail(request, pk):
 
 
 def edit_result(request, pk):
-    obj = Result.objects.get(pk=pk)
-    ResultFormSet = modelformset_factory(Result, fields=('value','setting', 'replicate', 'duration', 'subject'))
-    formset = ResultFormSet(request.POST or None, queryset=obj)
-    if formset.is_valid():
-        formset.save()
+    result = Result.objects.get(pk=pk)
+    form = ResultForm(request.POST or None, instance=result)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            result = form.save()
+            return redirect('result-detail', pk=result.id)
+
     context = {
-        'formset': formset
+        "form": form,
+        "result": result,
     }
     return render(request, 'calculator/partials/result_form.html', context)
 
@@ -989,7 +994,7 @@ def delete_result(request, pk):
 def create_subject(request):
     form = SubjectForm(request.POST or None)
     subjects = Subject.objects.all()
-    replicates = Replicate.objects.all()
+
 
     if request.method == 'POST':
         if form.is_valid():
@@ -1005,7 +1010,6 @@ def create_subject(request):
     context = {
         'form': form,
         'subjects': subjects,
-        'replicates': replicates
     }
 
     return render(request, 'calculator/subject_list.html', context)
