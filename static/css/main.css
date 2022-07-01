@@ -89,6 +89,17 @@ th{
     font-weight: normal;
 }
 /*-----------------------------------NAVBAR---------------------------------------*/
+
+.navbar{
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f4f4;
+    margin-bottom: 2em;
+}
+
+.navbar-brand{
+    font-size: 3em;
+}
+
 .dropdown-toggle::after {
     display: none !important;
 }
