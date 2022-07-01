@@ -63,9 +63,9 @@
                      aria-labelledby="nav-{{ duration.seconds }}-tab"
                      tabindex="0"
                 >
-                  <a hx-get="{% url 'create-result-form' %}" class="btn btn-danger btn-add"
+                  <a hx-get="{% url 'create-result-form' setting.id duration.id %}" class="btn btn-danger btn-add"
                                    role="button" data-bs-toggle="button" id="addresults-button"
-                                   hx-swap-oob="beforebegin">Add results</a>
+                                   hx-swap="beforebegin">Add results</a>
 
                     {% for subject in setting.subject.all %}
                         <div class="row">
@@ -74,12 +74,13 @@
                             </div>
                             <div class="col-3">
 
-
-                                <div class="row" hx-swap-oob="true" id="result_form-{{ duration.seconds }}-{{ subject }}"></div>
+{#                            <form action="" method="post">#}
+                                <div class="row" id="result_form-{{ duration.id }}-{{ subject.id }}"></div>
                                 {##}
                                 {#                                {% include 'calculator/partials/result_form.html' %}#}
                                 {##}
-
+{#                                <button type="submit" class="btn btn-secondary">Save</button>#}
+{#                            </form>#}
                                 {% for result in subject.result_set.all %}
                                     {% if result.setting == setting %}
                                         {% if result.duration == duration %}

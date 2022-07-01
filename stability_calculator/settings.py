@@ -121,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -147,6 +148,18 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR / "media/"
 MEDIA_URL = "/media/"
 
+#####################email settings for user registration mails########
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+###################collage email id##############
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+# When using Gmail, Settings in the account must be changed, enabling “Access for less secure apps”
+#https://support.google.com/mail/thread/5621336?hl=en
+
+# LOGIN_URL = 'login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

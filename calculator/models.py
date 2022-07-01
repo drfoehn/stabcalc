@@ -176,7 +176,7 @@ class Setting(models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
-    subject = models.ManyToManyField('Subject', blank=True)
+    subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
     # rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',

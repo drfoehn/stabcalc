@@ -828,7 +828,7 @@ def result_list(request, setting_pk):
     form = ResultForm(request.POST or None)
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(setting=setting)
-    subjects = Subject.objects.filter(setting=setting)
+    subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
 
     if request.method == 'POST':
@@ -858,10 +858,15 @@ def result_list(request, setting_pk):
     return render(request, 'calculator/result_list.html', context)
 
 
-def add_result_form(request):
+def add_result_form(request, setting_pk, duration_pk):
     form = ResultForm()
+    # duration = Duration.objects.get(pk=duration_pk)
+    subjects = Subject.objects.filter(settings__in=[setting_pk], result__duration_id=duration_pk)
+
     context = {
-        "form": form
+        "form": form,
+        "subjects": subjects,
+        "duration": duration
     }
     return render(request, 'calculator/partials/result_form.html', context)
 
@@ -952,7 +957,8 @@ def subject_list(request):
 def add_subject_form(request):
     form = SubjectForm()
     context = {
-        "form": form
+        "form": form,
+
     }
     return render(request, 'calculator/partials/subject_form.html', context)
 

@@ -53,7 +53,7 @@ urlpatterns = [
     path('results/result/<pk>/', result_detail, name="result-detail"),
     path('results/result/<pk>/delete', delete_result, name="delete-result"),
     path('results/result/<pk>/edit', edit_result, name="edit-result"),
-    path('results/create-result-form/', add_result_form, name='create-result-form'),
+    path('results/create-result-form/<setting_pk>/<duration_pk>', add_result_form, name='create-result-form'),
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
     # path("upload/", views.upload_view, name="upload"),

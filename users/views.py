@@ -1,24 +1,15 @@
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.template.loader import get_template
+from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.auth.decorators import login_required
+
 from .forms import *
 from django.utils.translation import gettext_lazy as _
 from calculator.models import *
-
-def login_user(request):
-    if request.method == 'POST':
-        username = request.POST['login_email']
-        password = request.POST['login_password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('index')
-        else:
-            messages.success(request, _('There was an error. Please try again or contact the administrator'))
-            return redirect('login')
-    else:
-        return render(request, 'users/login.html', {})
-
 
 def logout_user(request):
     logout(request)
@@ -32,16 +23,56 @@ def register_user(request):
         if form.is_valid():
             form.save()
             # FIXME: Login after registration throws error: 'AnonymousUser' object has no attribute '_meta'
-            # username = form.cleaned_data['user_name']
+            username = form.cleaned_data['user_name']
+            email = form.cleaned_data['email']
             # password1 = form.cleaned_data['password1']
             # LabUser = authenticate(username=username, password=password1)
             # login(request, LabUser)
-            messages.success(request, _('Registration successful!'))
+            #############Create and send authentication e-mail#####################
+            htmly = get_template('users/email.html')
+            d = {'username': username }
+            subject, from_email, to = 'welcome', 'administrator@eflm.eu', email
+            html_content = htmly.render(d)
+            msg = EmailMultiAlternatives(subject, html_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            ########################################
+            messages.success(request, _('Registration successful! Your application will be reviewed by the administrator. You will get a notification as soon as your account has been activated.'))
             return redirect('index')
     else:
         form = CustomUserCreationForm()
 
     return render(request, 'users/register_user.html', {'form': form})
+
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST['login_email']
+        password = request.POST['login_password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, f' Welcome {username} !!')
+            return redirect('index')
+        else:
+            messages.success(request, _('There was an error. Please try again or contact the administrator'))
+            return redirect('login')
+    form = AuthenticationForm()
+    return render(request, 'users/login.html', {'form': form})
+
+        # class UserUpdateView(view.UpdateView):
+        #     user=User.objects.get(pk=pk)
+        #     pass
+        # return render(request, 'users/my-profile.html', {})
+
+@login_required
+def user_profile(request):
+    return render(request, 'users/profile.html', {})
+
+# class UserUpdateView(view.UpdateView):
+#     user=User.objects.get(pk=pk)
+#     pass
+    # return render(request, 'users/my-profile.html', {})
 
 
 def user_dashboard(request):

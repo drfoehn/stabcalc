@@ -387,13 +387,16 @@
                                     0: {
                                         type: 'linear',
                                         {#degree: 3,#}
-                                        visibleInLegend: true,
+                                        visibleInLegend: false,
+                                        tooltips: false
                                     }
                                 }
                             };
 
                             var chart = new google.visualization.ScatterChart(document.getElementById('linear_div'));
                             chart.draw(data, options);
+
+
                         }
                     </script>
                 </div>
