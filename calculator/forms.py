@@ -115,9 +115,7 @@ class SettingForm(forms.ModelForm):
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
     subject = forms.ModelMultipleChoiceField(queryset=(Subject.objects.all()))
-    rerun = forms.Select()
 
-    # FIXME: In Setting form Durations are selectable, but durations do not get saved to the setting
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
     feedback = forms.CharField(
@@ -135,7 +133,6 @@ class SettingForm(forms.ModelForm):
             'condition',
             'duration',
             'subject',
-            'rerun',
         )
 
     def __init__(self, *args, **kwargs):
@@ -261,10 +258,11 @@ class SubjectForm(forms.ModelForm):
 
 
 class ResultForm(forms.ModelForm):
-    value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     setting = forms.ModelChoiceField(queryset=Setting.objects.all(), required=False)
     duration = forms.ModelChoiceField(queryset=Duration.objects.all(), required=False)
     subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False)
+    # subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
 
     class Meta:
         model = Result
@@ -282,9 +280,9 @@ class ResultForm(forms.ModelForm):
             raise forms.ValidationError("We don´t serve your kind here!")
         return feedback
 
-
-# ResultFormSet = formset_factory(ResultForm, extra=3)
-
+    # def __init__(self, *args, **kwargs):
+    #     super(ResultForm, self).__init__(*args, **kwargs)
+    #     self.fields['subject'].widget.attrs['class'] = 'form-check-input'
 
 
 class UploadExcelForm(forms.Form):

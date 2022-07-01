@@ -178,8 +178,8 @@ class Setting(models.Model):
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
     subject = models.ManyToManyField('Subject', blank=True)
     duration = models.ManyToManyField('Duration', blank=True)
-    rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
-                                          choices=list(zip(range(1, 11), range(1, 11))), default=2)
+    # rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
+    #                                       choices=list(zip(range(1, 11), range(1, 11))), default=2)
 
     def __str__(self):
         return f"{self.name}: {self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}"
