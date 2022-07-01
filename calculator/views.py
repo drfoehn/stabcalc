@@ -195,12 +195,21 @@ class ResultsView(DetailView):
         context["r_squared_log_adj"] = r_squared_log_adj
         #
 
-        # --------Log seconds for graph
+        # --------Log seconds and mean values for graph
 
         deviation_df = pd.DataFrame(deviation_array)
+        deviation_df['mean_rows'] = deviation_df.mean(axis=1)
         deviation_df.reset_index(inplace=True)
-        dev_log_sec = deviation_df['duration'].apply(log_func)
-        context['seconds_log'] = dev_log_sec
+        deviation_df['duration'] = deviation_df['duration'].apply(log_func)
+        deviation_mean_df = deviation_df[['duration', 'mean_rows']].values
+
+        dev_log_data = []
+        for row in deviation_mean_df:
+            dev_log_data.append([row[0], row[1]])
+
+        context["log_data"] = dev_log_data
+
+
 
 
         # -------Calculate Regression equation - lin log
