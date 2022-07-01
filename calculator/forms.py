@@ -115,6 +115,7 @@ class SettingForm(forms.ModelForm):
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
     subject = forms.ModelMultipleChoiceField(queryset=(Subject.objects.all()))
+    comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
@@ -133,6 +134,7 @@ class SettingForm(forms.ModelForm):
             'condition',
             'duration',
             'subject',
+            'comment'
         )
 
     def __init__(self, *args, **kwargs):

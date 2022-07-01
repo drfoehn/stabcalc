@@ -4,12 +4,12 @@
         {{ form }}
 {#    If statement to prevent edit-view from creating more objects#}
         {% if instrument %}     {#  Passed in from Edit-instrument-view #}
-            <button type="submit" hx-post="{% url 'edit-instrument' instrument.id %}"
+            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-instrument' instrument.id %}"
             class="btn btn-outline-secondary object-btn-save ">
             Save
         </button>
         {% else %}
-            <button type="submit" hx-post=".">
+            <button  class="btn btn-secondary" type="submit" hx-post=".">
             Save
         </button>
         {% endif %}

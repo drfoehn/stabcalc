@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.forms import modelformset_factory #is grey but still needed for the result_add_view
+from django.forms import modelformset_factory  # is grey but still needed for the result_add_view
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +11,7 @@ from django.views.generic import (
     UpdateView,
     TemplateView,
 )
-from django.core import validators
+
 from .forms import *
 from django.shortcuts import redirect, render
 from .models import *
@@ -19,17 +19,16 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-from sklearn.preprocessing import PolynomialFeatures
 import math
 from patsy.highlevel import dmatrices
 from django.http import HttpResponse
+
 
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
     model = Setting
     context_object_name = "setting"
 
-    # extra_context={'subjects': Subject.objects.all()}, {'results': Result.objects.all()}
     def get_context_data(self, **kwargs):
         global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
@@ -42,7 +41,9 @@ class ResultsView(DetailView):
         results_data = pd.DataFrame(results_val)
         parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
         setting = self.object
-
+        context['subjects_n'] = Subject.objects.filter(setting=self.object).count()
+        context['durations_n'] = Duration.objects.filter(setting=self.object).count()
+        context['results_n'] = Result.objects.filter(setting=self.object).count()
 
         # ---------------------------Get deviation data for each subject setting and time individually in a dict
         deviation_dict: dict[int, dict[int, int]] = {}
@@ -68,8 +69,6 @@ class ResultsView(DetailView):
                 if not math.isnan(result):  # pandas converts None-values to "nan" - this function excludes those values
                     y_rel.append(result)
                     x1_rel.append(duration)
-        # print(y_rel)
-        # print(x1_rel)
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
@@ -80,13 +79,8 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
-        # print(results_data)
-        # print(durations_data)
-        # print(merged_res_dur)
-        context["results_data222"] = merged_res_dur.to_html
 
-        context["timepoints_n"] = merged_res_dur["duration_id"].nunique()  # number of timepoints
-        # context["subjects_n"] = merged_res_dur["subject_id"].nunique()  # number of subjects
+        context["results_data222"] = merged_res_dur.to_html
 
         # ----------------Numpy-Arrays
         context["results_array"] = np.array(merged_res_dur)
@@ -113,7 +107,6 @@ class ResultsView(DetailView):
         res = mod.fit()  # Fit model
         context["statistics_extended_abs_lin"] = res.summary()
 
-        # print(res.params)
         r_squared_lin = res.rsquared
         context["r_squared_lin"] = r_squared_lin
         r_squared_lin_adj = res.rsquared_adj
@@ -128,7 +121,6 @@ class ResultsView(DetailView):
         # predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
         # predition_lin.predict(exog=new_values_dict)
 
-
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
         eq2 = np.poly1d(np.polyfit(X, y, 2))
@@ -140,6 +132,7 @@ class ResultsView(DetailView):
         results = {}
         coeffs = np.polyfit(X, y, 2)
         p = np.poly1d(coeffs)
+
         # calculate r-squared
         yhat = p(X)
         ybar = np.sum(y) / len(y)
@@ -154,7 +147,6 @@ class ResultsView(DetailView):
         eq3 = np.poly1d(np.polyfit(X, y, 3))
         context["eq_model_poly3"] = str("y = " + str(round(eq3[3], 5)) + " * x^3 + " + str(round(eq3[2], 5))
                                         + " * x^2 + " + str(round(eq3[1], 5)) + " * x + " + str(round(eq3[0], 5)))
-        # FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
 
         # Calculate r_squared
         results = {}
@@ -180,8 +172,6 @@ class ResultsView(DetailView):
             else:
                 x = np.log(x)
             return x
-
-
 
         merged_res_dur['seconds'] = merged_res_dur['seconds'].apply(log_func)
         y, X_log = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
@@ -209,17 +199,11 @@ class ResultsView(DetailView):
 
         context["log_data"] = dev_log_data
 
-
-
-
         # -------Calculate Regression equation - lin log
         # y = a + b*ln(x)
         # -- Reshape Dataframe into 1D-Array for calculations
         vars = ['seconds']
-
         X_log = X_log[vars]
-
-
 
         X_log_a = np.array(X_log)
         X_log_1D = X_log_a.ravel()
@@ -228,8 +212,8 @@ class ResultsView(DetailView):
 
         # --Calcualting equation
         eq_model_log = np.polyfit(X_log_1D, y_1D, 1)
-        context["eq_model_log"] = str("y = " + str(round(eq_model_log[0], 5)) + " * log(x) + " + str(round(eq_model_log[1], 5)))
-
+        context["eq_model_log"] = str(
+            "y = " + str(round(eq_model_log[0], 5)) + " * log(x) + " + str(round(eq_model_log[1], 5)))
 
         #############################Overall statistical tests for the datatable ###########################
         # Rainbow test for linearity (the null hypothesis is that the relationship is properly modelled as linear);
@@ -251,8 +235,7 @@ class ResultsView(DetailView):
         ksstat_p = ks[1]
         context["ksstat_p"] = ks[1]
         # TODO. Provide explanation
-        #kurtosistest only valid for n>=20
-
+        # kurtosistest only valid for n>=20
 
         # ------------------------Absolute
 
@@ -271,14 +254,13 @@ class ResultsView(DetailView):
         context["slope_abs_lin"] = b1_r_abs_lin
         context["reg_eq_abs_lin"] = (
                 "y = " + str(b0_r_abs_lin) + " + x1 * " + str(b1_r_abs_lin)
-        )  # equation linear regression: y = b0 + x1*b1
+        )
 
         # --------------------------relative
 
         x_rel = sm.add_constant(x1_rel)  # add a row of ones as constant
         model = sm.OLS(y_rel, x_rel)
         results_rel = model.fit()  # OLS = Ordinary Least Squares
-        # context["statistics_extended_rel_lin"] = results_rel.summary()
 
         # -------------------------Extract single parameters from summary - linear regression
         b0_rel_lin = results_rel.params[0]  # constant coefficient / Intercept
@@ -289,45 +271,7 @@ class ResultsView(DetailView):
         context["slope_rel_lin"] = b1_r_rel_lin
         context["reg_eq_rel_lin"] = (
                 "y = " + str(b0_r_rel_lin) + " + x1 * " + str(b1_r_rel_lin)
-        )  # equation linear regression: y = b0 + x1*b1
-
-        # # ------------------------Absolute log
-        #
-        # x1_abs_log = sm.add_constant(
-        # model = sm.OLS(y_abs, x1_abs_log)
-        # results_abs_log = model.fit()  # OLS = Ordinary Least Squares
-        # context["statistics_extended_abs_lin_log"] = results_abs_log.summary()
-        #
-        # # -------------------------Extract single parameters from summary - linear regression
-        # b0_abs_lin_log = results_abs_log.params[0]  # constant coefficient / Intercept
-        # b1_abs_lin_log = results_abs_log.params[1]  # seconds coefficient / Slope
-        # b0_r_abs_lin_log = round(b0_abs_lin_log, 5)
-        # context["intercept_abs_lin_log"] = b0_r_abs_lin_log
-        # b1_r_abs_lin_log = round(b1_abs_lin_log, 5)
-        # context["slope_abs_lin_log"] = b1_r_abs_lin_log
-        # context["reg_eq_abs_lin"] = (
-        #         "y = " + str(b0_r_abs_lin_log) + " + x1 * " + str(b1_r_abs_lin_log)
-        # )  # equation linear regression: y = b0 + x1*b1
-        #
-        # # --------------------------relative log
-        #
-        # x_rel_log = sm.add_constant(x1_rel_log)  # add a row of ones as constant
-        # model = sm.OLS(y_rel, x_rel_log)
-        # results_rel_log = model.fit()  # OLS = Ordinary Least Squares
-        # context["statistics_extended_rel_lin_log"] = results_rel_log.summary()
-        #
-        # # -------------------------Extract single parameters from summary - linear regression
-        # b0_rel_lin_log = results_rel_log.params[0]  # constant coefficient / Intercept
-        # b1_rel_lin_log = results_rel_log.params[1]  # seconds coefficient / Slope
-        # b0_r_rel_lin_log = round(b0_rel_lin_log, 5)
-        # context["intercept_rel_lin_log"] = b0_r_rel_lin_log
-        # b1_r_rel_lin_log = round(b1_rel_lin_log, 5)
-        # context["slope_rel_lin_log"] = b1_r_rel_lin_log
-        # context["reg_eq_lin_log"] = (
-        #         "y = " + str(b0_r_rel_lin_log) + " + x1 * " + str(b1_r_rel_lin_log)
-        # )  # equation linear regression: y = b0 + x1*b1
-        #
-        # #
+        )
 
         ######################################INTERPRETATION ################################################
 
@@ -351,6 +295,7 @@ class ResultsView(DetailView):
             parameter.values('name')[0]['name']) + ' level to change by ' + str(
             round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
         print(res.params[1])
+
         # -------------------------- Normal distribution
 
         def distrib() -> str:
@@ -424,25 +369,18 @@ class ResultsView(DetailView):
 
         # ------------------------Return context
 
-        context["f_value"] = (
-            results_abs.fvalue)  # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
-        context["f_p_value"] = results_abs.f_pvalue
-        # context['std_err'] = results.params[0,1]
-        context["r_square"] = results_abs.rsquared
         context.update(
             {
+                "subjects": subjects,
                 "results": results,
                 "durations": Duration.objects.all(),
-
-
+                "r_square": results_abs.rsquared,
+                "f_p_value": results_abs.f_pvalue,
+                "f_value": results_abs.fvalue
+                # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
             }
         )
-        context["subjects"] = subjects
-
         return context
-
-
-
 
 
 def upload_view(request):
@@ -450,22 +388,9 @@ def upload_view(request):
     return render(request, 'calculator/upload_form.html', {"form": form})
 
 
-# class DashboardView(ListView):
-#     model = Instrument
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         sample = Sample.objects.all()
-#         context["samples"] = sample
-#         # Add any other variables to the context here
-#         ...
-#         return context
+# --------------------------------------INSTRUMENT-----------------------------------------
 
-
-# class InstrumentIndex(ListView):
-#     model = Instrument
-
-def create_instrument(request):
+def instrument_list(request):
     form = InstrumentForm(request.POST or None)
     instruments = Instrument.objects.filter()
 
@@ -530,7 +455,7 @@ def delete_instrument(request, pk):
 
 # ------------------------------------PARAMETER---------------------------------------
 
-def create_parameter(request):
+def parameter_list(request):
     form = ParameterForm(request.POST or None)
     parameters = Parameter.objects.all()
 
@@ -595,7 +520,7 @@ def delete_parameter(request, pk):
 
 # --------------------------------------SAMPLE----------------------------------------
 
-def create_sample(request):
+def sample_list(request):
     form = SampleForm(request.POST)
     samples = Sample.objects.all()
     if request.method == 'POST':
@@ -659,7 +584,7 @@ def delete_sample(request, pk):
 
 # -------------------------------------SETTING----------------------------------------
 
-def create_setting(request):
+def setting_list(request):
     form = SettingForm(request.POST or None)
     settings = Setting.objects.all()
     if request.method == 'POST':
@@ -731,7 +656,7 @@ def delete_setting(request, pk):
 
 # -------------------------------------CONDITION----------------------------------------
 
-def create_condition(request):
+def condition_list(request):
     form = ConditionForm(request.POST or None)
     conditions = Condition.objects.all()
 
@@ -796,7 +721,7 @@ def delete_condition(request, pk):
 
 # -------------------------------------DURATION----------------------------------------
 
-def create_duration(request):
+def duration_list(request):
     form = DurationForm(request.POST or None)
     durations = Duration.objects.all()
 
@@ -899,7 +824,7 @@ def delete_duration(request, pk):
 #     }
 #
 #     return render(request, 'calculator/result_list.html', context)
-def create_result(request, setting_pk):
+def result_list(request, setting_pk):
     form = ResultForm(request.POST or None)
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(setting=setting)
@@ -911,8 +836,8 @@ def create_result(request, setting_pk):
             result = form.save(commit=False)
             result.setting = setting
             result.duration = duration
-            result.subjects.add(subject)
-            #FIXME: Define current subject for asignment
+            # result.subjects.add(subject)
+            # FIXME: Define current subject for asignment
             result.save()
             # return redirect('result-detail', pk=result.id)
         else:
@@ -932,13 +857,13 @@ def create_result(request, setting_pk):
 
     return render(request, 'calculator/result_list.html', context)
 
+
 def add_result_form(request):
     form = ResultForm()
     context = {
         "form": form
     }
     return render(request, 'calculator/partials/result_form.html', context)
-
 
 
 # def add_result_form(request):
@@ -998,12 +923,12 @@ def delete_result(request, pk):
     result.delete()
     return HttpResponse('')
 
+
 # -------------------------------------SUBJECT----------------------------------------
 
-def create_subject(request):
+def subject_list(request):
     form = SubjectForm(request.POST or None)
     subjects = Subject.objects.all()
-
 
     if request.method == 'POST':
         if form.is_valid():
@@ -1063,8 +988,6 @@ def delete_subject(request, pk):
     return HttpResponse('')
 
 
-
-
 def item_lists(request):
     settings = Setting.objects.all()
     parameters = Parameter.objects.all()
@@ -1074,7 +997,7 @@ def item_lists(request):
     conditions = Condition.objects.all()
     instruments = Instrument.objects.all()
 
-    context ={
+    context = {
         'settings': settings,
         'parameters': parameters,
         'subjects': subjects,
@@ -1083,13 +1006,7 @@ def item_lists(request):
         'conditions': conditions,
         'instruments': instruments,
     }
-    return render (request, 'itemlists.html', context)
-
-
-
-
-
-
+    return render(request, 'itemlists.html', context)
 
 # class InstrumentUpdateView(UpdateView):
 #     model = Instrument
@@ -1233,5 +1150,3 @@ def item_lists(request):
 #             # messages.error('Error(s) encountered during form processing, please review below and re-submit')
 #             pass
 #         return self.render_to_response(context)
-
-

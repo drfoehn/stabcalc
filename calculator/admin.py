@@ -48,7 +48,7 @@ class ResultInline(admin.StackedInline):
 class SettingAdmin(admin.ModelAdmin):
     model = Setting
     inlines = (ResultInline,)
-    list_display = ['name', 'parameter', 'condition']
+    list_display = ['name', 'parameter', 'condition', 'comment']
 
 class SubjectAdmin(admin.ModelAdmin):
     model = Subject

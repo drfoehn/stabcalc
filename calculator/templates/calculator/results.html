@@ -14,7 +14,7 @@
     {#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
         <div class="col d-flex justify-content-end">
-            <a href="#" class="bi bi-printer result_buttons"></a>
+            <a href="javascript:window.print()" class="bi bi-printer result_buttons"></a>
             <a href="{{ export_data_excel }}" class="bi bi-box-arrow-down result_buttons"></a>
             <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons"></a>
 
@@ -59,6 +59,13 @@
                     <th>Method Inter CV%</th>
                     <td>{{ setting.parameter.CV_inter }} %</td>
                 </tr>
+            {% if setting.comment %}
+
+            <tr>
+                <th>Comment</th>
+                <td>{{ setting.comment }}</td>
+            </tr>
+            {% endif %}
             </table>
         </div>
         <div class="col">
@@ -139,9 +146,8 @@
 
     <br>
     {{ interpretation_dist }} <br>
-    The model fitting best to your data is {{ best_fit_model }}, explaining {{ best_fit }} of the analyte variability observed during sample storage.<br>
-    The prediction value of this equation is ............... <br>
-    Valid for linear model only: {{ interpretation_1 }}
+    The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the analyte variability observed during sample storage.<br>
+    Valid for linear model only: <strong>{{ interpretation_1 }}</strong>
     <br>
     <br>
     <hr class="my-4">
@@ -150,8 +156,8 @@
     {#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
     <p class="graph_heading">Data</p>
     Number of Subjects: {{ subjects_n }}<br>
-{#    FIXME: Number of subjects#}
-    Number of tested storage durations: {{ timepoints_n }}<br>
+    Number of tested storage durations: {{ durations_n }}<br>
+    Number of results: {{ results_n }}
     <br>
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
     Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
@@ -168,7 +174,7 @@
 
             <p class="graph_heading">Overall Results</p>
             <div id="visualization"></div>
-            <button id="button_results_total" class="btn btn-outline-primary"
+            <button id="button_results_total" class="btn btn-outline-primary">
             <p id="button_switch"></p></button>
             <script>
                 google.charts.load('current', {'packages': ['corechart']});
@@ -234,10 +240,10 @@
                 }
             </script>
 
-
+</div>
             {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
-        </div>
+
         <div class="col-6">
             <p class="graph_heading">Single Results</p>
             <div id="visualization_single"></div>
@@ -356,11 +362,11 @@
 
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'Deviation'],
+                                ['Storage Duration', 'Deviation', '+TAE', '-TAE'],
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}, 100, -100],
                                     {% endif %}
                                 {% endfor %}
                                 {#[ 8,      12],#}
@@ -507,7 +513,7 @@
             </div>
         </div>
         {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
-{#       FIXME: Does not seem to be log#}
+
         <div class="col">
             <p class="graph_heading">Log transformed model</p>
             {#                    --------------------Graph----------------#}
@@ -539,7 +545,7 @@
                                 title: 'Parameter deviation at selected storage durations',
                                 vAxis: {title: "Deviation"},
                                 hAxis: {
-                                    title: "Storage duration - logs",
+                                    title: "Storage duration - log-seconds",
                                     logscale: true
                                 },
                                 legend: 'top',
