@@ -13,13 +13,17 @@
     </div>
     <div class="container-fluid">
         <div class="row">
-            <div class="col shadow p-4 mb-5 bg-body rounded">
+            <div class="col-8 shadow p-4 mb-5 bg-body rounded">
                 <form method="post" action="">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <button type="submit" class="btn btn-danger">Update Profile</button>
                 </form>
+                <br>
+                                <a href="{% url 'change_user_password' %}" ><button class="btn btn-danger">Change Password</button></a>
+
             </div>
+
         </div>
 
     </div>

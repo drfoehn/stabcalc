@@ -10,3 +10,4 @@ jupyter
 pandas
 statsmodels
 patsy
+django-guardian

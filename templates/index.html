@@ -7,20 +7,22 @@
 
 
     <div class="header_index row">
-    <div class="col-2 d-flex justify-content-center">
-        <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="" >
-    </div>
+        <div class="col-2 d-flex justify-content-center">
+            <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="">
+        </div>
         <div class="col-10">
-        <h2 class="display-4">Stability Calculator</h2>
-        <p class="lead">
-            EFLM Working Group "Preanalytical Phase" (WG-PRE)
-        </p>
-            </div>
+            <h2 class="display-4">Stability Calculator</h2>
+            <p class="lead">
+                EFLM Working Group "Preanalytical Phase" (WG-PRE)
+            </p>
+        </div>
     </div>
+    {% if user.is_authenticated %}
+
     <div class="row d-flex justify-content-center">
         <div class="col-2"></div>
         <div class="col-3">
-            <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt="" ></a><br>
+            <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt=""></a><br>
             <h4 class="display-4">Start new stability study</h4>
         </div>
         <div class="col-2"></div>
@@ -31,6 +33,26 @@
         <div class="col-2"></div>
     </div>
 
+    <div class="row">
+        <h4 class="display-6">Use of data:</h4>
+        This website and its content is copyright of Janne Cadamuro and the <a
+            href="https://www.eflm.eu/site/page/a/1156" target="_blank">Preanalytical Working-Group of the EFLM</a>.
+        <br> You may not, except with our express written permission, distribute or commercially exploit the content
+        (see copyright below).
+        <br>
+        If using data from this website for any purpose, it should be referenced as:
+        <i>Cadamuro J., all WG-PRE members. The EFLM Sample Stability Calculator. https://stabilitycalculator.eu/ [time
+            of access].</i>
+        <br>
+        For further information see the<a href="{% url 'terms_conditions' %}">Terms and Conditions</a>
 
     </div>
+    {% else %}
+        Blablabla - Infor for unregistererd users
+        <br>
+        <br>
+        <a href="{%  url 'register_user' %}">Register </a> or
+            <a href="{%  url 'login' %}"> Login</a>
+    {% endif %}
+
 {% endblock %}

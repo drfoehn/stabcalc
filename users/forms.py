@@ -7,7 +7,7 @@ from django_countries.widgets import CountrySelectWidget
 from.models import LabUser
 from django import forms
 
-class CustomUserChangeForm(UserChangeForm):
+class CustomUserChangeForm(forms.ModelForm):
     email = forms.EmailField()
     laboratory_name = forms.CharField(max_length=255)
     clinics = forms.CharField(max_length=255)
@@ -17,12 +17,31 @@ class CustomUserChangeForm(UserChangeForm):
         # model = get_user_model()
         model = LabUser
         fields = (
+            'user_name',
             'email',
             'laboratory_name',
             'clinics',
             'city',
             'country'
         )
+
+
+# class CustomUserChangeForm(UserChangeForm):
+#     email = forms.EmailField()
+#     laboratory_name = forms.CharField(max_length=255)
+#     clinics = forms.CharField(max_length=255)
+#     country = CountryField()
+#     city = forms.CharField(max_length=255)
+#     class Meta:
+#         # model = get_user_model()
+#         model = LabUser
+#         fields = (
+#             'email',
+#             'laboratory_name',
+#             'clinics',
+#             'city',
+#             'country'
+#         )
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))

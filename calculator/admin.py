@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from .models import *
 from .forms import *
+from users.models import LabUser
+from guardian.admin import GuardedModelAdmin
 
 # Register your models here.
 # class SubjectAdmin(admin.ModelAdmin):
@@ -23,6 +25,8 @@ from .forms import *
 
 
 
+class CalculatorAdmin(GuardedModelAdmin):
+    pass
 
 class ParameterAdmin(admin.ModelAdmin):
     model = Parameter
@@ -78,7 +82,8 @@ class UserAdminArea(admin.AdminSite):
 
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)
-admin.site.register(Parameter)
+
+admin.site.register(Parameter, CalculatorAdmin)
 admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(Sample, SampleAdmin)
@@ -87,7 +92,6 @@ admin.site.register(Duration, DurationAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Result, ResultAdmin)
-
 
 # user_dashboard.register(Parameter)
 # user_dashboard.register(Instrument, InstrumentAdmin)

@@ -89,7 +89,6 @@ def user_profile(request):
 class PasswordsChangeView(PasswordChangeView):
     form_class = PasswordChangeForm
     template_name='users/change_password.html'
-    messages.success(request, f'Your Password was changed successfully' )
     success_url = reverse_lazy('user_profile')
 
 

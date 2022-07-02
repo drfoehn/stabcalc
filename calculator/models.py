@@ -167,6 +167,11 @@ class Parameter(models.Model):
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
 
+    class Meta:
+        permissions = (
+            ('dg_view_parameter', 'OLP can view Parameter'),
+        )
+
     def __str__(self):
         return f"{self.name} - Intrument: {self.instrument.name} / Handmethod: {self.method_hand}"
 
@@ -176,6 +181,7 @@ class Setting(models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
+    #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')

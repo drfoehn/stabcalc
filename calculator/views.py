@@ -4,6 +4,7 @@ from django.forms import modelformset_factory  # is grey but still needed for th
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+
 from django.views.generic import (
     ListView,
     DetailView,
@@ -32,7 +33,7 @@ class ResultsView(DetailView):
     def get_context_data(self, **kwargs):
         global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
-        subjects = Subject.objects.filter(setting=self.object)
+        subjects = Subject.objects.filter(settings__in=[self.object])
         durations = Duration.objects.filter(setting=self.object)
         durations_val = durations.values()
         durations_data = pd.DataFrame(durations_val)
@@ -41,7 +42,7 @@ class ResultsView(DetailView):
         results_data = pd.DataFrame(results_val)
         parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
         setting = self.object
-        context['subjects_n'] = Subject.objects.filter(setting=self.object).count()
+        context['subjects_n'] = Subject.objects.filter(settings__in=[self.object]).count()
         context['durations_n'] = Duration.objects.filter(setting=self.object).count()
         context['results_n'] = Result.objects.filter(setting=self.object).count()
 
@@ -455,6 +456,7 @@ def delete_instrument(request, pk):
 
 # ------------------------------------PARAMETER---------------------------------------
 
+
 def parameter_list(request):
     form = ParameterForm(request.POST or None)
     parameters = Parameter.objects.all()
@@ -836,21 +838,21 @@ def result_list(request, setting_pk):
             # https://zerotobyte.com/using-django-bulk-create-and-bulk-update/
             # https://stackoverflow.com/questions/53594745/what-is-the-use-of-cleaned-data-in-django
             # subject = Result.subject.through(for subject in subjects: return subject.id)
-            result_list=[]
-            for result in results:
-                    result.value=Result.value,
-                    result.setting=setting.id,
-                    result.duration=duration.id,
-                    result_list.append(result)
-            Result.objects.bulk_create(result_list)
+            # result_list=[]
+            # for result in results:
+            #         result.value=Result.value,
+            #         result.setting=setting.id,
+            #         result.duration=duration.id,
+            #         result_list.append(result)
+            # Result.objects.bulk_create(result_list)
 
             # result = form.save(commit=False)
             # result.setting = setting
             # result.duration = duration
             # # result.subjects.add(subject)
             # # FIXME: Define current subject for asignment
-            # result.save()
-            # return redirect('result-detail', pk=result.id)
+            result.save()
+            return redirect('result-detail', pk=result.id)
         else:
             context = {
                 'form': form,
