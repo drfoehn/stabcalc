@@ -6,6 +6,9 @@ from django.template.loader import get_template
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
+from django.urls import reverse_lazy
 
 from .forms import *
 from django.utils.translation import gettext_lazy as _
@@ -67,12 +70,27 @@ def login_user(request):
 
 @login_required
 def user_profile(request):
-    return render(request, 'users/profile.html', {})
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f' Your profile was updated successfully.')
+            return redirect('user_profile')
+    else:
+        form=CustomUserChangeForm(instance=request.user)
+    return render(request, 'users/profile.html', {'form': form})
+
 
 # class UserUpdateView(view.UpdateView):
 #     user=User.objects.get(pk=pk)
 #     pass
     # return render(request, 'users/my-profile.html', {})
+
+class PasswordsChangeView(PasswordChangeView):
+    form_class = PasswordChangeForm
+    template_name='users/change_password.html'
+    messages.success(request, f'Your Password was changed successfully' )
+    success_url = reverse_lazy('user_profile')
 
 
 def user_dashboard(request):

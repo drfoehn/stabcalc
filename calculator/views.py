@@ -833,12 +833,23 @@ def result_list(request, setting_pk):
 
     if request.method == 'POST':
         if form.is_valid():
-            result = form.save(commit=False)
-            result.setting = setting
-            result.duration = duration
-            # result.subjects.add(subject)
-            # FIXME: Define current subject for asignment
-            result.save()
+            # https://zerotobyte.com/using-django-bulk-create-and-bulk-update/
+            # https://stackoverflow.com/questions/53594745/what-is-the-use-of-cleaned-data-in-django
+            # subject = Result.subject.through(for subject in subjects: return subject.id)
+            result_list=[]
+            for result in results:
+                    result.value=Result.value,
+                    result.setting=setting.id,
+                    result.duration=duration.id,
+                    result_list.append(result)
+            Result.objects.bulk_create(result_list)
+
+            # result = form.save(commit=False)
+            # result.setting = setting
+            # result.duration = duration
+            # # result.subjects.add(subject)
+            # # FIXME: Define current subject for asignment
+            # result.save()
             # return redirect('result-detail', pk=result.id)
         else:
             context = {

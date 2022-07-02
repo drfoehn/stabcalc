@@ -298,7 +298,7 @@ class Duration(models.Model):
         unit = self.get_duration_unit_display()
         return f"{self.duration_number}, {unit}"
 
-
+#FIXME: This calls the duration table upon makemigrations, which does not exist at that time.
 duration, created = Duration.objects.get_or_create(
         seconds=0,
         defaults={'duration_number': 0, 'duration_unit': '1'},
