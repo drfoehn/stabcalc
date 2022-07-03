@@ -5,25 +5,27 @@
 
 {% block content %}
 
+    {% if user.is_authenticated %}
+
 
     <div class="header_index row">
         <div class="col-2 d-flex justify-content-center">
             <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="">
         </div>
         <div class="col-10">
-            <h2 class="display-4">Stability Calculator</h2>
-            <p class="lead">
+            <h2 class="display-5">Stability Calculator</h2>
+            <p class="display-6">
                 EFLM Working Group "Preanalytical Phase" (WG-PRE)
             </p>
         </div>
     </div>
-    {% if user.is_authenticated %}
+
 
     <div class="row d-flex justify-content-center">
         <div class="col-2"></div>
         <div class="col-3">
             <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt=""></a><br>
-            <h4 class="display-4">Start new stability study</h4>
+            <h4 class="display-4">New study</h4>
         </div>
         <div class="col-2"></div>
         <div class="col-3">
@@ -47,12 +49,22 @@
         For further information see the<a href="{% url 'terms_conditions' %}">Terms and Conditions</a>
 
     </div>
-    {% else %}
-        Blablabla - Infor for unregistererd users
-        <br>
-        <br>
-        <a href="{%  url 'register_user' %}">Register </a> or
-            <a href="{%  url 'login' %}"> Login</a>
-    {% endif %}
+{% else %}
+
+
+        <div class="d-flex flex-column justify-content-center align-content-center">
+            <div class="p-2"><img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt=""></div>
+            <div class="p-2"><h2 class="display-5">European Federation of Clinical Chemistry and Laboratory medicine
+                (EFLM)
+                <br> Stability Calculator</h2></div>
+            <div class="p-2 display-6">EFLM Working Group "Preanalytical Phase" (WG-PRE)</div>
+            <div class="p-2">The EFLM Stability Calculator is a freely accsessible tool to calculate the ........</div>
+            <div class="p-2"> For usage, please <a href="{% url 'register_user' %}">Register </a> or <a
+                    href="{% url 'login' %}"> Login</a></div>
+
+        </div>
+
+
+{% endif %}
 
 {% endblock %}

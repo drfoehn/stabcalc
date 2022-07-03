@@ -111,10 +111,10 @@ class SampleForm(forms.ModelForm):
 
 class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
-    condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='Select storage condition')
+    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='---Select parameter---')
+    condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='---Select storage condition---')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
-    subject = forms.ModelMultipleChoiceField(queryset=(Subject.objects.all()))
+    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all())
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
 
     # ----------------------Botcatcher-------------------------
@@ -138,10 +138,14 @@ class SettingForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+    # def __init__(self, user, *args, **kwargs):
+    #     user=kwargs.pop('owner')
         super(SettingForm, self).__init__(*args, **kwargs)
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
+        # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
         # self.fields['duration'].widget.attrs['class'] = 'form-check-input'
+        # self.owner = user  #retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
