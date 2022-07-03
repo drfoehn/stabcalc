@@ -14,7 +14,9 @@
     <div class="row" id="instrument_form"></div>
     {% if instruments %}
         {% for instrument in instruments %}
+{#                    {% if user == instrument.owner %}#}
             {% include 'calculator/partials/instrument_detail.html' %}
+{#            {% endif %}#}
         {% endfor %}
     {% else %}
         <br>

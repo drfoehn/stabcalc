@@ -14,7 +14,7 @@ from django.views.generic import (
 )
 
 from .forms import *
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
 import numpy as np
 import pandas as pd
@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import math
 from patsy.highlevel import dmatrices
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 
 
 class ResultsView(DetailView):
@@ -391,15 +391,18 @@ def upload_view(request):
 
 # --------------------------------------INSTRUMENT-----------------------------------------
 
+
 def instrument_list(request):
     form = InstrumentForm(request.POST or None)
-    instruments = Instrument.objects.filter()
+    instruments = Instrument.objects.all()
 
     if request.method == 'POST':
         if form.is_valid():
             name = form.cleaned_data["name"]
             manufacturer = form.cleaned_data['manufacturer']
             instrument = Instrument(name=name, manufacturer=manufacturer)
+            owner = request.user
+            instrument.owner =owner
             instrument.save()
             return redirect('instrument-detail', pk=instrument.id)
         else:
@@ -424,11 +427,15 @@ def add_instrument_form(request):
 
 
 def instrument_detail(request, pk):
-    instrument = Instrument.objects.get(pk=pk)
-    context = {
-        "instrument": instrument
-    }
-    return render(request, 'calculator/partials/instrument_detail.html', context)
+    # instrument = Instrument.objects.get(pk=pk)
+    instrument = get_object_or_404(Instrument, pk=pk)
+    if not instrument.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "instrument": instrument
+        }
+        return render(request, 'calculator/partials/instrument_detail.html', context)
 
 
 def edit_instrument(request, pk):
@@ -838,13 +845,16 @@ def result_list(request, setting_pk):
             # https://zerotobyte.com/using-django-bulk-create-and-bulk-update/
             # https://stackoverflow.com/questions/53594745/what-is-the-use-of-cleaned-data-in-django
             # subject = Result.subject.through(for subject in subjects: return subject.id)
-            # result_list=[]
-            # for result in results:
-            #         result.value=Result.value,
-            #         result.setting=setting.id,
-            #         result.duration=duration.id,
-            #         result_list.append(result)
-            # Result.objects.bulk_create(result_list)
+            result_list=[]
+            for data in form.cleaned_data:
+                    result.value=form.cleaned_data['value'],
+                    result.setting=setting.id,
+                    result.duration=durations.id,
+                    result = Result(value=result.value, setting=result.setting, duration= result.duration)
+                    for subject in subjects:
+                        result.subject.add(subject)
+                    result_list.append(result)
+            Result.objects.bulk_create(result_list)
 
             # result = form.save(commit=False)
             # result.setting = setting

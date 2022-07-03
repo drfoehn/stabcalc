@@ -9,22 +9,17 @@ from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 import math
 import statistics
+from users.models import LabUser
 
 
-# Create your models here.
+class OwnedModelMixin(models.Model):
+    owner = models.ForeignKey(LabUser, on_delete=models.PROTECT)
 
-# class LabUser(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     email = models.EmailField(max_length=255, help_text='Only used in case we need to get back to you',
-#                               verbose_name='E-Mail')
-#     laboratory = models.CharField(_('Name of Laboratory'), max_length=255)
-#     country = CountryField(verbose_name='Country')
-#     city = models.CharField(max_length=255, verbose_name='City')
-#     REQUIRED_FIELDS = ['email', 'laboratory', 'country', 'city']
-import users.models
+    class Meta:
+        abstract = True
 
 
-class Instrument(models.Model):
+class Instrument(OwnedModelMixin, models.Model):
     # author = models.ForeignKey(users.models.LabUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
@@ -32,8 +27,7 @@ class Instrument(models.Model):
     def __str__(self):
         return f"{self.name}, {self.manufacturer}"
 
-
-class Condition(models.Model):
+class Condition(OwnedModelMixin, models.Model):
     ROOMTEMP = 1
     FRIDGE = 2
     FREEZE = 3
@@ -64,7 +58,7 @@ class Condition(models.Model):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
 
 
-class Sample(models.Model):
+class Sample(OwnedModelMixin, models.Model):
     VENOUS_BLOOD = 1
     URINE = 2
     CAPILLARY_BLOOD = 3
@@ -156,7 +150,7 @@ class Sample(models.Model):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
 
-class Parameter(models.Model):
+class Parameter(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=255, verbose_name='Parameter Name')
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
     reagent_name = models.CharField(max_length=255, verbose_name='Reagent name', blank=True, null=True)
@@ -176,7 +170,7 @@ class Parameter(models.Model):
         return f"{self.name} - Intrument: {self.instrument.name} / Handmethod: {self.method_hand}"
 
 
-class Setting(models.Model):
+class Setting(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=255, blank=True, null=True,
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
@@ -246,7 +240,7 @@ class Setting(models.Model):
     #     super().save(*args, **kwargs)
 
 
-class Duration(models.Model):
+class Duration(OwnedModelMixin, models.Model):
     class Meta:
         # unique_together = ["duration_number", "duration_unit"]
         ordering = ["seconds"]
@@ -304,19 +298,22 @@ class Duration(models.Model):
         unit = self.get_duration_unit_display()
         return f"{self.duration_number}, {unit}"
 
-#FIXME: This calls the duration table upon makemigrations, which does not exist at that time.
-duration, created = Duration.objects.get_or_create(
-        seconds=0,
-        defaults={'duration_number': 0, 'duration_unit': '1'},
-    )
 
-class Subject(models.Model):
+# duration, created = Duration.objects.get_or_create(
+#         seconds=0,
+#         defaults={'duration_number': 0, 'duration_unit': '1'},
+#     )
+
+#FIXME: This calls the duration table upon makemigrations, which does not exist at that time.
+
+
+class Subject(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
 
 
     def __str__(self):
         return self.name
-        
+
     def _results(self, duration: Duration, setting: Setting):
         return [v.value for v in
                 Result.objects.filter(duration=duration, subject=self, setting=setting)]
@@ -354,17 +351,7 @@ class Subject(models.Model):
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
-
-# TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
-# def number_of_subjects(self, setting: Setting):
-#     nr = self.objects.count(setting)
-#     if not nr:
-#         return "-"
-#     else:
-#         return nr
-
-
-class Result(models.Model):
+class Result(OwnedModelMixin, models.Model):
     value = models.FloatField()
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
@@ -386,3 +373,14 @@ class Result(models.Model):
     #     average = SumOfResults/count
     #     print("Entered results: ", results)
     #     print("Average: ", average)
+
+
+# TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
+# def number_of_subjects(self, setting: Setting):
+#     nr = self.objects.count(setting)
+#     if not nr:
+#         return "-"
+#     else:
+#         return nr
+
+
