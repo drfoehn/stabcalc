@@ -1,5 +1,8 @@
 
 <div hx-target="this" hx-swap='outerHTML' class="row ">
+    {% if duration.owner == user %}
+
+
     <div class="col-7 object-list-div">
     <h3>{{ duration.duration_number }} {{ duration.get_duration_unit_display }}</h3>
     </div>
@@ -9,5 +12,5 @@
     <div hx-post="{% url 'delete-duration' duration.id %}"
          hx-confirm="Are you sure you want to delete '{{ duration.duration_number }} {{ duration.get_duration_unit_display }}'?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
     </div>
-
-{##}
+       {% endif %}
+    </div>

@@ -1,6 +1,9 @@
 
 {##}
 <div hx-target="this" hx-swap='outerHTML' class="row">
+{% if condition.owner == user %}
+
+
 <div class="col-7 object-list-div">
     <h3>
         {{ condition.get_temperature_display }}
@@ -19,6 +22,6 @@ Exposure during storage to: <br>
     <div hx-get="{% url 'edit-condition' condition.id %}"><i class="bi bi-pencil icon_edit"></i></div>
     <div hx-post="{% url 'delete-condition' condition.id %}" hx-confirm="Are you sure?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
     </div>
-
+{% endif %}
 </div>
 

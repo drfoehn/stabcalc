@@ -470,7 +470,9 @@ def parameter_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            parameter = form.save()
+            parameter=form.save(commit=False)
+            parameter.owner = request.user
+            parameter.save()
             return redirect('parameter-detail', pk=parameter.id)
         else:
             context = {
@@ -497,11 +499,14 @@ def add_parameter_form(request):
 
 
 def parameter_detail(request, pk):
-    parameter = Parameter.objects.get(pk=pk)
-    context = {
-        "parameter": parameter
-    }
-    return render(request, 'calculator/partials/parameter_detail.html', context)
+    parameter = get_object_or_404(Parameter, pk=pk)
+    if not parameter.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "parameter": parameter
+        }
+        return render(request, 'calculator/partials/parameter_detail.html', context)
 
 
 def edit_parameter(request, pk):
@@ -534,7 +539,9 @@ def sample_list(request):
     samples = Sample.objects.all()
     if request.method == 'POST':
         if form.is_valid():
-            sample = form.save()
+            sample = form.save(commit=False)
+            sample.owner = request.user
+            sample.save()
             return redirect('sample-detail', pk=sample.id)
         else:
             context = {
@@ -561,11 +568,14 @@ def add_sample_form(request):
 
 
 def sample_detail(request, pk):
-    sample = Sample.objects.get(pk=pk)
-    context = {
-        "sample": sample
-    }
-    return render(request, 'calculator/partials/sample_detail.html', context)
+    sample = get_object_or_404(Sample, pk=pk)
+    if not sample.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "sample": sample
+        }
+        return render(request, 'calculator/partials/sample_detail.html', context)
 
 
 def edit_sample(request, pk):
@@ -599,6 +609,7 @@ def setting_list(request):
     if request.method == 'POST':
         if form.is_valid():
             setting = form.save(commit=False)
+            setting.owner = request.user
             setting.save()
             for duration in setting.duration.all():
                 setting.duration.pk.add(setting)
@@ -633,11 +644,14 @@ def add_setting_form(request):
 
 
 def setting_detail(request, pk):
-    setting = Setting.objects.get(pk=pk)
-    context = {
-        "setting": setting
-    }
-    return render(request, 'calculator/partials/setting_detail.html', context)
+    setting = get_object_or_404(Setting, pk=pk)
+    if not setting.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "setting": setting
+        }
+        return render(request, 'calculator/partials/setting_detail.html', context)
 
 
 def edit_setting(request, pk):
@@ -671,7 +685,9 @@ def condition_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            condition = form.save()
+            condition = form.save(commit=False)
+            condition.owner = request.user
+            condition.save()
             return redirect('condition-detail', pk=condition.id)
         else:
             context = {
@@ -698,11 +714,14 @@ def add_condition_form(request):
 
 
 def condition_detail(request, pk):
-    condition = Condition.objects.get(pk=pk)
-    context = {
-        "condition": condition
-    }
-    return render(request, 'calculator/partials/condition_detail.html', context)
+    condition = get_object_or_404(Condition, pk=pk)
+    if not condition.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "condition": condition
+        }
+        return render(request, 'calculator/partials/condition_detail.html', context)
 
 
 def edit_condition(request, pk):
@@ -736,7 +755,9 @@ def duration_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            duration = form.save()
+            duration = form.save(commit=False)
+            duration.owner = request.user
+            duration.save()
             return redirect('duration-detail', pk=duration.id)
         else:
             context = {
@@ -762,11 +783,14 @@ def add_duration_form(request):
 
 
 def duration_detail(request, pk):
-    duration = Duration.objects.get(pk=pk)
-    context = {
-        "duration": duration
-    }
-    return render(request, 'calculator/partials/duration_detail.html', context)
+    duration = get_object_or_404(Duration, pk=pk)
+    if not duration.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "duration": duration
+        }
+        return render(request, 'calculator/partials/duration_detail.html', context)
 
 
 def edit_duration(request, pk):
@@ -854,6 +878,9 @@ def result_list(request, setting_pk):
                     for subject in subjects:
                         result.subject.add(subject)
                     result_list.append(result)
+
+                    result.owner = request.user
+
             Result.objects.bulk_create(result_list)
 
             # result = form.save(commit=False)
@@ -903,13 +930,15 @@ def add_result_form(request, setting_pk, duration_pk):
 
 
 def result_detail(request, pk):
-    result = Result.objects.get(pk=pk)
-    # duration = Duration.objects.get(pk=duration_pk)
-    context = {
-        "result": result,
-        # "duration": duration,
-    }
-    return render(request, 'calculator/partials/result_detail.html', context)
+    result = get_object_or_404(Result, pk=pk)
+    if not result.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "result": result,
+            # "duration": duration,
+        }
+        return render(request, 'calculator/partials/result_detail.html', context)
 
 
 def edit_result(request, pk):
@@ -960,7 +989,9 @@ def subject_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            subject = form.save()
+            subject = form.save(commit=False)
+            subject.owner = request.user
+            subject.save()
             return redirect('subject-detail', pk=subject.id)
         else:
             context = {
@@ -987,11 +1018,14 @@ def add_subject_form(request):
 
 
 def subject_detail(request, pk):
-    subject = Subject.objects.get(pk=pk)
-    context = {
-        "subject": subject
-    }
-    return render(request, 'calculator/partials/subject_detail.html', context)
+    subject = get_object_or_404(Subject, pk=pk)
+    if not subject.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "subject": subject
+        }
+        return render(request, 'calculator/partials/subject_detail.html', context)
 
 
 def edit_subject(request, pk):
