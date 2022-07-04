@@ -12,7 +12,7 @@
             }
       </script>
 
-    <h4 class="display-5">List / Add results of/to setting: "{{ setting.name }}"</h4>
+    <h4 class="display-5">Results from: "{{ setting.name }} / Storage duration: {{ duration.duration_number }} {{ duration.get_duration_unit_display }}"</h4>
     <h4 class="display6"
     {% if setting.result_set.count < 10 %}
            onclick="alert10()"><a href="
@@ -25,47 +25,24 @@
     <br>
 
     <div class="row">
-        <!--
-        Define here the variables, you can delete this comment afterwords:
-            object_list for the "items" to loo over: a
-            single object: a
-            machine name attrof the object: a
-            display title ttr of the object: a
-        -->
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                {% for duration in durations %}
-                    <button
-                            class="nav-link{% if forloop.first %} active{% endif %}"
-                            id="nav-{{ duration.seconds }}-tab"
-                            data-bs-toggle="tab"
-                            data-bs-target="#nav-{{ duration.seconds }}"
-                            type="button"
-                            role="tab"
-                            aria-controls="nav-{{ duration.seconds }}"
-                            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-                            {#                            {% if not duration.enabled %}disabled{% endif %}#}
-                    >
-                        {% if duration.seconds == 0 %}
-                            Baseline
-                        {% else %}
-                            {{ duration }}
-                        {% endif %}
-                    </button>
-                {% endfor %}
-            </div>
-        </nav>
-        <div class="tab-content" id="nav-tabContent">
-            {% for duration in durations %}
-                <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
-                     id="nav-{{ duration.seconds }}"
-                     role="tabpanel"
-                     aria-labelledby="nav-{{ duration.seconds }}-tab"
-                     tabindex="0"
-                >
+
+
+<div class="col-3">
+<h5 class="display-7">Selected storage durations:</h5>
+    <ul  class="nav flex-column justify-content-center">
+        {% for duration in durations %}
+            <li  class="nav-item"><a href="{% url 'create-result' setting.id duration.id %}">{{ duration }}</a></li>
+        {% endfor %}
+    </ul>
+    <br>
+    <i><a href="{% url 'create-duration' %}">Add additional storage durations</a></i>
+</div>
+
+    <div class="col-7">
+    <br>
                   <a hx-get="{% url 'create-result-form' setting.id duration.id %}" class="btn btn-danger btn-add"
                                    role="button" data-bs-toggle="button" id="addresults-button"
-                                   hx-swap="beforebegin">Add results</a>
+                                   hx-swap="beforebegin">Add additional result rows per subject/sample</a>
  <form action="" method="post">
  {% csrf_token %}
                     {% for subject in setting.subject.all %}
@@ -80,7 +57,7 @@
 
 
                                 {##}
-                                {#                                {% include 'calculator/partials/result_form.html' %}#}
+                                                                {% include 'calculator/partials/result_form.html' %}
                                 {##}
 {#                                <button type="submit" class="btn btn-secondary">Save</button>#}
 {#                            </form>#}
@@ -97,12 +74,14 @@
                             </div>
                         </div>
                         <hr>
-                    {% endfor %}
+ {% endfor %}
+
   <button type="submit" class="btn btn-danger">Save</button>
   </form>
-                </div>
+</div>
 
-            {% endfor %}
+
+
         </div>
     </div>
 

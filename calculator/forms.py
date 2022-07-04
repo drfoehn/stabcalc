@@ -116,7 +116,7 @@ class SettingForm(forms.ModelForm):
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
     subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all())
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-
+    # owner = None
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
     feedback = forms.CharField(
@@ -138,8 +138,9 @@ class SettingForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-    # def __init__(self, user, *args, **kwargs):
-    #     user=kwargs.pop('owner')
+
+        # owner=kwargs.pop('owner')
+        # self.request = kwargs.pop('request')
         super(SettingForm, self).__init__(*args, **kwargs)
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
@@ -259,8 +260,6 @@ class SubjectForm(forms.ModelForm):
         if len(feedback) > 0:
             raise forms.ValidationError("We don´t serve your kind here!")
         return feedback
-
-
 
 
 class ResultForm(forms.ModelForm):

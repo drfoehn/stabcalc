@@ -49,7 +49,7 @@ urlpatterns = [
     path('subjects/subject/<pk>/edit', edit_subject, name="edit-subject"),
     path('subjects/create-subject-form/', add_subject_form, name='create-subject-form'),
 
-    path('setting/<setting_pk>/results/', result_list, name='create-result'),
+    path('setting/<setting_pk>/<duration_pk>/results/', result_list, name='create-result'),
     path('results/result/<pk>/', result_detail, name="result-detail"),
     path('results/result/<pk>/delete', delete_result, name="delete-result"),
     path('results/result/<pk>/edit', edit_result, name="edit-result"),

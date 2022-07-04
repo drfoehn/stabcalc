@@ -9,6 +9,7 @@
         {{ setting.parameter.name }}<br>
         {{ setting.condition.get_temperature_display }}<br>
  </div>
+        <div class="col-1"></div>
     <div class="col-2  object-list-div">
         <img src="{% static 'images/icon/8.png' %}" alt="" class="number-icons"><br>
         <a href="{% url 'create-result' setting.id%}">Add Results</a>

@@ -398,11 +398,12 @@ def instrument_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
+
             name = form.cleaned_data["name"]
             manufacturer = form.cleaned_data['manufacturer']
             instrument = Instrument(name=name, manufacturer=manufacturer)
             owner = request.user
-            instrument.owner =owner
+            instrument.owner = owner
             instrument.save()
             return redirect('instrument-detail', pk=instrument.id)
         else:
@@ -470,7 +471,7 @@ def parameter_list(request):
 
     if request.method == 'POST':
         if form.is_valid():
-            parameter=form.save(commit=False)
+            parameter = form.save(commit=False)
             parameter.owner = request.user
             parameter.save()
             return redirect('parameter-detail', pk=parameter.id)
@@ -637,8 +638,10 @@ def setting_list(request):
 
 def add_setting_form(request):
     form = SettingForm()
+    owner = request.user
     context = {
-        "form": form
+        "form": form,
+        "owner": owner
     }
     return render(request, 'calculator/partials/setting_form.html', context)
 
@@ -857,10 +860,11 @@ def delete_duration(request, pk):
 #     }
 #
 #     return render(request, 'calculator/result_list.html', context)
-def result_list(request, setting_pk):
+def result_list(request, setting_pk, duration_pk):
     form = ResultForm(request.POST or None)
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(setting=setting)
+    duration = Duration.objects.get(pk=duration_pk)
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
 
@@ -869,17 +873,17 @@ def result_list(request, setting_pk):
             # https://zerotobyte.com/using-django-bulk-create-and-bulk-update/
             # https://stackoverflow.com/questions/53594745/what-is-the-use-of-cleaned-data-in-django
             # subject = Result.subject.through(for subject in subjects: return subject.id)
-            result_list=[]
+            result_list = []
             for data in form.cleaned_data:
-                    result.value=form.cleaned_data['value'],
-                    result.setting=setting.id,
-                    result.duration=durations.id,
-                    result = Result(value=result.value, setting=result.setting, duration= result.duration)
-                    for subject in subjects:
-                        result.subject.add(subject)
-                    result_list.append(result)
+                data.value = form.value
+                data.setting = setting.id,
+                data.duration = duration.id,
+                result = Result(value=data.value, setting=data.setting, duration=data.duration)
+                for subject in subjects:
+                    result.subject.add(subject)
+                result_list.append(result)
 
-                    result.owner = request.user
+                result.owner = request.user
 
             Result.objects.bulk_create(result_list)
 
@@ -888,8 +892,9 @@ def result_list(request, setting_pk):
             # result.duration = duration
             # # result.subjects.add(subject)
             # # FIXME: Define current subject for asignment
-            result.save()
-            return redirect('result-detail', pk=result.id)
+            # result.save()
+            # return redirect('result-detail', pk=subject.result.id)
+            return redirect('result-detail')
         else:
             context = {
                 'form': form,
@@ -900,6 +905,7 @@ def result_list(request, setting_pk):
     context = {
         'form': form,
         'durations': durations,
+        'duration': duration,
         'setting': setting,
         'subjects': subjects,
         'results': results,
@@ -916,7 +922,7 @@ def add_result_form(request, setting_pk, duration_pk):
     context = {
         "form": form,
         "subjects": subjects,
-        "duration": duration
+        # "duration": duration
     }
     return render(request, 'calculator/partials/result_form.html', context)
 
