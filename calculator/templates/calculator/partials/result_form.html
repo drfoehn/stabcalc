@@ -17,9 +17,9 @@
 {#</div>#}
 
 {#{% for subject in subjects %}#}
-    <div hx-swap-oob=True id="result_form-{{ duration.id }}-{{ subject.id }}">
-{#    <form action="" method="post">#}
-{#    {% csrf_token %}#}
+<div hx-swap-oob=true id="result_form-{{ duration.id }}-{{ subject.id }}">
+    {#    <form action="" method="post">#}
+    {#    {% csrf_token %}#}
     {{ form.value.label_tag }} {{ form.value }}
 {#    </form>#}
     </div>

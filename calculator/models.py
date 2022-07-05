@@ -355,7 +355,7 @@ class Result(OwnedModelMixin, models.Model):
     value = models.FloatField()
     setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True)
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
-    subject = models.ManyToManyField(Subject)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
     # def duration_cat(self):
     #     return str(self.duration.duration_number) + self.duration.get_duration_unit_display()

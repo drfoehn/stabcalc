@@ -277,7 +277,7 @@ html, body {
   padding: 8px;
     text-align: center;
     vertical-align: center;
-    color: white;
+    /*color: white;*/
 }
 
 #footer-content a:link {

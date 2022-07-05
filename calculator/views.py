@@ -639,9 +639,11 @@ def setting_list(request):
 def add_setting_form(request):
     form = SettingForm()
     owner = request.user
+
     context = {
         "form": form,
-        "owner": owner
+        "owner": owner,
+
     }
     return render(request, 'calculator/partials/setting_form.html', context)
 
@@ -652,7 +654,7 @@ def setting_detail(request, pk):
         return HttpResponseForbidden
     else:
         context = {
-            "setting": setting
+            "setting": setting,
         }
         return render(request, 'calculator/partials/setting_detail.html', context)
 
@@ -860,11 +862,9 @@ def delete_duration(request, pk):
 #     }
 #
 #     return render(request, 'calculator/result_list.html', context)
-def result_list(request, setting_pk, duration_pk):
-    form = ResultForm(request.POST or None)
+def result_list(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(setting=setting)
-    duration = Duration.objects.get(pk=duration_pk)
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
 
@@ -874,13 +874,15 @@ def result_list(request, setting_pk, duration_pk):
             # https://stackoverflow.com/questions/53594745/what-is-the-use-of-cleaned-data-in-django
             # subject = Result.subject.through(for subject in subjects: return subject.id)
             result_list = []
-            for data in form.cleaned_data:
-                data.value = form.value
-                data.setting = setting.id,
-                data.duration = duration.id,
-                result = Result(value=data.value, setting=data.setting, duration=data.duration)
-                for subject in subjects:
-                    result.subject.add(subject)
+            for key, value in form.cleaned_data.items():
+                if not value:
+                    continue
+                print(key, value)
+                items = key.split("-")
+                subject_id = items[1]
+                duration = Duration.objects.get(pk=items[2])
+                result = Result(value=value, setting=setting, duration=duration, subject_id=subject_id)
+                result.owner = request.user
                 result_list.append(result)
 
                 result.owner = request.user
@@ -905,7 +907,6 @@ def result_list(request, setting_pk, duration_pk):
     context = {
         'form': form,
         'durations': durations,
-        'duration': duration,
         'setting': setting,
         'subjects': subjects,
         'results': results,
