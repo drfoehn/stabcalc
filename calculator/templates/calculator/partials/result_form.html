@@ -21,8 +21,9 @@
     {#    <form action="" method="post">#}
     {#    {% csrf_token %}#}
     {{ form.value.label_tag }} {{ form.value }}
-{#    </form>#}
-    </div>
+    {{ form }}
+    {#    </form>#}
+</div>
 {#{% endfor %}#}
 
 

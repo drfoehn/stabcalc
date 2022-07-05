@@ -867,6 +867,7 @@ def result_list(request, setting_pk):
     durations = Duration.objects.filter(setting=setting)
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
+    form = ResultForm(subjects, durations, data=request.POST or None)
 
     if request.method == 'POST':
         if form.is_valid():
@@ -885,7 +886,6 @@ def result_list(request, setting_pk):
                 result.owner = request.user
                 result_list.append(result)
 
-                result.owner = request.user
 
             Result.objects.bulk_create(result_list)
 
@@ -896,7 +896,9 @@ def result_list(request, setting_pk):
             # # FIXME: Define current subject for asignment
             # result.save()
             # return redirect('result-detail', pk=subject.result.id)
-            return redirect('result-detail')
+            # return redirect('result-detail')
+            form = ResultForm(subjects, durations, data=None)
+
         else:
             context = {
                 'form': form,
@@ -905,7 +907,7 @@ def result_list(request, setting_pk):
             return render(request, 'calculator/partials/result_form.html', context)
 
     context = {
-        'form': form,
+        "form": form,
         'durations': durations,
         'setting': setting,
         'subjects': subjects,

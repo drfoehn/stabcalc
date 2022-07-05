@@ -262,21 +262,30 @@ class SubjectForm(forms.ModelForm):
         return feedback
 
 
-class ResultForm(forms.ModelForm):
-    value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
-    setting = forms.ModelChoiceField(queryset=Setting.objects.all(), required=False)
-    duration = forms.ModelChoiceField(queryset=Duration.objects.all(), required=False)
-    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False)
+class ResultForm(forms.Form):
+    # value = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    # setting = forms.ModelChoiceField(queryset=Setting.objects.all(), required=False)
+    # duration = forms.ModelChoiceField(queryset=Duration.objects.all(), required=False)
+    # subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), required=False)
     # subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple, required=False)
 
-    class Meta:
-        model = Result
-        fields = (
-            'value',
-            'setting',
-            'duration',
-            'subject'
-        )
+    # class Meta:
+    #     model = Result
+    #     fields = (
+    #         'value',
+    #         'setting',
+    #         'duration',
+    #         'subject'
+    #     )
+
+    def __init__(self, subjects, durations, *args,**kwargs):
+        super().__init__(*args,**kwargs)
+        for subject in subjects:
+            for duration in durations:
+                field = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+                field.subject_id = subject.id
+                field.duration_id = duration.id
+                self.fields[f"value-{subject.id}-{duration.id}"] = field
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):
