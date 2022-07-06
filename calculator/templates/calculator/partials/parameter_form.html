@@ -1,7 +1,100 @@
 <div hx-target="this" hx-swap="outerHTML" >
     <form method="POST">
         {% csrf_token %}
-        {{ form }}
+
+    <table>
+        <tr>
+            <th>
+                {{ form.name.label_tag }}
+            </th>
+            <td>
+                {{ form.name }}
+            </td>
+            <td>
+                {{ form.name.errors }}
+            </td>
+            <th>
+                {{ form.unit.label_tag }}
+            </th>
+            <td>
+                {{ form.unit }}
+            </td>
+            <td>
+                {{ form.unit.errors }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+{{ form.reagent_name.label_tag }}
+            </th>
+            <td>
+{{ form.reagent_name }}
+            </td>
+            <td>
+                {{ form.reagent_name.errors }}
+            </td>
+            <th>
+{{ form.reagent_manufacturer.label_tag }}
+            </th>
+            <td>
+{{ form.reagent_manufacturer}}
+            </td>
+            <td>
+                {{ form.reagent_manufacturer.errors }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+{{ form.CV_intra.label_tag }}
+            </th>
+            <td>
+{{ form.CV_intra }}
+            </td>
+            <td>
+                {{ form.CV_intra.errors }}
+            </td>
+                        <th>
+{{ form.CV_inter.label_tag }}
+            </th>
+            <td>
+{{ form.CV_inter }}
+            </td>
+            <td>
+                {{ form.CV_inter.errors }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+Is it a manual analytical method?
+            </th>
+            <td>
+                {{ form.method_hand }} (yes)
+            </td>
+            <td>
+                {{ form.method_hand.errors }}
+            </td>
+        </tr>
+        <tr id="form-instrument">
+            <th>
+{{ form.instrument.label_tag }}
+            </th>
+            <td>
+{{ form.instrument }}
+            </td>
+            <td>
+                {{ form.instrument.errors }}
+            </td>
+        </tr>
+        <tr>
+            <th>
+
+            </th>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+        {{ form.name.label_tag }}:
 {#    If statement to prevent edit-view from creating more objects#}
         {% if parameter %}     {#  Passed in from Edit-instrument-view #}
             <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
@@ -15,3 +108,13 @@
         {% endif %}
     </form>
 </div>
+
+<script>
+    let hand = document.getElementById('method-hand')
+    let instrument = document.getElementById('form-instrument')
+    function hide_instrument(){
+        if(hand.checked){
+            instrument.disabled = true;
+        }
+    }
+</script>

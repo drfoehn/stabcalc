@@ -88,6 +88,28 @@ body{
 th{
     font-weight: normal;
 }
+
+.image_attribution{
+    font-size: smaller;
+    float: right;
+}
+
+.image_attribution a:link {
+color: dimgrey;
+}
+
+.image_attribution a:visited {
+color: dimgrey;
+}
+
+.image_attribution a:hover {
+color: lightgray; !important;
+}
+
+.image_attribution a:active {
+color: lightgray; !important;
+}
+
 /*-----------------------------------NAVBAR---------------------------------------*/
 
 .navbar{
@@ -108,11 +130,28 @@ th{
     font-size: 1.2em  !important;,
 }
 
-/*FIXME: Linkfarbe*/
-#navbarDropdown a:link,
-#navbarDropdown a:visited{
-    color: gray; !important;
+/*!*FIXME: Linkfarbe*!*/
+/*#navbarDropdown a:link,*/
+/*#navbarDropdown a:visited{*/
+/*    color: gray; !important;*/
+/*}*/
+
+#navbarDropdown  a:link {
+color: dimgrey;
 }
+
+#navbarDropdown  a:visited {
+color: dimgrey;
+}
+
+#navbarDropdown  a:hover {
+color: lightgray; !important;
+}
+
+#navbarDropdown  a:active {
+color: lightgray; !important;
+}
+
 /*a:link,*/
 /*a:visited {*/
 /*    color: gray;*/
@@ -125,8 +164,18 @@ th{
 
 /*-------------------------------------INDEX PAGE------------------------------------*/
 
+.index-sub{
+    /*font-family: 'Ubuntu', sans-serif;*/
+    font-size: 2em;
+}
+
+.index-text{
+    font-size: 1.5em;
+}
 
 /*------------------------------------DASHBOARD--------------------------------------*/
+
+
 .table-header{
     margin-top: 2em;
     background-color: var(--celadon-blue);
@@ -261,6 +310,9 @@ html, body {
   content: "";
   display: block;
   height: 50px; /* the footer's total height */
+}
+.use-of-data{
+
 }
 
 #content {

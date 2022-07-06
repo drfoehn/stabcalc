@@ -53,5 +53,5 @@ class LabUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['email', 'laboratory_name', 'country', 'city']
 
     def __str__(self):
-        return f'{self.laboratory_name}, {self.user_name}'
+        return f'{self.user_name}'
 

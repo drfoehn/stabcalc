@@ -114,7 +114,7 @@ class SettingForm(forms.ModelForm):
     parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='---Select parameter---')
     condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='---Select storage condition---')
     duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
-    subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.all())
+    # subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.filter(settings__owner__subject=LabUser))
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     # owner = None
     # ----------------------Botcatcher-------------------------
@@ -138,10 +138,10 @@ class SettingForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-
-        # owner=kwargs.pop('owner')
-        # self.request = kwargs.pop('request')
-        super(SettingForm, self).__init__(*args, **kwargs)
+        user = kwargs.pop('user')   #get the correct user for the dropdown-selections
+        print(user)
+        super().__init__(*args, **kwargs)
+        self.fields['subject'] = Subject.objects.get(owner=user)
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
         # self.fields['subject'].queryset = Subject.objects.filter(owner=user)

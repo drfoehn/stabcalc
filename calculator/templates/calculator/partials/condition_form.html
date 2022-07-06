@@ -1,4 +1,6 @@
 <div hx-target="this" hx-swap="outerHTML" >
+<p></p>
+<div class="col-7 object-list-div">
     <form method="POST">
 
         {% csrf_token %}
@@ -25,37 +27,34 @@
             </tr>
             <tr>
                 <th>
+                    <p></p>
                     Exposure during storage to .....
                 </th>
             </tr>
-            <tr>
+            <tr style="float: left">
                 <td>
-                    {{ form.light.label_tag }}
+                    {{ form.light.label_tag }}&nbsp;
                 </td>
                 <td>
-                    {{ form.air.label_tag}}
+                    {{ form.light }}&nbsp;
                 </td>
-                <td>
-                    {{ form.agitation.label_tag }}
-                </td>
-            </tr>
-                 <tr>
-                <td>
-                    {{ form.light }}
-                </td>
-                <td>
-                    {{ form.air}}
-                </td>
-                <td>
-                    {{ form.agitation }}
-                </td>
-            </tr>
-                 <tr>
                 <td>
                     {{ form.light.errors }}
                 </td>
                 <td>
+                    {{ form.air.label_tag}}&nbsp;
+                </td>
+                <td>
+                    {{ form.air}}&nbsp;
+                </td>
+                <td>
                     {{ form.air.errors}}
+                </td>
+                <td>
+                    {{ form.agitation.label_tag }}&nbsp;
+                </td>
+                <td>
+                    {{ form.agitation }}
                 </td>
                 <td>
                     {{ form.agitation.errors }}
@@ -63,6 +62,7 @@
             </tr>
                  <tr>
                 <th>
+                    <p></p>
                     {{ form.other_condition.label_tag }}
                 </th>
                  </tr>
@@ -75,7 +75,7 @@
                 </td>
             </tr>
              </table>
-
+<p></p>
 {#    If statement to prevent edit-view from creating more objects#}
         {% if condition %}     {#  Passed in from Edit-condition-view #}
             <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-condition' condition.id %}"
@@ -88,5 +88,6 @@
         </button>
         {% endif %}
     </form>
+</div>
 </div>
 

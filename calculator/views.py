@@ -605,7 +605,7 @@ def delete_sample(request, pk):
 # -------------------------------------SETTING----------------------------------------
 
 def setting_list(request):
-    form = SettingForm(request.POST or None)
+    form = SettingForm(request.POST or None, user=request.user)
     settings = Setting.objects.all()
     if request.method == 'POST':
         if form.is_valid():

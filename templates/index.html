@@ -8,63 +8,89 @@
     {% if user.is_authenticated %}
 
 
-    <div class="header_index row">
-        <div class="col-2 d-flex justify-content-center">
-            <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="">
+        <div class="header_index row">
+            <div class="col-2 d-flex justify-content-center">
+                <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="" width="150px" height="auto">
+            </div>
+            <div class="col-10">
+                <h2 class="display-5">Stability Calculator</h2>
+                <p class="display-6">
+                    EFLM Working Group "Preanalytical Phase" (WG-PRE)
+                </p>
+            </div>
         </div>
-        <div class="col-10">
-            <h2 class="display-5">Stability Calculator</h2>
-            <p class="display-6">
-                EFLM Working Group "Preanalytical Phase" (WG-PRE)
+
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-2"></div>
+            <div class="col-3">
+                <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt=""></a><br>
+                <h4 class="display-4">New study</h4>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-3">
+                <a href="{% url 'dashboard' %}"><img src="{% static 'images/dashboard.png' %}" alt=""></a><br>
+                <h4 class="display-4">Dashboard</h4>
+            </div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row use-of-data">
+            <h4 class="display-6">Use of data:</h4>
+            <p>
+                <nobr>This website and its content is copyright of Janne Cadamuro and the <a
+                        href="https://www.eflm.eu/site/page/a/1156" target="_blank">Preanalytical Working-Group of the
+                    EFLM</a>.
+                </nobr>
             </p>
+            <p> You may not, except with our express written permission, distribute or commercially exploit the content
+                (see copyright below).</p>
+            <br>
+            <p>
+                <nobr>If using data from this website for any purpose, it should be referenced as:
+                    <i>Cadamuro J., von Meyer A., Gómez Rioja R., Simundic A.M., Kristensen G., Nybo M., Costelloe S.,
+                        Cornes M. The EFLM Sample Stability Calculator. https://stabilitycalculator.eu/ [time of
+                        access].</i></nobr>
+            </p>
+            <br>
+            <p>
+                <nobr>For further information see the<a href="{% url 'terms_conditions' %}">Terms and Conditions</a>
+                </nobr>
+            </p>
+
         </div>
-    </div>
-
-
-    <div class="row d-flex justify-content-center">
-        <div class="col-2"></div>
-        <div class="col-3">
-            <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt=""></a><br>
-            <h4 class="display-4">New study</h4>
-        </div>
-        <div class="col-2"></div>
-        <div class="col-3">
-            <a href="{% url 'dashboard' %}"><img src="{% static 'images/dashboard.png' %}" alt=""></a><br>
-            <h4 class="display-4">Dashboard</h4>
-        </div>
-        <div class="col-2"></div>
-    </div>
-
-    <div class="row">
-        <h4 class="display-6">Use of data:</h4>
-        This website and its content is copyright of Janne Cadamuro and the <a
-            href="https://www.eflm.eu/site/page/a/1156" target="_blank">Preanalytical Working-Group of the EFLM</a>.
-        <br> You may not, except with our express written permission, distribute or commercially exploit the content
-        (see copyright below).
-        <br>
-        If using data from this website for any purpose, it should be referenced as:
-        <i>Cadamuro J., all WG-PRE members. The EFLM Sample Stability Calculator. https://stabilitycalculator.eu/ [time
-            of access].</i>
-        <br>
-        For further information see the<a href="{% url 'terms_conditions' %}">Terms and Conditions</a>
-
-    </div>
-{% else %}
+    {% else %}
 
 
         <div class="d-flex flex-column justify-content-center align-content-center">
-            <div class="p-2"><img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt=""></div>
-            <div class="p-2"><h2 class="display-5">European Federation of Clinical Chemistry and Laboratory medicine
-                (EFLM)
-                <br> Stability Calculator</h2></div>
-            <div class="p-2 display-6">EFLM Working Group "Preanalytical Phase" (WG-PRE)</div>
-            <div class="p-2">The EFLM Stability Calculator is a freely accsessible tool to calculate the ........</div>
-            <div class="p-2"> For usage, please <a href="{% url 'register_user' %}">Register </a> or <a
-                    href="{% url 'login' %}"> Login</a></div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <span class="align-middle">
+                        <img src="{% static 'images/stability.png' %}" alt="" width="100%" , height="auto">
+                    </span>
+                </div>
 
+{#                    <div class="col-3 logo-index"><img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt=""></div>#}
+                    <div class="col-8">
+                        <span class="align-middle">
+                        <div class="index-title"><h2 class="display-5">
+                            EFLM Stability Calculator</h2></div>
+                        <div class="index-sub">Working Group "Preanalytical Phase" (WG-PRE)</div>
+                            <p></p>
+                        <div class="index-text">The EFLM Stability Calculator is a freely accsessible tool to calculate
+                            individual analyte stability in different matrices under defined conditions.
+                        </div>
+                            <p></p>
+                        <div class="index-text"> For usage, please <a href="{% url 'register_user' %}">Register </a> or
+                            <a
+                                    href="{% url 'login' %}"> Login</a></div>
+                        </span>
+                    </div>
+
+            </div>
         </div>
 
 
-{% endif %}
+    {% endif %}
 
 {% endblock %}
