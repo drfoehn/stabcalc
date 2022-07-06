@@ -111,12 +111,11 @@ class SampleForm(forms.ModelForm):
 
 class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='---Select parameter---')
-    condition = forms.ModelChoiceField(queryset=(Condition.objects.all()), empty_label='---Select storage condition---')
-    duration = forms.ModelMultipleChoiceField(queryset=(Duration.objects.all()))
-    # subject = forms.ModelMultipleChoiceField(queryset=Subject.objects.filter(settings__owner__subject=LabUser))
+    parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
+    condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
+    duration = forms.ModelMultipleChoiceField(queryset=Duration.objects.all())
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    # owner = None
+    owner = None
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
     feedback = forms.CharField(
@@ -139,14 +138,17 @@ class SettingForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')   #get the correct user for the dropdown-selections
+        self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
         print(user)
         super().__init__(*args, **kwargs)
-        self.fields['subject'] = Subject.objects.get(owner=user)
+        # self.fields['subject'] = Subject.objects.filter(owner=user)
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
-        # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
+        self.fields['subject'].queryset = Subject.objects.filter(owner=user)
         # self.fields['duration'].widget.attrs['class'] = 'form-check-input'
-        # self.owner = user  #retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
+
+    def get_subjects_queryset(self):
+        return Subject.objects.filter(owner=self.owner)
 
     # -------------------Botcatcher-------------------------------------
     def clean_feedback(self):

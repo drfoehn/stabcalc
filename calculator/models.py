@@ -48,7 +48,8 @@ class Condition(OwnedModelMixin, models.Model):
         verbose_name='Temperature'
     )
     temperature_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Temperature'))
-
+    # thawing = models.CharField(max_length=400,)
+    # temperature_monitor =
     light = models.BooleanField(verbose_name='Exposure to light during storage')
     air = models.BooleanField(verbose_name='Exposure to air during storage')
     agitation = models.BooleanField(verbose_name='Agitation during storage')
@@ -57,8 +58,25 @@ class Condition(OwnedModelMixin, models.Model):
     def __str__(self):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
 
+# class Preanalytics(OwnedModelMixin, models.Model):
+#     collection_instrument
+#     collection_
+#     transportation_temp
+#     transportation_method
+#     transportation_time = models.CharField(max_length=255, verbose_name=_('Time from sample collection to separation', blank=True))
+    # centrifugation_g
+    # centrifugation_time
+    # centrifugation_temp
+
+
 
 class Sample(OwnedModelMixin, models.Model):
+    # sample_leftover = models.BooleanField()
+    # sample_pool = models.BooleanField()
+    # sample_pool_text = models.TextField()
+    # sample_spike = models.BooleanField()
+    # sample_spike_text = models.TextField()
+
     VENOUS_BLOOD = 1
     URINE = 2
     CAPILLARY_BLOOD = 3
@@ -178,6 +196,7 @@ class Setting(OwnedModelMixin, models.Model):
     #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
+    # protocol = models.TextField()
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
     # rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
     #                                       choices=list(zip(range(1, 11), range(1, 11))), default=2)

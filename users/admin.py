@@ -24,7 +24,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide'),
-            'fields': ('laboratory_name', 'clinics', 'country', 'city', 'user_name', 'password', 'is_active', 'is_staff')
+            'fields': ('user_name', 'password1', 'password2', 'laboratory_name', 'clinics', 'country', 'city', 'is_active', 'is_staff')
         }),
 
     )

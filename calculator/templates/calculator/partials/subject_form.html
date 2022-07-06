@@ -1,9 +1,9 @@
 <div hx-target="this" hx-swap="outerHTML" >
-
+<div class="col-9 object-list-div">
     <form method="POST">
         {% csrf_token %}
     {{ form}}
-
+<p></p>
 {#    If statement to prevent edit-view from creating more objects#}
         {% if subject %}     {#  Passed in from Edit-instrument-view #}
             <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-subject' subject.id %}"
@@ -16,4 +16,5 @@
         </button>
         {% endif %}
     </form>
+</div>
 </div>

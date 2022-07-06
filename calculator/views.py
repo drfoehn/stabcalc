@@ -606,7 +606,7 @@ def delete_sample(request, pk):
 
 def setting_list(request):
     form = SettingForm(request.POST or None, user=request.user)
-    settings = Setting.objects.all()
+    settings = Setting.objects.filter()
     if request.method == 'POST':
         if form.is_valid():
             setting = form.save(commit=False)
@@ -623,7 +623,7 @@ def setting_list(request):
         else:
             context = {
                 'form': form,
-                'settings': Setting.objects.all(),
+                'settings': settings
             }
             return render(request, 'calculator/partials/setting_form.html', context)
 
@@ -637,7 +637,7 @@ def setting_list(request):
 
 
 def add_setting_form(request):
-    form = SettingForm()
+    form = SettingForm(user=request.user)
     owner = request.user
 
     context = {
