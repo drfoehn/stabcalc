@@ -164,7 +164,7 @@ color: lightgray; !important;
 
 /*-------------------------------------INDEX PAGE------------------------------------*/
 
-.index-sub{
+.heading2{
     /*font-family: 'Ubuntu', sans-serif;*/
     font-size: 2em;
 }
@@ -173,15 +173,16 @@ color: lightgray; !important;
     font-size: 1.5em;
 }
 
-/*------------------------------------DASHBOARD--------------------------------------*/
 
-
+/*------------------------------------TABLES--------------------------------------*/
+#table-dashboard-settingname,
 .table-header{
     margin-top: 2em;
-    background-color: var(--celadon-blue);
-    color: var(--cultured);
+    background-color: #ffd166;
+    /*color: var(--cultured);*/
     font-family: 'Ubuntu', sans-serif;
-    font-size: 1.5em;
+    font-size: 1.3em;
+    /*font-weight: bold;*/
 }
 
 .table-dashboard-td{
@@ -193,9 +194,8 @@ color: lightgray; !important;
 
 }
 
-#table-dashboard-settingname{
-    font-size: 1.5em  ;
-}
+/*------------------------------------DASHBOARD--------------------------------------*/
+
 
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
 

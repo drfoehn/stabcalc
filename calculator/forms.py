@@ -31,7 +31,7 @@ class ParameterForm(forms.ModelForm):
     CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}), required=False)
-    instrument = forms.ModelChoiceField(queryset=(Instrument.objects.all()), empty_label='Select instrument')
+    # instrument = forms.ModelChoiceField(queryset=(Instrument.objects.all()), empty_label='Select instrument')
 
     # instrument = models.ForeignKey(Instrument)
     # sample = models.ForeignKey(Sample)
@@ -59,7 +59,10 @@ class ParameterForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(ParameterForm, self).__init__(*args, **kwargs)
+        user = kwargs.pop('user')   #get the correct user for the dropdown-selections
+        self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
+        super().__init__(*args, **kwargs)
+        self.fields['instrument'].queryset = Instrument.objects.filter(owner=user)
         self.fields['instrument'].widget.attrs['class'] = 'form-select'
 
 
@@ -113,7 +116,6 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
-    duration = forms.ModelMultipleChoiceField(queryset=Duration.objects.all())
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     owner = None
     # ----------------------Botcatcher-------------------------
@@ -139,13 +141,20 @@ class SettingForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user')   #get the correct user for the dropdown-selections
         self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
-        print(user)
+
         super().__init__(*args, **kwargs)
-        # self.fields['subject'] = Subject.objects.filter(owner=user)
+        # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
+        self.fields['duration'] = forms.ModelMultipleChoiceField(
+            Duration.objects.filter(owner=user),
+            widget=forms.CheckboxSelectMultiple,
+        )
+        self.fields['subject'] = forms.ModelMultipleChoiceField(
+            queryset=Subject.objects.filter(owner=user),
+            widget=forms.CheckboxSelectMultiple,
+        )
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
-        self.fields['subject'].queryset = Subject.objects.filter(owner=user)
-        # self.fields['duration'].widget.attrs['class'] = 'form-check-input'
+
 
     def get_subjects_queryset(self):
         return Subject.objects.filter(owner=self.owner)

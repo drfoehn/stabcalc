@@ -8,11 +8,10 @@
 
     <h4 class="display-5">{{ user.user_name }}'s Dashboard</h4>
     <div class="row">
-    <h4 class="display-6 d-flex justify-content-center"><a href="{% url 'create-instrument' %}">Start new stability study (Setup wizard)</a></h4>
+
     </div>
     <div class="row">
-    <div class="col-1"></div>
-    <div class="col-8">
+    <div class="col-10">
         <div>
             <h4 class="display-6">My Stability studies</h4>
         </div>
@@ -27,7 +26,7 @@
             </tr>
         {% for setting in settings %}
         <tr>
-            <td id="table-dashboard-settingname">{{ setting.name }} <br>
+            <th id="table-dashboard-settingname">{{ setting.name }} <br>
 
 
     <div class="display6"
@@ -36,7 +35,7 @@
     {% else %}
        ><a href="{% url 'results' setting.id %}
         {% endif %}
-    ">Show statistical evaluation</a></div></td>
+    ">Show statistical evaluation</a></div></th>
 
         <td id="table-dashboard-condition">
 
@@ -76,17 +75,16 @@
     </div>
 
     <div class="col-2">
-     <h4 class="display-6">Add / Edit / Delete</h4>
+    <h4 class="heading2">Add / Edit / Delete</h4>
+            <div><a href="{% url 'create-instrument' %}">1. Instruments</a></div>
+    <div><a href="{% url 'create-parameter' %}">2. Parameters / Lab tests</a></div>
+    <div><a href="{% url 'create-sample' %}">3. Samples</a></div>
+    <div><a href="{% url 'create-duration' %}">4. Storage durations</a></div>
+    <div><a href="{% url 'create-condition' %}">5. Conditions</a></div>
+        <div><a href="{% url 'create-subject' %}">6. Study subjects/volunteers/samples</a></div>
+        <div><a href="{% url 'create-setting' %}">7. Settings</a></div>
 
-       <div><a href="{% url 'create-parameter' %}">Parameters / Lab tests</a></div>
-    <div><a href="{% url 'create-instrument' %}">Instruments</a></div>
-    <div><a href="{% url 'create-setting' %}">Settings</a></div>
-    <div><a href="{% url 'create-condition' %}">Conditions</a></div>
-    <div><a href="{% url 'create-sample' %}">Samples</a></div>
-    <div><a href="{% url 'create-duration' %}">Storage durations</a></div>
-    <div><a href="{% url 'create-subject' %}">Study subjects/volunteers/samples</a></div>
 
-     <div class="col-1"></div>
     </div>
 
 {#'settings': settings,#}

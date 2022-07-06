@@ -466,7 +466,7 @@ def delete_instrument(request, pk):
 
 
 def parameter_list(request):
-    form = ParameterForm(request.POST or None)
+    form = ParameterForm(request.POST or None, user=request.user)
     parameters = Parameter.objects.all()
 
     if request.method == 'POST':
@@ -492,7 +492,7 @@ def parameter_list(request):
 
 
 def add_parameter_form(request):
-    form = ParameterForm()
+    form = ParameterForm(user=request.user)
     context = {
         "form": form
     }

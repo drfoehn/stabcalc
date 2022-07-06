@@ -3,6 +3,7 @@
     <form method="POST">
         {% csrf_token %}
         {{ form }}
+    <p></p>
 {#    If statement to prevent edit-view from creating more objects#}
         {% if instrument %}     {#  Passed in from Edit-instrument-view #}
             <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-instrument' instrument.id %}"
