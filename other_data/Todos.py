@@ -6,3 +6,6 @@
 # TODO: Let User choose from analyte list rather than free text entry for better comparison of data afterwards?
 # TODO: Additional Google Chart functions?
 # TODO: Customize graph tooltips: https://developers.google.com/chart/interactive/docs/customizing_tooltip_content
+
+
+# FIXME: If a user from a setting does not have any results, the results.html shows an error

@@ -4,7 +4,7 @@ from django.forms import modelformset_factory  # is grey but still needed for th
 
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-
+from statsmodels.stats.power import TTestIndPower
 from django.views.generic import (
     ListView,
     DetailView,
@@ -306,6 +306,49 @@ class ResultsView(DetailView):
                 return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
 
         context["interpretation_dist"] = distrib()
+
+        ###################################  Power Analysis #########################################
+
+        # from base64 import b64decode
+
+        # parameters for power analysis
+        effect = 0.8
+        alpha = 0.05
+        power = 0.8
+        # perform power analysis
+        analysis = TTestIndPower()
+        result = analysis.solve_power(effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
+        print('Sample Size: %.3f' % result)
+
+        nobs = Subject.objects.filter(settings__in=[self.object]).count()
+        print(nobs)
+        panalysis = TTestIndPower()
+
+
+        panalysis.plot_power(
+            dep_var="nobs",
+            nobs=np.arange(5, nobs),
+            effect_size=np.arange(0.5, 1.5, .2),
+            alpha=0.05,
+            ax=None,
+            title='Power-analysis',
+
+        )
+        plt.xlabel('Number of subjects', fontsize=20)
+        plt.ylabel('Power', fontsize=20)
+        image = plt.show()
+        return image
+
+
+
+        # image = b64decode(plt.show())
+
+        # power = TTestIndPower().solve_power(effect_size=effect_size,
+        #                                     nobs1=nobs1,
+        #                                     ratio=ratio,
+        #                                     power=None,
+        #                                     alpha=alpha,
+        #                                     alternative='two-sided')
 
         ###################################  Data import / export ####################################
 

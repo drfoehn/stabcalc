@@ -159,9 +159,18 @@
     Number of tested storage durations: {{ durations_n }}<br>
     Number of results: {{ results_n }}
     <br>
+    <img src="data:image/png,base64,{{ power|safe }}" alt="">
+    {{ power }}
+{#    {{ panalysis }}#}
+    <br>
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
     Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
-    {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }}
+    {% if subjects_n < 20 %}
+            Kurtosistest only valid for n>=20
+        {% else %}
+        {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }} (only valid if n > 20)
+    {% endif %}
+
     <br>
 
     <hr class="my-4">
