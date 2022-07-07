@@ -254,6 +254,10 @@ color: lightgray; !important;
     margin: 1em
 }
 
+/*.other-field{*/
+/*    display: none;*/
+/*}*/
+
 /*---------------------------------Resultpage------------------------------------*/
 .result_buttons,
 .print{

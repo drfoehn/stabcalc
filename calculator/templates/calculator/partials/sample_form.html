@@ -1,128 +1,190 @@
-<div hx-target="this" hx-swap="outerHTML" >
-<div class="col-12 object-list-div">
-    <form method="POST">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <th>
-                    {{ form.sample_type.label_tag }}
-                </th>
-                <th>
-                    {{ form.sample_type_other.label_tag }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.sample_type }}
-                </td>
-                <td>
-                    {{ form.sample_type_other }}
-                </td>
-                <td>
-                    {{ form.sample_type.errors }}
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    {{ form.container_additive.label_tag }}
-                </th>
-                <th>
-                    {{ form.container_additive_other.label_tag }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.container_additive }}
-                </td>
-                <td>
-                    {{ form.container_additive_other }}
-                </td>
-                <td>
-                    {{ form.container_additive.errors }}
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    {{ form.container_fillingvolume.label_tag }} <strong>in mL</strong>
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.container_fillingvolume }}
-                </td>
-                <td>
-                    {{ form.container_fillingvolume.errors }}
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    {{ form.container_dimension.label_tag }}
-                </th>
-                <th>
-                    {{ form.container_dimension_other.label_tag }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.container_dimension }}
-                </td>
-                <td>
-                    {{ form.container_dimension_other }}
-                </td>
-                <td>
-                    {{ form.container_dimension.errors }}
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    {{ form.container_material.label_tag }}
-                </th>
-                <th>
-                    {{ form.container_material_other.label_tag }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.container_material }}
-                </td>
-                <td>
-                    {{ form.container_material_other }}
-                </td>
-                <td>
-                    {{ form.container_material.errors }}
-                </td>
-            </tr>
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="col-12 object-list-div">
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>
+                        {{ form.sample_type.label_tag }}
+                    </th>
+                    <th>
 
-            <tr>
-                <th>
-                    <p></p>
-                    Does the container use gel as seperator?
-                </th>
-                <td>
-                    <p></p>
-                    {{ form.gel }} (yes)
-                </td>
-                <td>
-                    <p></p>
-                    {{ form.gel.errors }}
-                </td>
-            </tr>
-        </table>
-    <p></p>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.sample_type }}
+                    </td>
+                    <td>
+                        {{ form.sample_type_other }}
+                    </td>
+                    <td>
+                        {{ form.sample_type.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.container_additive.label_tag }}
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_additive }}
+                    </td>
+                    <td>
+                        {{ form.container_additive_other }}
+                    </td>
+                    <td>
+                        {{ form.container_additive.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.container_fillingvolume.label_tag }} <strong>in mL</strong>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_fillingvolume }}
+                    </td>
+                    <td>
+                        {{ form.container_fillingvolume.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.container_dimension.label_tag }}
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_dimension }}
+                    </td>
+                    <td>
+                        {{ form.container_dimension_other }}
+                    </td>
+                    <td>
+                        {{ form.container_dimension.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.container_material.label_tag }}
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_material }}
+
+                    </td>
+                    <td>
+                        {{ form.container_material_other }}
+                    </td>
+                    <td>
+                        {{ form.container_material.errors }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <p></p>
+                        Does the container use gel as seperator?
+                    </th>
+                    <td>
+                        <p></p>
+                        {{ form.gel }} (yes)
+                    </td>
+                    <td>
+                        <p></p>
+                        {{ form.gel.errors }}
+                    </td>
+                </tr>
+            </table>
+            <p></p>
 
 
-{#        {{ form }}#}
-{#    If statement to prevent edit-view from creating more objects#}
-        {% if sample %}     {#  Passed in from Edit-sample-view #}
-            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-sample' sample.id %}"
-            class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Save
-        </button>
-        {% else %}
-            <button  class="btn btn-secondary" type="submit" hx-post=".">
-            Save
-        </button>
-        {% endif %}
-    </form>
+            {#        {{ form }}#}
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if sample %}     {#  Passed in from Edit-sample-view #}
+                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-sample' sample.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+            {% else %}
+                <button class="btn btn-secondary" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
 </div>
-</div>
+
+<script>
+    document.getElementById('id_sample_type').addEventListener('change', toggleType)
+    document.getElementById('id_container_additive').addEventListener('change', toggleAdd)
+    document.getElementById('id_container_dimension').addEventListener('change', toggleDim)
+    document.getElementById('id_container_material').addEventListener('change', toggleMaterial)
+
+
+    function toggleType() {
+        let dropdown = document.getElementById('id_sample_type').value
+        let other = document.getElementById('id_sample_type_other');
+        if (dropdown === "9") {
+            other.style.display = 'block'
+        } else {
+            other.style.display = 'none'
+            other.value = ''
+        }
+    }
+window.onload = toggleType()
+
+
+     function toggleAdd() {
+        let dropdown = document.getElementById('id_container_additive').value
+        let other = document.getElementById('id_container_additive_other');
+        if (dropdown === "4") {
+            other.style.display = 'block'
+        } else {
+            other.style.display = 'none'
+            other.value = ''
+        }
+    }
+
+    window.onload = toggleAdd()
+
+
+    function toggleDim() {
+        let dropdown = document.getElementById('id_container_dimension').value
+        let other = document.getElementById('id_container_dimension_other');
+        if (dropdown === "4") {
+            other.style.display = 'block'
+        } else {
+            other.style.display = 'none'
+            other.value = ''
+        }
+    }
+
+    window.onload = toggleDim()
+
+    function toggleMaterial() {
+        let dropdown_material = document.getElementById('id_container_material').value
+        let other_material = document.getElementById('id_container_material_other');
+        if (dropdown_material === "3") {
+            other_material.style.display = 'block'
+        } else {
+            other_material.style.display = 'none'
+            other_material.value = ''
+        }
+    }
+
+    window.onload = toggleMaterial()
+</script>
