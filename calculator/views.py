@@ -512,7 +512,7 @@ def parameter_detail(request, pk):
 
 def edit_parameter(request, pk):
     parameter = Parameter.objects.get(pk=pk)
-    form = ParameterForm(request.POST or None, instance=parameter)
+    form = ParameterForm(request.POST or None, instance=parameter, user=request.user)
 
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
@@ -661,7 +661,7 @@ def setting_detail(request, pk):
 
 def edit_setting(request, pk):
     setting = Setting.objects.get(pk=pk)
-    form = SettingForm(request.POST or None, instance=setting)
+    form = SettingForm(request.POST or None, instance=setting, user=request.user)
 
     # This part is so that the update does not produce more objects
     if request.method == 'POST':

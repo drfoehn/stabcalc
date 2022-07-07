@@ -1,122 +1,169 @@
-<div hx-target="this" hx-swap="outerHTML" >
-<div class="col-12 object-list-div">
-    <form method="POST">
-        {% csrf_token %}
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="col-12 object-list-div">
+        <form method="POST">
+            {% csrf_token %}
 
-    <table>
-        <tr>
-            <th>
-                {{ form.name.label_tag }}
-            </th>
-            <td>
-                {{ form.name }}
-            </td>
-            <td>
-                {{ form.name.errors }}
-            </td>
-            <th>
-                {{ form.unit.label_tag }}
-            </th>
-            <td>
-                {{ form.unit }}
-            </td>
-            <td>
-                {{ form.unit.errors }}
-            </td>
-        </tr>
-        <tr>
-            <th>
-{{ form.reagent_name.label_tag }}
-            </th>
-            <td>
-{{ form.reagent_name }}
-            </td>
-            <td>
-                {{ form.reagent_name.errors }}
-            </td>
-            <th>
-{{ form.reagent_manufacturer.label_tag }}
-            </th>
-            <td>
-{{ form.reagent_manufacturer}}
-            </td>
-            <td>
-                {{ form.reagent_manufacturer.errors }}
-            </td>
-        </tr>
-        <tr>
-            <th>
-{{ form.CV_intra.label_tag }}
-            </th>
-            <td>
-{{ form.CV_intra }}
-            </td>
-            <td>
-                {{ form.CV_intra.errors }}
-            </td>
-                        <th>
-{{ form.CV_inter.label_tag }}
-            </th>
-            <td>
-{{ form.CV_inter }}
-            </td>
-            <td>
-                {{ form.CV_inter.errors }}
-            </td>
-        </tr>
-        <tr>
-            <th>
-Is it a manual analytical method?
-            </th>
-            <td>
-                {{ form.method_hand }} (yes)
-            </td>
-            <td>
-                {{ form.method_hand.errors }}
-            </td>
-        </tr>
-        <tr id="form-instrument">
-            <th>
-{{ form.instrument.label_tag }}
-            </th>
-            <td>
-{{ form.instrument }}
-            </td>
-            <td>
-                {{ form.instrument.errors }}
-            </td>
-        </tr>
-        <tr>
-            <th>
+            <table>
+                <tr>
+                    <th class="strong">
+                        Parameter
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        {{ form.name.label_tag }}
+                    </th>
+                    <th>
+                        {{ form.unit.label_tag }}
+                    </th>
+                </tr>
+                <tr>
 
-            </th>
-            <td>
+                    <td>
+                        {{ form.name }}
+                    </td>
+                    <td>
+                        {{ form.unit }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.name.errors }}
+                    </td>
+                    <td>
+                        {{ form.unit.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="strong">
+                        Reagent
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
 
-            </td>
-        </tr>
-    </table>
-    <p></p>
-{#    If statement to prevent edit-view from creating more objects#}
-        {% if parameter %}     {#  Passed in from Edit-instrument-view #}
-            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
-            class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Save
-        </button>
-        {% else %}
-            <button  class="btn btn-secondary" type="submit" hx-post=".">
-            Save
-        </button>
-        {% endif %}
-    </form>
-</div>
-</div>
+                        Manufacturer
 
-<script>
-    let hand = document.getElementById('method-hand')
-    let instrument = document.getElementById('form-instrument')
-    function hide_instrument(){
-        if(hand.checked){
-            instrument.disabled = true;
+                    </th>
+                </tr>
+                <tr>
+
+                    <td>
+                        {{ form.reagent_name }}
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.reagent_name.errors }}
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th class="strong">
+                        CV
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Intra-assay
+                    </th>
+                    <th>
+                        Inter-assay
+                    </th>
+                </tr>
+                <tr>
+
+                    <td>
+                        {{ form.CV_intra }}
+                    </td>
+                    <td>
+                        {{ form.CV_inter }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.CV_intra.errors }}
+                    </td>
+                    <td>
+                        {{ form.CV_inter.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <p></p>
+                        Is it a manual analytical method?<br>
+
+
+                    </th>
+                    <td>
+                        <p></p><div>
+                <input type="checkbox" name="method_hand" class="check-input" onclick="toggleOther()">(Yes)</input>
+
+            </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="instrument-toggle">
+                                Analytical instrument <br>
+                                {{ form.instrument }} {{ form.instrument.errors }}
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
+
+                        <script>
+                            function toggleOther() {
+
+                              let displaystatus = document.getElementById('instrument-toggle');
+
+                              if (displaystatus.style.display === 'none') {
+                                displaystatus.style.display = 'block'
+                              } else {
+                                displaystatus.style.display = 'none'
+                              }
+                            }
+
+                            document.getElementById('method-checkbox').onclick = function () {
+                                if (this.checked) {
+                                    toggleOther()
+                                }
+                            };
+
+
+
+                        </script>
+            <p></p>
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if parameter %}     {#  Passed in from Edit-instrument-view #}
+                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+            {% else %}
+                <button class="btn btn-secondary" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        let hand = document.getElementById('method-hand')
+        let instrument = document.getElementById('form-instrument')
+
+        function hide_instrument() {
+            if (hand.checked) {
+                instrument.disabled = true;
+            }
         }
-    }
-</script>
+    </script>

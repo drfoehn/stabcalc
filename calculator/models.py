@@ -185,7 +185,7 @@ class Parameter(OwnedModelMixin, models.Model):
         )
 
     def __str__(self):
-        return f"{self.name} - Intrument: {self.instrument.name} / Handmethod: {self.method_hand}"
+        return f"{self.name}"
 
 
 class Setting(OwnedModelMixin, models.Model):
