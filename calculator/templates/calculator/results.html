@@ -159,10 +159,7 @@
     Number of tested storage durations: {{ durations_n }}<br>
     Number of results: {{ results_n }}
     <br>
-    <img src="data:image/png,base64,{{ power|safe }}" alt="">
-    {{ power }}
-{#    {{ panalysis }}#}
-    <br>
+    <p class="graph_heading">Data Statistics</p>
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
     Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
     {% if subjects_n < 20 %}
@@ -172,7 +169,6 @@
     {% endif %}
 
     <br>
-
     <hr class="my-4">
 
     {#    ----------------------------------Google Charts ---------------------------------------#}
@@ -439,10 +435,28 @@
                             <td>{{ eq_model_lin }} <br></td>
                         </tr>
                         <tr>
-                            <td>
-                                <hr>
+                            <td class="sub-italic">
+                                <br>
                                 y...Testresult (dependent variable) <br>
                                 x1...Storage Duration (independent variable)
+                                <hr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                Power
+                            </td>
+                            <td>
+                                {{ power_lin }}<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sub-italic">
+                                <br>
+                                Alpha: 0.05 <br>
+                                Effect-size: {{ r_squared_lin }} <br>
+                                Sample size: {{ subjects_n }}
                             </td>
                         </tr>
                     </table>
@@ -605,10 +619,28 @@
                             <td>{{ eq_model_log }}<br></td>
                         </tr>
                         <tr>
-                            <td>
-                                <hr>
+                            <td  class="sub-italic">
+                                <br>
                                 y...Testresult (dependent variable) <br>
                                 x1...Storage Duration (independent variable)
+                                <hr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                Power
+                            </td>
+                            <td>
+                                {{ power_log }}<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sub-italic">
+                                <br>
+                                Alpha: 0.05 <br>
+                                Effect-size: {{ r_squared_log }} <br>
+                                Sample size: {{ subjects_n }}
                             </td>
                         </tr>
                     </table>

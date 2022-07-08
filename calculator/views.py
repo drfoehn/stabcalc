@@ -278,13 +278,15 @@ class ResultsView(DetailView):
 
         # --------------------------Calculate best fitting model
 
-        r_sq_list = [r_squared_lin, r_squared_poly2, r_squared_poly3]
+        r_sq_list = [r_squared_lin, r_squared_log, r_squared_poly2, r_squared_poly3]
         best_fit = max(r_sq_list)
         context["best_fit"] = str(str(round(best_fit * 100, 2)) + " %")
 
         def best_fit_model() -> str:
             if r_squared_lin == best_fit:
                 return 'Linear Regression Model'
+            elif r_squared_log == best_fit:
+                return 'Logarithmic regression model'
             elif r_squared_poly2 == best_fit:
                 return 'Polynomial Regression Model 2° degree'
             else:
@@ -295,7 +297,7 @@ class ResultsView(DetailView):
         context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
             parameter.values('name')[0]['name']) + ' level to change by ' + str(
             round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
-        print(res.params[1])
+        # print(res.params[1])
 
         # -------------------------- Normal distribution
 
@@ -309,46 +311,52 @@ class ResultsView(DetailView):
 
         ###################################  Power Analysis #########################################
 
-        # from base64 import b64decode
-
-        # parameters for power analysis
-        effect = 0.8
+        #  ---------------- power analysis - linear regression
+        effect_lin = r_squared_lin
+        effect_log = r_squared_log
         alpha = 0.05
-        power = 0.8
+        nobs = Subject.objects.filter(settings__in=[self.object]).count()
+
         # perform power analysis
         analysis = TTestIndPower()
-        result = analysis.solve_power(effect, power=power, nobs1=None, ratio=1.0, alpha=alpha)
-        print('Sample Size: %.3f' % result)
+        power_lin = analysis.solve_power(effect_lin, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
+        power_log = analysis.solve_power(effect_log, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
+        print(power_lin, power_log)
 
-        nobs = Subject.objects.filter(settings__in=[self.object]).count()
-        print(nobs)
-        panalysis = TTestIndPower()
-
-
-        panalysis.plot_power(
-            dep_var="nobs",
-            nobs=np.arange(5, nobs),
-            effect_size=np.arange(0.5, 1.5, .2),
-            alpha=0.05,
-            ax=None,
-            title='Power-analysis',
-
-        )
-        plt.xlabel('Number of subjects', fontsize=20)
-        plt.ylabel('Power', fontsize=20)
-        image = plt.show()
-        return image
-
-
-
-        # image = b64decode(plt.show())
-
+        context["power_lin"] = round(power_lin, 2)
+        context["power_log"] = round(power_log, 2)
         # power = TTestIndPower().solve_power(effect_size=effect_size,
         #                                     nobs1=nobs1,
         #                                     ratio=ratio,
         #                                     power=None,
         #                                     alpha=alpha,
         #                                     alternative='two-sided')
+
+
+        # ---------------------Image for Power estimation
+        # -----------------------Render with <img src="data:image/png,base64,{{ power|safe }}" alt="">
+        # nobs = Subject.objects.filter(settings__in=[self.object]).count()
+        # print(nobs)
+        # panalysis = TTestIndPower()
+        #
+        # def powerFigure():
+        #     panalysis.plot_power(
+        #         dep_var="nobs",
+        #         nobs=np.arange(5, nobs),
+        #         effect_size=np.arange(0.5, 1.5, .2),
+        #         alpha=0.05,
+        #         ax=None,
+        #         title='Power-analysis',
+        #
+        #     )
+        #     plt.xlabel('Number of subjects', fontsize=20)
+        #     plt.ylabel('Power', fontsize=20)
+        #     plt.show()
+        #
+        # context['power'] = panalysis
+        # context['panalysis'] = panalysis
+
+
 
         ###################################  Data import / export ####################################
 
@@ -921,7 +929,7 @@ def result_list(request, setting_pk):
             for key, value in form.cleaned_data.items():
                 if not value:
                     continue
-                print(key, value)
+                # print(key, value)
                 items = key.split("-")
                 subject_id = items[1]
                 duration = Duration.objects.get(pk=items[2])

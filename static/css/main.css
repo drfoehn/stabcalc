@@ -294,6 +294,10 @@ color: lightgray; !important;
     text-align: center;
 }
 
+.sub-italic{
+    font-style: italic;
+}
+
 /*---------------------ABOUT-PAGE---------------------*/
 
 .about_subheading{
