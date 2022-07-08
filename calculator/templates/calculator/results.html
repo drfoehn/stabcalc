@@ -59,13 +59,13 @@
                     <th>Method Inter CV%</th>
                     <td>{{ setting.parameter.CV_inter }} %</td>
                 </tr>
-            {% if setting.comment %}
+                {% if setting.comment %}
 
-            <tr>
-                <th>Comment</th>
-                <td>{{ setting.comment }}</td>
-            </tr>
-            {% endif %}
+                    <tr>
+                        <th>Comment</th>
+                        <td>{{ setting.comment }}</td>
+                    </tr>
+                {% endif %}
             </table>
         </div>
         <div class="col">
@@ -146,7 +146,8 @@
 
     <br>
     {{ interpretation_dist }} <br>
-    The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the analyte variability observed during sample storage.<br>
+    The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the
+    analyte variability observed during sample storage.<br>
     Valid for linear model only: <strong>{{ interpretation_1 }}</strong>
     <br>
     <br>
@@ -163,8 +164,8 @@
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
     Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
     {% if subjects_n < 20 %}
-            Kurtosistest only valid for n>=20
-        {% else %}
+        Kurtosistest only valid for n>=20
+    {% else %}
         {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }} (only valid if n > 20)
     {% endif %}
 
@@ -180,7 +181,7 @@
             <p class="graph_heading">Overall Results</p>
             <div id="visualization"></div>
             <button id="button_results_total" class="btn btn-outline-primary">
-            <p id="button_switch"></p></button>
+                <p id="button_switch"></p></button>
             <script>
                 google.charts.load('current', {'packages': ['corechart']});
                 google.charts.setOnLoadCallback(drawTotal);
@@ -245,8 +246,8 @@
                 }
             </script>
 
-</div>
-            {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
+        </div>
+        {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
 
         <div class="col-6">
@@ -370,8 +371,8 @@
                                 ['Storage Duration', 'Deviation', '+TAE', '-TAE'],
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
-                                        {% if dev_tot %}
-                                    [{{ duration.seconds }}, {% deviation_tot setting duration %}, 100, -100],
+                                    {% if dev_tot %}
+                                        [{{ duration.seconds }}, {% deviation_tot setting duration %}, 100, -100],
                                     {% endif %}
                                 {% endfor %}
                                 {#[ 8,      12],#}
@@ -439,32 +440,11 @@
                                 <br>
                                 y...Testresult (dependent variable) <br>
                                 x1...Storage Duration (independent variable)
-                                <hr>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
 
-                                Power
-                            </td>
-                            <td>
-                                {{ power_lin }}<br>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sub-italic">
-                                <br>
-                                Alpha: 0.05 <br>
-                                Effect-size: {{ r_squared_lin }} <br>
-                                Sample size: {{ subjects_n }}
                             </td>
                         </tr>
                     </table>
-
-
-                </div>
-            </div>
-            {#                 ------------- Button-Extended Statictics ----------------#}
+{#                 ------------- Button-Extended Statictics ----------------#}
             <br>
             <div class="row">
                 <div class="col">
@@ -499,44 +479,79 @@
 
                 </div>
             </div>
-            {#                        -------------------Calculator---------------#}
-            <hr>
-            <div class="row">
-                <div class="col">
 
-                    {#    TODO: Check if input is in seconds#}
+                    <hr>
+{#         -------------------------Power-----------------------------------           #}
+                    <table>
+                        <tr>
+                            <td>
 
-                    <form>
-                        {% csrf_token %}
-                        <div class="form-row align-items-center">
-                            <div class="col-auto">
-                                <label class="sr-only" for="inlineFormInput">Seconds</label>
-                                <input type="text" class="form-control mb-2" id="inlineFormInput"
-                                       placeholder="Insert storage time in seconds">
-                            </div>
-                            <div class="col-auto">
-                                <button id="button_calc" value="here goes result" onclick="calcValue()"
-                                        class="btn btn-outline-primary">Calculate
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="row">
-                        <div class="col">
-                    <span class="calc_result">The estimated Result at that storage time is: <p
-                            id="calc_result"></p></span>
-                        </div>
-                    </div>
-                    <script>
-                        function calcValue() {
-                            var x = document.getElementById("calc_input").value;
-                            var y = {{ intercept }} +x * {{ slope }};
-                            document.getElementById("calc_result").innerHTML = y;
-                        }
-                    </script>
-
+                                Power
+                            </td>
+                            <td>
+                                {{ power_lin }}<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sub-italic">
+                                <br>
+                                Alpha: 0.05 <br>
+                                Effect-size: {{ r_squared_lin }} <br>
+                                Sample size: {{ subjects_n }}
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
+
+
+            <hr>
+
+{#        ---------------------------- Power estimator graph---------------------------#}
+        <div class="row">
+                <div class="col">
+                    <div id="power_linear_div"></div>
+
+                    <script type="text/javascript">
+                        google.charts.load("current", {packages: ["corechart"]});
+                        google.charts.setOnLoadCallback(drawChart);
+
+                        function drawChart() {
+                            var data = google.visualization.arrayToDataTable([
+                                ['Samplesize', 'Power'],
+
+
+                                            {% for data_p in power_lin_est %}
+                                               [ {{ data_p.0 }}, {{ data_p.1 }}],
+                                            {% endfor %}
+
+                            ]);
+
+                            var options = {
+                                title: 'Estimation of samplesize, based on calculated effect size',
+                                vAxis: {title: "Power"},
+                                hAxis: {title: "Number of observations"},
+                                legend: 'top',
+                                crosshair: {trigger: 'both', orientation: 'both'},
+                                trendlines: {
+                                    0: {
+                                        type: 'polynomial',
+                                        degree: 2,
+                                        visibleInLegend: false,
+                                        tooltips: false
+                                    }
+                                }
+                            };
+
+                            var chart = new google.visualization.ScatterChart(document.getElementById('power_linear_div'));
+                            chart.draw(data, options);
+
+
+                        }
+                    </script>
+                </div>
+            </div>
+
         </div>
         {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
 
@@ -558,13 +573,13 @@
                                 {% for data in log_data %}
                                     {{ data }},
                                 {% endfor %}
-{#                                {% for duration in setting.duration.all %}#}
-{#                                    {% deviation_tot setting duration as dev_tot %}#}
-{#                                        {% if dev_tot %}#}
-{#                                         {% deviation_tot setting duration %},#}
-{#                                {% endif %}#}
-{#                                {% endfor %}#}
-                            {##FIXME - Gonzo: combine log_sec with acording dev-value#}
+                                {#                                {% for duration in setting.duration.all %}#}
+                                {#                                    {% deviation_tot setting duration as dev_tot %}#}
+                                {#                                        {% if dev_tot %}#}
+                                {#                                         {% deviation_tot setting duration %},#}
+                                {#                                {% endif %}#}
+                                {#                                {% endfor %}#}
+                                {##FIXME - Gonzo: combine log_sec with acording dev-value#}
                             ]);
 
                             var options = {
@@ -619,36 +634,16 @@
                             <td>{{ eq_model_log }}<br></td>
                         </tr>
                         <tr>
-                            <td  class="sub-italic">
+                            <td class="sub-italic">
                                 <br>
                                 y...Testresult (dependent variable) <br>
                                 x1...Storage Duration (independent variable)
-                                <hr>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
 
-                                Power
-                            </td>
-                            <td>
-                                {{ power_log }}<br>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sub-italic">
-                                <br>
-                                Alpha: 0.05 <br>
-                                Effect-size: {{ r_squared_log }} <br>
-                                Sample size: {{ subjects_n }}
                             </td>
                         </tr>
                     </table>
 
-
-                </div>
-            </div>
-            {#                 ------------- Button-Extended Statictics ----------------#}
+                                {#                 ------------- Button-Extended Statictics ----------------#}
             <br>
             <div class="row">
                 <div class="col">
@@ -683,41 +678,32 @@
 
                 </div>
             </div>
-            {#                        -------------------Calculator---------------#}
-            <hr>
-            <div class="row">
-                <div class="col">
 
-                    <form>
-                        {% csrf_token %}
-                        <div class="form-row align-items-center">
-                            <div class="col-auto">
-                                <label class="sr-only" for="inlineFormInput">Seconds</label>
-                                <input type="text" class="form-control mb-2" id="inlineFormInput"
-                                       placeholder="Insert storage time in seconds">
-                            </div>
-                            <div class="col-auto">
-                                <button id="button_calc" value="here goes result" onclick="calcValue()"
-                                        class="btn btn-outline-primary">Calculate
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="row">
-                        <div class="col">
-                    <span class="calc_result">The estimated Result at that storage time is: <p
-                            id="calc_result"></p></span>
-                        </div>
-                    </div>
-                    <script>
-                        function calcValue() {
-                            var x = document.getElementById("calc_input").value;
-                            var y = {{ intercept }} +x * {{ slope }};
-                            document.getElementById("calc_result").innerHTML = y;
-                        }
-                    </script>
+                    <hr>{#         --------------------------------Power----------------------------           #}
+                    <table>
+                        <tr>
+                            <td>
+
+                                Power
+                            </td>
+                            <td>
+                                {{ power_log }}<br>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sub-italic">
+                                <br>
+                                Alpha: 0.05 <br>
+                                Effect-size: {{ r_squared_log }} <br>
+                                Sample size: {{ subjects_n }}
+                            </td>
+                        </tr>
+                    </table>
+
+
                 </div>
             </div>
+
         </div>
 
         <hr>
@@ -740,8 +726,8 @@
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                        [{{ duration.seconds }}, {% deviation_tot setting duration %}],
-                                    {% endif %}
+                                            [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                        {% endif %}
                                     {% endfor %}
                                     {#[ 8,      12],#}
                                     {#[ 4,      5.5],#}
@@ -860,19 +846,19 @@
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                        [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                            [{{ duration.seconds }}, {% deviation_tot setting duration %}],
                                         {% endif %}
                                     {% endfor %}
-{#                                    [ 8,      12],#}
-{#                                    [ 4,      5.5],#}
-{#                                    [ 11,     14],#}
-{#                                    [ 4,      5],#}
-{#                                    [ 3,      3.5],#}
-{#                                    [ 6.5,    7]#}
-{#                                        [0, 0.0],#}
-{#                                        [3600, 44.52],#}
-{#                                        [259200, 70.33],#}
-{#                                        [12960000, 90],#}
+                                    {#                                    [ 8,      12],#}
+                                    {#                                    [ 4,      5.5],#}
+                                    {#                                    [ 11,     14],#}
+                                    {#                                    [ 4,      5],#}
+                                    {#                                    [ 3,      3.5],#}
+                                    {#                                    [ 6.5,    7]#}
+                                    {#                                        [0, 0.0],#}
+                                    {#                                        [3600, 44.52],#}
+                                    {#                                        [259200, 70.33],#}
+                                    {#                                        [12960000, 90],#}
 
                                 ]);
 
@@ -1001,19 +987,19 @@
                             <td>
 
 
-                                    {% for result in subject.result_set.all %}
-                                        {% if result.duration == duration %}
-                                            {% if result.setting == setting %}
-{#                                            {% if result.subject == subject %}#}
-{#                                                {% if not result.value %}#}
-                                                    {# FIXME: Does not work                      'No results entered'#}
-{#                                                {% else %}#}
-                                                    {{ result.value }} {{ setting.parameter.unit }} <br>
-                                                {% endif %}
-                                            {% endif %}
-{##}
-{#                                        {% endif %}#}
-{#                                    {% endfor %}#}
+                                {% for result in subject.result_set.all %}
+                                    {% if result.duration == duration %}
+                                        {% if result.setting == setting %}
+                                            {#                                            {% if result.subject == subject %}#}
+                                            {#                                                {% if not result.value %}#}
+                                            {# FIXME: Does not work                      'No results entered'#}
+                                            {#                                                {% else %}#}
+                                            {{ result.value }} {{ setting.parameter.unit }} <br>
+                                        {% endif %}
+                                    {% endif %}
+                                    {##}
+                                    {#                                        {% endif %}#}
+                                    {#                                    {% endfor %}#}
                                 {% endfor %}
 
                             </td>
@@ -1045,6 +1031,58 @@
 
     </div>
 
+    <script>
 
+    // VARIABLES
+    // ----------------------------------------------------------
+
+    let power = document.getElementById('power-slider')
+    let result = document.getElementById('power-result')
+    let samplesize = {{ subjects_n }}
+
+    function powerCalculator() {
+        result=
+
+    }
+
+    {#let samplesize, power, result;#}
+    {#let calculator = $('.calculator');#}
+    {#let calculatorBill = calculator.find('.calculator__bill');#}
+    {#let calculatorTip = calculator.find('.calculator__tip');#}
+    {#let calculatorResult = calculator.find('.calculator__result');#}
+    {#let tipAmount = calculator.find('.tip-amount');#}
+
+
+    // INIT BILL
+    // ----------------------------------------------------------
+
+    $(window).on('DOMContentLoaded', function () {
+        tipAmount.text( calculatorTip.val() + '%' );
+        samplesize = calculatorBill.val() * 1;
+        power = calculatorTip.val() * 1;
+        result = samplesize + amount * ( power / 100 );
+        calculatorResult.text( result.toFixed(2) + '$' );
+    });
+
+
+    // RANGE FUNCTION
+    // ----------------------------------------------------------
+
+    calculatorTip.on('change', function () {
+
+        if ( calculatorBill.val() === '' || isNaN( calculatorBill.val() ) ) {
+            alert('Enter bill amount, please!')
+        } else {
+            samplesize = calculatorBill.val() * 1;
+        }
+
+        tipAmount.text( calculatorTip.val() + '%' );
+        power = calculatorTip.val() * 1;
+        result = samplesize + samplesize * ( power / 100 );
+        calculatorResult.text( result.toFixed(2) + '$' );
+    });
+
+});
+    </script>
 
 {% endblock %}

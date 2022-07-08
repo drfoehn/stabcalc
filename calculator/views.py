@@ -321,10 +321,26 @@ class ResultsView(DetailView):
         analysis = TTestIndPower()
         power_lin = analysis.solve_power(effect_lin, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
         power_log = analysis.solve_power(effect_log, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
-        print(power_lin, power_log)
 
         context["power_lin"] = round(power_lin, 2)
         context["power_log"] = round(power_log, 2)
+
+        nobs1 = analysis.solve_power(effect_lin, power=0.1, nobs1=None, ratio=1.0, alpha=alpha)
+        print(nobs1)
+
+
+        power_lin_est = []
+        samplesize_lin_est = []
+        for lin_est in range(1, 11):
+                lin_est = lin_est/10
+                print(lin_est)
+                nobs = analysis.solve_power(effect_lin, power=lin_est, nobs1=None, ratio=1.0, alpha=alpha)
+                data_for_graph = (nobs, lin_est)
+                power_lin_est.append(data_for_graph)
+        context['power_lin_est']=power_lin_est
+
+
+
         # power = TTestIndPower().solve_power(effect_size=effect_size,
         #                                     nobs1=nobs1,
         #                                     ratio=ratio,
@@ -433,6 +449,7 @@ class ResultsView(DetailView):
             }
         )
         return context
+
 
 
 def upload_view(request):
