@@ -160,6 +160,7 @@
     Number of tested storage durations: {{ durations_n }}<br>
     Number of results: {{ results_n }}
     <br>
+    <p></p>
     <p class="graph_heading">Data Statistics</p>
     Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
     Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
@@ -187,12 +188,12 @@
                 google.charts.setOnLoadCallback(drawTotal);
 
                 function drawTotal() {
-                    var rowData1 = [['Timepoint', 'Average Result (relative)'],
+                    var rowData1 = [['Duration', 'Average PD%'],
                         {% for duration in setting.duration.all %}
                             ['{{ duration }}', {% deviation_tot setting duration %}],
                         {% endfor %}];
 
-                    var rowData2 = [['Timepoint', 'Average Result (absolute)'],
+                    var rowData2 = [['Duration', 'Average absolute'],
                         {% for duration in setting.duration.all %}
                             ['{{ duration }}', {% average_tot setting duration %}],
                         {% endfor %}];
@@ -205,7 +206,7 @@
                     var options = {
                         {#width: 600,#}
                         {#height: 240,#}
-                        vAxis: {title: "abs/rel Value"},
+                        vAxis: {title: "abs / PD% Value"},
                         hAxis: {title: "Storage duration"},
                         seriesType: "line",
                         curveType: 'function',
@@ -368,31 +369,24 @@
 
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'Deviation', '+TAE', '-TAE'],
+                                ['Storage Duration', 'PD%', '+TAE', '-TAE'],
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
                                     {% if dev_tot %}
                                         [{{ duration.seconds }}, {% deviation_tot setting duration %}, 100, -100],
                                     {% endif %}
                                 {% endfor %}
-                                {#[ 8,      12],#}
-                                {#[ 4,      5.5],#}
-                                {#[ 11,     14],#}
-                                {#[ 4,      5],#}
-                                {#[ 3,      3.5],#}
-                                {#[ 6.5,    7]#}
                             ]);
 
                             var options = {
-                                title: 'Parameter deviation at selected storage durations',
-                                vAxis: {title: "Deviation"},
+                                title: 'Parameter percent deviation (PD) at selected storage durations',
+                                vAxis: {title: "PD%"},
                                 hAxis: {title: "Storage duration (seconds)"},
                                 legend: 'top',
                                 crosshair: {trigger: 'both', orientation: 'both'},
                                 trendlines: {
                                     0: {
                                         type: 'linear',
-                                        {#degree: 3,#}
                                         visibleInLegend: false,
                                         tooltips: false
                                     }
@@ -789,39 +783,7 @@
                     </div>
                 </div>
 
-                {#                        -------------------Calculator---------------#}
-                <hr>
-                Calculate individual values based on the regression equation
 
-
-                <form>
-                    {% csrf_token %}
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Seconds</label>
-                            <input type="text" class="form-control mb-2" id="inlineFormInput"
-                                   placeholder="Insert storage time in seconds">
-                        </div>
-                        <div class="col-auto">
-                            <button id="button_calc" value="here goes result" onclick="calcValue()"
-                                    class="btn btn-outline-primary">Calculate
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <div class="row">
-                    <div class="col">
-                    <span class="calc_result">The estimated Result at that storage time is: <p
-                            id="calc_result"></p></span>
-                    </div>
-                </div>
-                <script>
-                    function calcValue() {
-                        var x = document.getElementById("calc_input").value;
-                        var y = {{ intercept }} +x * {{ slope }};
-                        document.getElementById("calc_result").innerHTML = y;
-                    }
-                </script>
 
 
             </div>
@@ -914,17 +876,32 @@
                     </div>
                 </div>
 
-                {#                        -------------------Calculator---------------#}
+
+            </div>
+        </div>
+    </div>
+
+{#-----------------------------Acceptable limits Calculator-------------------------#}
+<div class="row">
+<div class="col">
                 <hr>
-                Calculate individual values based on the regression equation
+                <p  class="graph_heading">Calculate allowable / acceptable deviation limits</p> <br>
+
+
 
                 <form>
                     {% csrf_token %}
                     <div class="form-row align-items-center">
                         <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Seconds</label>
-                            <input type="text" class="form-control mb-2" id="inlineFormInput"
-                                   placeholder="Insert storage time in seconds">
+                            <label class="sr-only" for="inlineFormInput">Intra-Individual Variation (CVi) of {{ setting.parameter.name }}</label>
+                            <input type="text" class="form-control mb-2" id="intra-cv"
+                                   placeholder="">
+                        </div>
+                        <br>
+                        <div class="col-auto">
+                            <label class="sr-only" for="inlineFormInput">Inter-Individual Variation (CVg) of {{ setting.parameter.name }}</label>
+                            <input type="text" class="form-control mb-2" id="inter-cv"
+                                   placeholder="">
                         </div>
                         <div class="col-auto">
                             <button id="button_calc" value="here goes result" onclick="calcValue()"
@@ -933,22 +910,65 @@
                         </div>
                     </div>
                 </form>
-                <div class="row">
+    </div>
+
                     <div class="col">
-                    <span class="calc_result">The estimated Result at that storage time is: <p
-                            id="calc_result"></p></span>
+                        <hr>
+                        <table>
+                            <tr>
+                                <th>
+                                    <span class="calc_result">Allowable Deviation: </span><br>
+                                    <span class="sub-italic">Formula: 0.5 * CVi </span><br>
+                                </th>
+                                <td>
+                                    <span id="calc_result_allow"></span>&nbsp;%<br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="calc_result">Acceptable Deviation: </span><br>
+                                    <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
+                                </th>
+                                <td>
+                                    <span id="calc_result_accept"></span>&nbsp;%<br>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="calc_result">Allowable Bias: </span><br>
+                                    <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CVi<sup>2</sup> + CVg<sup>2</sup>)&nbsp;</span></span><br>
+                                </th>
+                                <td>
+                                    <span id="calc_bias_allow"></span>&nbsp;%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="sub-italic">
+                                    Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                                <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                                   target="_blank">10.1515/cclm-2019-0596</a>.
+                                PMID: 31702996.
+                                <br/>
+                                </td>
+                            </tr>
+                        </table>
+
                     </div>
                 </div>
+{#    FIXME: Page jumps to start after funtion call#}
                 <script>
+
                     function calcValue() {
-                        var x = document.getElementById("calc_input").value;
-                        var y = {{ intercept }} +x * {{ slope }};
-                        document.getElementById("calc_result").innerHTML = y;
+                        let cvi = document.getElementById("intra-cv").value;
+                        let cvg = document.getElementById("inter-cv").value;
+                        let result_accept = 0.5*cvi;
+                        let result_allow = 0.7*result_accept
+                        let bias_allow = 0.25*(Math.sqrt(cvi^2+cvg^2))
+                        document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);
+                        document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);
+                        document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);
                     }
                 </script>
-            </div>
-        </div>
-    </div>
 
 
 
@@ -1031,58 +1051,6 @@
 
     </div>
 
-    <script>
 
-    // VARIABLES
-    // ----------------------------------------------------------
-
-    let power = document.getElementById('power-slider')
-    let result = document.getElementById('power-result')
-    let samplesize = {{ subjects_n }}
-
-    function powerCalculator() {
-        result=
-
-    }
-
-    {#let samplesize, power, result;#}
-    {#let calculator = $('.calculator');#}
-    {#let calculatorBill = calculator.find('.calculator__bill');#}
-    {#let calculatorTip = calculator.find('.calculator__tip');#}
-    {#let calculatorResult = calculator.find('.calculator__result');#}
-    {#let tipAmount = calculator.find('.tip-amount');#}
-
-
-    // INIT BILL
-    // ----------------------------------------------------------
-
-    $(window).on('DOMContentLoaded', function () {
-        tipAmount.text( calculatorTip.val() + '%' );
-        samplesize = calculatorBill.val() * 1;
-        power = calculatorTip.val() * 1;
-        result = samplesize + amount * ( power / 100 );
-        calculatorResult.text( result.toFixed(2) + '$' );
-    });
-
-
-    // RANGE FUNCTION
-    // ----------------------------------------------------------
-
-    calculatorTip.on('change', function () {
-
-        if ( calculatorBill.val() === '' || isNaN( calculatorBill.val() ) ) {
-            alert('Enter bill amount, please!')
-        } else {
-            samplesize = calculatorBill.val() * 1;
-        }
-
-        tipAmount.text( calculatorTip.val() + '%' );
-        power = calculatorTip.val() * 1;
-        result = samplesize + samplesize * ( power / 100 );
-        calculatorResult.text( result.toFixed(2) + '$' );
-    });
-
-});
-    </script>
 
 {% endblock %}

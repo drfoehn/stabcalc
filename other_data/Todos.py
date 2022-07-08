@@ -6,6 +6,10 @@
 # TODO: Additional Google Chart functions?
 # TODO: Customize graph tooltips: https://developers.google.com/chart/interactive/docs/customizing_tooltip_content
 
-# TODO: Add a posteriori power analysis - https://stackoverflow.com/questions/68365921/statsmodels-power-analysis-number-of-observations
-# FIXME: Powerplot is not rendering
+
 # FIXME: If a user from a setting does not have any results, the results.html shows an error
+
+# TODO: Implement acceptance criteria
+# 16. ISO Guide 35:2017 (E). Reference material – Guidance for
+# characterization and assessment of homogeneity and stability, 4th ed. Geneva, Switzerland: International Organization for
+# Standardization, 2017.
