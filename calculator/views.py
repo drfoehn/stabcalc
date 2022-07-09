@@ -303,9 +303,9 @@ class ResultsView(DetailView):
 
         def distrib() -> str:
             if ksstat_p <= 0.05:
-                return 'The data IS NOT normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
+                return 'The data IS NOT normally distributed. KS-p-value: ' + str(round(ksstat_p, 4)) + ' (only valid if n > 20)'
             else:
-                return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4))
+                return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4)) + ' (only valid if n > 20)'
 
         context["interpretation_dist"] = distrib()
 
@@ -326,7 +326,7 @@ class ResultsView(DetailView):
         context["power_log"] = round(power_log, 2)
 
         power_lin_est = []
-        for lin_est in range(1, 11):
+        for lin_est in range(1, 10):
                 lin_est = lin_est/10
                 print(lin_est)
                 nobs = analysis.solve_power(effect_lin, power=lin_est, nobs1=None, ratio=1.0, alpha=alpha)

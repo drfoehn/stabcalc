@@ -155,20 +155,28 @@
 
 
     {#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
-    <p class="graph_heading">Data</p>
-    Number of Subjects: {{ subjects_n }}<br>
-    Number of tested storage durations: {{ durations_n }}<br>
-    Number of results: {{ results_n }}
-    <br>
-    <p></p>
-    <p class="graph_heading">Data Statistics</p>
-    Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
-    Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
-    {% if subjects_n < 20 %}
-        Kurtosistest only valid for n>=20
-    {% else %}
-        {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }} (only valid if n > 20)
-    {% endif %}
+
+    <div class="row">
+        <div class="col">
+            <p class="graph_heading">Data</p>
+            Number of Subjects: {{ subjects_n }}<br>
+            Number of tested storage durations: {{ durations_n }}<br>
+            Number of results: {{ results_n }}
+            <br>
+            <p></p>
+        </div>
+        <div class="col">
+            <p class="graph_heading">Data Statistics</p>
+            Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
+            Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
+            {% if results_n < 20 %}
+                Kurtosistest only valid for n>=20
+            {% else %}
+                {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }}
+            {% endif %}
+        </div>
+    </div>
+
 
     <br>
     <hr class="my-4">
@@ -181,6 +189,9 @@
 
             <p class="graph_heading">Overall Results</p>
             <div id="visualization"></div>
+            <div class="sub-italic">
+                Select area of interest with left click to zoom. Right-click to reset.
+            </div>
             <button id="button_results_total" class="btn btn-outline-primary">
                 <p id="button_switch"></p></button>
             <script>
@@ -209,7 +220,9 @@
                         vAxis: {title: "abs / PD% Value"},
                         hAxis: {title: "Storage duration"},
                         seriesType: "line",
+                        fontName: 'Ubuntu',
                         curveType: 'function',
+                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                         legend: {position: 'top'},
                         interpolateNulls: true,
                         {#series: {5: {type: "line"}},#}
@@ -254,6 +267,9 @@
         <div class="col-6">
             <p class="graph_heading">Single Results</p>
             <div id="visualization_single"></div>
+            <div class="sub-italic">
+                Select area of interest with left click to zoom. Right-click to reset.
+            </div>
             <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p>
             </button>
             <script>
@@ -309,6 +325,8 @@
                         hAxis: {title: "Storage duration"},
                         seriesType: "line",
                         curveType: 'function',
+                        fontName: 'Ubuntu',
+                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                         legend: {position: 'top'},
                         interpolateNulls: true,
                         {#series: {5: {type: "line"}},#}
@@ -362,7 +380,9 @@
             <div class="row">
                 <div class="col">
                     <div id="linear_div"></div>
-
+                    <div class="sub-italic">
+                        Select area of interest with left click to zoom. Right-click to reset.
+                    </div>
                     <script type="text/javascript">
                         google.charts.load("current", {packages: ["corechart"]});
                         google.charts.setOnLoadCallback(drawChart);
@@ -382,6 +402,9 @@
                                 title: 'Parameter percent deviation (PD) at selected storage durations',
                                 vAxis: {title: "PD%"},
                                 hAxis: {title: "Storage duration (seconds)"},
+                                fontName: 'Ubuntu',
+                                curveType: 'function',
+                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                                 legend: 'top',
                                 crosshair: {trigger: 'both', orientation: 'both'},
                                 trendlines: {
@@ -438,44 +461,45 @@
                             </td>
                         </tr>
                     </table>
-{#                 ------------- Button-Extended Statictics ----------------#}
-            <br>
-            <div class="row">
-                <div class="col">
+                    {#                 ------------- Button-Extended Statictics ----------------#}
+                    <br>
+                    <div class="row">
+                        <div class="col">
 
 
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#linearModal">
-                        Extended Statistics
-                    </button>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#linearModal">
+                                Extended Statistics
+                            </button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="linearModal" tabindex="-1" aria-labelledby="linearModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="linearModalLabel">Stability study
-                                        "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <pre style="font-family: monospace, monospace">{{ statistics_extended_abs_lin|safe }}</pre>
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="javascript:window.print()" class="bi bi-printer print"></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="linearModal" tabindex="-1" aria-labelledby="linearModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="linearModalLabel">Stability study
+                                                "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <pre style="font-family: monospace, monospace">{{ statistics_extended_abs_lin|safe }}</pre>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="javascript:window.print()" class="bi bi-printer print"></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
 
-
-                </div>
-            </div>
-
                     <hr>
-{#         -------------------------Power-----------------------------------           #}
+                    {#         -------------------------Power-----------------------------------           #}
                     <table>
                         <tr>
                             <td>
@@ -497,12 +521,9 @@
                     </table>
                 </div>
             </div>
-
-
             <hr>
-
-{#        ---------------------------- Power estimator graph---------------------------#}
-        <div class="row">
+            {#        ---------------------------- Power estimator graph---------------------------#}
+            <div class="row">
                 <div class="col">
                     <div id="power_linear_div"></div>
 
@@ -515,9 +536,9 @@
                                 ['Samplesize', 'Power'],
 
 
-                                            {% for data_p in power_lin_est %}
-                                               [ {{ data_p.0 }}, {{ data_p.1 }}],
-                                            {% endfor %}
+                                {% for data_p in power_lin_est %}
+                                    [{{ data_p.0 }}, {{ data_p.1 }}],
+                                {% endfor %}
 
                             ]);
 
@@ -555,6 +576,9 @@
             <div class="row">
                 <div class="col">
                     <div id="log_div"></div>
+                    <div class="sub-italic">
+                        Select area of interest with left click to zoom. Right-click to reset.
+                    </div>
 
                     <script type="text/javascript">
                         google.charts.load("current", {packages: ["corechart"]});
@@ -577,14 +601,22 @@
                             ]);
 
                             var options = {
+
                                 title: 'Parameter deviation at selected storage durations',
-                                vAxis: {title: "Deviation"},
+                                vAxis: {
+                                    title: "PD%",
+                                },
                                 hAxis: {
                                     title: "Storage duration - log-seconds",
-                                    logscale: true
+                                    logscale: true,
                                 },
                                 legend: 'top',
-                                crosshair: {trigger: 'both', orientation: 'both'},
+                                {#fontsize: '10',#}
+                                fontName: 'Ubuntu',
+                                curveType: 'function',
+                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
+                                crosshair: {trigger: 'both', orientation: 'both', color: '#e63'},
+                                focusTarget: 'datum',
                                 trendlines: {
                                     0: {
                                         type: 'exponential',
@@ -637,43 +669,45 @@
                         </tr>
                     </table>
 
-                                {#                 ------------- Button-Extended Statictics ----------------#}
-            <br>
-            <div class="row">
-                <div class="col">
+                    {#                 ------------- Button-Extended Statictics ----------------#}
+                    <br>
+                    <div class="row">
+                        <div class="col">
 
 
-                    <!-- Button trigger modal -->
+                            <!-- Button trigger modal -->
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#logModal">
-                        Extended Statistics
-                    </button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#logModal">
+                                Extended Statistics
+                            </button>
 
-                    <!-- Modal -->
-                    <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel"
-                         aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="logModalLabel">Stability study
-                                        "{{ setting.name }}" <br> Extended Statistics - Logarithmic model</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <pre style="font-family: monospace, monospace">{{ statistics_extended_log|safe }}</pre>
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="javascript:window.print()" class="bi bi-printer print"></a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="logModalLabel">Stability study
+                                                "{{ setting.name }}" <br> Extended Statistics - Logarithmic model</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <pre style="font-family: monospace, monospace">{{ statistics_extended_log|safe }}</pre>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a href="javascript:window.print()" class="bi bi-printer print"></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-                    <hr>{#         --------------------------------Power----------------------------           #}
+                    <hr>
+                    {#         --------------------------------Power----------------------------           #}
                     <table>
                         <tr>
                             <td>
@@ -699,16 +733,20 @@
             </div>
 
         </div>
-
+        <p></p>
         <hr>
 
+
+        {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
         <div class="row">
-            {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
             <div class="col">
                 <p class="graph_heading">Polynomial Model 2°</p>
                 <div class="row">
                     <div class="col">
                         <div id="poly2_div"></div>
+                        <div class="sub-italic">
+                            Select area of interest with left click to zoom. Right-click to reset.
+                        </div>
 
                         <script type="text/javascript">
                             google.charts.load("current", {packages: ["corechart"]});
@@ -736,6 +774,9 @@
                                     vAxis: {title: "Deviation"},
                                     hAxis: {title: "Storage duration (seconds)"},
                                     legend: 'top',
+                                    fontName: 'Ubuntu',
+                                    curveType: 'function',
+                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                                     crosshair: {trigger: 'both', orientation: 'both'},
                                     trendlines: {
                                         0: {
@@ -784,8 +825,6 @@
                 </div>
 
 
-
-
             </div>
 
 
@@ -797,6 +836,9 @@
                 <div class="row">
                     <div class="col">
                         <div id="poly3_div"></div>
+                        <div class="sub-italic">
+                            Select area of interest with left click to zoom. Right-click to reset.
+                        </div>
 
                         <script type="text/javascript">
                             google.charts.load("current", {packages: ["corechart"]});
@@ -829,6 +871,9 @@
                                     vAxis: {title: "Deviation"},
                                     hAxis: {title: "Storage duration (seconds)"},
                                     legend: 'top',
+                                    fontName: 'Ubuntu',
+                                    curveType: 'function',
+                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                                     crosshair: {trigger: 'both', orientation: 'both'},
                                     trendlines: {
                                         0: {
@@ -881,94 +926,95 @@
         </div>
     </div>
 
-{#-----------------------------Acceptable limits Calculator-------------------------#}
-<div class="row">
-<div class="col">
-                <hr>
-                <p  class="graph_heading">Calculate allowable / acceptable deviation limits</p> <br>
+    {#-----------------------------Acceptable limits Calculator-------------------------#}
+    <div class="row">
+        <div class="col">
+            <hr>
+            <p class="graph_heading">Calculate allowable / acceptable deviation limits</p> <br>
 
 
-
-                <form>
-                    {% csrf_token %}
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Intra-Individual Variation (CVi) of {{ setting.parameter.name }}</label>
-                            <input type="text" class="form-control mb-2" id="intra-cv"
-                                   placeholder="">
-                        </div>
-                        <br>
-                        <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Inter-Individual Variation (CVg) of {{ setting.parameter.name }}</label>
-                            <input type="text" class="form-control mb-2" id="inter-cv"
-                                   placeholder="">
-                        </div>
-                        <div class="col-auto">
-                            <button id="button_calc" value="here goes result" onclick="calcValue()"
-                                    class="btn btn-outline-primary">Calculate
-                            </button>
-                        </div>
+            <form>
+                {% csrf_token %}
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Intra-Individual Variation (CVi)
+                            of {{ setting.parameter.name }}</label>
+                        <input type="text" class="form-control mb-2" id="intra-cv"
+                               placeholder="">
                     </div>
-                </form>
-    </div>
-
-                    <div class="col">
-                        <hr>
-                        <table>
-                            <tr>
-                                <th>
-                                    <span class="calc_result">Allowable Deviation: </span><br>
-                                    <span class="sub-italic">Formula: 0.5 * CVi </span><br>
-                                </th>
-                                <td>
-                                    <span id="calc_result_allow"></span>&nbsp;%<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <span class="calc_result">Acceptable Deviation: </span><br>
-                                    <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
-                                </th>
-                                <td>
-                                    <span id="calc_result_accept"></span>&nbsp;%<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <span class="calc_result">Allowable Bias: </span><br>
-                                    <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CVi<sup>2</sup> + CVg<sup>2</sup>)&nbsp;</span></span><br>
-                                </th>
-                                <td>
-                                    <span id="calc_bias_allow"></span>&nbsp;%
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="sub-italic">
-                                    Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
-                                <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
-                                   target="_blank">10.1515/cclm-2019-0596</a>.
-                                PMID: 31702996.
-                                <br/>
-                                </td>
-                            </tr>
-                        </table>
-
+                    <br>
+                    <div class="col-auto">
+                        <label class="sr-only" for="inlineFormInput">Inter-Individual Variation (CVg)
+                            of {{ setting.parameter.name }}</label>
+                        <input type="text" class="form-control mb-2" id="inter-cv"
+                               placeholder="">
+                    </div>
+                    <div class="col-auto">
+                        <button id="button_calc" value="here goes result" onclick="calcValue()"
+                                class="btn btn-outline-primary">Calculate
+                        </button>
                     </div>
                 </div>
-{#    FIXME: Page jumps to start after funtion call#}
-                <script>
+            </form>
+        </div>
 
-                    function calcValue() {
-                        let cvi = document.getElementById("intra-cv").value;
-                        let cvg = document.getElementById("inter-cv").value;
-                        let result_accept = 0.5*cvi;
-                        let result_allow = 0.7*result_accept
-                        let bias_allow = 0.25*(Math.sqrt(cvi^2+cvg^2))
-                        document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);
-                        document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);
-                        document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);
-                    }
-                </script>
+        <div class="col">
+            <hr>
+            <table>
+                <tr>
+                    <th>
+                        <span class="calc_result">Allowable Deviation: </span><br>
+                        <span class="sub-italic">Formula: 0.5 * CVi </span><br>
+                    </th>
+                    <td>
+                        <span id="calc_result_allow"></span>&nbsp;%<br>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="calc_result">Acceptable Deviation: </span><br>
+                        <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
+                    </th>
+                    <td>
+                        <span id="calc_result_accept"></span>&nbsp;%<br>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="calc_result">Allowable Bias: </span><br>
+                        <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CVi<sup>2</sup> + CVg<sup>2</sup>)&nbsp;</span></span><br>
+                    </th>
+                    <td>
+                        <span id="calc_bias_allow"></span>&nbsp;%
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sub-italic">
+                        Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                        <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                           target="_blank">10.1515/cclm-2019-0596</a>.
+                        PMID: 31702996.
+                        <br/>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    {#    FIXME: Page jumps to start after funtion call#}
+    <script>
+
+        function calcValue() {
+            let cvi = document.getElementById("intra-cv").value;
+            let cvg = document.getElementById("inter-cv").value;
+            let result_accept = 0.5 * cvi;
+            let result_allow = 0.7 * result_accept
+            let bias_allow = 0.25 * (Math.sqrt(cvi ^ 2 + cvg ^ 2))
+            document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);
+            document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);
+            document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);
+        }
+    </script>
 
 
 
