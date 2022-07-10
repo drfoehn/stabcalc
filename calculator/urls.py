@@ -37,6 +37,12 @@ urlpatterns = [
     path('conditions/condition/<pk>/edit', edit_condition, name="edit-condition"),
     path('conditions/create-condition-form/', add_condition_form, name='create-condition-form'),
 
+    path('preanalytical-sets/', preanalytical_set_list, name='create-preanalytics'),
+    path('preanalytical-sets/preanalytical-set/<pk>/', preanalytics_detail, name="preanalytics-detail"),
+    path('preanalytical-sets/preanalytical-set/<pk>/delete', delete_preanalytical_set, name="delete-preanalytics"),
+    path('preanalytical-sets/preanalytical-set/<pk>/edit', edit_preanalytical_set, name="edit-preanalytics"),
+    path('preanalytical-sets/create-preanalytical-set-form/', add_preanalytics_form, name='create-preanalytics-form'),
+
     path('durations/', duration_list, name='create-duration'),
     path('durations/duration/<pk>/', duration_detail, name="duration-detail"),
     path('durations/duration/<pk>/delete', delete_duration, name="delete-duration"),

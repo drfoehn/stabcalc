@@ -1,0 +1,92 @@
+<div hx-target="this" hx-swap="outerHTML" >
+<p></p>
+<div class="col-9 object-list-div">
+    <form method="POST">
+
+        {% csrf_token %}
+{#        {{ form }}#}
+             <table>
+                 <tr>
+                     <th>
+                         {{ form.collection_site.label_tag }}
+                     </th>
+                     <td>
+                         {{ form.collection_site }}
+                     </td>
+                 </tr>
+                 <tr>
+                     <th><h4>Transportation</h4></th>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.transportation_time.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.transportation_time }}
+                     </td>
+                     <td>{{ form.transportation_time_unit }}</td>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.transportation_temp.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.transportation_temp }}
+                     </td>
+                     <td> °C</td>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.transportation_method.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.transportation_method }}
+                     </td>
+                 </tr>
+                 <tr>
+                     <th><h4>Centrifugation</h4></th>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.centrifugation_g.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.centrifugation_g }}
+                     </td>
+                     <td> *g</td>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.centrifugation_time.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.centrifugation_time }}
+                     </td>
+                     <td> minutes</td>
+                 </tr>
+                 <tr>
+                     <th>
+                        {{ form.centrifugation_temp.label_tag }}
+                    </th>
+                     <td>
+                         {{ form.centrifugation_temp }}
+                     </td>
+                     <td> °C</td>
+                 </tr>
+             </table>
+<p></p>
+{#    If statement to prevent edit-view from creating more objects#}
+        {% if preanalytics %}     {#  Passed in from Edit-preanalytics-view #}
+            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-preanalytics' preanalytics.id %}"
+            class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Savel
+        </button>
+        {% else %}
+            <button  class="btn btn-secondary" type="submit" hx-post=".">
+            Save
+        </button>
+        {% endif %}
+    </form>
+</div>
+</div>
+

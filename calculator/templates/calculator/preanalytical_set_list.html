@@ -1,0 +1,30 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}List/Add preanalyticss{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">List / Add preanalytics</h4>
+
+
+    <a hx-get="{% url 'create-preanalytics-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#preanalytics_form">Add additional preanalytical condition set</a>
+    <div class="row" id="preanalytics_form"></div>
+    {% if preanalyticss %}
+        {% for preanalytics in preanalyticss %}
+            {% include 'calculator/partials/preanalytical_set_detail.html' %}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no preanalytics saved - <a hx-get="{% url 'create-preanalytics-form' %}" hx-swap="beforeend"
+                                                hx-target="#preanalytics_form" class="alert-link">Create your first
+            preanalytical condition set</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -10,7 +10,7 @@
                 <th>
                     {{ form.temperature.label_tag }}
                 </th>
-                <th>
+                <th id="temp_other_label">
                     {{ form.temperature_other.label_tag }}
                 </th>
             </tr>
@@ -25,6 +25,13 @@
                     {{ form.temperature.errors }}
                 </td>
             </tr>
+                                  <tr>
+                     <td id="sample_thaw">
+                         <p></p>
+                         How were frozen samples thawed prior to analysis :<br>
+                         {{ form.thawing }}
+                     </td>
+                 </tr>
             <tr>
                 <th>
                     <p></p>
@@ -61,13 +68,7 @@
                     <p></p>
                 </td>
             </tr>
-                 <tr>
-                     <td>
-                         <p></p>
-                         How were frozen samples thawed prior to analysis (if applicable):<br>
-                         {{ form.thawing }}
-                     </td>
-                 </tr>
+
                  <tr>
                 <th>
                     <p></p>
@@ -98,4 +99,36 @@
     </form>
 </div>
 </div>
+
+<script>
+    document.getElementById('id_temperature').addEventListener('change', toggleTemp)
+
+
+    function toggleTemp() {
+        let dropdown = document.getElementById('id_temperature').value;
+        let thaw = document.getElementById('sample_thaw');
+        let other = document.getElementById('id_temperature_other');
+        let other_label = document.getElementById('temp_other_label');
+        if (dropdown === "9") {
+            other.style.display = 'block'
+            other_label.style.display = 'block'
+            thaw.style.display = 'none'
+            thaw.value = ''
+            }
+            else if(dropdown === "4" || dropdown === "3"){
+            thaw.style.display = 'block'
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+        }
+        else {
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+            thaw.style.display = 'none'
+            thaw.value = ''
+        }
+    }
+window.onload = toggleTemp()
+</script>
 

@@ -126,12 +126,43 @@ class SampleForm(forms.ModelForm):
         self.fields['sample_pool'].widget.attrs['class'] = 'form-check-input'
         self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
 
+class PreanalyticalSetForm(forms.ModelForm):
+    collection_instrument = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    collection_site =forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    transportation_temp = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    transportation_method = forms.Select()
+    transportation_time_unit = forms.Select()
+    transportation_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    centrifugation_g = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    centrifugation_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    centrifugation_temp = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
+
+    class Meta:
+        model = PreanalyticalSet
+        fields = (
+        'collection_instrument',
+        'collection_site',
+        'transportation_temp',
+        'transportation_method',
+        'transportation_time_unit',
+        'transportation_time',
+        'centrifugation_g' ,
+        'centrifugation_time',
+        'centrifugation_temp',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super(PreanalyticalSetForm, self).__init__(*args, **kwargs)
+        self.fields['transportation_time_unit'].widget.attrs['class'] = 'form-select'
+        self.fields['transportation_method'].widget.attrs['class'] = 'form-select'
 
 
 class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
+    protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     owner = None
     # ----------------------Botcatcher-------------------------
@@ -151,6 +182,7 @@ class SettingForm(forms.ModelForm):
             'condition',
             'duration',
             'subject',
+            'protocol',
             'comment'
         )
 

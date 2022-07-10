@@ -65,6 +65,8 @@ class SampleAdmin(admin.ModelAdmin):
 class DurationAdmin(admin.ModelAdmin):
     model = Duration
 
+class PreanalyticsAdmin(admin.ModelAdmin):
+    model = PreanalyticalSet
 
 class ResultAdmin(admin.ModelAdmin):
     model = Result
@@ -92,6 +94,7 @@ admin.site.register(Duration, DurationAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Result, ResultAdmin)
+admin.site.register(PreanalyticalSet, PreanalyticsAdmin)
 
 # user_dashboard.register(Parameter)
 # user_dashboard.register(Instrument, InstrumentAdmin)

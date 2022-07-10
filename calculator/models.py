@@ -57,7 +57,7 @@ class Condition(OwnedModelMixin, models.Model):
     def __str__(self):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
 
-class Preanalytics(OwnedModelMixin, models.Model):
+class PreanalyticalSet(OwnedModelMixin, models.Model):
     collection_instrument = models.CharField(max_length=255, verbose_name=_('Sample collection set'), blank=True, null=True)
     collection_site = models.CharField(max_length=255, verbose_name=_('Sample collection site'))
     transportation_temp = models.SmallIntegerField(verbose_name=_('Transportation temperature'))
@@ -84,7 +84,19 @@ class Preanalytics(OwnedModelMixin, models.Model):
     )
     transportation_method_other = models.CharField(max_length=255, verbose_name=_('Other'), blank=True, null=True)
 
-    transportation_time = models.CharField(max_length=255, verbose_name=_('Time from sample collection to separation'), blank=True)
+    MINUTES = "1"
+    HOURS = "2"
+    DAYS = "3"
+    DurationChoices = (
+        (MINUTES, _("Minute(s)")),
+        (HOURS, _("Hour(s)")),
+        (DAYS, _("Day(s)")),
+    )
+    transportation_time_unit = models.CharField(
+        choices=DurationChoices,
+        max_length=1
+    )
+    transportation_time = models.PositiveIntegerField(verbose_name=_('Time from sample collection to separation'))
     centrifugation_g = models.SmallIntegerField(verbose_name=_('Centrifugation speed (*g)'), blank=True, null=True)
     centrifugation_time = models.SmallIntegerField(verbose_name=_('Centrifugation time (min)'), blank=True, null=True)
     centrifugation_temp = models.SmallIntegerField(verbose_name=_('Centrifugation temperature (°C)'), blank=True, null=True)
@@ -185,7 +197,7 @@ class Sample(OwnedModelMixin, models.Model):
     )
     container_additive_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Additive'))
     gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
-    preanalytics = models.ForeignKey(Preanalytics, on_delete=models.CASCADE)
+    preanalytical_set = models.ForeignKey(PreanalyticalSet, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"

@@ -596,6 +596,74 @@ def delete_parameter(request, pk):
     return HttpResponse('')
 
 
+# --------------------------------------PREANALYTICS----------------------------------------
+
+def preanalytical_set_list(request):
+    form = PreanalyticalSetForm(request.POST)
+    preanalytical_set = PreanalyticalSet.objects.all()
+    if request.method == 'POST':
+        if form.is_valid():
+            preanalytical_set = form.save(commit=False)
+            preanalytical_set.owner = request.user
+            preanalytical_set.save()
+            return redirect('preanalytics-detail', pk=preanalytical_set.id)
+        else:
+            context = {
+                'form': form,
+                'preanalytical_set': PreanalyticalSet.objects.all()
+            }
+            return render(request, 'calculator/partials/preanalytical_set_form.html', context)
+
+    context = {
+        'form': form,
+        'preanalytical_set': preanalytical_set,
+
+    }
+
+    return render(request, 'calculator/preanalytical_set_list.html', context)
+
+
+def add_preanalytics_form(request):
+    form = PreanalyticalSetForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'calculator/partials/preanalytical_set_form.html', context)
+
+
+def preanalytics_detail(request, pk):
+    preanalytical_set = get_object_or_404(PreanalyticalSet, pk=pk)
+    if not preanalytical_set.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "preanalytical_set": preanalytical_set
+        }
+        return render(request, 'calculator/partials/preanalytical_set_detail.html', context)
+
+
+def edit_preanalytical_set(request, pk):
+    preanalytical_set = PreanalyticalSet.objects.get(pk=pk)
+    form = PreanalyticalSetForm(request.POST or None, instance=preanalytical_set)
+
+    # This part is so that the update does not produce more objects
+    if request.method == 'POST':
+        if form.is_valid():
+            preanalytical_set = form.save()
+            return redirect('preanalytics-detail', pk=preanalytical_set.id)
+
+    context = {
+        "form": form,
+        "preanalytical_set": preanalytical_set,
+    }
+    return render(request, 'calculator/partials/preanalytical_set_form.html', context)
+
+
+def delete_preanalytical_set(request, pk):
+    preanalytical_set = PreanalyticalSet.objects.get(pk=pk)
+    preanalytical_set.delete()
+    return HttpResponse('')
+
 # --------------------------------------SAMPLE----------------------------------------
 
 def sample_list(request):
