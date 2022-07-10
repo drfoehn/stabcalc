@@ -7,6 +7,17 @@
 {#        {{ form }}#}
              <table>
                  <tr>
+                     <th><h4>Sample collection</h4></th>
+                 </tr>
+                 <tr>
+                     <th>
+                         {{ form.collection_instrument.label_tag }}
+                     </th>
+                     <td>
+                         {{ form.collection_instrument }}
+                     </td>
+                 </tr>
+                 <tr>
                      <th>
                          {{ form.collection_site.label_tag }}
                      </th>

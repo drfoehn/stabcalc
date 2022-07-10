@@ -92,6 +92,8 @@ class SampleForm(forms.ModelForm):
     container_material = forms.Select()
     container_material_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     gel = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    preanalytical_set = forms.ModelChoiceField(queryset=PreanalyticalSet.objects.all(), empty_label='---Select preanalytical set---')
+
 
     class Meta:
         model = Sample
@@ -111,6 +113,7 @@ class SampleForm(forms.ModelForm):
             'container_material',
             'container_material_other',
             'gel',
+            'preanalytical_set',
         )
 
     def __init__(self, *args, **kwargs):
@@ -125,6 +128,7 @@ class SampleForm(forms.ModelForm):
         self.fields['sample_spike'].widget.attrs['class'] = 'form-check-input'
         self.fields['sample_pool'].widget.attrs['class'] = 'form-check-input'
         self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
+        self.fields['preanalytical_set'].widget.attrs['class'] = 'form-select'
 
 class PreanalyticalSetForm(forms.ModelForm):
     collection_instrument = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
