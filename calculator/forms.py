@@ -79,6 +79,11 @@ class ParameterForm(forms.ModelForm):
 class SampleForm(forms.ModelForm):
     sample_type = forms.Select()
     sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    sample_leftover = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_pool = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_pool_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
+    sample_spike = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_spike_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     container_additive = forms.Select()
     container_additive_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     container_dimension = forms.Select()
@@ -93,6 +98,11 @@ class SampleForm(forms.ModelForm):
         fields = (
             'sample_type',
             'sample_type_other',
+            'sample_leftover',
+            'sample_pool',
+            'sample_pool_text',
+            'sample_spike',
+            'sample_spike_text',
             'container_additive',
             'container_additive_other',
             'container_dimension',
@@ -112,6 +122,10 @@ class SampleForm(forms.ModelForm):
         self.fields['container_fillingvolume'].widget.attrs['class'] = 'form-control'
         self.fields['container_material'].widget.attrs['class'] = 'form-select'
         self.fields['gel'].widget.attrs['class'] = 'form-check-input'
+        self.fields['sample_spike'].widget.attrs['class'] = 'form-check-input'
+        self.fields['sample_pool'].widget.attrs['class'] = 'form-check-input'
+        self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
+
 
 
 class SettingForm(forms.ModelForm):
@@ -175,7 +189,8 @@ class ConditionForm(forms.ModelForm):
     light = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     air = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     agitation = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    other_condition = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    thawing = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
+    other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
@@ -194,6 +209,7 @@ class ConditionForm(forms.ModelForm):
             'light',
             'air',
             'agitation',
+            'thawing',
             'other_condition',
         )
 

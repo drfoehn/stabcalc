@@ -108,6 +108,44 @@
                         {{ form.gel.errors }}
                     </td>
                 </tr>
+                <tr>
+                    <p></p>
+                    <th>Are study samples leftovers from routine analysis?</th>
+                    <td>
+                        {{ form.sample_leftover }} (Yes)
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Are your study samples pooled from individual samples?
+                    </th>
+                    <td>
+                        <input type="checkbox" name="sample_pool" class="check-input" onclick="togglePool()">(Yes)</input>
+                    </td>
+                </tr>
+                <tr>
+                    <th id="sample_pool_text_th" style="display: none">
+                        <p></p>
+                        Please describe the pooling (Source, Concentrations, etc) <br>
+                        {{ form.sample_pool_text }}
+                    </th>
+
+                </tr>
+                <tr>
+                    <th>
+                        Have you spiked samples with the analyte in question?
+                    </th>
+                    <td>
+                        <input type="checkbox" name="sample_spike" class="check-input" onclick="toggleSpike()">(Yes)</input>
+                    </td>
+                </tr>
+                <tr>
+                    <th id="sample_spike_text_th" style="display: none">
+                        <p></p>
+                        Please describe the spiking (analyte, concentrations, etc) <br>
+                        {{ form.sample_spike_text}}
+                    </th>
+                </tr>
             </table>
             <p></p>
 
@@ -135,6 +173,7 @@
     document.getElementById('id_container_material').addEventListener('change', toggleMaterial)
 
 
+
     function toggleType() {
         let dropdown = document.getElementById('id_sample_type').value
         let other = document.getElementById('id_sample_type_other');
@@ -158,7 +197,6 @@ window.onload = toggleType()
             other.value = ''
         }
     }
-
     window.onload = toggleAdd()
 
 
@@ -172,8 +210,8 @@ window.onload = toggleType()
             other.value = ''
         }
     }
-
     window.onload = toggleDim()
+
 
     function toggleMaterial() {
         let dropdown_material = document.getElementById('id_container_material').value
@@ -185,6 +223,30 @@ window.onload = toggleType()
             other_material.value = ''
         }
     }
-
     window.onload = toggleMaterial()
+
+
+
+    function toggleSpike() {
+        let spike_text = document.getElementById('sample_spike_text_th');
+        if (spike_text.style.display === 'none') {
+            spike_text.style.display = 'block'
+        } else {
+            spike_text.style.display = 'none'
+        }
+    }
+
+    document.getElementById('id_sample_spike').addEventListener('change', toggleSpike)
+    document.getElementById('id_sample_pool').addEventListener('change', togglePool)
+
+    function togglePool() {
+        let spike_pool = document.getElementById('sample_pool_text_th');
+        if (spike_pool.style.display === 'none') {
+            spike_pool.style.display = 'block'
+        } else {
+            spike_pool.style.display = 'none'
+        }
+    }
+
+
 </script>

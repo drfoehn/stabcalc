@@ -20,7 +20,6 @@ class OwnedModelMixin(models.Model):
 
 
 class Instrument(OwnedModelMixin, models.Model):
-    # author = models.ForeignKey(users.models.LabUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name='Analyzer name', blank=True, null=True)
     manufacturer = models.CharField(max_length=255, verbose_name='Analyzer manufacturer', blank=True, null=True)
 
@@ -48,8 +47,8 @@ class Condition(OwnedModelMixin, models.Model):
         verbose_name='Temperature'
     )
     temperature_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Temperature'))
-    # thawing = models.CharField(max_length=400,)
-    # temperature_monitor =
+    thawing = models.CharField(max_length=400, verbose_name=_('How were frozen samples thawed?'), blank=True, null=True)
+    temperature_monitor = models.CharField(max_length=255, verbose_name=_('How was the storage temperature monitored?'))
     light = models.BooleanField(verbose_name='Exposure to light during storage')
     air = models.BooleanField(verbose_name='Exposure to air during storage')
     agitation = models.BooleanField(verbose_name='Agitation during storage')
@@ -58,24 +57,47 @@ class Condition(OwnedModelMixin, models.Model):
     def __str__(self):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
 
-# class Preanalytics(OwnedModelMixin, models.Model):
-#     collection_instrument
-#     collection_
-#     transportation_temp
-#     transportation_method
-#     transportation_time = models.CharField(max_length=255, verbose_name=_('Time from sample collection to separation', blank=True))
-    # centrifugation_g
-    # centrifugation_time
-    # centrifugation_temp
+class Preanalytics(OwnedModelMixin, models.Model):
+    collection_instrument = models.CharField(max_length=255, verbose_name=_('Sample collection set'), blank=True, null=True)
+    collection_site = models.CharField(max_length=255, verbose_name=_('Sample collection site'))
+    transportation_temp = models.SmallIntegerField(verbose_name=_('Transportation temperature'))
 
+    PTS = 1
+    CARRIER = 2
+    TRAIN = 3
+    PLANE = 4
+    CAR = 5
+    OTHER = 9
+    TRANSPORTATION = (
+        (PTS, _("Pneumatic tube system")),
+        (CARRIER, _("manual - by Carrier")),
+        (TRAIN, _("by Train")),
+        (PLANE, _("by Plane")),
+        (CAR, _("by Car")),
+        (OTHER, _("Other - Please specify")),
 
+    )
+
+    transportation_method = models.SmallIntegerField(
+        choices=TRANSPORTATION,
+        verbose_name='Transportation method'
+    )
+    transportation_method_other = models.CharField(max_length=255, verbose_name=_('Other'), blank=True, null=True)
+
+    transportation_time = models.CharField(max_length=255, verbose_name=_('Time from sample collection to separation'), blank=True)
+    centrifugation_g = models.SmallIntegerField(verbose_name=_('Centrifugation speed (*g)'), blank=True, null=True)
+    centrifugation_time = models.SmallIntegerField(verbose_name=_('Centrifugation time (min)'), blank=True, null=True)
+    centrifugation_temp = models.SmallIntegerField(verbose_name=_('Centrifugation temperature (°C)'), blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.collection_site}"
 
 class Sample(OwnedModelMixin, models.Model):
-    # sample_leftover = models.BooleanField()
-    # sample_pool = models.BooleanField()
-    # sample_pool_text = models.TextField()
-    # sample_spike = models.BooleanField()
-    # sample_spike_text = models.TextField()
+    sample_leftover = models.BooleanField(verbose_name=_('Were the used samples leftovers from routine processes?'))
+    sample_pool = models.BooleanField(verbose_name=_('Were the used samples pooled samples?'))
+    sample_pool_text = models.TextField(verbose_name=_('How and form what samples were study samples pooled?'), blank=True, null=True)
+    sample_spike = models.BooleanField(verbose_name=_('Were analytes spiked in study samples?'))
+    sample_spike_text = models.TextField(verbose_name=_('Which analytes were spiked and how?'), blank=True, null=True)
 
     VENOUS_BLOOD = 1
     URINE = 2
@@ -163,6 +185,7 @@ class Sample(OwnedModelMixin, models.Model):
     )
     container_additive_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Additive'))
     gel = models.BooleanField(verbose_name='Container with gel', blank=True, null=True)
+    preanalytics = models.ForeignKey(Preanalytics, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
@@ -196,8 +219,9 @@ class Setting(OwnedModelMixin, models.Model):
     #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
-    # protocol = models.TextField()
+    protocol = models.TextField(verbose_name=_('Study protocol'), blank=True, null=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
+
     # rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
     #                                       choices=list(zip(range(1, 11), range(1, 11))), default=2)
 
