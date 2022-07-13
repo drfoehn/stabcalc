@@ -110,6 +110,11 @@ color: lightgray; !important;
 color: lightgray; !important;
 }
 
+.display-6{
+    background-color: var(--celadon-blue);
+    color: white;
+    padding: 5px;
+}
 /*-----------------------------------NAVBAR---------------------------------------*/
 
 .navbar{
@@ -277,10 +282,12 @@ th{
 .accordion-header,
 .info_accordion,
 .th_category_heading{
-    background-color: var(--celadon-blue) !important;
-    color: var(--cultured) !important;
+    background-color: var(--powder-blue) !important;
+    color: var(--celadon-blue) !important;
     font-family: 'Ubuntu', sans-serif !important;
     font-size: 1.5em !important;
+    padding: 5px;
+    border: none !important;
 }
 
 .total_results{
