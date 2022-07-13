@@ -6,10 +6,9 @@
 
 <div class="col-7 object-list-div">
     <h3>
-        {{ condition.get_temperature_display }}
-    {#FIXME: other_condition value does not show up - it seems that it still is referred to as checkbox (===True instead of != None)#}
-        {% if condition.other_condition == True %}
-            {{ condition.other_condition}}
+        {{ condition.get_temperature_display }} <br>
+        {% if condition.other_condition%}
+            {{ condition.other_condition }}
         {% endif %}
     </h3>
 Exposure during storage to: <br>

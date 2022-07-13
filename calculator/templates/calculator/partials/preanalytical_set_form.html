@@ -87,8 +87,8 @@
              </table>
 <p></p>
 {#    If statement to prevent edit-view from creating more objects#}
-        {% if preanalytics %}     {#  Passed in from Edit-preanalytics-view #}
-            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-preanalytics' preanalytics.id %}"
+        {% if preanalytical_set %}     {#  Passed in from Edit-preanalytics-view #}
+            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-preanalytical-set' preanalytical_set.id %}"
             class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
             Savel
         </button>

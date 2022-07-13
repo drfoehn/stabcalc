@@ -23,6 +23,23 @@
         without Gel/Seperator
     {% endif %} |
     {{ sample.container_fillingvolume }} mL<br>
+    <p></p>
+ {% if sample.sample_leftover == True %}
+        Sample leftovers: Yes
+    {% else %}
+        Sample leftovers: No
+    {% endif %}
+ <p></p>
+  {% if sample.sample_spike == True %}
+     Sample spiking: <br>
+      {{ sample.sample_spike_text}}
+    {% endif %}
+ <p>
+ </p>
+   {% if sample.sample_pool == True %}
+     Sample spiking: <br>
+      {{ sample.sample_pool_text}}
+    {% endif %}
  </div>
     <div class="col-2 edit-delete-div">
     <div hx-get="{% url 'edit-sample' sample.id %}"><i class="bi bi-pencil icon_edit"></i></div>

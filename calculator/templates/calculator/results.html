@@ -23,120 +23,310 @@
     <hr class="my-4">
 
     {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
-    <div class="row ">
-
-        <div class="col">
-            <table class="table table-hover">
-                <thead class="th_analytical">
-                <th>Parameter:</th>
-                <td>{{ setting.parameter.name }} ({{ setting.parameter.unit }})</td>
-                </thead>
 
 
-                <tr>
-                    <th>Instrument:</th>
-                    <td>{{ setting.parameter.instrument }}</td>
-                </tr>
-                <tr>
-                    <th>Reagent:</th>
-                    <td>{{ setting.parameter.reagent_name }}<br>
-                        {{ setting.parameter.reagent_manufacturer }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Manual method:</th>
-                    <td>{% if setting.parameter.method_hand == True %}
-                        Yes
-                    {% else %}
-                        No
-                    {% endif %}</td>
-                </tr>
-                <tr>
-                    <th>Method Intra CV%</th>
-                    <td>{{ setting.parameter.CV_intra }} %</td>
-                </tr>
-                <tr>
-                    <th>Method Inter CV%</th>
-                    <td>{{ setting.parameter.CV_inter }} %</td>
-                </tr>
-                {% if setting.comment %}
 
-                    <tr>
-                        <th>Comment</th>
-                        <td>{{ setting.comment }}</td>
-                    </tr>
-                {% endif %}
-            </table>
-        </div>
-        <div class="col">
-            <table class="table table-hover">
-                <thead>
-                <th class="th_condition" colspan="2">Storage Conditions</th>
-                </thead>
-                <tr>
-                    <th>Sample</th>
-                    <td>
-                        Sample Type: {{ setting.parameter.sample.get_sample_type_display }} <br>
-                        Additive: {{ setting.parameter.sample.get_container_additive_display }}<br>
-                        Container: {{ setting.parameter.sample.container_fillingvolume }} mL /
-                        {{ setting.parameter.sample.get_container_dimension_display }} /
-                        {{ setting.parameter.sample.get_container_material_display }}
-                        Seperator (Gel): {% if setting.parameter.sample.gel == True %}
-                        Yes
-                    {% else %}
-                        No
+
+
+    <div class="info-accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                    Basic Setting Information
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                 aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                    <table>
+                        <tr>
+                            <th>
+                                <h4>Parameter: </h4>
+                            </th>
+                            <td>
+                                <h4>{{ setting.parameter.name }} ({{ setting.parameter.unit }})</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                Sample:
+                            </th>
+                            <td>
+                                {% if setting.parameter.sample.sample_type_other %}
+                                    {{ setting.parameter.sample.sample_type_other }}
+                                {% else %}
+                                    {{ setting.parameter.sample.get_sample_type_display }}
+                                    {{ setting.sample.container_fillingvolume }} mL ,
+                                    {% if setting.sample.container_additive_other %}
+                                        {{ setting.sample.container_additive_other }}
+                                    {% else %}
+                                        {{ setting.sample.get_container_additive_display }}
+                                    {% endif %}
+                                    {% if setting.sample.gel %} with gel
+                                    {% else %} without gel
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% if setting.condition.other_condition %}
+                        <tr>
+                            <th>
+Other Condition:
+                            </th>
+                            <td>
+{{ setting.condition.other_condition }}
+                            </td>
+                        </tr>
                     {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Temperature</th>
-                    <td>
-                        {{ setting.condition.get_temperature_display }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Other condition</th>
-                    <td>{{ setting.condition.other_condition }}</td>
-                </tr>
-                <tr>
-                    <th colspan="2">Exposure during storage to...</th>
-                </tr>
-                <tr>
-                    <th>...light</th>
-                    <td>
-                        {% if setting.condition.light == True %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>...air</th>
-                    <td>
-                        {% if setting.condition.air.light == True %}
-                            Yes
-                        {% else %}
-                            No
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>...agitation</th>
-                    <td>
+                    <tr>
+                        <th>
+                            Storage:
+                        </th>
+                        <td>
+                            {{ setting.condition.get_temperature_display }}
+                        </td>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="info_accordion" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseTwo">
+                    Extended Setting information
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                 aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                    <div class="row ">
 
-                        {% if setting.condition.agitation == True %}
-                            Yes
-                        {% else %}
-                            No
+                        <div class="col">
+                            <table class="table table-hover">
+                            <thead>
+                                <th class="th_category_heading" colspan="2">Analytical method</th>
+                                </thead>
+                                <tr>
+                                    <th>Instrument:</th>
+                                    <td>{{ setting.parameter.instrument }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Reagent:</th>
+                                    <td>{{ setting.parameter.reagent_name }}<br>
+                                        {{ setting.parameter.reagent_manufacturer }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Manual method:</th>
+                                    <td>{% if setting.parameter.method_hand == True %}
+                                        Yes
+                                    {% else %}
+                                        No
+                                    {% endif %}</td>
+                                </tr>
+                                <tr>
+                                    <th>Method Intra CV%</th>
+                                    <td>{{ setting.parameter.CV_intra }} %</td>
+                                </tr>
+                                <tr>
+                                    <th>Method Inter CV%</th>
+                                    <td>{{ setting.parameter.CV_inter }} %</td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="col">
+                            <table class="table table-hover">
+                                <thead>
+                                <th class="th_category_heading" colspan="2">Samples</th>
+                                </thead>
+                                <tr>
+                                    <th>Sample Type:</th>
+                                    <td>{{ setting.sample.get_sample_type_display }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Additive:</th>
+                                    <td>{{ setting.sample.get_container_additive_display }}</td>
+                                   </tr>
+                                <tr>
+                                    <th>Container:</th>
+                                    <td>Filling volume: {{ setting.sample.container_fillingvolume }} mL <br>
+                                        Dimension: {{ setting.sample.get_container_dimension_display }} <br>
+                                        Material: {{ setting.sample.get_container_material_display }}<br>
+                                        {% if setting.sample.gel %}
+                                            with gel/seperator
+                                        {% else %}
+                                            withot gel/seperator
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-hover">
+                                <thead>
+                                <th class="th_category_heading" colspan="2">Storage Conditions</th>
+                                </thead>
+
+                                <tr>
+                                    <th>Temperature</th>
+                                    <td>
+                                        {{ setting.condition.get_temperature_display }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Other condition</th>
+                                    <td>{{ setting.condition.other_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <th colspan="2">Exposure during storage to...</th>
+                                </tr>
+                                <tr>
+                                    <th>...light</th>
+                                    <td>
+                                        {% if setting.condition.light == True %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>...air</th>
+                                    <td>
+                                        {% if setting.condition.air.light == True %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>...agitation</th>
+                                    <td>
+
+                                        {% if setting.condition.agitation == True %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+
+
+                            </table>
+
+                        </div>
+                        <div class="col">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="th_category_heading" colspan="2">Preanalytical Sample Information</th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                    Sample collection
+                                </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Site: {{ setting.sample.preanalytical_set.collection_site}}<br>
+                                        Instrument: {{ setting.sample.preanalytical_set.collection_instrument}} °C<br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                    Transportation
+                                </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {% if setting.sample.preanalytical_set.transportation_method_other %}
+                                        {{ setting.sample.preanalytical_set.transportation_method_other }}<br>
+                                        {% else %}
+                                        Method: {{ setting.sample.preanalytical_set.get_transportation_method_display}}<br>
+                                        {% endif %}
+                                        Temperature: {{ setting.sample.preanalytical_set.transportation_temp}} °C<br>
+                                        Time: {{ setting.sample.preanalytical_set.transportation_time}} {{ setting.sample.preanalytical_set.get_transportation_time_unit_display}}<br>
+                                    </td>
+                                </tr>
+                            <tr>
+                                    <th>
+                                    Centrifugation
+                                </th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Speed: {{ setting.sample.preanalytical_set.centrifugation_g}} *g<br>
+                                        Time: {{ setting.sample.preanalytical_set.centrifugation_time}} minutes<br>
+                                        Temperature: {{ setting.sample.preanalytical_set.centrifugation_temp}} °C<br>
+                                    </td>
+                                </tr>
+                                {% if setting.condition.thawing %}
+                                    <tr>
+                                    <th>
+                                        Sample Thawing:
+                                    </th>
+                                    </tr>
+                                        <tr>
+                                    <td>
+                                        {{ setting.condition.thawing }}
+                                    </td>
+                                    </tr>
+                                {% endif %}
+                            </table>
+                        </div>
+                    <div class="row">
+
+                        {% if setting.comment %}
+                            <div class="col">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th class="th_category_heading" >
+                                        Comment
+                                    </th>
+                                </tr>
+                                    <tr>
+                                    <td>
+                                        {{ setting.comment }}
+                                    </td>
+                                </tr>
+                            </table>
+                                    </div>
+                                {% endif %}
+
+                        {% if setting.protocol %}
+                            <div class="col">
+                            <table class="table table-hover">
+                            <tr>
+                                <th class="th_category_heading" >
+                                    Study protocol
+                                </th>
+                                </tr>
+                                <tr>
+                                <td>
+                                    {{ setting.protocol }}
+                                </td>
+                            </tr>
+                            </table>
+
+                            </div>
                         {% endif %}
-                    </td>
-                </tr>
+                    </div>
 
-            </table>
 
+                </div>
+            </div>
         </div>
     </div>
+
+
 
     <hr class="my-4">
 
@@ -158,7 +348,7 @@
 
     <div class="row">
         <div class="col">
-            <p class="graph_heading">Data</p>
+            <p class="th_category_heading">Data</p>
             Number of Subjects: {{ subjects_n }}<br>
             Number of tested storage durations: {{ durations_n }}<br>
             Number of results: {{ results_n }}
@@ -166,7 +356,7 @@
             <p></p>
         </div>
         <div class="col">
-            <p class="graph_heading">Data Statistics</p>
+            <p class="th_category_heading">Data Statistics</p>
             Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
             Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
             {% if results_n < 20 %}
@@ -187,7 +377,7 @@
     <div class="row">
         <div class="col-6">
 
-            <p class="graph_heading">Overall Results</p>
+            <p class="th_category_heading">Overall Results</p>
             <div id="visualization"></div>
             <div class="sub-italic">
                 Select area of interest with left click to zoom. Right-click to reset.
@@ -265,7 +455,7 @@
 
 
         <div class="col-6">
-            <p class="graph_heading">Single Results</p>
+            <p class="th_category_heading">Single Results</p>
             <div id="visualization_single"></div>
             <div class="sub-italic">
                 Select area of interest with left click to zoom. Right-click to reset.
@@ -375,13 +565,14 @@
 
         {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
         <div class="col">
-            <p class="graph_heading">Linear Model</p>
+            <p class="th_category_heading">Linear Model</p>
             {#                    --------------------Graph----------------#}
             <div class="row">
                 <div class="col">
                     <div id="linear_div"></div>
                     <div class="sub-italic">
-                        Select area of interest with left click to zoom. Right-click to reset.
+                        Select area of interest with left click to zoom. Right-click to reset. <br>
+                        PD% = Percent deviation from baseline
                     </div>
                     <script type="text/javascript">
                         google.charts.load("current", {packages: ["corechart"]});
@@ -389,11 +580,11 @@
 
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'PD%', '+TAE', '-TAE'],
+                                ['Storage Duration', 'PD%'],
                                 {% for duration in setting.duration.all %}
                                     {% deviation_tot setting duration as dev_tot %}
                                     {% if dev_tot %}
-                                        [{{ duration.seconds }}, {% deviation_tot setting duration %}, 100, -100],
+                                        [{{ duration.seconds }}, {% deviation_tot setting duration %}],
                                     {% endif %}
                                 {% endfor %}
                             ]);
@@ -411,6 +602,7 @@
                                     0: {
                                         type: 'linear',
                                         visibleInLegend: false,
+                                        interpolateNulls: true,
                                         tooltips: false
                                     }
                                 }
@@ -525,6 +717,9 @@
             {#        ---------------------------- Power estimator graph---------------------------#}
             <div class="row">
                 <div class="col">
+                    <p class="th_category_heading">Power estimation</p>
+                    <p>This graph shows you the number of subjects/observations you need to achieve the corresponding
+                        statistical power, given the correlation of your data.</p>
                     <div id="power_linear_div"></div>
 
                     <script type="text/javascript">
@@ -553,6 +748,7 @@
                                         type: 'polynomial',
                                         degree: 2,
                                         visibleInLegend: false,
+                                        interpolateNulls: true,
                                         tooltips: false
                                     }
                                 }
@@ -571,13 +767,14 @@
         {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
 
         <div class="col">
-            <p class="graph_heading">Log transformed model</p>
+            <p class="th_category_heading">Log transformed model</p>
             {#                    --------------------Graph----------------#}
             <div class="row">
                 <div class="col">
                     <div id="log_div"></div>
                     <div class="sub-italic">
-                        Select area of interest with left click to zoom. Right-click to reset.
+                        Select area of interest with left click to zoom. Right-click to reset.<br>
+                        PD% = Percent deviation from baseline
                     </div>
 
                     <script type="text/javascript">
@@ -586,7 +783,7 @@
 
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'Deviation'],
+                                ['Storage Duration', 'PD%'],
 
                                 {% for data in log_data %}
                                     {{ data }},
@@ -621,6 +818,7 @@
                                     0: {
                                         type: 'exponential',
                                         visibleInLegend: false,
+                                        interpolateNulls: true,
                                     }
                                 }
                             };
@@ -740,12 +938,13 @@
         {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
         <div class="row">
             <div class="col">
-                <p class="graph_heading">Polynomial Model 2°</p>
+                <p class="th_category_heading">Polynomial Model 2°</p>
                 <div class="row">
                     <div class="col">
                         <div id="poly2_div"></div>
                         <div class="sub-italic">
-                            Select area of interest with left click to zoom. Right-click to reset.
+                            Select area of interest with left click to zoom. Right-click to reset.<br>
+                            PD% = Percent deviation from baseline
                         </div>
 
                         <script type="text/javascript">
@@ -754,7 +953,7 @@
 
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
-                                    ['Storage Duration', 'Deviation'],
+                                    ['Storage Duration', 'PD%'],
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
@@ -771,7 +970,7 @@
 
                                 var options = {
                                     title: 'Parameter deviation at selected storage durations',
-                                    vAxis: {title: "Deviation"},
+                                    vAxis: {title: "PD%"},
                                     hAxis: {title: "Storage duration (seconds)"},
                                     legend: 'top',
                                     fontName: 'Ubuntu',
@@ -782,7 +981,8 @@
                                         0: {
                                             type: 'polynomial',
                                             degree: 2,
-                                            visibleInLegend: true,
+                                            visibleInLegend: false,
+                                            interpolateNulls: true,
                                         }
                                     }
                                 };
@@ -832,12 +1032,13 @@
 
 
             <div class="col">
-                <p class="graph_heading">Ploynomial Model 3° (Cubic)</p>
+                <p class="th_category_heading">Ploynomial Model 3° (Cubic)</p>
                 <div class="row">
                     <div class="col">
                         <div id="poly3_div"></div>
                         <div class="sub-italic">
-                            Select area of interest with left click to zoom. Right-click to reset.
+                            Select area of interest with left click to zoom. Right-click to reset.<br>
+                            PD% = Percent deviation from baseline
                         </div>
 
                         <script type="text/javascript">
@@ -846,7 +1047,7 @@
 
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
-                                    ['Storage Duration', 'Deviation'],
+                                    ['Storage Duration', 'PD%'],
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
@@ -868,7 +1069,7 @@
 
                                 var options = {
                                     title: 'Parameter deviation at selected storage durations',
-                                    vAxis: {title: "Deviation"},
+                                    vAxis: {title: "PD%"},
                                     hAxis: {title: "Storage duration (seconds)"},
                                     legend: 'top',
                                     fontName: 'Ubuntu',
@@ -879,7 +1080,7 @@
                                         0: {
                                             type: 'polynomial',
                                             degree: 3,
-                                            visibleInLegend: true,
+                                            visibleInLegend: false,
                                             interpolateNulls: true,
                                         }
                                     }
@@ -930,7 +1131,7 @@
     <div class="row">
         <div class="col">
             <hr>
-            <p class="graph_heading">Calculate allowable / acceptable deviation limits</p> <br>
+            <p class="th_category_heading">Calculate allowable / acceptable deviation limits</p> <br>
 
 
             <form>
@@ -1023,7 +1224,7 @@
     <div class="row">
         <div class="col">
             <table class="table table-hover">
-                <thead class="th_results">
+                <thead class="th_category_heading">
                 <tr>
                     <th scope="col">Subject</th>
                     {% for duration in setting.duration.all %}

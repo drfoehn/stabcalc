@@ -69,21 +69,21 @@ body{
 /*    list-style: none;*/
 /*}*/
 
-/*a:link {*/
-/*color: #FF924C;*/
-/*}*/
+a:link {
+color: var(--imperial-red)
+}
 
-/*a:visited {*/
-/*color: #FF924C;*/
-/*}*/
+a:visited {
+color: var(--imperial-red)
+}
 
-/*a:hover {*/
-/*color: #FFCA3A;*/
-/*}*/
+a:hover {
+color: #FF924C;
+}
 
-/*a:active {*/
-/*color: #FFCA3A;*/
-/*}*/
+a:active {
+color: #FFCA3A;
+}
 
 th{
     font-weight: normal;
@@ -185,13 +185,17 @@ color: lightgray; !important;
 
 /*------------------------------------TABLES--------------------------------------*/
 #table-dashboard-settingname,
-.table-header{
+.table-header,
+th{
     margin-top: 2em;
-    background-color: #ffd166;
+
     /*color: var(--cultured);*/
     font-family: 'Ubuntu', sans-serif;
     font-size: 1.3em;
     /*font-weight: bold;*/
+}
+.table-header{
+        background-color: #ffd166;
 }
 
 .table-dashboard-td{
@@ -265,19 +269,18 @@ color: lightgray; !important;
 }
 
 .parameter_name,
-.th_results,
-.th_condition,
-.th_analytical,
-.graph_heading{
-    font-family: 'Ubuntu', sans-serif;
-    font-size: 1.5em;
+.th_category_heading,
+.info_accordion{
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 1.5em !important;
 }
-
-.th_results{
-    background-color: var(--celadon-blue);
-    color: var(--cultured);
-    font-family: 'Ubuntu', sans-serif;
-    font-size: 1.5em;
+.accordion-header,
+.info_accordion,
+.th_category_heading{
+    background-color: var(--celadon-blue) !important;
+    color: var(--cultured) !important;
+    font-family: 'Ubuntu', sans-serif !important;
+    font-size: 1.5em !important;
 }
 
 .total_results{

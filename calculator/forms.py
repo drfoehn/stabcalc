@@ -80,6 +80,7 @@ class SampleForm(forms.ModelForm):
     sample_type = forms.Select()
     sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     sample_leftover = forms.BooleanField(widget=forms.CheckboxInput())
+    # FIXME: Sample Pool, Sample Spike does not show Bootstrap attrs and upon edit the checks are gone.
     sample_pool = forms.BooleanField(widget=forms.CheckboxInput())
     sample_pool_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     sample_spike = forms.BooleanField(widget=forms.CheckboxInput())
@@ -130,6 +131,7 @@ class SampleForm(forms.ModelForm):
         self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
         self.fields['preanalytical_set'].widget.attrs['class'] = 'form-select'
 
+
 class PreanalyticalSetForm(forms.ModelForm):
     collection_instrument = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     collection_site =forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -165,6 +167,7 @@ class PreanalyticalSetForm(forms.ModelForm):
 class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
+    sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
@@ -183,6 +186,7 @@ class SettingForm(forms.ModelForm):
         fields = (
             'name',
             'parameter',
+            'sample',
             'condition',
             'duration',
             'subject',
@@ -204,8 +208,13 @@ class SettingForm(forms.ModelForm):
             queryset=Subject.objects.filter(owner=user),
             widget=forms.CheckboxSelectMultiple,
         )
+        self.fields['sample'] = forms.ModelChoiceField(
+            queryset=Sample.objects.filter(owner=user),
+            widget=forms.Select,
+        )
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
+        # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
 
     def get_subjects_queryset(self):
@@ -226,7 +235,7 @@ class ConditionForm(forms.ModelForm):
     air = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     agitation = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     thawing = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}),  required=False)
 
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.

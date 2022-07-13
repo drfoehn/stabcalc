@@ -439,7 +439,7 @@ class ResultsView(DetailView):
                 "durations": Duration.objects.all(),
                 "r_square": results_abs.rsquared,
                 "f_p_value": results_abs.f_pvalue,
-                "f_value": results_abs.fvalue
+                "f_value": results_abs.fvalue,
                 # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
             }
         )
@@ -600,23 +600,23 @@ def delete_parameter(request, pk):
 
 def preanalytical_set_list(request):
     form = PreanalyticalSetForm(request.POST)
-    preanalytical_set = PreanalyticalSet.objects.all()
+    preanalytical_sets = PreanalyticalSet.objects.all()
     if request.method == 'POST':
         if form.is_valid():
             preanalytical_set = form.save(commit=False)
             preanalytical_set.owner = request.user
             preanalytical_set.save()
-            return redirect('preanalytics-detail', pk=preanalytical_set.id)
+            return redirect('preanalytical-set-detail', pk=preanalytical_set.id)
         else:
             context = {
                 'form': form,
-                'preanalytical_set': PreanalyticalSet.objects.all()
+                'preanalytical_sets': PreanalyticalSet.objects.all()
             }
             return render(request, 'calculator/partials/preanalytical_set_form.html', context)
 
     context = {
         'form': form,
-        'preanalytical_set': preanalytical_set,
+        'preanalytical_sets': preanalytical_sets,
 
     }
 
@@ -650,7 +650,7 @@ def edit_preanalytical_set(request, pk):
     if request.method == 'POST':
         if form.is_valid():
             preanalytical_set = form.save()
-            return redirect('preanalytics-detail', pk=preanalytical_set.id)
+            return redirect('preanalytical-set-detail', pk=preanalytical_set.id)
 
     context = {
         "form": form,

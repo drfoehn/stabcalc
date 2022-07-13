@@ -35,7 +35,7 @@ class Condition(OwnedModelMixin, models.Model):
     TEMPERATURE = (
         (ROOMTEMP, _("Roomtemperature (20 to 25°C)")),
         (FRIDGE, _("Refrigerated (2 to 6°C)")),
-        (FREEZE, _("Frozen (-15 to -25°C")),
+        (FREEZE, _("Frozen (-15 to -25°C)")),
         (DEEPFREEZE, _("Deepfrozen (-60 to -80°C)")),
         (OTHER, _("Other - Please specify")),
 
@@ -231,11 +231,9 @@ class Setting(OwnedModelMixin, models.Model):
     #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
+    sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
     protocol = models.TextField(verbose_name=_('Study protocol'), blank=True, null=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
-
-    # rerun = models.SmallIntegerField(help_text='How many replicate measurements did/will you perform per sample?',
-    #                                       choices=list(zip(range(1, 11), range(1, 11))), default=2)
 
     def __str__(self):
         return f"{self.name}: {self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}"
