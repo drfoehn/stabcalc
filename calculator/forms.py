@@ -30,6 +30,7 @@ class ParameterForm(forms.ModelForm):
     unit = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    analytical_method = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}), required=False)
@@ -54,6 +55,7 @@ class ParameterForm(forms.ModelForm):
             'unit',
             'reagent_name',
             'reagent_manufacturer',
+            'analytical_method',
             'CV_intra',
             'CV_inter',
             'method_hand',
@@ -142,7 +144,7 @@ class PreanalyticalSetForm(forms.ModelForm):
     centrifugation_g = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     centrifugation_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     centrifugation_temp = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-
+    comment = forms.Textarea(attrs={'class': 'form-control'})
 
     class Meta:
         model = PreanalyticalSet
@@ -156,6 +158,7 @@ class PreanalyticalSetForm(forms.ModelForm):
         'centrifugation_g' ,
         'centrifugation_time',
         'centrifugation_temp',
+        'comment',
         )
 
     def __init__(self, *args, **kwargs):
@@ -168,6 +171,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
+    sample_type = forms.Select()
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
@@ -187,6 +191,7 @@ class SettingForm(forms.ModelForm):
             'name',
             'parameter',
             'sample',
+            'sample_type',
             'condition',
             'duration',
             'subject',
@@ -214,6 +219,7 @@ class SettingForm(forms.ModelForm):
         )
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
+        self.fields['sample_type'].widget.attrs['class'] = 'form-select'
         # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
 

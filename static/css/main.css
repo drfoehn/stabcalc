@@ -216,6 +216,9 @@ th{
 
 
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
+.form-rowhead{
+    font-weight: bold;
+}
 
 .number-icons{
     width: 48px;

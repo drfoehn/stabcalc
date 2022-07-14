@@ -100,6 +100,7 @@ class PreanalyticalSet(OwnedModelMixin, models.Model):
     centrifugation_g = models.SmallIntegerField(verbose_name=_('Centrifugation speed (*g)'), blank=True, null=True)
     centrifugation_time = models.SmallIntegerField(verbose_name=_('Centrifugation time (min)'), blank=True, null=True)
     centrifugation_temp = models.SmallIntegerField(verbose_name=_('Centrifugation temperature (°C)'), blank=True, null=True)
+    comment = models.TextField(verbose_name=_('Preanalytical comment'))
 
     def __str__(self):
         return f"{self.collection_site}"
@@ -208,6 +209,7 @@ class Parameter(OwnedModelMixin, models.Model):
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
     reagent_name = models.CharField(max_length=255, verbose_name='Reagent name', blank=True, null=True)
     reagent_manufacturer = models.CharField(max_length=255, verbose_name='Reagent manufacturer', blank=True, null=True)
+    analytical_method = models.CharField(max_length=255, verbose_name='Analytical method')
     CV_intra = models.FloatField(verbose_name='CV% intra', blank=True, null=True)
     CV_inter = models.FloatField(verbose_name='CV% inter', blank=True, null=True)
     method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
@@ -232,6 +234,23 @@ class Setting(OwnedModelMixin, models.Model):
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
     sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
+
+    PATIENT = 1
+    HEALTHY = 2
+    OTHER = 3
+    TYPE = (
+        (PATIENT, _("Patient samples")),
+        (HEALTHY, _("Healthy volunteers")),
+        (OTHER, _("Other")),
+
+    )
+
+    sample_type = models.SmallIntegerField(
+        choices=TYPE,
+        # default=HOURS,
+        verbose_name='Type of study subject'
+    )
+
     protocol = models.TextField(verbose_name=_('Study protocol'), blank=True, null=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
 
@@ -362,7 +381,6 @@ class Duration(OwnedModelMixin, models.Model):
 
 class Subject(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=20, blank=True, null=True)
-
 
     def __str__(self):
         return self.name

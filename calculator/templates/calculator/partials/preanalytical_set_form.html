@@ -7,82 +7,99 @@
 {#        {{ form }}#}
              <table>
                  <tr>
-                     <th><h4>Sample collection</h4></th>
+                     <th colspan="2"><h4>Sample collection</h4></th>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                          {{ form.collection_instrument.label_tag }}
-                     </th>
+                     </td>
                      <td>
                          {{ form.collection_instrument }}
                      </td>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                          {{ form.collection_site.label_tag }}
-                     </th>
+                     </td>
                      <td>
                          {{ form.collection_site }}
+                         <p></p>
                      </td>
                  </tr>
                  <tr>
                      <th><h4>Transportation</h4></th>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                         {{ form.transportation_time.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.transportation_time }}
                      </td>
                      <td>{{ form.transportation_time_unit }}</td>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                         {{ form.transportation_temp.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.transportation_temp }}
                      </td>
                      <td> °C</td>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                         {{ form.transportation_method.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.transportation_method }}
+                         <p></p>
                      </td>
                  </tr>
                  <tr>
                      <th><h4>Centrifugation</h4></th>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                         {{ form.centrifugation_g.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.centrifugation_g }}
                      </td>
                      <td> *g</td>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead"t>
                         {{ form.centrifugation_time.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.centrifugation_time }}
                      </td>
                      <td> minutes</td>
                  </tr>
                  <tr>
-                     <th>
+                     <td class="form-rowhead">
                         {{ form.centrifugation_temp.label_tag }}
-                    </th>
+                    </td>
                      <td>
                          {{ form.centrifugation_temp }}
+                         <p></p>
                      </td>
                      <td> °C</td>
+                 </tr>
+                 <tr>
+                     <th><h4>
+                         Comment:
+                     </h4></th>
+                 </tr>
+                 <tr>
+                     <td colspan="2">
+                         Samples should be mixed properly after collection. Serum-samples should be transported in upright position.
+                         <br>
+                         In case of deviations from <a href="https://www.eflm.eu/site/api/download/1453-2.CCLM_2018_EFLM_Guidelines.pdf/publications/Joint%20EFLM-COLABIOCLI%20Recommendation%20for%20venous%20blood%20sampling%20v%201.1,%20June%202018" target="_blank">current preanalytical recommendations</a>, including hemolysis, icterus or lipemia, please indicate in this comment field.
+                         <br>
+                         {{ form.comment }}
+                     </td>
                  </tr>
              </table>
 <p></p>

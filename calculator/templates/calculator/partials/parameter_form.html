@@ -5,17 +5,17 @@
 
             <table>
                 <tr>
-                    <th class="strong">
+                    <th colspan="2"><h4>
                         Parameter
-                    </th>
+                    </h4></th>
                 </tr>
                 <tr>
-                    <th>
+                    <td class="form-rowhead">
                         {{ form.name.label_tag }}
-                    </th>
-                    <th>
+                    </td>
+                    <td class="form-rowhead">
                         {{ form.unit.label_tag }}
-                    </th>
+                    </td>
                 </tr>
                 <tr>
 
@@ -35,19 +35,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="strong">
-                        Reagent
-                    </th>
+                    <th colspan="2"><h4>
+                        Analysis
+                    </h4></th>
                 </tr>
                 <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
+                    <td class="form-rowhead">
+                        {{ form.reagent_name.label_tag }}
+                    </td>
+                    <td class="form-rowhead">
 
-                        Manufacturer
+                        {{ form.reagent_manufacturer.label_tag }}
 
-                    </th>
+                    </td>
                 </tr>
                 <tr>
 
@@ -66,18 +66,49 @@
                         {{ form.reagent_manufacturer.errors }}
                     </td>
                 </tr>
+
                 <tr>
-                    <th class="strong">
-                        CV
-                    </th>
+                    <td class="form-rowhead">
+                        {{ form.analytical_method.label_tag }}
+                    </td>
+                    <td>
+                       {{ form.analytical_method }}
+                    </td>
                 </tr>
                 <tr>
-                    <th>
+                    <td class="form-rowhead">
+                        <p></p>
+                        Is it a manual analytical method?<br>
+
+
+                    </td>
+                    <td class="form-rowhead">
+                        <p></p><div>
+                <input type="checkbox" name="method_hand" class="check-input" onclick="hideInstrument()">(Yes)</input>
+
+            </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="instrument-toggle">
+                                Analytical instrument <br>
+                                {{ form.instrument }} {{ form.instrument.errors }}
+                            </div>
+                    </td>
+                </tr>
+                                <tr>
+                    <th colspan="2"><h4>
+                        CV
+                    </h4></th>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
                         Intra-assay
-                    </th>
-                    <th>
+                    </td>
+                    <td class="form-rowhead">
                         Inter-assay
-                    </th>
+                    </td>
                 </tr>
                 <tr>
 
@@ -94,28 +125,6 @@
                     </td>
                     <td>
                         {{ form.CV_inter.errors }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>
-                        <p></p>
-                        Is it a manual analytical method?<br>
-
-
-                    </th>
-                    <td>
-                        <p></p><div>
-                <input type="checkbox" name="method_hand" class="check-input" onclick="hideInstrument()">(Yes)</input>
-
-            </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="instrument-toggle">
-                                Analytical instrument <br>
-                                {{ form.instrument }} {{ form.instrument.errors }}
-                            </div>
                     </td>
                 </tr>
             </table>
