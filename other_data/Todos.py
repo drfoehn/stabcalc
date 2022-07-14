@@ -2,7 +2,10 @@
 # TODO: Incorporate EMA specifications? https://www.ema.europa.eu/en/specifications-control-tests-finished-product
 # TODO: Let User choose from analyte list rather than free text entry for better comparison of data afterwards?
 # TODO: Add automated 0 minutes duaration
+# TODO: Calculate Inter-Subject variability
+
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error
+# FIXME: Upon fresh setup/migration, an anonymous user is being added
 
 
 # 16. ISO Guide 35:2017 (E). Reference material – Guidance for

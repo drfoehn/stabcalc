@@ -1,10 +1,126 @@
 {% load crispy_forms_tags %}
 <div hx-target="this" hx-swap="outerHTML" >
-<div class="col-9 object-list-div">
+<div class="col object-list-div">
     <form method="POST">
         {% csrf_token %}
-        {{ form | crispy}}
+{#        {{ form | crispy}}#}
 
+
+
+    <table>
+        <tr>
+            <td class="form-rowhead">
+                Choose a name for your setting
+            </td>
+            </tr>
+            <tr>
+            <td>
+                {{ form.name }}
+            </td>
+            <td>
+                {{ form.name.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                {{ form.parameter.label_tag }}
+            </td>
+        </tr>
+            <tr>
+            <td>
+                {{ form.parameter }}
+            </td>
+            <td>
+                {{ form.parameter.errors }}
+            </td>
+        </tr>
+                <tr>
+            <td class="form-rowhead">
+                {{ form.sample.label_tag }}
+            </td>
+                    </tr>
+            <tr>
+            <td>
+                {{ form.sample }}
+            </td>
+            <td>
+                {{ form.sample.errors }}
+            </td>
+        </tr>
+                   <tr>
+            <td class="form-rowhead">
+                {{ form.sample_type.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.sample_type }}
+            </td>
+            <td>
+                {{ form.sample_type.errors }}
+            </td>
+        </tr>
+{#        {% if setting.condition.FREEZE or setting.condition.DEEPFREEZE %}#}
+
+                   <tr id="freeze_thaw_cycle">
+{#                   TODO: Check if this work without JS#}
+            <td class="form-rowhead">
+                How many freeze/thaw cycles have the samples gone through? <br>
+
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                <i>(Select "1" for first thawing cycle)</i>
+                {{ form.freeze_thaw }}
+            </td>
+            <td>
+                {{ form.freeze_thaw.errors }}
+            </td>
+        </tr>
+{#        {% endif %}#}
+        <tr>
+            <td class="form-rowhead">
+                {{ form.condition.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.condition }}
+            </td>
+            <td>
+                {{ form.condition.errors }}
+            </td>
+        </tr>
+    <tr>
+            <td class="form-rowhead">
+                {{ form.protocol.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.protocol }}
+            </td>
+            <td>
+                {{ form.protocol.errors }}
+            </td>
+        </tr>
+    <tr>
+            <td class="form-rowhead">
+                {{ form.comment.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.comment }}
+            </td>
+            <td>
+                {{ form.comment.errors }}
+            </td>
+        </tr>
+
+
+    </table>
 
     <p></p>
 {#    If statement to prevent edit-view from creating more objects#}
@@ -21,3 +137,34 @@
     </form>
 </div>
 </div>
+<script>
+    document.getElementById('id_temperature').addEventListener('change', toggleTemp)
+
+
+    function toggleTemp() {
+        let dropdown = document.getElementById('id_temperature').value;
+        let thaw = document.getElementById('sample_thaw');
+        let other = document.getElementById('id_temperature_other');
+        let other_label = document.getElementById('temp_other_label');
+        if (dropdown === "9") {
+            other.style.display = 'block'
+            other_label.style.display = 'block'
+            thaw.style.display = 'none'
+            thaw.value = ''
+            }
+            else if(dropdown === "4" || dropdown === "3"){
+            thaw.style.display = 'block'
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+        }
+        else {
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+            thaw.style.display = 'none'
+            thaw.value = ''
+        }
+    }
+window.onload = toggleTemp()
+</script>

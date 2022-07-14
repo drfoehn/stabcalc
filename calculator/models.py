@@ -234,6 +234,7 @@ class Setting(OwnedModelMixin, models.Model):
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
     duration = models.ManyToManyField('Duration', blank=True)
     sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
+    freeze_thaw_cycles = models.SmallIntegerField(verbose_name=_('How many freeze/thaw cycles did the samples endure?'), blank=True, null=True)
 
     PATIENT = 1
     HEALTHY = 2

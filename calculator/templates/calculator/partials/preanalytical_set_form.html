@@ -1,6 +1,6 @@
 <div hx-target="this" hx-swap="outerHTML" >
 <p></p>
-<div class="col-9 object-list-div">
+<div class="col object-list-div">
     <form method="POST">
 
         {% csrf_token %}
@@ -51,11 +51,22 @@
                      <td class="form-rowhead">
                         {{ form.transportation_method.label_tag }}
                     </td>
-                     <td>
+                     <td >
                          {{ form.transportation_method }}
                          <p></p>
                      </td>
                  </tr>
+
+                 <tr  id="transport_other">
+                     <td class="form-rowhead">
+                        {{ form.transportation_method_other.label_tag }}
+{#                    </td>#}
+{#                     <td>#}
+                         {{ form.transportation_method_other }}
+                         <p></p>
+                     </td>
+                 </tr>
+
                  <tr>
                      <th><h4>Centrifugation</h4></th>
                  </tr>
@@ -118,3 +129,26 @@
 </div>
 </div>
 
+<script>
+    document.getElementById('id_transportation_method').addEventListener('change', toggleTemp)
+
+
+    function toggleTemp() {
+        let dropdown = document.getElementById('id_transportation_method').value;
+        let transport = document.getElementById('transport_other');
+        {#let other = document.getElementById('id_transportation_method_other');#}
+
+        if (dropdown === "9") {
+            {#other.style.display = 'block'#}
+            transport.style.display = 'block'
+            transport.value = ''
+            }
+        else {
+            {#other.style.display = 'none'#}
+            {#other.value = ''#}
+            transport.style.display = 'none'
+            transport.value = ''
+        }
+    }
+window.onload = toggleTemp()
+</script>

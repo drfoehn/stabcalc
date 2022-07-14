@@ -116,7 +116,9 @@
                     </td>
                     <td>
                         {{ form.sample_leftover }} (Yes)
+
                     </td>
+                    <td>{{ form.sample_leftover.errors}}</td>
                 </tr>
                 <tr>
                     <td class="form-rowhead">
@@ -131,7 +133,9 @@
                         <p></p>
                         Please describe the pooling (Source, Concentrations, etc) <br>
                         {{ form.sample_pool_text }}
+
                     </td>
+                    <td>{{ form.sample_pool_text.errors }}</td>
 
                 </tr>
                 <tr>
@@ -147,13 +151,16 @@
                         <p></p>
                         Please describe the spiking (analyte, concentrations, etc) <br>
                         {{ form.sample_spike_text}}
+
                     </td>
+                    <td>{{ form.sample_spike_text.errors }}</td>
                 </tr>
                 <tr>
                     <td class="form-rowhead">
                         <p></p>
                         {{ form.preanalytical_set.label_tag }}<br>
-                        {{ form.preanalytical_set }}
+                        {{ form.preanalytical_set }}<br>
+                        {{ form.preanalytical_set.errors }}
                     </td>
                     <td>
 

@@ -139,6 +139,7 @@ class PreanalyticalSetForm(forms.ModelForm):
     collection_site =forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     transportation_temp = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     transportation_method = forms.Select()
+    transportation_method_other = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     transportation_time_unit = forms.Select()
     transportation_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     centrifugation_g = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
@@ -153,6 +154,7 @@ class PreanalyticalSetForm(forms.ModelForm):
         'collection_site',
         'transportation_temp',
         'transportation_method',
+        'transportation_method_other',
         'transportation_time_unit',
         'transportation_time',
         'centrifugation_g' ,
@@ -172,6 +174,7 @@ class SettingForm(forms.ModelForm):
     parameter = forms.ModelChoiceField(queryset=Parameter.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
     sample_type = forms.Select()
+    freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
@@ -192,6 +195,7 @@ class SettingForm(forms.ModelForm):
             'parameter',
             'sample',
             'sample_type',
+            'freeze_thaw',
             'condition',
             'duration',
             'subject',
@@ -219,6 +223,7 @@ class SettingForm(forms.ModelForm):
         )
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
         self.fields['condition'].widget.attrs['class'] = 'form-select'
+        self.fields['sample'].widget.attrs['class'] = 'form-select'
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
         # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
