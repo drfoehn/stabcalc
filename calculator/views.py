@@ -1,7 +1,12 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.mail import EmailMessage
 from django.forms import modelformset_factory  # is grey but still needed for the result_add_view
+from datetime import datetime
+from wsgiref.util import FileWrapper
 
+from django.utils import timezone
+from openpyxl import Workbook #Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from statsmodels.stats.power import TTestIndPower
@@ -394,10 +399,12 @@ class ResultsView(DetailView):
 
         # -----------------------------Export
 
-        from datetime import datetime
+
         # https://stackoverflow.com/questions/35267585/django-pandas-to-http-response-download-file
         # https://djangoadventures.com/how-to-create-file-download-links-in-django/
         #
+
+
 
         MDATA = datetime.now().strftime('%Y-%m-%d')
 
@@ -444,6 +451,24 @@ class ResultsView(DetailView):
             }
         )
         return context
+
+from io import BytesIO
+
+def DownloadExcel(request):
+    excelfile = BytesIO()
+    workbook = Workbook()
+    workbook.remove(workbook.active)
+    # ws = wb.active
+    ws1 = workbook.create_sheet(title="Basic Information")
+    ws2 = workbook.create_sheet(title="Data")
+    for row in range(1, 40):
+        ws1.append(range(600))
+    workbook.save(excelfile)
+    now = timezone.now().strftime('%d-%m-%Y - %H-%M')
+    response = HttpResponse(excelfile.getvalue(), content_type='application/')
+    response['Content-Disposition'] = f'attachment; filename=stability-study-data-{now}.xlsx'
+    return response
+
 
 
 

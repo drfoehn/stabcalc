@@ -62,7 +62,11 @@ urlpatterns = [
     path('results/create-result-form/<setting_pk>/<duration_pk>', add_result_form, name='create-result-form'),
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
+
+    path("download-xlsx", views.DownloadExcel, name="download-data")
     # path("upload/", views.upload_view, name="upload"),
+
+
 
 
 

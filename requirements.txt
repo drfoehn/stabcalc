@@ -11,3 +11,4 @@ pandas
 statsmodels
 patsy
 django-guardian
+openpyxl

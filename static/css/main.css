@@ -271,6 +271,7 @@ th{
 .result_buttons,
 .print{
     font-size: 2em;
+    padding-left: 10px;
 }
 
 .parameter_name,
@@ -282,8 +283,8 @@ th{
 .accordion-header,
 .info_accordion,
 .th_category_heading{
-    background-color: var(--powder-blue) !important;
-    color: var(--celadon-blue) !important;
+    background-color: var(--honey-yellow) !important;
+    /*color: grey !important;*/
     font-family: 'Ubuntu', sans-serif !important;
     font-size: 1.5em !important;
     padding: 5px;

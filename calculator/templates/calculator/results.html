@@ -14,15 +14,16 @@
     {#    --------------------------------BUTTONS--------------------------------#}
     <div class="row">
         <div class="col d-flex justify-content-end">
-            <a href="javascript:window.print()" class="bi bi-printer result_buttons"></a>
-            <a href="{{ export_data_excel }}" class="bi bi-box-arrow-down result_buttons"></a>
-            <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons"></a>
+            <a href="javascript:window.print()" class="bi bi-printer result_buttons" data-toggle="tooltip" data-placement="top" title="Print this page"></a>
+            <a href="{% url 'download-data' %}" class="bi bi-box-arrow-down result_buttons" data-toggle="tooltip" data-placement="top" title="Download data"></a>
+            <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons" data-toggle="tooltip" data-placement="top" title="Add results"></a>
 
         </div>
     </div>
     <hr class="my-4">
 
     {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
+
 
     <div class="info-accordion" id="accordionPanelsStayOpenExample">
         <div class="accordion-item">
@@ -1175,7 +1176,7 @@
                             <span class="sub-italic">Formula: 0.5 * CVi </span><br>
                         </th>
                         <td>
-                            <span id="calc_result_allow"></span>&nbsp;%<br>
+                            <span id="calc_result_allow" class="calc_result"></span>&nbsp;%<br>
                         </td>
                     </tr>
                     <tr>
@@ -1184,7 +1185,7 @@
                             <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
                         </th>
                         <td>
-                            <span id="calc_result_accept"></span>&nbsp;%<br>
+                            <span id="calc_result_accept" class="calc_result"></span>&nbsp;%<br>
                         </td>
                     </tr>
                     <tr>
@@ -1193,7 +1194,7 @@
                             <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CVi<sup>2</sup> + CVg<sup>2</sup>)&nbsp;</span></span><br>
                         </th>
                         <td>
-                            <span id="calc_bias_allow"></span>&nbsp;%
+                            <span id="calc_bias_allow" class="calc_result"></span>&nbsp;%
                         </td>
                     </tr>
                     <tr>

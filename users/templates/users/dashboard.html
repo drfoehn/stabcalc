@@ -23,10 +23,12 @@
                 <th>Storage durations</th>
                 <th>Study subjects/volunteers/samples (n)</th>
                 <th>Results (n)</th>
+                <th></th>
             </tr>
         {% for setting in settings %}
         <tr>
-            <th id="table-dashboard-settingname">{{ setting.name }} <br>
+            <th id="table-dashboard-settingname"><a href="{% url 'create-setting' %}">{{ setting.name }}</a>
+                <hr>
 
 
     <div class="display6"
@@ -68,7 +70,7 @@
             {{ setting.result_set.count }}<br>
             <a href="{% url 'create-result' setting.id %}">Add Results</a>
         </td>
-
+    <td><a href="{% url 'download-data' %}" class="bi bi-box-arrow-down result_buttons"></a></td>
             </tr>
     {% endfor %}
     </table>
