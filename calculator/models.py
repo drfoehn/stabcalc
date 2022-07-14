@@ -49,9 +49,15 @@ class Condition(OwnedModelMixin, models.Model):
     temperature_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Temperature'))
     thawing = models.CharField(max_length=400, verbose_name=_('How were frozen samples thawed?'), blank=True, null=True)
     temperature_monitor = models.CharField(max_length=255, verbose_name=_('How was the storage temperature monitored?'))
-    light = models.BooleanField(verbose_name='Exposure to light during storage')
-    air = models.BooleanField(verbose_name='Exposure to air during storage')
-    agitation = models.BooleanField(verbose_name='Agitation during storage')
+
+    CHOICES_BOOLEAN = (
+        (True, _('Yes')),
+        (False, _('No'))
+    )
+    light = models.BooleanField(verbose_name=_('Exposure to light during storage'), choices=CHOICES_BOOLEAN)
+    air = models.BooleanField(verbose_name=_('Contact to air during storage'), choices=CHOICES_BOOLEAN)
+    cell = models.BooleanField(verbose_name=_('Contact to cells during storage?'), choices=CHOICES_BOOLEAN)
+    agitation = models.BooleanField(verbose_name=_('Agitation during storage'), choices=CHOICES_BOOLEAN)
     other_condition = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Condition'))
 
     def __str__(self):
@@ -113,19 +119,19 @@ class Sample(OwnedModelMixin, models.Model):
     sample_spike_text = models.TextField(verbose_name=_('Which analytes were spiked and how?'), blank=True, null=True)
 
     VENOUS_BLOOD = 1
-    URINE = 2
-    CAPILLARY_BLOOD = 3
-    CSF = 4
-    STOOL = 5
-    ARTERIAL_BLOOD = 6
+    CAPILLARY_BLOOD = 2
+    ARTERIAL_BLOOD = 3
+    URINE = 4
+    CSF = 5
+    STOOL = 6
     OTHER = 9
     SAMPLETYPE = (
         (VENOUS_BLOOD, _("Venous Blood")),
-        (URINE, _("Urine")),
         (CAPILLARY_BLOOD, _("Capillary Blood")),
+        (ARTERIAL_BLOOD, _("Arterial Blood")),
+        (URINE, _("Urine")),
         (CSF, _("CSF")),
         (STOOL, _("Stool")),
-        (ARTERIAL_BLOOD, _("Arterial Blood")),
         (OTHER, _("Other - Please specify")),
 
     )
@@ -136,6 +142,18 @@ class Sample(OwnedModelMixin, models.Model):
         verbose_name='Sample Type'
     )
     sample_type_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Sampletype'))
+
+    WHOLEBLOOD = 1
+    PLASMA = 2
+    STORAGE = (
+        (WHOLEBLOOD, _("Whole Blood")),
+        (PLASMA, _("Plasma/Serum")),
+    )
+
+    storage = models.SmallIntegerField(
+        choices=STORAGE,
+        verbose_name='Blood storage as'
+    )
 
     PLASTIC = 1
     GLASS = 2

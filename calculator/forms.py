@@ -79,8 +79,10 @@ class ParameterForm(forms.ModelForm):
 
 
 class SampleForm(forms.ModelForm):
+
     sample_type = forms.Select()
     sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    storage = forms.Select()
     sample_leftover = forms.BooleanField(widget=forms.CheckboxInput())
     # FIXME: Sample Pool, Sample Spike does not show Bootstrap attrs and upon edit the checks are gone.
     sample_pool = forms.BooleanField(widget=forms.CheckboxInput())
@@ -103,6 +105,7 @@ class SampleForm(forms.ModelForm):
         fields = (
             'sample_type',
             'sample_type_other',
+            'storage',
             'sample_leftover',
             'sample_pool',
             'sample_pool_text',
@@ -123,6 +126,7 @@ class SampleForm(forms.ModelForm):
         super(SampleForm, self).__init__(*args, **kwargs)
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
         self.fields['sample_type'].widget.attrs['onchange'] = "showMe(\"idShowMe\")"
+        self.fields['storage'].widget.attrs['class'] = 'form-select'
         self.fields['container_dimension'].widget.attrs['class'] = 'form-select'
         self.fields['container_additive'].widget.attrs['class'] = 'form-select'
         self.fields['container_fillingvolume'].widget.attrs['class'] = 'form-control'
@@ -242,9 +246,10 @@ class SettingForm(forms.ModelForm):
 class ConditionForm(forms.ModelForm):
     temperature = forms.Select()
     temperature_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    light = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    air = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    agitation = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
+    light = forms.Select()
+    air = forms.Select()
+    cell = forms.Select()
+    agitation = forms.Select()
     thawing = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}),  required=False)
 
@@ -264,6 +269,7 @@ class ConditionForm(forms.ModelForm):
             'temperature_other',
             'light',
             'air',
+            'cell',
             'agitation',
             'thawing',
             'other_condition',
@@ -272,9 +278,9 @@ class ConditionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ConditionForm, self).__init__(*args, **kwargs)
         self.fields['temperature'].widget.attrs['class'] = 'form-select'
-        self.fields['light'].widget.attrs['class'] = 'form-check-input'
-        self.fields['air'].widget.attrs['class'] = 'form-check-input'
-        self.fields['agitation'].widget.attrs['class'] = 'form-check-input'
+        self.fields['light'].widget.attrs['class'] = 'form-select'
+        self.fields['air'].widget.attrs['class'] = 'form-select'
+        self.fields['agitation'].widget.attrs['class'] = 'form-select'
 
 
 

@@ -4,7 +4,7 @@
 {% if sample.owner == user %}
 
 
- <div class="col-7 object-list-div">
+ <div class="col object-list-div">
     {% if sample.sample_type_other %}
         <h3>{{ sample.sample_type_other }}</h3>
     {% else %}
@@ -37,7 +37,7 @@
  <p>
  </p>
    {% if sample.sample_pool == True %}
-     Sample spiking: <br>
+     Sample pooling: <br>
       {{ sample.sample_pool_text}}
     {% endif %}
  </div>

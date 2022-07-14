@@ -1,5 +1,5 @@
 <div hx-target="this" hx-swap="outerHTML">
-    <div class="col-12 object-list-div">
+    <div class="col object-list-div">
         <form method="POST">
             {% csrf_token %}
             <table>
@@ -8,9 +8,13 @@
                     <td class="form-rowhead">
                         {{ form.sample_type.label_tag }}
                     </td>
-                    <th>
+                    <td>
 
-                    </th>
+                    </td>
+                    <td></td>
+                    <td id="storage-title">
+Blood samples are stored as...
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -22,7 +26,13 @@
                     <td>
                         {{ form.sample_type.errors }}
                     </td>
+                    <td id="storage-field">
+
+                        {{ form.storage }}
+                    </td>
                 </tr>
+
+
                 <tr>
                     <td class="form-rowhead">
                         {{ form.container_additive.label_tag }}
@@ -197,11 +207,24 @@
     function toggleType() {
         let dropdown = document.getElementById('id_sample_type').value
         let other = document.getElementById('id_sample_type_other');
+        let storage_title = document.getElementById('storage-title');
+        let storage_field = document.getElementById('storage-field');
+
         if (dropdown === "9") {
             other.style.display = 'block'
-        } else {
+            storage_title.style.display = 'none'
+            storage_field.style.display = 'none'
+        } else if(dropdown === "3" || dropdown === '2' || dropdown==='1'){
+            storage_title.style.display = 'block'
+            storage_field.style.display = 'block'
+            other.style.display = 'none'
+        }
+        else {
             other.style.display = 'none'
             other.value = ''
+            storage_title.style.display = 'none'
+            storage_field.style.display = 'none'
+            storage_field.value = ''
         }
     }
 window.onload = toggleType()

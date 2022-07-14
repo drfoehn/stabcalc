@@ -3,6 +3,9 @@
 # TODO: Let User choose from analyte list rather than free text entry for better comparison of data afterwards?
 # TODO: Add automated 0 minutes duaration
 # TODO: Calculate Inter-Subject variability
+# TODO: Add "Select all" in settings for subjects and durations
+# TODO: Delet Value-1-1 above result inputs
+# TODO: Render all the new fields in results
 
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error
 # FIXME: Upon fresh setup/migration, an anonymous user is being added

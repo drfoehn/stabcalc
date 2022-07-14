@@ -1,104 +1,115 @@
-<div hx-target="this" hx-swap="outerHTML" >
-<p></p>
-<div class="col-9 object-list-div">
-    <form method="POST">
+<div hx-target="this" hx-swap="outerHTML">
+    <p></p>
+    <div class="col object-list-div">
+        <form method="POST">
 
-        {% csrf_token %}
-{#        {{ form }}#}
-             <table>
-            <tr>
-                <td class="form-rowhead">
-                    {{ form.temperature.label_tag }}
-                </td>
-                <th class="form-rowhead" id="temp_other_label">
-                    {{ form.temperature_other.label_tag }}
-                </th>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.temperature }}
-                </td>
-                <td>
-                    {{ form.temperature_other }}
-                </td>
-                <td>
-                    {{ form.temperature.errors }}
-                </td>
-            </tr>
-                                  <tr>
-                     <td id="sample_thaw">
-                         <p></p>
-                         How were frozen samples thawed prior to analysis :<br>
-                         {{ form.thawing }} <br>
-                         {{ form.thawing.errors }}
-                     </td>
-                 </tr>
-            <tr>
-                <td class="form-rowhead">
-                    <p></p>
-                    Exposure during storage to .....
-                </td>
-            </tr>
-            <tr style="float: left">
-                <td>
-                    {{ form.light.label_tag }}&nbsp;
-                </td>
-                <td>
-                    {{ form.light }}&nbsp;
-                </td>
-                <td>
-                    {{ form.light.errors }}
-                </td>
-                <td>
-                    {{ form.air.label_tag}}&nbsp;
-                </td>
-                <td>
-                    {{ form.air}}&nbsp;
-                </td>
-                <td>
-                    {{ form.air.errors}}
-                </td>
-                <td>
-                    {{ form.agitation.label_tag }}&nbsp;
-                </td>
-                <td>
-                    {{ form.agitation }}
-                </td>
-                <td>
-                    {{ form.agitation.errors }}
-                    <p></p>
-                </td>
-            </tr>
+            {% csrf_token %}
+            {#        {{ form }}#}
+            <table>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.temperature.label_tag }}
+                    </td>
+                    <th class="form-rowhead" id="temp_other_label">
+                        {{ form.temperature_other.label_tag }}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.temperature }}
+                    </td>
+                    <td>
+                        {{ form.temperature_other }}
+                    </td>
+                    <td>
+                        {{ form.temperature.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td id="sample_thaw">
+                        <p></p>
+                        How were frozen samples thawed prior to analysis :<br>
+                        {{ form.thawing }} <br>
+                        {{ form.thawing.errors }}
+                    </td>
+                </tr>
 
-                 <tr>
-                <td class="form-rowhead">
-                    <p></p>
-                    {{ form.other_condition.label_tag }}
-                </td>
-                 </tr>
-                     <tr>
-                     <td>
-                    {{ form.other_condition }}
-                </td>
-                     <td>
-                    {{ form.other_condition.errors }}
-                </td>
-            </tr>
-             </table>
-<p></p>
-{#    If statement to prevent edit-view from creating more objects#}
-        {% if condition %}     {#  Passed in from Edit-condition-view #}
-            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-condition' condition.id %}"
-            class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Savel
-        </button>
-        {% else %}
-            <button  class="btn btn-secondary" type="submit" hx-post=".">
-            Save
-        </button>
-        {% endif %}
-    </form>
-</div>
+                <tr>
+                    <td>
+                        {{ form.light.label_tag }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.light }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.light.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.cell.label_tag }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.cell }}
+                    </td>
+                    <td>
+                        {{ form.cell.errors }}
+                        <p></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.air.label_tag }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.air }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.air.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.agitation.label_tag }}&nbsp;
+                    </td>
+                    <td>
+                        {{ form.agitation }}
+                    </td>
+                    <td>
+                        {{ form.agitation.errors }}
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        {{ form.other_condition.label_tag }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.other_condition }}
+                    </td>
+                    <td>
+                        {{ form.other_condition.errors }}
+                    </td>
+                </tr>
+            </table>
+            <p></p>
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if condition %}     {#  Passed in from Edit-condition-view #}
+                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-condition' condition.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Savel
+                </button>
+            {% else %}
+                <button class="btn btn-secondary" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
 </div>
 
 <script>
@@ -115,14 +126,12 @@
             other_label.style.display = 'block'
             thaw.style.display = 'none'
             thaw.value = ''
-            }
-            else if(dropdown === "4" || dropdown === "3"){
+        } else if (dropdown === "4" || dropdown === "3") {
             thaw.style.display = 'block'
             other.style.display = 'none'
             other_label.style.display = 'none'
             other.value = ''
-        }
-        else {
+        } else {
             other.style.display = 'none'
             other_label.style.display = 'none'
             other.value = ''
@@ -130,6 +139,7 @@
             thaw.value = ''
         }
     }
-window.onload = toggleTemp()
+
+    window.onload = toggleTemp()
 </script>
 

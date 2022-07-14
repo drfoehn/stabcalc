@@ -81,6 +81,32 @@
 {#        {% endif %}#}
         <tr>
             <td class="form-rowhead">
+                {{ form.duration.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.duration }}
+            </td>
+            <td>
+                {{ form.duration.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                {{ form.subject.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.subject }}
+            </td>
+            <td>
+                {{ form.subject.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
                 {{ form.condition.label_tag }}
             </td>
                        </tr>
