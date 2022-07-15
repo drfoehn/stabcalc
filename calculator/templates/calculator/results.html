@@ -110,6 +110,10 @@
                                 <thead>
                                 <th class="th_category_heading" colspan="2">Analytical method</th>
                                 </thead>
+                            <tr>
+                                <th>Analytical Method</th>
+                                <td>{{ setting.parameter.analytical_method }}</td>
+                            </tr>
                                 <tr>
                                     <th>Instrument:</th>
                                     <td>{{ setting.parameter.instrument }}</td>
@@ -148,15 +152,39 @@
                                     <th>Sample Type:</th>
                                     <td>{{ setting.sample.get_sample_type_display }}</td>
                                 </tr>
+                            {% if setting.sample.storage %}
+                                    <tr>
+                                    <th>Storage of blood as:</th>
+                                    <td>{{ setting.sample.get_storage_display}}</td>
+                                    </tr>
+                            {% endif %}
+                            {% if setting.sample.container_additive_other %}
+                                <tr>
+                                <th>Additive:</th>
+                                <td>
+                                    {{ setting.sample.container_additive_other }}
+                                </td>
+                                </tr>
+                            {% else %}
                                 <tr>
                                     <th>Additive:</th>
                                     <td>{{ setting.sample.get_container_additive_display }}</td>
                                 </tr>
+                            {% endif %}
                                 <tr>
                                     <th>Container:</th>
                                     <td>Filling volume: {{ setting.sample.container_fillingvolume }} mL <br>
-                                        Dimension: {{ setting.sample.get_container_dimension_display }} <br>
-                                        Material: {{ setting.sample.get_container_material_display }}<br>
+                                        {% if setting.sample.container_dimension_other %}
+                                        Dimension: {{ setting.sample.container_dimension_other }} <br>
+                                            {% else %}
+                                            Dimension: {{ setting.sample.get_container_dimension_display }} <br>
+                                        {% endif %}
+                                    {% if setting.sample.container_material_other %}
+                                        Material: {{ setting.sample.container_material_other }} <br>
+                                            {% else %}
+                                            Material: {{ setting.sample.get_container_material_display }} <br>
+                                        {% endif %}
+
                                         {% if setting.sample.gel %}
                                             with gel/seperator
                                         {% else %}
@@ -164,6 +192,22 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                            {% if setting.sample.sample_spike_text %}
+                                <tr>
+                                <th>Sample spiking</th>
+                                </tr>
+                                    <tr>
+                                    <td colspan="2">{{ setting.sample.sample_spike_text }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% if setting.sample.sample_pool_text %}
+                                <tr>
+                                <th>Sample pooling</th>
+                                </tr>
+                                    <tr>
+                                    <td colspan="2">{{ setting.sample.sample_pool_text }}</td>
+                                    </tr>
+                                {% endif %}
                             </table>
 
                         </div>
@@ -181,12 +225,16 @@
                                         {{ setting.condition.get_temperature_display }}
                                     </td>
                                 </tr>
+                            {% if setting.condition.other_condition %}
+
+
                                 <tr>
                                     <th>Other condition</th>
                                     <td>{{ setting.condition.other_condition }}</td>
                                 </tr>
+                            {% endif %}
                                 <tr>
-                                    <th colspan="2">Exposure during storage to...</th>
+                                    <th colspan="2">Exposure/Contact during storage to...</th>
                                 </tr>
                                 <tr>
                                     <th>...light</th>
@@ -198,10 +246,20 @@
                                         {% endif %}
                                     </td>
                                 </tr>
+                            <tr>
+                                    <th>...cells</th>
+                                    <td>
+                                        {% if setting.condition.cell == True %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>...air</th>
                                     <td>
-                                        {% if setting.condition.air.light == True %}
+                                        {% if setting.condition.air == True %}
                                             Yes
                                         {% else %}
                                             No
@@ -237,7 +295,7 @@
                                 <tr>
                                     <td>
                                         Site: {{ setting.sample.preanalytical_set.collection_site }}<br>
-                                        Instrument: {{ setting.sample.preanalytical_set.collection_instrument }} °C<br>
+                                        Instrument: {{ setting.sample.preanalytical_set.collection_instrument }}<br>
                                     </td>
                                 </tr>
                                 <tr>
@@ -248,7 +306,7 @@
                                 <tr>
                                     <td>
                                         {% if setting.sample.preanalytical_set.transportation_method_other %}
-                                            {{ setting.sample.preanalytical_set.transportation_method_other }}<br>
+                                            Method: {{ setting.sample.preanalytical_set.transportation_method_other }}<br>
                                         {% else %}
                                             Method:
                                             {{ setting.sample.preanalytical_set.get_transportation_method_display }}<br>
@@ -276,11 +334,27 @@
                                         </th>
                                     </tr>
                                     <tr>
+                                    <td>
+                                     {% if setting.freeze_thaw_cycles == '1' %}
+                                    Samples were thawed for the first time after freezing.
+                                        {% else %}
+                                        Samples were thawed and refrozen {{ setting.freeze_thaw_cycles }} times.
+                                    {% endif %}
+                                    </td>
+                                    </tr>
+                                    <tr>
                                         <td>
                                             {{ setting.condition.thawing }}
                                         </td>
                                     </tr>
                                 {% endif %}
+                            {% if setting.sample.preanalytical_set.comment %}
+                                    <tr>
+                                    <th>Preanalytical comment</th>
+                                        </tr><tr>
+                                    <td>{{ setting.sample.preanalytical_set.comment }}</td>
+                                    </tr>
+                            {% endif %}
                             </table>
                         </div>
                         <div class="row">
@@ -290,7 +364,7 @@
                                     <table class="table table-hover">
                                         <tr>
                                             <th class="th_category_heading">
-                                                Comment
+                                                Setting Comment
                                             </th>
                                         </tr>
                                         <tr>

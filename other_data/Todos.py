@@ -6,7 +6,9 @@
 # TODO: Add "Select all" in settings for subjects and durations
 # TODO: Delet Value-1-1 above result inputs
 # TODO: Render all the new fields in results
+# TODO: Style Error messages
 
+# FIXME: Freeze/Thaw cycle does not get saved
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error
 # FIXME: Upon fresh setup/migration, an anonymous user is being added
 

@@ -246,10 +246,10 @@ class SettingForm(forms.ModelForm):
 class ConditionForm(forms.ModelForm):
     temperature = forms.Select()
     temperature_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    light = forms.Select()
-    air = forms.Select()
-    cell = forms.Select()
-    agitation = forms.Select()
+    light = forms.BooleanField(widget=forms.CheckboxInput)
+    air = forms.BooleanField(widget=forms.CheckboxInput)
+    cell = forms.BooleanField(widget=forms.CheckboxInput)
+    agitation = forms.BooleanField(widget=forms.CheckboxInput)
     thawing = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}),  required=False)
 
@@ -278,9 +278,10 @@ class ConditionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ConditionForm, self).__init__(*args, **kwargs)
         self.fields['temperature'].widget.attrs['class'] = 'form-select'
-        self.fields['light'].widget.attrs['class'] = 'form-select'
-        self.fields['air'].widget.attrs['class'] = 'form-select'
-        self.fields['agitation'].widget.attrs['class'] = 'form-select'
+        self.fields['light'].widget.attrs['class'] = 'form-check-input'
+        self.fields['air'].widget.attrs['class'] = 'form-check-input'
+        self.fields['cell'].widget.attrs['class'] = 'form-check-input'
+        self.fields['agitation'].widget.attrs['class'] = 'form-check-input'
 
 
 

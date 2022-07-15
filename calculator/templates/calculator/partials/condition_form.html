@@ -33,10 +33,16 @@
                         {{ form.thawing.errors }}
                     </td>
                 </tr>
-
                 <tr>
                     <td>
-                        {{ form.light.label_tag }}&nbsp;
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Exposure to <strong>light</strong> during storage?
                     </td>
                     <td>
                         {{ form.light }}&nbsp;
@@ -47,7 +53,7 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ form.cell.label_tag }}&nbsp;
+                        Contact to <strong>cells</strong> during storage?
                     </td>
                     <td>
                         {{ form.cell }}
@@ -59,9 +65,10 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ form.air.label_tag }}&nbsp;
+                        Contact to <strong>air</strong> during storage?
                     </td>
                     <td>
+
                         {{ form.air }}&nbsp;
                     </td>
                     <td>
@@ -70,7 +77,7 @@
                 </tr>
                 <tr>
                     <td>
-                        {{ form.agitation.label_tag }}&nbsp;
+                        <strong>Agitation</strong> during storage?
                     </td>
                     <td>
                         {{ form.agitation }}

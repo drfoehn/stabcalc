@@ -50,14 +50,14 @@ class Condition(OwnedModelMixin, models.Model):
     thawing = models.CharField(max_length=400, verbose_name=_('How were frozen samples thawed?'), blank=True, null=True)
     temperature_monitor = models.CharField(max_length=255, verbose_name=_('How was the storage temperature monitored?'))
 
-    CHOICES_BOOLEAN = (
-        (True, _('Yes')),
-        (False, _('No'))
-    )
-    light = models.BooleanField(verbose_name=_('Exposure to light during storage'), choices=CHOICES_BOOLEAN)
-    air = models.BooleanField(verbose_name=_('Contact to air during storage'), choices=CHOICES_BOOLEAN)
-    cell = models.BooleanField(verbose_name=_('Contact to cells during storage?'), choices=CHOICES_BOOLEAN)
-    agitation = models.BooleanField(verbose_name=_('Agitation during storage'), choices=CHOICES_BOOLEAN)
+    # CHOICES_BOOLEAN = (
+    #     (True, _('Yes')),
+    #     (False, _('No'))
+    # )
+    light = models.BooleanField(verbose_name=_('Exposure to light during storage'))
+    air = models.BooleanField(verbose_name=_('Contact to air during storage'))
+    cell = models.BooleanField(verbose_name=_('Contact to cells during storage?'))
+    agitation = models.BooleanField(verbose_name=_('Agitation during storage'))
     other_condition = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Condition'))
 
     def __str__(self):
