@@ -423,16 +423,21 @@ class Duration(OwnedModelMixin, models.Model):
         self.seconds = calc_tbl[self.duration_unit] * self.duration_number
         super().save(*args, **kwargs)
 
-    # def converted_time(self):
-    #     minutes = self.seconds*60,
-    #     hours = self.seconds*60*60,
-    #     days = self.seconds*60*60*24,
-    #     months = self.seconds*60*60*24*30,
-    #     years = self.seconds*60*60*24*365,
-    #
-    #     if self.seconds >= 31536000:
-    #         return str(years) + ' years, ' + str(months) + ' months, ' + str(days) + ' days'
-    #     elif self.seconds < 31536000 and self.seconds >=
+    def converted_time(self):
+        minutes = self.seconds/60
+        hours = self.seconds/3600
+        days = self.seconds/3600/24
+        months = self.seconds/3600/24/30
+        years = self.seconds/3600/24/365
+
+        if years >= 1:
+            return str(years) + ' years, ' + str(months) + ' months, ' + str(days) + ' days'
+        elif months >= 1 and years <1:
+            return str(months) + ' months, ' + str(days) + ' days'
+        elif days >= 1 and months <1:
+            return str(days) + ' days' + str(hours) + ' hours'
+        elif hours >=1 and days <1:
+            return str(hours) + ' hours'
 
 
     def __str__(self):

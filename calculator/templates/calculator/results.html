@@ -654,7 +654,7 @@
                             PD% = Percent deviation from baseline
                         </div>
                         <script type="text/javascript">
-                            var seconds = {{ duration.seconds }}
+
                             google.charts.load("current", {packages: ["corechart"]});
                             google.charts.setOnLoadCallback(drawChart);
 
@@ -665,7 +665,7 @@
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
-                                            [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                            [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
                                         {% endif %}
                                     {% endfor %}
                                 ]);
@@ -674,7 +674,7 @@
                                     title: 'Parameter percent deviation (PD) at selected storage durations',
                                     vAxis: {title: "PD%"},
                                     hAxis: {
-                                        title: "Storage duration (seconds)",
+                                        title: "Storage duration (hours)",
                                         minValue: 0,
                                         {#gridlines:#}
                                         {#    {multiple: 1,#}
@@ -715,7 +715,7 @@
 
                             <tr>
                                 <td class="calc_result">
-                                    R2
+                                    R<sup>2</sup>
                                 </td>
                                 <td class="calc_result">
                                     {{ r_squared_lin | floatformat:4 }}
@@ -723,7 +723,7 @@
                             </tr>
                             <tr>
                                 <td class="calc_result">
-                                    R2 adjusted
+                                    R<sup>2</sup> adjusted
                                 </td>
                                 <td class="calc_result">
                                     {{ r_squared_lin_adj  | floatformat:4 }}
@@ -884,7 +884,7 @@
 
                             <tr>
                                 <td class="calc_result">
-                                    R2
+                                    R<sup>2</sup>
                                 </td>
                                 <td class="calc_result">
                                     {{ r_squared_log | floatformat:4 }}
@@ -892,7 +892,7 @@
                             </tr>
                             <tr>
                                 <td class="calc_result">
-                                    R2 adjusted
+                                    R<sup>2</sup> adjusted
                                 </td>
                                 <td class="calc_result">
                                     {{ r_squared_log_adj  | floatformat:4 }}
@@ -908,7 +908,7 @@
                                 <td class="sub-italic">
                                     <br>
                                     y...Testresult (dependent variable) <br>
-                                    x1...Storage Duration (independent variable)
+                                    x...Storage Duration (independent variable)
 
                                 </td>
                             </tr>
@@ -1059,7 +1059,7 @@
                                         {% for duration in setting.duration.all %}
                                             {% deviation_tot setting duration as dev_tot %}
                                             {% if dev_tot %}
-                                                [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                                [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
                                             {% endif %}
                                         {% endfor %}
                                     ]);
@@ -1067,7 +1067,7 @@
                                     var options = {
                                         title: 'Parameter deviation at selected storage durations',
                                         vAxis: {title: "PD%"},
-                                        hAxis: {title: "Storage duration (seconds)"},
+                                        hAxis: {title: "Storage duration (hours)"},
                                         legend: 'top',
                                         fontName: 'Ubuntu',
                                         curveType: 'function',
@@ -1094,7 +1094,7 @@
                         <div class="col">
                             <table>
                                 <tr>
-                                    <td class="calc_result">R2</td>
+                                    <td class="calc_result">R<sup>2</sup></td>
                                     <td class="calc_result">{{ r_squared_poly2 |floatformat:4 }}</td>
                                 </tr>
                                 <tr>
@@ -1148,7 +1148,7 @@
                                         {% for duration in setting.duration.all %}
                                             {% deviation_tot setting duration as dev_tot %}
                                             {% if dev_tot %}
-                                                [{{ duration.seconds }}, {% deviation_tot setting duration %}],
+                                                [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
                                             {% endif %}
                                         {% endfor %}
 
@@ -1158,7 +1158,7 @@
                                     var options = {
                                         title: 'Parameter deviation at selected storage durations',
                                         vAxis: {title: "PD%"},
-                                        hAxis: {title: "Storage duration (seconds)"},
+                                        hAxis: {title: "Storage duration (hours)"},
                                         legend: 'top',
                                         fontName: 'Ubuntu',
                                         curveType: 'function',
@@ -1185,7 +1185,7 @@
                         <div class="col">
                             <table>
                                 <tr>
-                                    <td class="calc_result">R2</td>
+                                    <td class="calc_result">R<sup>2</sup></td>
                                     <td class="calc_result">{{ r_squared_poly3 |floatformat:4 }}</td>
                                 </tr>
                                 <tr>

@@ -39,11 +39,13 @@ def cv(subject: Subject, duration: Duration, setting: Setting):
         return ""
     return subject.cv(duration, setting)
 
+
 @register.simple_tag
 def cv_max(setting: Setting):
     if setting.cv_max() is None:
         return ""
     return setting.cv_max()
+
 
 @register.simple_tag
 def cv_max_abs_high(duration: Duration, setting: Setting):
@@ -51,11 +53,13 @@ def cv_max_abs_high(duration: Duration, setting: Setting):
         return ""
     return setting.cv_max_abs_high(duration)
 
+
 @register.simple_tag
 def cv_max_abs_low(duration: Duration, setting: Setting):
     if setting.cv_max_abs_low(duration) is None:
         return ""
     return setting.cv_max_abs_low(duration)
+
 
 @register.simple_tag
 def cv_tot(setting: Setting, duration: Duration):
@@ -126,3 +130,8 @@ def human_readable_seconds(secs: int):
         return "Baseline"
     else:
         return result
+
+
+@register.filter(name="hours")
+def hours(secs:int):
+    return secs / 3600

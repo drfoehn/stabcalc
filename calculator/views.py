@@ -76,6 +76,8 @@ class ResultsView(DetailView):
                     y_rel.append(result)
                     x1_rel.append(duration)
 
+        print(y_rel)
+        print(x1_rel)
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
@@ -86,6 +88,7 @@ class ResultsView(DetailView):
             how="inner",
         )
 
+        merged_res_dur['hours'] = (merged_res_dur['seconds']/3600)
         context["results_data222"] = merged_res_dur.to_html
 
         # ----------------Numpy-Arrays
@@ -105,11 +108,10 @@ class ResultsView(DetailView):
 
         # -----------------------LINEAR----------------------------------------
 
+
         vars = ['value', 'seconds']
         merged_res_dur = merged_res_dur[vars]
         merged_res_dur = merged_res_dur.dropna()
-        # merged_res_dur = merged_res_dur.append({'value': 0, 'seconds': 0}, ignore_index=True)
-        # print(merged_res_dur)
         y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod = sm.OLS(y, X)  # Describe model
         res = mod.fit()  # Fit model

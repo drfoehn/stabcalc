@@ -5,6 +5,7 @@
 # TODO: Calculate Inter-Subject variability
 # TODO: Add "Select all" in settings for subjects and durations
 # TODO: Style Error messages
+# TODO: Make switchable graph seconds / hours/ years ...
 
 # FIXME: Freeze/Thaw cycle does not get saved
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error
