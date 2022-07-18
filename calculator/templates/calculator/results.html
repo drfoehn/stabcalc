@@ -654,12 +654,14 @@
                             PD% = Percent deviation from baseline
                         </div>
                         <script type="text/javascript">
+                            var seconds = {{ duration.seconds }}
                             google.charts.load("current", {packages: ["corechart"]});
                             google.charts.setOnLoadCallback(drawChart);
 
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
                                     ['Storage Duration', 'PD%'],
+                                    [0, 0],
                                     {% for duration in setting.duration.all %}
                                         {% deviation_tot setting duration as dev_tot %}
                                         {% if dev_tot %}
@@ -671,7 +673,17 @@
                                 var options = {
                                     title: 'Parameter percent deviation (PD) at selected storage durations',
                                     vAxis: {title: "PD%"},
-                                    hAxis: {title: "Storage duration (seconds)"},
+                                    hAxis: {
+                                        title: "Storage duration (seconds)",
+                                        minValue: 0,
+                                        {#gridlines:#}
+                                        {#    {multiple: 1,#}
+                                        {#     units: {#}
+                                        {#        hours: {format: ['HH:mm']},#}
+                                        {#        seconds: {format: [/*format strings here*/]},#}
+                                        {#            }#}
+                                        {#    },#}
+                                    },
                                     fontName: 'Ubuntu',
                                     curveType: 'function',
                                     explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
@@ -817,6 +829,7 @@
                             function drawChart() {
                                 var data = google.visualization.arrayToDataTable([
                                     ['Storage Duration', 'PD%'],
+                                    [0, 0],
 
                                     {% for data in log_data %}
                                         {{ data }},
@@ -835,6 +848,7 @@
                                     title: 'Parameter deviation at selected storage durations',
                                     vAxis: {
                                         title: "PD%",
+                                        minValue: 0,
                                     },
                                     hAxis: {
                                         title: "Storage duration - log-seconds",
@@ -987,6 +1001,7 @@
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
                                 ['Samplesize', 'Power'],
+                                [0, 0],
 
 
                                 {% for data_p in power_lin_est %}
@@ -1040,18 +1055,13 @@
                                 function drawChart() {
                                     var data = google.visualization.arrayToDataTable([
                                         ['Storage Duration', 'PD%'],
+                                        [0, 0],
                                         {% for duration in setting.duration.all %}
                                             {% deviation_tot setting duration as dev_tot %}
                                             {% if dev_tot %}
                                                 [{{ duration.seconds }}, {% deviation_tot setting duration %}],
                                             {% endif %}
                                         {% endfor %}
-                                        {#[ 8,      12],#}
-                                        {#[ 4,      5.5],#}
-                                        {#[ 11,     14],#}
-                                        {#[ 4,      5],#}
-                                        {#[ 3,      3.5],#}
-                                        {#[ 6.5,    7]#}
                                     ]);
 
                                     var options = {
@@ -1134,22 +1144,14 @@
                                 function drawChart() {
                                     var data = google.visualization.arrayToDataTable([
                                         ['Storage Duration', 'PD%'],
+                                    [0, 0],
                                         {% for duration in setting.duration.all %}
                                             {% deviation_tot setting duration as dev_tot %}
                                             {% if dev_tot %}
                                                 [{{ duration.seconds }}, {% deviation_tot setting duration %}],
                                             {% endif %}
                                         {% endfor %}
-                                        {#                                    [ 8,      12],#}
-                                        {#                                    [ 4,      5.5],#}
-                                        {#                                    [ 11,     14],#}
-                                        {#                                    [ 4,      5],#}
-                                        {#                                    [ 3,      3.5],#}
-                                        {#                                    [ 6.5,    7]#}
-                                        {#                                        [0, 0.0],#}
-                                        {#                                        [3600, 44.52],#}
-                                        {#                                        [259200, 70.33],#}
-                                        {#                                        [12960000, 90],#}
+
 
                                     ]);
 

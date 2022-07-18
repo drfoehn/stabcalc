@@ -6,7 +6,7 @@ from datetime import datetime
 from wsgiref.util import FileWrapper
 
 from django.utils import timezone
-from openpyxl import Workbook #Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
+from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from statsmodels.stats.power import TTestIndPower
@@ -108,6 +108,8 @@ class ResultsView(DetailView):
         vars = ['value', 'seconds']
         merged_res_dur = merged_res_dur[vars]
         merged_res_dur = merged_res_dur.dropna()
+        # merged_res_dur = merged_res_dur.append({'value': 0, 'seconds': 0}, ignore_index=True)
+        # print(merged_res_dur)
         y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
         mod = sm.OLS(y, X)  # Describe model
         res = mod.fit()  # Fit model
@@ -302,15 +304,18 @@ class ResultsView(DetailView):
         context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
             parameter.values('name')[0]['name']) + ' level to change by ' + str(
             round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
+
         # print(res.params[1])
 
         # -------------------------- Normal distribution
 
         def distrib() -> str:
             if ksstat_p <= 0.05:
-                return 'The data IS NOT normally distributed. KS-p-value: ' + str(round(ksstat_p, 4)) + ' (only valid if n > 20)'
+                return 'The data IS NOT normally distributed. KS-p-value: ' + str(
+                    round(ksstat_p, 4)) + ' (only valid if n > 20)'
             else:
-                return 'The data IS normally distributed. KS-p-value: ' + str(round(ksstat_p, 4)) + ' (only valid if n > 20)'
+                return 'The data IS normally distributed. KS-p-value: ' + str(
+                    round(ksstat_p, 4)) + ' (only valid if n > 20)'
 
         context["interpretation_dist"] = distrib()
 
@@ -332,14 +337,12 @@ class ResultsView(DetailView):
 
         power_lin_est = []
         for lin_est in range(1, 10):
-                lin_est = lin_est/10
-                print(lin_est)
-                nobs = analysis.solve_power(effect_lin, power=lin_est, nobs1=None, ratio=1.0, alpha=alpha)
-                data_for_graph = (nobs, lin_est)
-                power_lin_est.append(data_for_graph)
-        context['power_lin_est']=power_lin_est
-
-
+            lin_est = lin_est / 10
+            print(lin_est)
+            nobs = analysis.solve_power(effect_lin, power=lin_est, nobs1=None, ratio=1.0, alpha=alpha)
+            data_for_graph = (nobs, lin_est)
+            power_lin_est.append(data_for_graph)
+        context['power_lin_est'] = power_lin_est
 
         # power = TTestIndPower().solve_power(effect_size=effect_size,
         #                                     nobs1=nobs1,
@@ -347,7 +350,6 @@ class ResultsView(DetailView):
         #                                     power=None,
         #                                     alpha=alpha,
         #                                     alternative='two-sided')
-
 
         # ---------------------Image for Power estimation
         # -----------------------Render with <img src="data:image/png,base64,{{ power|safe }}" alt="">
@@ -371,8 +373,6 @@ class ResultsView(DetailView):
         #
         # context['power'] = panalysis
         # context['panalysis'] = panalysis
-
-
 
         ###################################  Data import / export ####################################
 
@@ -399,12 +399,9 @@ class ResultsView(DetailView):
 
         # -----------------------------Export
 
-
         # https://stackoverflow.com/questions/35267585/django-pandas-to-http-response-download-file
         # https://djangoadventures.com/how-to-create-file-download-links-in-django/
         #
-
-
 
         MDATA = datetime.now().strftime('%Y-%m-%d')
 
@@ -452,7 +449,9 @@ class ResultsView(DetailView):
         )
         return context
 
+
 from io import BytesIO
+
 
 def DownloadExcel(request):
     excelfile = BytesIO()
@@ -469,15 +468,13 @@ def DownloadExcel(request):
 
     durations = Duration.objects.filter(owner=owner)
     for duration in durations:
-            ws2.append([str(duration)])
+        ws2.append([str(duration)])
 
     workbook.save(excelfile)
 
     response = HttpResponse(excelfile.getvalue(), content_type='application/')
     response['Content-Disposition'] = f'attachment; filename=stability-study-data-{now}.xlsx'
     return response
-
-
 
 
 def upload_view(request):
@@ -696,6 +693,7 @@ def delete_preanalytical_set(request, pk):
     preanalytical_set = PreanalyticalSet.objects.get(pk=pk)
     preanalytical_set.delete()
     return HttpResponse('')
+
 
 # --------------------------------------SAMPLE----------------------------------------
 
@@ -1049,7 +1047,6 @@ def result_list(request, setting_pk):
                 result = Result(value=value, setting=setting, duration=duration, subject_id=subject_id)
                 result.owner = request.user
                 result_list.append(result)
-
 
             Result.objects.bulk_create(result_list)
 
