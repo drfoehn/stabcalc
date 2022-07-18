@@ -4,8 +4,6 @@
 # TODO: Add automated 0 minutes duaration
 # TODO: Calculate Inter-Subject variability
 # TODO: Add "Select all" in settings for subjects and durations
-# TODO: Delet Value-1-1 above result inputs
-# TODO: Render all the new fields in results
 # TODO: Style Error messages
 
 # FIXME: Freeze/Thaw cycle does not get saved

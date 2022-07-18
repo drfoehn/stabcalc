@@ -82,7 +82,7 @@
 {#                                {% include 'calculator/partials/result_form.html' %}#}
                                 {% for field in form %}
                                     {% if field.field.subject_id == subject.id and field.field.duration_id == duration.id %}
-                                        {{ field.label }}
+{#                                        {{ field.label }}#}
                                         {{ field }}
                                     {% endif %}
                                 {% endfor %}

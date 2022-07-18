@@ -83,11 +83,11 @@ class SampleForm(forms.ModelForm):
     sample_type = forms.Select()
     sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     storage = forms.Select()
-    sample_leftover = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_leftover = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     # FIXME: Sample Pool, Sample Spike does not show Bootstrap attrs and upon edit the checks are gone.
-    sample_pool = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_pool = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     sample_pool_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    sample_spike = forms.BooleanField(widget=forms.CheckboxInput())
+    sample_spike = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     sample_spike_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     container_additive = forms.Select()
     container_additive_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -179,6 +179,8 @@ class SettingForm(forms.ModelForm):
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
     sample_type = forms.Select()
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    design_type = forms.Select()
+    design_sample = forms.Select()
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
@@ -203,6 +205,8 @@ class SettingForm(forms.ModelForm):
             'condition',
             'duration',
             'subject',
+            'design_type',
+            'design_sample',
             'protocol',
             'comment'
         )
@@ -229,6 +233,8 @@ class SettingForm(forms.ModelForm):
         self.fields['condition'].widget.attrs['class'] = 'form-select'
         self.fields['sample'].widget.attrs['class'] = 'form-select'
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
+        self.fields['design_sample'].widget.attrs['class'] = 'form-select'
+        self.fields['design_type'].widget.attrs['class'] = 'form-select'
         # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
 
@@ -246,10 +252,10 @@ class SettingForm(forms.ModelForm):
 class ConditionForm(forms.ModelForm):
     temperature = forms.Select()
     temperature_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    light = forms.BooleanField(widget=forms.CheckboxInput)
-    air = forms.BooleanField(widget=forms.CheckboxInput)
-    cell = forms.BooleanField(widget=forms.CheckboxInput)
-    agitation = forms.BooleanField(widget=forms.CheckboxInput)
+    light = forms.BooleanField(widget=forms.CheckboxInput, required=False)
+    air = forms.BooleanField(widget=forms.CheckboxInput, required=False)
+    cell = forms.BooleanField(widget=forms.CheckboxInput, required=False)
+    agitation = forms.BooleanField(widget=forms.CheckboxInput, required=False)
     thawing = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}),  required=False)
 

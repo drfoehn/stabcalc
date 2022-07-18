@@ -169,10 +169,15 @@ color: lightgray; !important;
 
 
 /*-------------------------------------INDEX PAGE------------------------------------*/
+
+.index-site-title{
+    background-color: transparent; !important;
+    color: black; !important;
+}
+
 .instrument-toggle{
     display: block;
 }
-
 
 .heading2{
     /*font-family: 'Ubuntu', sans-serif;*/

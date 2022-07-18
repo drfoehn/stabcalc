@@ -22,15 +22,7 @@
     {% endblock %}
 
     {% block js %}
-{#        -----------------------------Initialize Bootstrap Tooltip-----------------------------#}
-{#        FIXME: Tooltip style does not render#}
-{#        https://getbootstrap.com/docs/5.0/components/tooltips/#}
-        <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-</script>
+
         {#        ----------------------------------HTMX - https://htmx.org/ -------------------------------------#}
         <script src="https://unpkg.com/htmx.org@1.7.0"></script>
         {#        ------------------------Google Charts - https://developers.google.com/chart/interactive/docs/gallery#}
@@ -101,12 +93,29 @@
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
     })
 </script>
-
+{#-----------------------------Bootstrap5------------------------------------#}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous">
-
 </script>
+{#----------------------------Bootstrap Popover --------------------------------#}
+{#https://getbootstrap.com/docs/5.0/components/popovers/#example-enable-popovers-everywhere#}
+{#<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl)
+        })
+</script>
+
+
+
+
 
 </body>
 

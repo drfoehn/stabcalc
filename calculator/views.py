@@ -458,13 +458,21 @@ def DownloadExcel(request):
     excelfile = BytesIO()
     workbook = Workbook()
     workbook.remove(workbook.active)
-    # ws = wb.active
     ws1 = workbook.create_sheet(title="Basic Information")
     ws2 = workbook.create_sheet(title="Data")
-    for row in range(1, 40):
-        ws1.append(range(600))
-    workbook.save(excelfile)
+    owner = request.user
     now = timezone.now().strftime('%d-%m-%Y - %H-%M')
+
+    ws1['A1'] = "EFLM Stability Calculator"
+    ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)" + request.user.user_name
+    ws1['A5'] = 'Downloaded on ' + now
+
+    durations = Duration.objects.filter(owner=owner)
+    for duration in durations:
+            ws2.append([str(duration)])
+
+    workbook.save(excelfile)
+
     response = HttpResponse(excelfile.getvalue(), content_type='application/')
     response['Content-Disposition'] = f'attachment; filename=stability-study-data-{now}.xlsx'
     return response

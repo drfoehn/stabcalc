@@ -88,6 +88,12 @@
                                 {{ setting.condition.get_temperature_display }}
                             </td>
                         </tr>
+                    <tr>
+                        <th>Study design:</th>
+                        <td>
+                            {{ setting.get_design_type_display }}
+                        </td>
+                    </tr>
                     </table>
                 </div>
             </div>
@@ -441,7 +447,6 @@
             </div>
         </div>
 
-
         <br>
         <hr class="my-4">
 
@@ -713,7 +718,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="calc_result">Regression equation: <br></td>
+                                <td class="calc_result">Stability equation: <br></td>
                             </tr>
                             <tr>
                                 <td class="calc_result">{{ eq_model_lin }} <br></td>
@@ -781,7 +786,7 @@
                                 <td class="sub-italic">
                                     <br>
                                     Alpha: 0.05 <br>
-                                    Effect-size: {{ r_squared_lin }} <br>
+                                    Effect-size: {{ r_squared_lin  | floatformat:4  }} <br>
                                     Sample size: {{ subjects_n }}
                                 </td>
                             </tr>
@@ -880,7 +885,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="calc_result">Regression equation: <br></td>
+                                <td class="calc_result">Stability equation: <br></td>
                             </tr>
                             <tr>
                                 <td class="calc_result">{{ eq_model_log }}<br></td>
@@ -949,7 +954,7 @@
                                 <td class="sub-italic">
                                     <br>
                                     Alpha: 0.05 <br>
-                                    Effect-size: {{ r_squared_log }} <br>
+                                    Effect-size: {{ r_squared_log   | floatformat:4  }} <br>
                                     Sample size: {{ subjects_n }}
                                 </td>
                             </tr>
@@ -1084,7 +1089,7 @@
                                 </tr>
                                 <tr>
                                     <td class="calc_result">
-                                        Regression equation
+                                        Stability equation
                                     </td>
 
                                 </tr>
@@ -1183,7 +1188,7 @@
                                 </tr>
                                 <tr>
                                     <td class="calc_result">
-                                        Regression equation
+                                        Stability equation
                                     </td>
 
                                 </tr>
@@ -1305,6 +1310,21 @@
 
         {#    ---------------------------------RESULT TABLE------------------------------#}
         <h1 class="display-6">Single results</h1>
+    <div class="row">
+        <div class="col">
+            {%  cv_max setting as cv_max %}
+            {% if cv_max %}
+            <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>
+            In case more than 5% of all results are outliers, the analytical performance should be reviwed in depth. <br>
+            </span>
+            <span class="sub-italic">Definition of outliers: Greater than the 3-fold analytical-CV (According to your input: {% cv_max setting %} %)</span>
+            {% else %}
+                <span class="calc_result">If you want outliers to be calculated (highly recommended), please indicate the analytical CV of your method in the
+                <a href="{% url 'create-parameter' %}">"Parameter"-Section</a></span>
+            {% endif %}
+    <p></p>
+        </div>
+    </div>
         <div class="row">
             <div class="col">
                 <table class="table table-hover">
@@ -1335,7 +1355,9 @@
                         <tr>
                             <th scope="row" rowspan="2">{{ subject }}</th>
                             {% for duration in setting.duration.all %}
-                                <td>
+                                {% cv_max_abs_high duration setting as cv_max_abs_high%}
+                                {% cv_max_abs_low duration setting as cv_max_abs_low%}
+                                <td >
 
 
                                     {% for result in subject.result_set.all %}
@@ -1345,7 +1367,13 @@
                                                 {#                                                {% if not result.value %}#}
                                                 {# FIXME: Does not work                      'No results entered'#}
                                                 {#                                                {% else %}#}
+                                                {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}
+                                                <span style="color: red">
                                                 {{ result.value }} {{ setting.parameter.unit }} <br>
+                                                    </span>
+                                                    {% else %}
+                                                    {{ result.value }} {{ setting.parameter.unit }} <br>
+                                                {% endif %}
                                             {% endif %}
                                         {% endif %}
                                         {##}
@@ -1359,8 +1387,8 @@
                         <tr>
 
                             {% for duration in setting.duration.all %}
-                                <td>
 
+                                <td>
                                     AVG: {% average subject duration setting %} {{ setting.parameter.unit }}<br>
                                     SD: {% stdv subject duration setting %}<br>
                                     CV: {% cv subject duration setting %}%<br>

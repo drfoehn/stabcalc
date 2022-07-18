@@ -30,6 +30,7 @@ Blood samples are stored as...
 
                         {{ form.storage }}
                     </td>
+
                 </tr>
 
 
@@ -137,6 +138,9 @@ Blood samples are stored as...
                     <td>
                         <input type="checkbox" name="sample_pool" class="check-input" onclick="togglePool()">(Yes)</input>
                     </td>
+                    <td>
+                        {{ form.sample_pool.errors }}
+                    </td>
                 </tr>
                 <tr>
                     <td id="sample_pool_text_th" style="display: none" class="form-rowhead">
@@ -154,6 +158,9 @@ Blood samples are stored as...
                     </td>
                     <td>
                         <input type="checkbox" name="sample_spike" class="check-input" onclick="toggleSpike()">(Yes)</input>
+                    </td>
+                    <td>
+                        {{ form.sample_spike.errors }}
                     </td>
                 </tr>
                 <tr>

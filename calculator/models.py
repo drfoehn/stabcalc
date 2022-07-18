@@ -106,16 +106,16 @@ class PreanalyticalSet(OwnedModelMixin, models.Model):
     centrifugation_g = models.SmallIntegerField(verbose_name=_('Centrifugation speed (*g)'), blank=True, null=True)
     centrifugation_time = models.SmallIntegerField(verbose_name=_('Centrifugation time (min)'), blank=True, null=True)
     centrifugation_temp = models.SmallIntegerField(verbose_name=_('Centrifugation temperature (°C)'), blank=True, null=True)
-    comment = models.TextField(verbose_name=_('Preanalytical comment'))
+    comment = models.TextField(verbose_name=_('Preanalytical comment'), blank=True, null=True)
 
     def __str__(self):
         return f"{self.collection_site}"
 
 class Sample(OwnedModelMixin, models.Model):
-    sample_leftover = models.BooleanField(verbose_name=_('Were the used samples leftovers from routine processes?'))
-    sample_pool = models.BooleanField(verbose_name=_('Were the used samples pooled samples?'))
+    sample_leftover = models.BooleanField(verbose_name=_('Were the used samples leftovers from routine processes?'), blank=True, null=True)
+    sample_pool = models.BooleanField(verbose_name=_('Were the used samples pooled samples?'), blank=True, null=True)
     sample_pool_text = models.TextField(verbose_name=_('How and form what samples were study samples pooled?'), blank=True, null=True)
-    sample_spike = models.BooleanField(verbose_name=_('Were analytes spiked in study samples?'))
+    sample_spike = models.BooleanField(verbose_name=_('Were analytes spiked in study samples?'), blank=True, null=True)
     sample_spike_text = models.TextField(verbose_name=_('Which analytes were spiked and how?'), blank=True, null=True)
 
     VENOUS_BLOOD = 1
@@ -270,6 +270,33 @@ class Setting(OwnedModelMixin, models.Model):
         verbose_name='Type of study subject'
     )
 
+
+    ISOCHRONUS = 1
+    REALTIME = 2
+    DESIGN_TYPE = (
+        (ISOCHRONUS, _("Isochronus")),
+        (REALTIME, _("Real time")),
+
+    )
+
+    design_type = models.SmallIntegerField(
+        choices=DESIGN_TYPE,
+        verbose_name='Type of study design'
+    )
+
+    PRIMARY = 1
+    ALIQUOT = 2
+    DESIGN_SAMPLE = (
+        (PRIMARY, _("primary samples")),
+        (ALIQUOT, _("aliquots")),
+
+    )
+
+    design_sample = models.SmallIntegerField(
+        choices=DESIGN_SAMPLE,
+        verbose_name='Type of study design'
+    )
+
     protocol = models.TextField(verbose_name=_('Study protocol'), blank=True, null=True)
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
 
@@ -314,6 +341,29 @@ class Setting(OwnedModelMixin, models.Model):
             return None
         else:
             return math.ceil(((stdv / average) * 100) * 100) / 100
+
+    def cv_max(self) -> float | None:
+        analytical_cv = self.parameter.CV_intra
+        if not analytical_cv:
+            return None
+        else:
+            return round(analytical_cv*3, 2)
+
+    def cv_max_abs_high(self, duration: 'Duration') -> float | None:
+        analytical_cv = self.parameter.CV_intra
+        average_tot= self.average_tot(duration)
+        if not analytical_cv:
+            return None
+        else:
+            return  average_tot*(((analytical_cv*3)+1)/100)+average_tot
+
+    def cv_max_abs_low(self, duration: 'Duration') -> float | None:
+        analytical_cv = self.parameter.CV_intra
+        average_tot= self.average_tot(duration)
+        if not analytical_cv:
+            return None
+        else:
+            return  average_tot-average_tot*(((analytical_cv*3)+1)/100)
 
     def deviation_tot(self, duration: 'Duration') -> float | None:
         average = self.average_tot(duration)
