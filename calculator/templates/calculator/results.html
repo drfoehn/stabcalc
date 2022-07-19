@@ -7,23 +7,18 @@
 
     <div class="jumbotron">
         <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
-        <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to
-            featured content or information.</p>
-        <hr class="my-4">
-    </div>
-    {#    --------------------------------BUTTONS--------------------------------#}
-    <div class="row">
+
+            {#    --------------------------------BUTTONS--------------------------------#}
         <div class="col d-flex justify-content-end">
             <a href="javascript:window.print()" class="bi bi-printer result_buttons" data-toggle="tooltip" data-placement="top" title="Print this page"></a>
             <a href="{% url 'download-data' %}" class="bi bi-box-arrow-down result_buttons" data-toggle="tooltip" data-placement="top" title="Download data"></a>
-            <div class="spinner-border" role="status">
-  <span class="visually-hidden">Loading...</span>
-</div>
             <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons" data-toggle="tooltip" data-placement="top" title="Add results"></a>
 
         </div>
+        <hr class="my-4">
     </div>
-    <hr class="my-4">
+
+
 
     {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
 
@@ -139,13 +134,13 @@
                                     {% endif %}</td>
                                 </tr>
                                 <tr>
-                                    <th>Method Intra CV%</th>
+                                    <th>Method Analytical Imprecision (Intra CV%)</th>
                                     <td>{{ setting.parameter.CV_intra }} %</td>
                                 </tr>
-                                <tr>
-                                    <th>Method Inter CV%</th>
-                                    <td>{{ setting.parameter.CV_inter }} %</td>
-                                </tr>
+{#                                <tr>#}
+{#                                    <th>Method Inter CV%</th>#}
+{#                                    <td>{{ setting.parameter.CV_inter }} %</td>#}
+{#                                </tr>#}
 
                             </table>
                         </div>
@@ -406,7 +401,7 @@
                 </div>
             </div>
         </div>
-
+    </div>
 
         <hr class="my-4">
 
@@ -418,7 +413,80 @@
         {{ interpretation_dist }} <br>
         The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the
         analyte variability observed during sample storage.<br>
-        Valid for linear model only: <strong>{{ interpretation_1 }}</strong>
+    <p></p>
+
+
+    <div class="row">
+                            <div class="col">
+
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                                        data-bs-target="#interpretModal">
+                                    Recommended interpretation / expression of results
+                                </button>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="interpretModal" tabindex="-1"
+                                     aria-labelledby="interpretModalLabel"
+                                     aria-hidden="true">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="interpretModalLabel">Recommended interpretation / expression of results </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul>
+                                                    <li>
+                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a non-linear model,
+                                                        <br>indicate <strong>"Under these conditions, a non-linear increase/decrease in magnitude is observed"</strong>
+                                                    <p></p>
+                                                    </li>
+                                                    <li>
+                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a linear model, but in the maximum study time, a DP% above the maximum permissible error (MPE) is not reached,
+                                                        <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n (units) per hour is expected. In the time studied (indicate), the error due to loss of stability does not exceed the maximum permissible error criterion of x% (based on ...)".</strong>
+                                                    <p></p>
+                                                    </li>
+                                                    <li>
+                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a linear model,
+                                                        <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n (units) per hour is expected”</strong>
+                                                    <p></p>
+                                                    </li>
+                                                    <li>
+                                                        If the slope obtained is not significantly different from zero,
+                                                        <br>indicate, <strong>"Under these conditions and with this experimental design, no loss of stability is expècted up to XX hours".</strong>
+                                                    <p></p>
+                                                    </li>
+                                                    <li>
+                                                        If the slope obtained is significantly different from zero, but the R2 obtained is <0.7,
+                                                        <br>indicate <strong>"Under these conditions, a possible loss of stability effect is observed and needs to be confirmed".</strong>
+                                                    <p></p>
+                                                    </li>
+                                                </ul>
+                                           </div>
+                                        </div>
+                                    </div>
+                                </div>
+<p></p>
+
+                            </div>
+                        </div>
+
+
+
+    <img src="{% static 'images/icon/quote1.png' %}" alt="">
+        <span class="interpretation">
+            {% if r_squared_lin > 0.7 and f_p_value < 0.05 %}
+            {{ interpretation_1 }}
+                {% else  %}
+            {{ interpretation_2 }}
+            {% endif %}
+            <sup>*</sup></span>
+    <img src="{% static 'images/icon/quote2.png' %}" alt="">
+    <br><sup>*</sup> Valid for linear model only.
+    
         <br>
         <br>
         <hr class="my-4">
@@ -743,6 +811,36 @@
 
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="calc_result">
+                                <p></p>
+                                    <i>p</i>-value: {% if f_p_value < 0.0001 %}
+                                        < 0.0001
+                                    {% elif f_p_value >= 0.05  %}
+                                        Non-significant ({{ f_p_value | floatformat:4 }})
+                                        {% else %}
+                                        {{ f_p_value | floatformat:4 }}
+                                    {% endif %}
+                                </td>
+                            </tr><tr>
+                                <td>
+                                    <span class="sub-italic">Performed statistics: t-test <br>
+                                        Interpretation:
+                                        {% if f_p_value >= 0.05  %}
+                                        The hypothesis test is not significant - It is impossible to distinguish whether
+                                        there is no loss in {{ setting.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
+                                    {% else %}
+                                        The chance of the change in {{ setting.parameter.name }}-values
+                                        not being related to the storage time/condition is
+                                        {% if f_p_value < 0.0001 %}
+                                        < 0.01
+                                        {% else %}
+                                        {{ f_p_value_perc | floatformat:2 }}
+                                    {% endif %} %.
+                                    {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
                         </table>
                         {#                 ------------- Button-Extended Statictics ----------------#}
                         <br>
@@ -768,8 +866,11 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body-stat">
                                                 <pre style="font-family: monospace, monospace">{{ statistics_extended_abs_lin|safe }}</pre>
+                                            </div>
+                                            <div>
+                                                For an explanation of the numbers visit <a href="https://medium.com/swlh/interpreting-linear-regression-through-statsmodels-summary-4796d359035a">this link</a>.
                                             </div>
                                             <div class="modal-footer">
                                                 <a href="javascript:window.print()" class="bi bi-printer print"></a>
@@ -912,6 +1013,35 @@
 
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="calc_result">
+                                <p></p>
+                                    <i>p</i>-value: {% if f_p_log_value < 0.0001 %}
+                                        < 0.0001
+                                    {% elif f_p_log_value >= 0.05  %}
+                                        Non-significant ({{ f_p_log_value | floatformat:4 }})
+                                        {% else %}
+                                        {{ f_p_log_value | floatformat:4 }}
+                                    {% endif %}
+                                </td>
+                            </tr><tr>
+                                <td>
+                                    <span class="sub-italic">Performed statistics: t-test <br>
+                                    Interpretation:
+                                    {% if f_p_log_value >= 0.05  %}
+                                        The hypothesis test is not significant - It is impossible to distinguish whether
+                                        there is no loss in {{ setting.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
+                                    {% else %}
+                                        The chance of the change in {{ setting.parameter.name }}-values
+                                        not being related to the storage time/condition is
+                                        {% if f_p_log_value < 0.0001 %}
+                                        < 0.01
+                                        {% else %}
+                                        {{ f_p_log_value_perc | floatformat:2 }}
+                                    {% endif %} %.
+                                    {% endif %}</span>
+                                </td>
+                            </tr>
                         </table>
 
                         {#                 ------------- Button-Extended Statictics ----------------#}
@@ -939,7 +1069,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                             </div>
-                                            <div class="modal-body">
+                                            <div class="modal-body-stat">
                                                 <pre style="font-family: monospace, monospace">{{ statistics_extended_log|safe }}</pre>
                                             </div>
                                             <div class="modal-footer">
@@ -1215,13 +1345,34 @@
             </div>
         </div>
 
-        {#-----------------------------Acceptable limits Calculator-------------------------#}
+        {#-----------------------------Maximum permissible error Calculator-------------------------#}
         <div class="row">
             <div class="col">
                 <hr>
-                <p class="th_category_heading">Calculate allowable / acceptable deviation limits</p> <br>
+                <p class="th_category_heading">Calculate maximum permissible error (MPE)</p> <br>
             </div>
         </div>
+    <div class="row">
+        <div class="col">
+            There are no explicit specifications for maximum permissible error (MPE) for pre-analytical deterioration,
+            and in any case, they should be related to the quality specifications of the laboratory and the intended use
+            of the results. <br>
+            In accordance with the analytical quality specifications, in the <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2015-0067/pdf">
+            1st Strategic Conference of the European Federation of Laboratory Medicine</a>, three models were defined for the choice of specifications:
+            <ul>
+                <li>the clinical impact,</li>
+                <li>biological variation,</li>
+                <li>and state of the art.</li>
+                </ul>
+            The following sources of biological variation data may be used:
+                <ul>
+                    <li><a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">
+            The EuBIVAS study</a></li>
+                    <li><a href="https://biologicalvariation.eu/">The EFLM Biological Variation Database</a></li>
+                </ul>
+      </div>
+    </div>
+        <hr>
         <div class="row">
             <div class="col">
 
@@ -1229,15 +1380,26 @@
                 <form>
                     {% csrf_token %}
                     <div class="form-row align-items-center">
+                        <div class="col-auto ">
+                            <label class="sr-only calc_result" for="inlineFormInput">Analytical Imprecision (Intra-Assay-CV) (CV<sub>a</sub>)
+                                of {{ setting.parameter.name }}</label>
+                            {% if  setting.parameter.CV_intra  %}
+                                <span class="calc_result">{{ setting.parameter.CV_intra }} %</span><br>
+                                <span class="sub-italic">This value is derived from your input. You can change it in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.name }}</a></span>
+                                {% else %}
+                                <span class="calc_result">Please enter a value in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.name }}</a></span>
+                            {% endif %}
+                        <p></p>
+                        </div>
                         <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Intra-Individual Variation (CVi)
+                            <label class="sr-only calc_result" for="inlineFormInput">Intra-Individual (Within-subject) Variation (CV<sub>i</sub>)
                                 of {{ setting.parameter.name }}</label>
                             <input type="text" class="form-control mb-2" id="intra-cv"
                                    placeholder="">
                         </div>
                         <br>
                         <div class="col-auto">
-                            <label class="sr-only" for="inlineFormInput">Inter-Individual Variation (CVg)
+                            <label class="sr-only calc_result" for="inlineFormInput">Inter-Individual (Between-subject) Variation (CV<sub>g</sub>)
                                 of {{ setting.parameter.name }}</label>
                             <input type="text" class="form-control mb-2" id="inter-cv"
                                    placeholder="">
@@ -1256,11 +1418,37 @@
                 <table>
                     <tr>
                         <th>
+                            <span class="calc_result">Reference Change Value (RCV): </span><br>
+                            <span class="sub-italic">Formula:  RCV = 2<sup>1/2</sup> * Z * (CV<sub>a</sub><sup>2</sup> + CV<sub>i</sub><sup>2</sup>)<sup>1/2</sup> <br></span>
+                        </th>
+                        <td>
+                            <span id="calc_result_rcv" class="calc_result"></span>&nbsp;%<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sub-italic">
+                            Z is set to 1.96 to represent a significance level of 0.05<br>
+                            Reference: Fraser C.G. Clin Chem Lab Med 2012;50(5):807–812 doi:
+                            <a href="https://www.degruyter.com/document/doi/10.1515/CCLM.2011.733/html">10.1515/cclm-2011-733</a>
+                            <br/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             <span class="calc_result">Allowable Deviation: </span><br>
-                            <span class="sub-italic">Formula: 0.5 * CVi </span><br>
+                            <span class="sub-italic">Formula: 0.5 * CV<sub>i</sub> </span><br>
                         </th>
                         <td>
                             <span id="calc_result_allow" class="calc_result"></span>&nbsp;%<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="sub-italic">
+                            Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                               target="_blank">10.1515/cclm-2019-0596</a>.
+                            PMID: 31702996.
+                            <br/>
                         </td>
                     </tr>
                     <tr>
@@ -1273,9 +1461,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <td class="sub-italic">
+                            Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                               target="_blank">10.1515/cclm-2019-0596</a>.
+                            PMID: 31702996.
+                            <br/>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>
                             <span class="calc_result">Allowable Bias: </span><br>
-                            <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CVi<sup>2</sup> + CVg<sup>2</sup>)&nbsp;</span></span><br>
+                            <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CV<sub>i</sub><sup>2</sup> + CV<sub>g</sub><sup>2</sup>)&nbsp;</span></span><br>
                         </th>
                         <td>
                             <span id="calc_bias_allow" class="calc_result"></span>&nbsp;%
@@ -1298,11 +1495,14 @@
         <script>
 
             function calcValue() {
+                let cva = {{ setting.parameter.CV_intra }}
                 let cvi = document.getElementById("intra-cv").value;
                 let cvg = document.getElementById("inter-cv").value;
+                let rcv = 2^0.5*1.96*(cva^2+cvi^2)^0.5
                 let result_accept = 0.5 * cvi;
                 let result_allow = 0.7 * result_accept
                 let bias_allow = 0.25 * (Math.sqrt(cvi ^ 2 + cvg ^ 2))
+                document.getElementById("calc_result_rcv").innerHTML = rcv.toFixed(2);
                 document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);
                 document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);
                 document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);

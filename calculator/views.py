@@ -76,8 +76,8 @@ class ResultsView(DetailView):
                     y_rel.append(result)
                     x1_rel.append(duration)
 
-        print(y_rel)
-        print(x1_rel)
+        # print(y_rel)
+        # print(x1_rel)
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
@@ -258,6 +258,7 @@ class ResultsView(DetailView):
         # -------------------------Extract single parameters from summary - linear regression
         b0_abs_lin = results_abs.params[0]  # constant coefficient / Intercept
         b1_abs_lin = results_abs.params[1]  # seconds coefficient / Slope
+        print(results_abs.f_pvalue)
         b0_r_abs_lin = round(b0_abs_lin, 5)
         context["intercept_abs_lin"] = b0_r_abs_lin
         b1_r_abs_lin = round(b1_abs_lin, 5)
@@ -303,7 +304,11 @@ class ResultsView(DetailView):
 
         context["best_fit_model"] = best_fit_model()
 
-        context["interpretation_1"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
+        context["interpretation_1"] = 'Under these conditions, a ' + str(
+            parameter.values('name')[0]['name']) + ' magnitude increase/decrease of ' + str(
+            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit']) + ' per hour is expected'
+
+        context["interpretation_2"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
             parameter.values('name')[0]['name']) + ' level to change by ' + str(
             round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
 
@@ -340,7 +345,7 @@ class ResultsView(DetailView):
         power_lin_est = []
         for lin_est in range(1, 10):
             lin_est = lin_est / 10
-            print(lin_est)
+            # print(lin_est)
             nobs = analysis.solve_power(effect_lin, power=lin_est, nobs1=None, ratio=1.0, alpha=alpha)
             data_for_graph = (nobs, lin_est)
             power_lin_est.append(data_for_graph)
@@ -445,7 +450,10 @@ class ResultsView(DetailView):
                 "durations": Duration.objects.all(),
                 "r_square": results_abs.rsquared,
                 "f_p_value": results_abs.f_pvalue,
+                "f_p_value_perc": results_abs.f_pvalue*100,
                 "f_value": results_abs.fvalue,
+                "f_p_log_value": res_log.f_pvalue,
+                "f_p_log_value_perc": res_log.f_pvalue*100,
                 # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
             }
         )

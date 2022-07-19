@@ -300,6 +300,14 @@ th{
     border: none !important;
 }
 
+.interpretation{
+    font-family: Ubuntu, serif;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+
+
 .total_results{
     font-weight: bold;
     background-color: var(--powder-blue);
@@ -310,7 +318,7 @@ th{
     font-weight: bold;
 }
 
-.modal-body{
+.modal-body-stat{
     text-align: center;
 }
 
