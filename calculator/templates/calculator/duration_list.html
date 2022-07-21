@@ -9,7 +9,7 @@
     <h4 class="display-5">List / Add durations</h4>
 
 
-    <a hx-get="{% url 'create-duration-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
+    <a hx-get="{% url 'create-duration-form' %}" class="button button-red" role="button" data-bs-toggle="button"
        hx-swap="beforeend" hx-target="#duration_form">Add additional duration</a>
     <div class="row" id="duration_form"></div>
     {% if durations %}

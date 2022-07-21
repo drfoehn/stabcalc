@@ -1,0 +1,823 @@
+{
+  "Parameters": [
+    {
+      "ID": 1,
+      "Name": "ALT / GPT",
+      "Abbreviation": "ALT",
+      "Unit": "U/L",
+      "Mean value": 22.3,
+      "CVa": 6.7,
+      "CVi": 9.3,
+      "CVg": 28
+    },
+    {
+      "ID": 2,
+      "Name": "AST / GOT",
+      "Abbreviation": "AST",
+      "Unit": "U/L",
+      "Mean value": 20.9,
+      "CVa": 5.5,
+      "CVi": 9.5,
+      "CVg": 20.3
+    },
+    {
+      "ID": 3,
+      "Name": "Gamma-Glutamy Transferase",
+      "Abbreviation": "GGT",
+      "Unit": "U/L",
+      "Mean value": 13.8,
+      "CVa": 8.7,
+      "CVi": 8.9,
+      "CVg": 45.1
+    },
+    {
+      "ID": 4,
+      "Name": "Alkal. Phosphatase",
+      "Abbreviation": "ALP",
+      "Unit": "U/L",
+      "Mean value": 61.2,
+      "CVa": 2.8,
+      "CVi": 5.3,
+      "CVg": 24.9
+    },
+    {
+      "ID": 5,
+      "Name": "LDH",
+      "Abbreviation": "LDH",
+      "Unit": "U/L",
+      "Mean value": 159,
+      "CVa": 1.2,
+      "CVi": 5.2,
+      "CVg": 12.6
+    },
+    {
+      "ID": 6,
+      "Name": "Creatin-Kinase",
+      "Abbreviation": "CK",
+      "Unit": "U/L",
+      "Mean value": 106,
+      "CVa": 0.9,
+      "CVi": 14.5,
+      "CVg": 37.9
+    },
+    {
+      "ID": 7,
+      "Name": "Amylase",
+      "Abbreviation": "AMY",
+      "Unit": "U/L",
+      "Mean value": 69.9,
+      "CVa": 1,
+      "CVi": 6.8,
+      "CVg": 30.4
+    },
+    {
+      "ID": 8,
+      "Name": "Pancreatic Alpha-amylase",
+      "Abbreviation": "PAMY",
+      "Unit": "U/L",
+      "Mean value": 32.5,
+      "CVa": 1.8,
+      "CVi": 6.3,
+      "CVg": 24.9
+    },
+    {
+      "ID": 9,
+      "Name": "Lipase",
+      "Abbreviation": "LIP",
+      "Unit": "U/L",
+      "Mean value": 37.2,
+      "CVa": 6.4,
+      "CVi": 7.7,
+      "CVg": 23.8
+    },
+    {
+      "ID": 10,
+      "Name": "Sodium",
+      "Abbreviation": "Na",
+      "Unit": "mmol/L",
+      "Mean value": 142.7,
+      "CVa": 0.4,
+      "CVi": 0.53,
+      "CVg": 1.21
+    },
+    {
+      "ID": 11,
+      "Name": "Potassium",
+      "Abbreviation": "K",
+      "Unit": "mmol/L",
+      "Mean value": 4.28,
+      "CVa": 0.41,
+      "CVi": 3.92,
+      "CVg": 4.08
+    },
+    {
+      "ID": 12,
+      "Name": "Chloride",
+      "Abbreviation": "Cl",
+      "Unit": "mmol/L",
+      "Mean value": 105.6,
+      "CVa": 0.4,
+      "CVi": 0.98,
+      "CVg": 1.34
+    },
+    {
+      "ID": 13,
+      "Name": "Calcium",
+      "Abbreviation": "Ca",
+      "Unit": "mg/dL",
+      "Mean value": 8.97,
+      "CVa": 0.85,
+      "CVi": 1.81,
+      "CVg": 2.73
+    },
+    {
+      "ID": 14,
+      "Name": "Magnesium",
+      "Abbreviation": "Mg",
+      "Unit": "mg/dL",
+      "Mean value": 2.01,
+      "CVa": 2.48,
+      "CVi": 2.88,
+      "CVg": 5.79
+    },
+    {
+      "ID": 15,
+      "Name": "inorg. Phosphate",
+      "Abbreviation": "IP",
+      "Unit": "mg/dL",
+      "Mean value": 3.62,
+      "CVa": 2.87,
+      "CVi": 7.67,
+      "CVg": 10.5
+    },
+    {
+      "ID": 16,
+      "Name": "Total Cholesterol",
+      "Abbreviation": "TC",
+      "Unit": "mg/dL",
+      "Mean value": 191,
+      "CVa": 0.98,
+      "CVi": 5.18,
+      "CVg": 17.4
+    },
+    {
+      "ID": 17,
+      "Name": "HDL Cholesterol",
+      "Abbreviation": "HDL Chol",
+      "Unit": "mg/dL",
+      "Mean value": 63.8,
+      "CVa": 0.56,
+      "CVi": 5.67,
+      "CVg": 25.1
+    },
+    {
+      "ID": 18,
+      "Name": "LDL Cholesterol",
+      "Abbreviation": "LDL Chol",
+      "Unit": "mg/dL",
+      "Mean value": 106.4,
+      "CVa": 1.77,
+      "CVi": 8.46,
+      "CVg": 28.2
+    },
+    {
+      "ID": 19,
+      "Name": "Non-HDL Cholesterol",
+      "Abbreviation": "Non-HDL Chol",
+      "Unit": "mg/dL",
+      "Mean value": 127,
+      "CVa": 1.47,
+      "CVi": 6.88,
+      "CVg": 26.4
+    },
+    {
+      "ID": 20,
+      "Name": "Trigycerides",
+      "Abbreviation": "Trig",
+      "Unit": "mg/dL",
+      "Mean value": 87.6,
+      "CVa": 1.8,
+      "CVi": 19.8,
+      "CVg": 40.3
+    },
+    {
+      "ID": 21,
+      "Name": "Glucose",
+      "Abbreviation": "Glu",
+      "Unit": "mg/dL",
+      "Mean value": 83.3,
+      "CVa": 0.58,
+      "CVi": 4.7,
+      "CVg": 8.1
+    },
+    {
+      "ID": 22,
+      "Name": "Urea",
+      "Abbreviation": "Urea",
+      "Unit": "mg/dL",
+      "Mean value": 32.3,
+      "CVa": 2.32,
+      "CVi": 14.1,
+      "CVg": 22.5
+    },
+    {
+      "ID": 23,
+      "Name": "Uric Acid",
+      "Abbreviation": "UA",
+      "Unit": "mg/dL",
+      "Mean value": 4.81,
+      "CVa": 0.86,
+      "CVi": 8.32,
+      "CVg": 23.6
+    },
+    {
+      "ID": 24,
+      "Name": "Total Protein",
+      "Abbreviation": "TP",
+      "Unit": "mg/dL",
+      "Mean value": 7.24,
+      "CVa": 0.97,
+      "CVi": 2.6,
+      "CVg": 4.6
+    },
+    {
+      "ID": 25,
+      "Name": "Total Bilirubin",
+      "Abbreviation": "T Bil",
+      "Unit": "mg/dL",
+      "Mean value": 0.69,
+      "CVa": 2.98,
+      "CVi": 20.9,
+      "CVg": 26.6
+    },
+    {
+      "ID": 26,
+      "Name": "Direct Bilirubin",
+      "Abbreviation": "D Bil",
+      "Unit": "mg/dL",
+      "Mean value": 0.23,
+      "CVa": 6.05,
+      "CVi": 20.9,
+      "CVg": 31.1
+    },
+    {
+      "ID": 27,
+      "Name": "Creatinine (enzymatic)",
+      "Abbreviation": "Crea Enz",
+      "Unit": "mg/dL",
+      "Mean value": 0.8,
+      "CVa": 1.1,
+      "CVi": 4.4,
+      "CVg": 17.1
+    },
+    {
+      "ID": 28,
+      "Name": "Creatinine (Jaffe)",
+      "Abbreviation": "Crea Jaffe",
+      "Unit": "mg/dL",
+      "Mean value": 0.74,
+      "CVa": 4.4,
+      "CVi": 4.7,
+      "CVg": 19
+    },
+    {
+      "ID": 29,
+      "Name": "neuron-specific enolase",
+      "Abbreviation": "NSE",
+      "Unit": "mg/L",
+      "Mean value": 11.9,
+      "CVa": 3.2,
+      "CVi": 10.9,
+      "CVg": 20.3
+    },
+    {
+      "ID": 30,
+      "Name": "S100-β protein",
+      "Abbreviation": "S100B",
+      "Unit": "pg/L",
+      "Mean value": 44.5,
+      "CVa": 4.3,
+      "CVi": 10.2,
+      "CVg": 32.7
+    },
+    {
+      "ID": 31,
+      "Name": "Alpha1-Antitrypsin",
+      "Abbreviation": "AAT",
+      "Unit": "mg/dL",
+      "Mean value": 112.9,
+      "CVa": 1.38,
+      "CVi": 3.8,
+      "CVg": 10.1
+    },
+    {
+      "ID": 32,
+      "Name": "Alpha1-acid-glycoprotein",
+      "Abbreviation": "AGP",
+      "Unit": "mg/dL",
+      "Mean value": 63.3,
+      "CVa": 1.96,
+      "CVi": 6.8,
+      "CVg": 24
+    },
+    {
+      "ID": 33,
+      "Name": "Albumin",
+      "Abbreviation": "Alb",
+      "Unit": "g/dL",
+      "Mean value": 4.21,
+      "CVa": 1.5,
+      "CVi": 2.5,
+      "CVg": 5.1
+    },
+    {
+      "ID": 34,
+      "Name": "ß2-Microglobulin",
+      "Abbreviation": "b2M",
+      "Unit": "mg/L",
+      "Mean value": 1.6,
+      "CVa": 2.21,
+      "CVi": 4,
+      "CVg": 11.2
+    },
+    {
+      "ID": 35,
+      "Name": "Complement component 3",
+      "Abbreviation": "C3",
+      "Unit": "mg/L",
+      "Mean value": 113.4,
+      "CVa": 1.89,
+      "CVi": 4.6,
+      "CVg": 15.2
+    },
+    {
+      "ID": 36,
+      "Name": "Complement component 4",
+      "Abbreviation": "C4",
+      "Unit": "mg/L",
+      "Mean value": 23.4,
+      "CVa": 2.34,
+      "CVi": 6.9,
+      "CVg": 24.5
+    },
+    {
+      "ID": 37,
+      "Name": "Ceruloplasmin",
+      "Abbreviation": "Cer",
+      "Unit": "mg/L",
+      "Mean value": 20.06,
+      "CVa": 2.07,
+      "CVi": 4.9,
+      "CVg": 15.2
+    },
+    {
+      "ID": 38,
+      "Name": "Cystatin C",
+      "Abbreviation": "CysC",
+      "Unit": "mg/L",
+      "Mean value": 0.88,
+      "CVa": 2.54,
+      "CVi": 3.9,
+      "CVg": 12
+    },
+    {
+      "ID": 39,
+      "Name": "Haptoglobin",
+      "Abbreviation": "Hapto",
+      "Unit": "mg/dL",
+      "Mean value": 98.5,
+      "CVa": 2.23,
+      "CVi": 7.4,
+      "CVg": 39.4
+    },
+    {
+      "ID": 40,
+      "Name": "Immunglobulin A",
+      "Abbreviation": "IgA",
+      "Unit": "mg/dL",
+      "Mean value": 206.8,
+      "CVa": 1.49,
+      "CVi": 3.3,
+      "CVg": 39.4
+    },
+    {
+      "ID": 41,
+      "Name": "Immunglobulin G",
+      "Abbreviation": "IgG",
+      "Unit": "mg/dL",
+      "Mean value": 1052.1,
+      "CVa": 1.28,
+      "CVi": 2.8,
+      "CVg": 19.7
+    },
+    {
+      "ID": 42,
+      "Name": "Immunglobulin M",
+      "Abbreviation": "IgM",
+      "Unit": "mg/dL",
+      "Mean value": 121,
+      "CVa": 2.2,
+      "CVi": 3.9,
+      "CVg": 48.6
+    },
+    {
+      "ID": 43,
+      "Name": "Transferrin",
+      "Abbreviation": "Trf",
+      "Unit": "mg/dL",
+      "Mean value": 259.5,
+      "CVa": 2.69,
+      "CVi": 3.4,
+      "CVg": 13.9
+    },
+    {
+      "ID": 44,
+      "Name": "soluble Transferrin Receptor",
+      "Abbreviation": "sTfr",
+      "Unit": "mg/L",
+      "Mean value": 2.59,
+      "CVa": 4.09,
+      "CVi": 6.9,
+      "CVg": 19.1
+    },
+    {
+      "ID": 45,
+      "Name": "C-reactive Protein",
+      "Abbreviation": "CRP",
+      "Unit": "mg/L",
+      "Mean value": 0.72,
+      "CVa": 11.1,
+      "CVi": 29.4,
+      "CVg": 87
+    },
+    {
+      "ID": 46,
+      "Name": "Lipoprotein (a)",
+      "Abbreviation": "Lp(a)",
+      "Unit": "nmol/L",
+      "Mean value": 73.1,
+      "CVa": 3.1,
+      "CVi": 8.9
+    },
+    {
+      "ID": 47,
+      "Name": "Apolipoprotein A1",
+      "Abbreviation": "ApoA1",
+      "Unit": "mg/dL",
+      "Mean value": 152,
+      "CVa": 1.7,
+      "CVi": 4.8,
+      "CVg": 17.3
+    },
+    {
+      "ID": 48,
+      "Name": "Apolipoprotein B",
+      "Abbreviation": "ApoB",
+      "Unit": "mg/dL",
+      "Mean value": 90,
+      "CVa": 1.5,
+      "CVi": 6.7,
+      "CVg": 25.9
+    },
+    {
+      "ID": 49,
+      "Name": "Troponin I (Siemens)",
+      "Abbreviation": "TnI Siemens",
+      "Unit": "ng/L",
+      "Mean value": 2.85,
+      "CVa": 10.7,
+      "CVi": 13.9,
+      "CVg": 36.3
+    },
+    {
+      "ID": 50,
+      "Name": "Troponin I (Singulex)",
+      "Abbreviation": "Tn I Singulex",
+      "Unit": "ng/L",
+      "Mean value": 0.78,
+      "CVa": 11.6,
+      "CVi": 16.6,
+      "CVg": 40.3
+    },
+    {
+      "ID": 51,
+      "Name": "Parathormone",
+      "Abbreviation": "PTH 1-84",
+      "Unit": "ng/L",
+      "Mean value": 37.9,
+      "CVa": 3.3,
+      "CVi": 14.7,
+      "CVg": 26.8
+    },
+    {
+      "ID": 52,
+      "Name": "Osteocalcin",
+      "Abbreviation": "OC",
+      "Unit": "μg/L",
+      "Mean value": 22.5,
+      "CVa": 2.3,
+      "CVi": 8.9,
+      "CVg": 32.6
+    },
+    {
+      "ID": 53,
+      "Name": "uncarboxylated-unphosphorylated Matrix-Gla Protein",
+      "Abbreviation": "uCuP-MGP",
+      "Unit": "pmol/L",
+      "Mean value": 397,
+      "CVa": 6.9,
+      "CVi": 6.9,
+      "CVg": 13.9
+    },
+    {
+      "ID": 54,
+      "Name": "N-terminal propeptide of type I collagen",
+      "Abbreviation": "PINP",
+      "Unit": "μg/L",
+      "Mean value": 63.7,
+      "CVa": 3.7,
+      "CVi": 8.8,
+      "CVg": 35.2
+    },
+    {
+      "ID": 55,
+      "Name": "β-isomerized C-terminal telopeptide of type I collagen",
+      "Abbreviation": "ß-CTX",
+      "Unit": "ng/L",
+      "Mean value": 514.3,
+      "CVa": 5,
+      "CVi": 15.1,
+      "CVg": 45.9
+    },
+    {
+      "ID": 56,
+      "Name": "intact Fibroblast Growth Factor 23",
+      "Abbreviation": "iFGF23",
+      "Unit": "ng/L",
+      "Mean value": 35.3,
+      "CVa": 4.4,
+      "CVi": 13.9,
+      "CVg": 26.4
+    },
+    {
+      "ID": 57,
+      "Name": "Cortisol",
+      "Abbreviation": "Cort",
+      "Unit": "nmol/L",
+      "Mean value": 361.4,
+      "CVa": 3.6,
+      "CVi": 15.5,
+      "CVg": 20.6
+    },
+    {
+      "ID": 58,
+      "Name": "Insulin",
+      "Abbreviation": "INS",
+      "Unit": "mU/mL",
+      "Mean value": 7.65,
+      "CVa": 3.1,
+      "CVi": 25.3,
+      "CVg": 33.4
+    },
+    {
+      "ID": 59,
+      "Name": "TSH",
+      "Abbreviation": "TSH",
+      "Unit": "mIU/L",
+      "Mean value": 2.2,
+      "CVa": 1.46,
+      "CVi": 18.9,
+      "CVg": 35.9
+    },
+    {
+      "ID": 60,
+      "Name": "Free T3",
+      "Abbreviation": "FT3",
+      "Unit": "pmol/L",
+      "Mean value": 4.85,
+      "CVa": 1.77,
+      "CVi": 5,
+      "CVg": 8
+    },
+    {
+      "ID": 61,
+      "Name": "Free Thyroxine",
+      "Abbreviation": "FT4",
+      "Unit": "pmol/L",
+      "Mean value": 15.3,
+      "CVa": 1.71,
+      "CVi": 4.8,
+      "CVg": 7.5
+    },
+    {
+      "ID": 62,
+      "Name": "human Calitonin",
+      "Abbreviation": "HCT",
+      "Unit": "ng/L",
+      "Mean value": 2.77,
+      "CVa": 3.84,
+      "CVi": 13,
+      "CVg": 65.8
+    },
+    {
+      "ID": 63,
+      "Name": "Thyreoglobulin",
+      "Abbreviation": "TG",
+      "Unit": "µg/L",
+      "Mean value": 15.9,
+      "CVa": 3.74,
+      "CVi": 10.3,
+      "CVg": 79
+    },
+    {
+      "ID": 64,
+      "Name": "total PSA",
+      "Abbreviation": "TPSA",
+      "Unit": "µg/L",
+      "Mean value": 0.85,
+      "CVa": 3.3,
+      "CVi": 6.8,
+      "CVg": 42
+    },
+    {
+      "ID": 65,
+      "Name": "free PSA (absolut)",
+      "Abbreviation": "fPSA",
+      "Unit": "µg/L",
+      "Mean value": 0.32,
+      "CVa": 1.4,
+      "CVi": 7.1,
+      "CVg": 46.2
+    },
+    {
+      "ID": 66,
+      "Name": "conjugated PSA",
+      "Abbreviation": "cPSA",
+      "Unit": "µg/L",
+      "Mean value": 0.53,
+      "CVa": 4.7,
+      "CVi": 8.8,
+      "CVg": 57.7
+    },
+    {
+      "ID": 67,
+      "Name": "free PSA (relative)",
+      "Abbreviation": "%free PSA%",
+      "Unit": "%",
+      "Mean value": 40.3,
+      "CVa": 2.7,
+      "CVi": 5.3,
+      "CVg": 36.1
+    },
+    {
+      "ID": 68,
+      "Name": "CA 15-3",
+      "Abbreviation": "Ca15-3",
+      "Unit": "U/mL",
+      "Mean value": 16.3,
+      "CVa": 2.2,
+      "CVi": 4.4,
+      "CVg": 36.8
+    },
+    {
+      "ID": 69,
+      "Name": "Carcino Embryonal Antigen",
+      "Abbreviation": "CEA",
+      "Unit": "ng/mL",
+      "Mean value": 1.88,
+      "CVa": 2,
+      "CVi": 6.3,
+      "CVg": 59.8
+    },
+    {
+      "ID": 70,
+      "Name": "CA 19-9",
+      "Abbreviation": "Ca19-9",
+      "Unit": "U/mL",
+      "Mean value": 9.98,
+      "CVa": 2.3,
+      "CVi": 4,
+      "CVg": 56
+    },
+    {
+      "ID": 71,
+      "Name": "Cytokeratin Fragment 21-1",
+      "Abbreviation": "Cyfra 21-1",
+      "Unit": "mg/L",
+      "Mean value": 1.54,
+      "CVa": 2.5,
+      "CVi": 19.7,
+      "CVg": 29.5
+    },
+    {
+      "ID": 72,
+      "Name": "human epididymis protein-4",
+      "Abbreviation": "HE4",
+      "Unit": "pmol/L",
+      "Mean value": 50.5,
+      "CVa": 1.1,
+      "CVi": 6.7,
+      "CVg": 18.5
+    },
+    {
+      "ID": 73,
+      "Name": "Alpha Fetoprotein",
+      "Abbreviation": "AFP",
+      "Unit": "µg/L",
+      "Mean value": 3.06,
+      "CVa": 3.1,
+      "CVi": 4.1,
+      "CVg": 41.9
+    },
+    {
+      "ID": 74,
+      "Name": "CA 125",
+      "Abbreviation": "Ca125",
+      "Unit": "U/mL",
+      "Mean value": 11.4,
+      "CVa": 2.3,
+      "CVi": 8.6,
+      "CVg": 41.1
+    },
+    {
+      "ID": 75,
+      "Name": "activated partial Thromboplasin Time ",
+      "Abbreviation": "APTT",
+      "Unit": "s",
+      "Mean value": 29.7,
+      "CVa": 3.7,
+      "CVi": 2.9,
+      "CVg": 7.2
+    },
+    {
+      "ID": 76,
+      "Name": "Prothrombin Time",
+      "Abbreviation": "PT",
+      "Unit": "s",
+      "Mean value": 11.8,
+      "CVa": 1.7,
+      "CVi": 2.6,
+      "CVg": 5.1
+    },
+    {
+      "ID": 77,
+      "Name": "Antithrombin 3",
+      "Abbreviation": "AT",
+      "Unit": "%",
+      "Mean value": 110,
+      "CVa": 5.4,
+      "CVi": 3.5,
+      "CVg": 8.1
+    },
+    {
+      "ID": 78,
+      "Name": "Coagulation factor VIII",
+      "Abbreviation": "FVIII",
+      "Unit": "%",
+      "Mean value": 110.7,
+      "CVa": 5.9,
+      "CVi": 8.3,
+      "CVg": 23.3
+    },
+    {
+      "ID": 79,
+      "Name": "Fibrinogen",
+      "Abbreviation": "Fib",
+      "Unit": "mg/dL",
+      "Mean value": 284.3,
+      "CVa": 4.7,
+      "CVi": 10.2,
+      "CVg": 17.3
+    },
+    {
+      "ID": 80,
+      "Name": "D-Dimer",
+      "Abbreviation": "DD",
+      "Unit": "ng/mL (FEU)",
+      "Mean value": 271,
+      "CVa": 33.1,
+      "CVi": 29,
+      "CVg": 35.6
+    },
+    {
+      "ID": 81,
+      "Name": "Protein C",
+      "Abbreviation": "Prot C",
+      "Unit": "%",
+      "Mean value": 104.4,
+      "CVa": 2.4,
+      "CVi": 5.4,
+      "CVg": 18.6
+    },
+    {
+      "ID": 82,
+      "Name": "free Protein S",
+      "Abbreviation": "Free prot S",
+      "Unit": "%",
+      "Mean value": 97,
+      "CVa": 2,
+      "CVi": 4,
+      "CVg": 16.2
+    }
+  ]
+}

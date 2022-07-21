@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 from django.forms import modelformset_factory  # is grey but still needed for the result_add_view
 from datetime import datetime
 from wsgiref.util import FileWrapper
-
+import json
 from django.utils import timezone
 from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from django.urls import reverse_lazy
@@ -596,8 +596,32 @@ def parameter_list(request):
 
 def add_parameter_form(request):
     form = ParameterForm(user=request.user)
+
+    json_data = open('static/data/analytes_eubivas.json').read()
+    parameter_data = json.loads(json_data)
+    # parameter_names = []
+    # for parameter in (parameter_data['Parameters']):
+    #     parameter.name = parameter.get('Name')
+    #     CVs.CV_g = parameter.get('CVg')
+    #     CVs.CV_i = parameter.get('CVi')
+    #     CVs.CV_a = parameter.get('CVa')
+    #     parameter_names.append(parameter.name)
+
+    # parameter_abbr = []
+    # parameter_names = []
+    # for index in range(0, len(parameter_data['Parameters'])):
+    #     parameter_names.append(parameter_data['Parameters'][index].get('Name'))
+        # parameter_names = parameter_names + [parameter_data['Parameters'][index].get('Abbreviation')]
+    # CVa = CVs.CV_a
+    # CVi = CVs.CV_i
+    # CVg = CVs.CV_g
+
     context = {
-        "form": form
+        "form": form,
+        "parameter_data": parameter_data,
+        # "parameter_abbr": parameter_abbr,
+        # "parameter_names": parameter_names,
+
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
 

@@ -17,18 +17,31 @@
               crossorigin="anonymous">
         <!-- Bootstrap Font Icon CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
         {#       ---------------------------Local CSS -----------------------------#}
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+        {#        --------------------JQuery---------------------------#}
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />
     {% endblock %}
+
+
 
     {% block js %}
 
+        {#        --------------------JQuery---------------------------#}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js"></script>
+
         {#        ----------------------------------HTMX - https://htmx.org/ -------------------------------------#}
         <script src="https://unpkg.com/htmx.org@1.7.0"></script>
+
         {#        ------------------------Google Charts - https://developers.google.com/chart/interactive/docs/gallery#}
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
         {#                -------------------------------Alpine JS - https://alpinejs.dev/start-here#}
         <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     {% endblock %}
 
 
@@ -112,8 +125,6 @@
       return new bootstrap.Popover(popoverTriggerEl)
         })
 </script>
-
-
 
 
 

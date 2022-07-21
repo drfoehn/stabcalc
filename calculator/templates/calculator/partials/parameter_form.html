@@ -1,7 +1,8 @@
 <div hx-target="this" hx-swap="outerHTML">
-    <div class="col object-list-div">
+    <div class="col item-box">
         <form method="POST">
             {% csrf_token %}
+
 
             <table>
                 <tr>
@@ -17,10 +18,28 @@
                         {{ form.unit.label_tag }}
                     </td>
                 </tr>
+            <tr>
+                <td class="sub-italic">
+                    Start typing and select.
+                </td>
+            </tr>
                 <tr>
 
                     <td>
-                        {{ form.name }}
+{#                        {{ form.name }}#}
+                        <input type="text" id="parameter_input">
+                            <script>
+                                  $( function() {
+                                    var availableNames = [
+                                        {% for name in parameter_names %}
+                                            "{{name}}",
+                                        {% endfor %}
+                                    ];
+                                    $( "#parameter_input" ).autocomplete({
+                                      source: availableNames
+                                    });
+                                  } );
+                          </script>
                     </td>
                     <td>
                         {{ form.unit }}
@@ -99,7 +118,7 @@
                 </tr>
                                 <tr>
                     <th colspan="2"><h4>
-                        CV
+                        CVs
                     </h4></th>
                 </tr>
                 <tr>
@@ -110,7 +129,7 @@
                 <tr>
 
                     <td>
-                        {{ form.CV_intra }}
+                        {{ form.CV.CV_g }}
                     </td>
                     <td>
                         %
@@ -142,12 +161,12 @@
             <p></p>
             {#    If statement to prevent edit-view from creating more objects#}
             {% if parameter %}     {#  Passed in from Edit-instrument-view #}
-                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
+                <button class="button button-save" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
                         class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Save
                 </button>
             {% else %}
-                <button class="btn btn-secondary" type="submit" hx-post=".">
+                <button class="button button-save" type="submit" hx-post=".">
                     Save
                 </button>
             {% endif %}

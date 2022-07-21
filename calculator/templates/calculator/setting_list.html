@@ -9,7 +9,7 @@
     <h4 class="display-5">List / Add settings</h4>
 
 
-    <a hx-get="{% url 'create-setting-form' %}" class="btn btn-outline-secondary btn-add" role="button" data-bs-toggle="button"
+    <a hx-get="{% url 'create-setting-form' %}" class="button button-red" role="button" data-bs-toggle="button"
        hx-swap="beforebegin" hx-target="#setting_form">Add additional setting</a>
     <div class="row" id="setting_form"></div>
     {% if settings %}

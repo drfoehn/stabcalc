@@ -93,5 +93,41 @@
 
 
     {% endif %}
-
+<div class="cookie-wrapper">
+    <img src="#" alt="">
+    <div class="cookie-content">
+        <div class="row">
+            <div class="col">
+                <header class="cookie-header">Cookies Consent</header>
+            </div>
+            <div class="col">
+                <img src="{% static 'images/cookie.png' %}" alt="" width="100px", height="auto">
+            </div>
+        </div>
+      <div class="row">
+      <p class="cookie-content">This website use cookies to ensure you get the best experience on this website.</p>
+      <div class="buttons">
+        <button class="button button-cookie">I understand</button>
+          <br>
+        <a href="{% url 'terms_conditions' %}" class="item" style="color: white !important;">Learn more</a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const cookieBox = document.querySelector(".cookie-wrapper"),
+    acceptBtn = cookieBox.querySelector("button");
+    acceptBtn.onclick = ()=>{
+      //setting cookie for 1 month, after one month it'll be expired automatically
+      document.cookie = "CookieBy=CodingNepal; max-age="+60*60*24*30;
+      if(document.cookie){ //if cookie is set
+        cookieBox.classList.add("hide"); //hide cookie box
+      }else{ //if cookie not set then alert an error
+        alert("Cookie can't be set! Please unblock this site from the cookie setting of your browser.");
+      }
+    }
+    let checkCookie = document.cookie.indexOf("CookieBy=CodingNepal"); //checking our cookie
+    //if cookie is set then hide the cookie box else show it
+    checkCookie != -1 ? cookieBox.classList.add("hide") : cookieBox.classList.remove("hide");
+  </script>
 {% endblock %}

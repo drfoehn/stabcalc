@@ -8,9 +8,10 @@
     --imperial-red: #e63946ff;
     --celadon-blue: #457b9dff;
     --prussian-blue: #1d3557ff;
-    --powder-blue: #a8dadcff;
+    --powder-blue: #b7cdce;
     --honey-yellow: #ffae03ff;
     --cultured: #f6f4f3ff;
+    --background: #f4f4f4;
 
     /* CSS HSL */
     --imperial-red: hsla(355, 78%, 56%, 1);
@@ -60,9 +61,10 @@
 /*  border: 1px solid black;*/
 /*}*/
 
+
 body{
     font-family: 'Montserrat', sans-serif;
-    background-color: #f4f4f4;
+    background-color: var(--background);
 }
 
 /*ul{*/
@@ -121,6 +123,11 @@ color: lightgray; !important;
     font-family: 'Montserrat', sans-serif;
     background-color: #f4f4f4;
     margin-bottom: 2em;
+    /*background: rgba(255,255,255,0.5);*/
+    /*-webkit-backdrop-filter: blur(8px);*/
+    /*backdrop-filter: blur(8px);*/
+    /*border: 1px solid rgba(255,255,255,0.25);*/
+    /*position: fixed;*/
 }
 
 .navbar-brand{
@@ -193,6 +200,79 @@ color: lightgray; !important;
     font-size: 1.5em;
 }
 
+.button {
+      /*background-color: #4CAF50; !* Green *!*/
+      border: none;
+      color: var(--background);
+      padding: 4px 8px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 18px;
+      margin: 4px 2px;
+      transition-duration: 0.2s;
+      cursor: pointer;
+    border-radius: 5px;
+    box-shadow:
+      0px 2.1px 6.1px rgba(0, 0, 0, 0.023),
+      0px 4.8px 12.8px rgba(0, 0, 0, 0.032),
+      0px 8.6px 21px rgba(0, 0, 0, 0.038),
+      0px 14.5px 32.7px rgba(0, 0, 0, 0.044),
+      0px 25.4px 52.9px rgba(0, 0, 0, 0.051),
+      0px 56px 108px rgba(0, 0, 0, 0.07)
+    ;
+}
+
+.button:active {
+  background-color: #3e8e41;
+    box-shadow:
+      0px 0.7px 3.5px rgba(0, 0, 0, 0.166),
+      0px 1.6px 7.2px rgba(0, 0, 0, 0.171),
+      0px 2.9px 11.9px rgba(0, 0, 0, 0.17),
+      0px 4.9px 18.5px rgba(0, 0, 0, 0.167),
+      0px 8.6px 29.9px rgba(0, 0, 0, 0.163),
+      0px 19px 61px rgba(0, 0, 0, 0.16)
+    ;
+  transform: translateY(4px);
+}
+
+.button-red {
+  background-color: var(--background);
+  color: var(--imperial-red);
+  border: 0.5px solid var(--imperial-red);
+}
+
+.button-red:hover {
+  background-color: var(--imperial-red);
+  color: white;
+}
+
+.button-save{
+      background-color: var(--background);
+  color: var(--imperial-red);
+  border: 0.5px solid var(--imperial-red);
+}
+
+.button-save:hover {
+  background-color: var(--imperial-red);
+  color: white;
+}
+
+.button-cookie{
+      background-color: #debb7e;
+  color: black;
+  border: 0.5px solid #915e3a;
+}
+
+.button-cookie:hover {
+  background-color: #915e3a;
+  color: white;
+}
+
+.errorlist{
+    list-style: none !important;
+    color:  var(--imperial-red);
+}
 
 /*------------------------------------TABLES--------------------------------------*/
 #table-dashboard-settingname,
@@ -222,6 +302,27 @@ th{
 
 
 /*----------------------------------LIST/ADD PAGES-------------------------------------*/
+
+.item-box{
+    box-shadow:
+      1.2px 2.1px 6.1px rgba(0, 0, 0, 0.023),
+      2.7px 4.8px 12.8px rgba(0, 0, 0, 0.032),
+      4.9px 8.6px 21px rgba(0, 0, 0, 0.038),
+      8.3px 14.5px 32.7px rgba(0, 0, 0, 0.044),
+      14.5px 25.4px 52.9px rgba(0, 0, 0, 0.051),
+      32px 56px 108px rgba(0, 0, 0, 0.07)
+    ;
+    padding: 1em ;
+    margin-top: 1em;
+
+    border-radius: 5px;
+    background-color: white;
+}
+
+.list-items{
+    margin-right: 1em;
+}
+
 .form-rowhead{
     font-weight: bold;
 }
@@ -391,4 +492,34 @@ color: lightgray; !important;
 
 #footer-content a:active {
 color: lightgray; !important;
+}
+
+
+/*---------------------------------Cookie---------------------------------*/
+
+.cookie-wrapper{
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  max-width: 365px;
+  background: #debb7e;
+background: -webkit-linear-gradient(140deg, #debb7e 0%, #915e3a 100%);
+background: linear-gradient(140deg, #debb7e 0%, #915e3a 100%);
+  padding: 25px 25px 30px 25px;
+  border-radius: 15px;
+  box-shadow: 1px 7px 14px -5px rgba(0,0,0,0.15);
+  text-align: center;
+
+}
+
+.cookie-header{
+    color: white;
+        font-family: Ubuntu, sans-serif;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.cookie-content{
+    color: white;
+ font-family:  Montserrat, sans-serif;;
 }

@@ -26,6 +26,7 @@ class Instrument(OwnedModelMixin, models.Model):
     def __str__(self):
         return f"{self.name}, {self.manufacturer}"
 
+
 class Condition(OwnedModelMixin, models.Model):
     ROOMTEMP = 1
     FRIDGE = 2
@@ -62,6 +63,7 @@ class Condition(OwnedModelMixin, models.Model):
 
     def __str__(self):
         return f"{self.get_temperature_display()}, Light: {self.light}, Air: {self.air}, Agitation: {self.agitation}, Other: {self.other_condition}"
+
 
 class PreanalyticalSet(OwnedModelMixin, models.Model):
     collection_instrument = models.CharField(max_length=255, verbose_name=_('Sample collection set'), blank=True, null=True)
@@ -110,6 +112,7 @@ class PreanalyticalSet(OwnedModelMixin, models.Model):
 
     def __str__(self):
         return f"{self.collection_site}"
+
 
 class Sample(OwnedModelMixin, models.Model):
     sample_leftover = models.BooleanField(verbose_name=_('Were the used samples leftovers from routine processes?'), blank=True, null=True)
@@ -222,6 +225,12 @@ class Sample(OwnedModelMixin, models.Model):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
 
+class CVs(OwnedModelMixin, models.Model):
+    CV_i = models.FloatField(verbose_name='CV% intra')
+    CV_g = models.FloatField(verbose_name='CV% inter')
+    CV_a = models.FloatField(verbose_name='CV% inter')
+
+
 class Parameter(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=255, verbose_name='Parameter Name')
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
@@ -233,6 +242,7 @@ class Parameter(OwnedModelMixin, models.Model):
     method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
+    CV = models.ForeignKey(CVs, on_delete=models.CASCADE)
 
     class Meta:
         permissions = (
@@ -241,6 +251,9 @@ class Parameter(OwnedModelMixin, models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+
 
 
 class Setting(OwnedModelMixin, models.Model):
@@ -495,6 +508,7 @@ class Subject(OwnedModelMixin, models.Model):
             return None
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
+
 
 class Result(OwnedModelMixin, models.Model):
     value = models.FloatField()
