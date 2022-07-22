@@ -225,10 +225,11 @@ class Sample(OwnedModelMixin, models.Model):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
 
-class CVs(OwnedModelMixin, models.Model):
-    CV_i = models.FloatField(verbose_name='CV% intra')
-    CV_g = models.FloatField(verbose_name='CV% inter')
-    CV_a = models.FloatField(verbose_name='CV% inter')
+# class ValidatedParameterManager(models.Manager):
+#
+#     @property
+#     def get_queryset(self):
+#         return super().get_queryset().filter(validated=True)
 
 
 class Parameter(OwnedModelMixin, models.Model):
@@ -242,7 +243,11 @@ class Parameter(OwnedModelMixin, models.Model):
     method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
     instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
-    CV = models.ForeignKey(CVs, on_delete=models.CASCADE)
+    cv_i = models.FloatField(verbose_name='CV% intra')
+    cv_g = models.FloatField(verbose_name='CV% inter')
+    # validated = models.BooleanField(default=False)
+
+    # objects = ValidatedParameterManager()
 
     class Meta:
         permissions = (
@@ -251,6 +256,11 @@ class Parameter(OwnedModelMixin, models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+
+class CVa(OwnedModelMixin, models.Model):
+    percentage = models.FloatField(verbose_name='CV% inter')
+    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, related_name='cva')
 
 
 

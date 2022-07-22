@@ -595,7 +595,11 @@ def parameter_list(request):
 
 
 def add_parameter_form(request):
-    form = ParameterForm(user=request.user)
+    try:
+        parameter = Parameter.objects.get(name=request.POST.get("name"))
+    except Parameter.DoesNotExist:
+        parameter = None
+    form = ParameterForm(user=request.user, instance=parameter)
 
     json_data = open('static/data/analytes_eubivas.json').read()
     parameter_data = json.loads(json_data)

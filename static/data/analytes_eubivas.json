@@ -71,8 +71,9 @@
       "CVg": 30.4
     },
     {
-      "ID": 8,
-      "Name": "Pancreatic Alpha-amylase",
+      "model": "calculator.Parameter",
+      "pk": 8,
+      "name": "Pancreatic Alpha-amylase",
       "Abbreviation": "PAMY",
       "Unit": "U/L",
       "Mean value": 32.5,

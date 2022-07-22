@@ -26,20 +26,27 @@
                 <tr>
 
                     <td>
-{#                        {{ form.name }}#}
-                        <input type="text" id="parameter_input">
-                            <script>
-                                  $( function() {
-                                    var availableNames = [
-                                        {% for name in parameter_names %}
-                                            "{{name}}",
-                                        {% endfor %}
-                                    ];
-                                    $( "#parameter_input" ).autocomplete({
-                                      source: availableNames
-                                    });
-                                  } );
-                          </script>
+{#                        {{ form.name#}
+                        <input
+                                type="text"
+                                name="name"
+                                hx-trigger="keyup changed delay:500ms, search"
+                                hx-post="."
+                                hx-target="#parameter_form"
+                        >
+{#                        <input type="text" id="parameter_input">#}
+{#                            <script>#}
+{#                                  $( function() {#}
+{#                                    var availableNames = [#}
+{#                                        {% for name in parameter_names %}#}
+{#                                            "{{name}}",#}
+{#                                        {% endfor %}#}
+{#                                    ];#}
+{#                                    $( "#parameter_input" ).autocomplete({#}
+{#                                      source: availableNames#}
+{#                                    });#}
+{#                                  } );#}
+{#                          </script>#}
                     </td>
                     <td>
                         {{ form.unit }}
