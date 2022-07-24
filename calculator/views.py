@@ -601,8 +601,10 @@ def add_parameter_form(request):
         parameter = None
     form = ParameterForm(user=request.user, instance=parameter)
 
-    json_data = open('static/data/analytes_eubivas.json').read()
-    parameter_data = json.loads(json_data)
+    json_data_parameters = open('static/data/analytes_eubivas.json').read()
+    json_data_cvas = open('static/data/analytes_eubivas_cva.json').read()
+    parameter_data = json.loads(json_data_parameters)
+    cva_data = json.loads(json_data_cvas)
     # parameter_names = []
     # for parameter in (parameter_data['Parameters']):
     #     parameter.name = parameter.get('Name')
