@@ -1,30 +1,33 @@
 <div hx-target="this" hx-swap="outerHTML">
     <div class="col item-box">
         <form method="POST">
+            <div class="spinner-border htmx-indicator" role="status">
+                <span class="visually-hidden"Searching...</span>
+            </div>
             {% csrf_token %}
-{#            <input#}
-{#                    type="search"#}
-{#                    placeholder="Begin Typing To Search Parameters..."#}
-{#                    name="name"#}
-{#                    hx-trigger="keyup changed delay:500ms, search"#}
-{#                    hx-post="{% url 'create-parameter-form' %}"#}
-{#                    hx-target="#search-results"#}
-{#                    hx-select="#lala"#}
-{##}
-{#            >#}
-{#            <table class="table">#}
-{#                <thead>#}
-{#                <tr>#}
-{#                    <th>Parameter name</th>#}
-{#                    <th>Unit</th>#}
-{#                    <th>CVg</th>#}
-{#                    <th>CVi</th>#}
-{#                </tr>#}
-{#                </thead>#}
-{#                <tbody  id="search-results">#}
-{##}
-{#                </tbody>#}
-{#            </table>#}
+            <input
+                    type="search"
+                    placeholder="Begin Typing To Search Parameters..."
+                    name="name"
+                    hx-trigger="keyup changed delay:500ms, search"
+                    hx-post="{% url 'search-parameter' %}"
+                    hx-target="#search-results"
+                    hx-indicator=".htmx-indicator"
+                    {#                    hx-select=""#}
+            >
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Parameter name</th>
+                    <th>Unit</th>
+                    <th>CVg</th>
+                    <th>CVi</th>
+                </tr>
+                </thead>
+                <tbody id="search-results">
+
+                </tbody>
+            </table>
 
             {#                <tr>#}
             {#                    <th colspan="2"><h4>#}
@@ -90,98 +93,98 @@
                         {{ form.parameter }}
                     </td>
                 </tr>
-            <tr>
-                <th colspan="2"><h4>
-                    Analysis
-                </h4></th>
-            </tr>
-            <tr>
-                <td class="form-rowhead">
-                    {{ form.reagent_name.label_tag }}
-                </td>
-                <td class="form-rowhead">
+                <tr>
+                    <th colspan="2"><h4>
+                        Analysis
+                    </h4></th>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.reagent_name.label_tag }}
+                    </td>
+                    <td class="form-rowhead">
 
-                    {{ form.reagent_manufacturer.label_tag }}
+                        {{ form.reagent_manufacturer.label_tag }}
 
-                </td>
-            </tr>
-            <tr>
+                    </td>
+                </tr>
+                <tr>
 
-                <td>
-                    {{ form.reagent_name }}
-                </td>
-                <td>
-                    {{ form.reagent_manufacturer }}
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    {{ form.reagent_name.errors }}
-                </td>
-                <td>
-                    {{ form.reagent_manufacturer.errors }}
-                </td>
-            </tr>
+                    <td>
+                        {{ form.reagent_name }}
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.reagent_name.errors }}
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer.errors }}
+                    </td>
+                </tr>
 
-            <tr>
-                <td class="form-rowhead">
-                    {{ form.analytical_method.label_tag }}
-                </td>
-                <td>
-                    {{ form.analytical_method }}
-                </td>
-            </tr>
-            <tr>
-                <td class="form-rowhead">
-                    <p></p>
-                    Is it a manual analytical method?<br>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.analytical_method.label_tag }}
+                    </td>
+                    <td>
+                        {{ form.analytical_method }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        Is it a manual analytical method?<br>
 
 
-                </td>
-                <td class="form-rowhead">
-                    <p></p>
-                    <div>
-                        <input type="checkbox" name="method_hand" class="check-input"
-                               onclick="hideInstrument()">(Yes)</input>
+                    </td>
+                    <td class="form-rowhead">
+                        <p></p>
+                        <div>
+                            <input type="checkbox" name="method_hand" class="check-input"
+                                   onclick="hideInstrument()">(Yes)</input>
 
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="instrument-toggle">
-                        Analytical instrument <br>
-                        {{ form.instrument }} {{ form.instrument.errors }}
-                    </div>
-                </td>
-            </tr>
-            {#                <tr>#}
-            {#                    <th colspan="2"><h4>#}
-            {#                        CVs#}
-            {#                    </h4></th>#}
-            {#                </tr>#}
-            {#                <tr>#}
-            {#                    <td class="form-rowhead">#}
-            {#                        Analytical Imprecision (Intra-Assay CV %)#}
-            {#                    </td>#}
-            {#                </tr>#}
-            {#                <tr>#}
-            {##}
-            {#                    <td>#}
-            {#                        {{ form.CV.CV_g }}#}
-            {#                    </td>#}
-            {#                    <td>#}
-            {#                        %#}
-            {#                    </td>#}
-            {#                </tr>#}
-            {#                <tr>#}
-            {#                    <td>#}
-            {#                        {{ form.CV_intra.errors }}#}
-            {#                    </td>#}
-            {#                    <td>#}
-            {#                        {{ form.CV_inter.errors }}#}
-            {#                    </td>#}
-            {#                </tr>#}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="instrument-toggle">
+                            Analytical instrument <br>
+                            {{ form.instrument }} {{ form.instrument.errors }}
+                        </div>
+                    </td>
+                </tr>
+                {#                <tr>#}
+                {#                    <th colspan="2"><h4>#}
+                {#                        CVs#}
+                {#                    </h4></th>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    <td class="form-rowhead">#}
+                {#                        Analytical Imprecision (Intra-Assay CV %)#}
+                {#                    </td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {##}
+                {#                    <td>#}
+                {#                        {{ form.CV.CV_g }}#}
+                {#                    </td>#}
+                {#                    <td>#}
+                {#                        %#}
+                {#                    </td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    <td>#}
+                {#                        {{ form.CV_intra.errors }}#}
+                {#                    </td>#}
+                {#                    <td>#}
+                {#                        {{ form.CV_inter.errors }}#}
+                {#                    </td>#}
+                {#                </tr>#}
             </table>
 
 

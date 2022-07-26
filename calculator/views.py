@@ -593,15 +593,27 @@ def parameter_list(request):
 
     return render(request, 'calculator/parameter_list.html', context)
 
+def search_parameter(request):
+    try:
+        parameter = Parameter.objects.get(name=request.POST.get("name"))
+    except Parameter.DoesNotExist:
+        parameter = None
+
+    context = {
+        "parameter": parameter,
+
+    }
+    return render(request, 'calculator/partials/parameter_searchresult.html', context)
+
 
 def add_parameter_form(request):
     # try:
     #     parameter = Parameter.objects.get(name=request.POST.get("name"))
     # except Parameter.DoesNotExist:
     #     parameter = None
-    # form = ParameterForm(user=request.user, instance=parameter)
-    parameter_select = Parameter.objects.all()
     form = ParameterUserForm(user=request.user)
+    parameter_select = Parameter.objects.all()
+    # form = ParameterUserForm(user=request.user)
 
     context = {
         "form": form,
