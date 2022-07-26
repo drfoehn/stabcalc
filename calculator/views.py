@@ -594,13 +594,16 @@ def parameter_list(request):
     return render(request, 'calculator/parameter_list.html', context)
 
 def search_parameter(request):
-    try:
-        parameter = Parameter.objects.get(name=request.POST.get("name"))
-    except Parameter.DoesNotExist:
-        parameter = None
+    if 'name' in request.POST:
+        try:
+            parameters = Parameter.objects.filter(name__icontains=request.POST.get("name"))
+        except Parameter.DoesNotExist:
+            parameters = None
+            print('Parameter does not exist')
+
 
     context = {
-        "parameter": parameter,
+        "parameters": parameters,
 
     }
     return render(request, 'calculator/partials/parameter_searchresult.html', context)

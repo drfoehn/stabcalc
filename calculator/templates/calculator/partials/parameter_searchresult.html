@@ -1,16 +1,19 @@
 
+{% for parameter in parameters %}
 
 <tr>
     <td>
-        NAME{{ parameter.name }}
+        {{ parameter.name }}
     </td>
     <td>
-        UNIT{{ parameter.unit }}
+        {{ parameter.unit }}
     </td>
     <td>
-        CVG{{ parameter.cv_g }}
+        {{ parameter.cv_g }}
     </td>
     <td>
-        CVI{{ parameter.cv_i }}
+        {{ parameter.cv_i }}
     </td>
 </tr>
+
+{% endfor %}
