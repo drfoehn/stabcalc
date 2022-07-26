@@ -25,20 +25,18 @@ class InstrumentForm(forms.ModelForm):
         )
 
 
-class ParameterForm(forms.ModelForm):
-    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    unit = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'class': 'form-control'}))
+class ParameterUserForm(forms.ModelForm):
+    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
     reagent_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     analytical_method = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    CV_intra = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
-    CV_inter = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     method_hand = forms.BooleanField(widget=forms.CheckboxInput(attrs={'class': 'check-input'}), required=False)
-    # instrument = forms.ModelChoiceField(queryset=(Instrument.objects.all()), empty_label='Select instrument')
-
+    instrument = forms.ModelChoiceField(queryset=(Instrument.objects.all()), empty_label='Select instrument', required=False)
+    cv_a = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    #
     # instrument = models.ForeignKey(Instrument)
     # sample = models.ForeignKey(Sample)
-
+    #
     # ----------------------Botcatcher-------------------------
     # TODO: Check if working: Bots should not get an error. It should silently fail.
     feedback = forms.CharField(
@@ -49,17 +47,15 @@ class ParameterForm(forms.ModelForm):
     # -----------------------------------------------------------
 
     class Meta:
-        model = Parameter
+        model = ParameterUser
         fields = (
-            'name',
-            'unit',
+            'parameter',
             'reagent_name',
             'reagent_manufacturer',
             'analytical_method',
-            'CV_intra',
-            'CV_inter',
             'method_hand',
             'instrument',
+            'cv_a'
         )
 
     def __init__(self, *args, **kwargs):
@@ -68,6 +64,7 @@ class ParameterForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['instrument'].queryset = Instrument.objects.filter(owner=user)
         self.fields['instrument'].widget.attrs['class'] = 'form-select'
+        self.fields['parameter'].widget.attrs['class'] = 'form-select'
 
 
     # -------------------Botcatcher-------------------------------------

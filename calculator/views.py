@@ -569,8 +569,8 @@ def delete_instrument(request, pk):
 
 
 def parameter_list(request):
-    form = ParameterForm(request.POST or None, user=request.user)
-    parameters = Parameter.objects.all()
+    form = ParameterUserForm(request.POST or None, user=request.user)
+    parameters = ParameterUser.objects.all()
 
     if request.method == 'POST':
         if form.is_valid():
@@ -581,7 +581,7 @@ def parameter_list(request):
         else:
             context = {
                 'form': form,
-                'parameters': Parameter.objects.filter()
+                'parameters': ParameterUser.objects.filter()
             }
             return render(request, 'calculator/partials/parameter_form.html', context)
 
@@ -595,45 +595,24 @@ def parameter_list(request):
 
 
 def add_parameter_form(request):
-    try:
-        parameter = Parameter.objects.get(name=request.POST.get("name"))
-    except Parameter.DoesNotExist:
-        parameter = None
-    form = ParameterForm(user=request.user, instance=parameter)
-
-    json_data_parameters = open('static/data/analytes_eubivas.json').read()
-    json_data_cvas = open('static/data/analytes_eubivas_cva.json').read()
-    parameter_data = json.loads(json_data_parameters)
-    cva_data = json.loads(json_data_cvas)
-    # parameter_names = []
-    # for parameter in (parameter_data['Parameters']):
-    #     parameter.name = parameter.get('Name')
-    #     CVs.CV_g = parameter.get('CVg')
-    #     CVs.CV_i = parameter.get('CVi')
-    #     CVs.CV_a = parameter.get('CVa')
-    #     parameter_names.append(parameter.name)
-
-    # parameter_abbr = []
-    # parameter_names = []
-    # for index in range(0, len(parameter_data['Parameters'])):
-    #     parameter_names.append(parameter_data['Parameters'][index].get('Name'))
-        # parameter_names = parameter_names + [parameter_data['Parameters'][index].get('Abbreviation')]
-    # CVa = CVs.CV_a
-    # CVi = CVs.CV_i
-    # CVg = CVs.CV_g
+    # try:
+    #     parameter = Parameter.objects.get(name=request.POST.get("name"))
+    # except Parameter.DoesNotExist:
+    #     parameter = None
+    # form = ParameterForm(user=request.user, instance=parameter)
+    parameter_select = Parameter.objects.all()
+    form = ParameterUserForm(user=request.user)
 
     context = {
         "form": form,
-        "parameter_data": parameter_data,
-        # "parameter_abbr": parameter_abbr,
-        # "parameter_names": parameter_names,
+        "parameter_list": parameter_select
 
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
 
 
 def parameter_detail(request, pk):
-    parameter = get_object_or_404(Parameter, pk=pk)
+    parameter = get_object_or_404(ParameterUser, pk=pk)
     if not parameter.owner == request.user:
         return HttpResponseForbidden
     else:
@@ -644,8 +623,8 @@ def parameter_detail(request, pk):
 
 
 def edit_parameter(request, pk):
-    parameter = Parameter.objects.get(pk=pk)
-    form = ParameterForm(request.POST or None, instance=parameter, user=request.user)
+    parameter = ParameterUser.objects.get(pk=pk)
+    form = ParameterUserForm(request.POST or None, instance=parameter, user=request.user)
 
     # This part is so that the update does not produce more objects
     if request.method == 'POST':

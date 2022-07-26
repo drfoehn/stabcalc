@@ -225,45 +225,29 @@ class Sample(OwnedModelMixin, models.Model):
         return f"{self.get_sample_type_display()} - {self.container_fillingvolume}ml {self.get_container_additive_display()} ({self.get_container_dimension_display()}, {self.get_container_material_display()}); Gel: {self.gel}"
 
 
-# class ValidatedParameterManager(models.Manager):
-#
-#     @property
-#     def get_queryset(self):
-#         return super().get_queryset().filter(validated=True)
-
-
 class Parameter(models.Model):
     name = models.CharField(max_length=255, verbose_name='Parameter Name')
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
-    reagent_name = models.CharField(max_length=255, verbose_name='Reagent name', blank=True, null=True)
-    reagent_manufacturer = models.CharField(max_length=255, verbose_name='Reagent manufacturer', blank=True, null=True)
-    analytical_method = models.CharField(max_length=255, verbose_name='Analytical method')
-    CV_intra = models.FloatField(verbose_name='CV% intra', blank=True, null=True)
-    CV_inter = models.FloatField(verbose_name='CV% inter', blank=True, null=True)
-    method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
-    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
-    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
     cv_i = models.FloatField(verbose_name='CVi')
     cv_g = models.FloatField(verbose_name='CVg')
-    # validated = models.BooleanField(default=False)
-
-    # objects = ValidatedParameterManager()
-
-    # class Meta:
-            # permissions = (
-            #     ('dg_view_parameter', 'OLP can view Parameter'),
-            # )
 
     def __str__(self):
         return f"{self.name}"
 
 
-class CVa(OwnedModelMixin, models.Model):
-    percentage = models.FloatField(verbose_name='CVa')
-    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, related_name='cva')
+class ParameterUser(OwnedModelMixin, models.Model):
+    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, related_name='parameter_user')
+    reagent_name = models.CharField(max_length=255, verbose_name='Reagent name', blank=True, null=True)
+    reagent_manufacturer = models.CharField(max_length=255, verbose_name='Reagent manufacturer', blank=True, null=True)
+    analytical_method = models.CharField(max_length=255, verbose_name='Analytical method')
+    method_hand = models.BooleanField(verbose_name='Manual method', blank=True, null=True)
+    instrument = models.ForeignKey(Instrument, on_delete=models.CASCADE, blank=True, null=True)
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE, blank=True, null=True)
+    cv_a = models.FloatField(verbose_name='CVa')
 
 
-
+    def __str__(self):
+        return f"{self.parameter.name}"
 
 
 class Setting(OwnedModelMixin, models.Model):

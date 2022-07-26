@@ -32,6 +32,19 @@ class ParameterAdmin(admin.ModelAdmin):
     model = Parameter
     list_display = ['name', 'unit']
 
+class ParameterUserAdmin(admin.ModelAdmin):
+    model = ParameterUser
+    # list_display = [
+    #     'reagent_name',
+    #     'reagent_manufacturer',
+    #     'analytical_method',
+    #     'method_hand',
+    #     'instrument',
+    #     'sample',
+    #     'cv_a',
+    #     'parameter'
+    # ]
+
 class InstrumentAdmin(admin.ModelAdmin):
     model = Instrument
     list_display = ['name', 'manufacturer']
@@ -86,6 +99,7 @@ class UserAdminArea(admin.AdminSite):
 # admin.site.register(User, UserAdmin)
 
 admin.site.register(Parameter, CalculatorAdmin)
+admin.site.register(ParameterUser, ParameterUserAdmin)
 admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)
 admin.site.register(Sample, SampleAdmin)

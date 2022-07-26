@@ -1,0 +1,496 @@
+{
+  "Parameters": [
+    {
+      "model": "calculator.CVa",
+      "pk": 1,
+      "parameter": "ALT / GPT",
+      "percentage": 6.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 2,
+      "parameter": "AST / GOT",
+      "percentage": 5.5
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 3,
+      "parameter": "Gamma-Glutamy Transferase",
+      "percentage": 8.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 4,
+      "parameter": "Alkal. Phosphatase",
+      "percentage": 2.8
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 5,
+      "parameter": "LDH",
+      "percentage": 1.2
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 6,
+      "parameter": "Creatin-Kinase",
+      "percentage": 0.9
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 7,
+      "parameter": "Amylase",
+      "percentage": 1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 8,
+      "parameter": "Pancreatic α-amylase",
+      "percentage": 1.8
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 9,
+      "parameter": "Lipase",
+      "percentage": 6.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 10,
+      "parameter": "Sodium",
+      "percentage": 0.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 11,
+      "parameter": "Potassium",
+      "percentage": 0.41
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 12,
+      "parameter": "Chloride",
+      "percentage": 0.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 13,
+      "parameter": "Calcium",
+      "percentage": 0.85
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 14,
+      "parameter": "Magnesium",
+      "percentage": 2.48
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 15,
+      "parameter": "inorg. Phosphate",
+      "percentage": 2.87
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 16,
+      "parameter": "Total Cholesterol",
+      "percentage": 0.98
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 17,
+      "parameter": "HDL Cholesterol",
+      "percentage": 0.56
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 18,
+      "parameter": "LDL Cholesterol",
+      "percentage": 1.77
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 19,
+      "parameter": "Non-HDL Cholesterol",
+      "percentage": 1.47
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 20,
+      "parameter": "Trigycerides",
+      "percentage": 1.8
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 21,
+      "parameter": "Glucose",
+      "percentage": 0.58
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 22,
+      "parameter": "Urea",
+      "percentage": 2.32
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 23,
+      "parameter": "Uric Acid",
+      "percentage": 0.86
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 24,
+      "parameter": "Total Protein",
+      "percentage": 0.97
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 25,
+      "parameter": "Total Bilirubin",
+      "percentage": 2.98
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 26,
+      "parameter": "Direct Bilirubin",
+      "percentage": 6.05
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 27,
+      "parameter": "Creatinine (enzymatic)",
+      "percentage": 1.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 28,
+      "parameter": "Creatinine (Jaffe)",
+      "percentage": 4.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 29,
+      "parameter": "neuron-specific enolase",
+      "percentage": 3.2
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 30,
+      "parameter": "S100-β protein",
+      "percentage": 4.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 31,
+      "parameter": "Alpha1-Antitrypsin",
+      "percentage": 1.38
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 32,
+      "parameter": "Alpha1-acid-glycoprotein",
+      "percentage": 1.96
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 33,
+      "parameter": "Albumin",
+      "percentage": 1.5
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 34,
+      "parameter": "ß2-Microglobulin",
+      "percentage": 2.21
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 35,
+      "parameter": "Complement component 3",
+      "percentage": 1.89
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 36,
+      "parameter": "Complement component 4",
+      "percentage": 2.34
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 37,
+      "parameter": "Ceruloplasmin",
+      "percentage": 2.07
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 38,
+      "parameter": "Cystatin C",
+      "percentage": 2.54
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 39,
+      "parameter": "Haptoglobin",
+      "percentage": 2.23
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 40,
+      "parameter": "Immunglobulin A",
+      "percentage": 1.49
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 41,
+      "parameter": "Immunglobulin G",
+      "percentage": 1.28
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 42,
+      "parameter": "Immunglobulin M",
+      "percentage": 2.2
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 43,
+      "parameter": "Transferrin",
+      "percentage": 2.69
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 44,
+      "parameter": "soluble Transferrin Receptor",
+      "percentage": 4.09
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 45,
+      "parameter": "C-reactive Protein",
+      "percentage": 11.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 46,
+      "parameter": "Lipoprotein (a)",
+      "percentage": 3.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 47,
+      "parameter": "Apolipoprotein A1",
+      "percentage": 1.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 48,
+      "parameter": "Apolipoprotein B",
+      "percentage": 1.5
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 49,
+      "parameter": "Troponin I (Siemens)",
+      "percentage": 10.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 50,
+      "parameter": "Troponin I (Singulex)",
+      "percentage": 11.6
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 51,
+      "parameter": "Parathormone",
+      "percentage": 3.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 52,
+      "parameter": "Osteocalcin",
+      "percentage": 2.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 53,
+      "parameter": "uncarboxylated-unphosphorylated Matrix-Gla Protein",
+      "percentage": 6.9
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 54,
+      "parameter": "N-terminal propeptide of type I collagen",
+      "percentage": 3.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 55,
+      "parameter": "β-isomerized C-terminal telopeptide of type I collagen",
+      "percentage": 5
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 56,
+      "parameter": "intact Fibroblast Growth Factor 23",
+      "percentage": 4.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 57,
+      "parameter": "Cortisol",
+      "percentage": 3.6
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 58,
+      "parameter": "Insulin",
+      "percentage": 3.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 59,
+      "parameter": "TSH",
+      "percentage": 1.46
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 60,
+      "parameter": "Free T3",
+      "percentage": 1.77
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 61,
+      "parameter": "Free Thyroxine",
+      "percentage": 1.71
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 62,
+      "parameter": "human Calcitonin",
+      "percentage": 3.84
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 63,
+      "parameter": "Thyreoglobulin",
+      "percentage": 3.74
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 64,
+      "parameter": "total PSA",
+      "percentage": 3.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 65,
+      "parameter": "free PSA (absolut)",
+      "percentage": 1.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 66,
+      "parameter": "conjugated PSA",
+      "percentage": 4.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 67,
+      "parameter": "free PSA (relative)",
+      "percentage": 2.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 68,
+      "parameter": "CA 15-3",
+      "percentage": 2.2
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 69,
+      "parameter": "Carcino Embryonal Antigen",
+      "percentage": 2
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 70,
+      "parameter": "CA 19-9",
+      "percentage": 2.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 71,
+      "parameter": "Cytokeratin Fragment 21-1",
+      "percentage": 2.5
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 72,
+      "parameter": "human epididymis protein-4",
+      "percentage": 1.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 73,
+      "parameter": "Alpha Fetoprotein",
+      "percentage": 3.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 74,
+      "parameter": "CA 125",
+      "percentage": 2.3
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 75,
+      "parameter": "activated partial Thromboplasin Time ",
+      "percentage": 3.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 76,
+      "parameter": "Prothrombin Time",
+      "percentage": 1.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 77,
+      "parameter": "Antithrombin 3",
+      "percentage": 5.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 78,
+      "parameter": "Coagulation factor VIII",
+      "percentage": 5.9
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 79,
+      "parameter": "Fibrinogen",
+      "percentage": 4.7
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 80,
+      "parameter": "D-Dimer",
+      "percentage": 33.1
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 81,
+      "parameter": "Protein C",
+      "percentage": 2.4
+    },
+    {
+      "model": "calculator.CVa",
+      "pk": 82,
+      "parameter": "free Protein S",
+      "percentage": 2
+    }
+  ]
+}
