@@ -1,9 +1,10 @@
+{% if parameters %}
+
 
 {% for parameter in parameters %}
-
 <tr>
     <td>
-        {{ parameter.name }}
+        <a class="" hx-post="{% url 'select-parameter' parameter.pk %}" style="cursor: pointer">{{ parameter.name }}</a>
     </td>
     <td>
         {{ parameter.unit }}
@@ -16,4 +17,10 @@
     </td>
 </tr>
 
+
 {% endfor %}
+
+{% else %}
+Is the parameter you are serching for not in the list? <br>
+    <a href="#">Request insertion of a new parameter to the list</a>
+{% endif %}

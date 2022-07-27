@@ -19,6 +19,7 @@ urlpatterns = [
     path('parameters/parameter/<pk>/edit', edit_parameter, name="edit-parameter"),
     path('parameters/create-parameter-form/', add_parameter_form, name='create-parameter-form'),
     path('parameters/search', search_parameter, name='search-parameter'),
+    path('parameters/<pk>/select', select_parameter, name='select-parameter'),
 
     path('samples/', sample_list, name='create-sample'),
     path('samples/sample/<pk>/', sample_detail, name="sample-detail"),

@@ -274,6 +274,11 @@ color: lightgray; !important;
     color:  var(--imperial-red);
 }
 
+.form-check-input{
+    font-size: x-large;
+    margin-left: 0.5em !important;
+}
+
 /*------------------------------------TABLES--------------------------------------*/
 #table-dashboard-settingname,
 .table-header,
@@ -371,6 +376,11 @@ th{
 
 #addresults-button{
     margin: 1em
+}
+
+#selected_parameter{
+    font-size: larger;
+    color: var(--imperial-red);
 }
 
 /*.other-field{*/

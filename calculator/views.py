@@ -608,6 +608,28 @@ def search_parameter(request):
     }
     return render(request, 'calculator/partials/parameter_searchresult.html', context)
 
+def select_parameter(request, pk):
+    parameter = Parameter.objects.get(pk=pk)
+    initial_dict = {
+        'parameter': parameter.id
+    }
+    form = ParameterUserForm(
+        user=request.user,
+        initial= initial_dict
+    )
+
+    # form.initial['parameter'].id = parameter.id
+
+    context = {
+        "form": form,
+        "parameter_name": parameter.name,
+        "parameter_unit": parameter.unit,
+        "parameter_cvg": parameter.cv_g,
+        "parameter_cvi": parameter.cv_i,
+    }
+
+    return render(request, 'calculator/partials/parameter_form.html', context)
+
 
 def add_parameter_form(request):
     # try:
@@ -621,8 +643,8 @@ def add_parameter_form(request):
     context = {
         "form": form,
         "parameter_list": parameter_select
-
     }
+
     return render(request, 'calculator/partials/parameter_form.html', context)
 
 

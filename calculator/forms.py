@@ -26,7 +26,7 @@ class InstrumentForm(forms.ModelForm):
 
 
 class ParameterUserForm(forms.ModelForm):
-    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()), empty_label='Select parameter')
+    parameter = forms.ModelChoiceField(queryset=(Parameter.objects.all()))
     reagent_name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     reagent_manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     analytical_method = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -65,6 +65,7 @@ class ParameterUserForm(forms.ModelForm):
         self.fields['instrument'].queryset = Instrument.objects.filter(owner=user)
         self.fields['instrument'].widget.attrs['class'] = 'form-select'
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
+
 
 
     # -------------------Botcatcher-------------------------------------
