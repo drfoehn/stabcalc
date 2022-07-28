@@ -45,7 +45,7 @@ class ResultsView(DetailView):
         results = Result.objects.filter(setting=self.object)
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
-        parameter = Parameter.objects.filter(setting=self.object).values('name', 'unit')
+        parameter = ParameterUser.objects.filter(setting=self.object).values('parameter__name', 'parameter__unit')
         setting = self.object
         context['subjects_n'] = Subject.objects.filter(settings__in=[self.object]).count()
         context['durations_n'] = Duration.objects.filter(setting=self.object).count()
@@ -305,12 +305,12 @@ class ResultsView(DetailView):
         context["best_fit_model"] = best_fit_model()
 
         context["interpretation_1"] = 'Under these conditions, a ' + str(
-            parameter.values('name')[0]['name']) + ' magnitude increase/decrease of ' + str(
-            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit']) + ' per hour is expected'
+            parameter.values('parameter__name')[0]['parameter__name']) + ' magnitude increase/decrease of ' + str(
+            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('parameter__unit')[0]['parameter__unit']) + ' per hour is expected'
 
         context["interpretation_2"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
-            parameter.values('name')[0]['name']) + ' level to change by ' + str(
-            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('unit')[0]['unit'])
+            parameter.values('parameter__name')[0]['parameter__name']) + ' level to change by ' + str(
+            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('parameter__unit')[0]['parameter__unit'])
 
         # print(res.params[1])
 

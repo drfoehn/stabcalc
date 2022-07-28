@@ -350,14 +350,14 @@ class Setting(OwnedModelMixin, models.Model):
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
     def cv_max(self) -> float | None:
-        analytical_cv = self.parameter.CV_intra
+        analytical_cv = self.parameter.cv_a
         if not analytical_cv:
             return None
         else:
             return round(analytical_cv*3, 2)
 
     def cv_max_abs_high(self, duration: 'Duration') -> float | None:
-        analytical_cv = self.parameter.CV_intra
+        analytical_cv = self.parameter.cv_a
         average_tot= self.average_tot(duration)
         if not analytical_cv:
             return None
@@ -365,7 +365,7 @@ class Setting(OwnedModelMixin, models.Model):
             return  average_tot*(((analytical_cv*3)+1)/100)+average_tot
 
     def cv_max_abs_low(self, duration: 'Duration') -> float | None:
-        analytical_cv = self.parameter.CV_intra
+        analytical_cv = self.parameter.cv_a
         average_tot= self.average_tot(duration)
         if not analytical_cv:
             return None
