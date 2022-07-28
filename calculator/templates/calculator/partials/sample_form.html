@@ -113,7 +113,10 @@ Blood samples are stored as...
                     </td>
                     <td>
                         <p></p>
-                        {{ form.gel }} (yes)
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="gel" id="id_gel">
+                        </div>
+{#                        {{ form.gel }} (yes)#}
                     </td>
                     <td>
                         <p></p>
@@ -126,7 +129,10 @@ Blood samples are stored as...
                         Are study samples leftovers from routine analysis?
                     </td>
                     <td>
-                        {{ form.sample_leftover }} (Yes)
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="sample_leftover" id="id_sample_leftover">
+                        </div>
+{#                        {{ form.sample_leftover }} (Yes)#}
 
                     </td>
                     <td>{{ form.sample_leftover.errors}}</td>
@@ -135,8 +141,9 @@ Blood samples are stored as...
                     <td class="form-rowhead">
                         Are your study samples pooled from individual samples?
                     </td>
-                    <td>
-                        <input type="checkbox" name="sample_pool" class="check-input" onclick="togglePool()">(Yes)</input>
+                    <td><div class="form-check form-switch">
+                        <input type="checkbox" name="sample_pool" id="id_sample_pool" class="form-check-input" onclick="togglePool()"></input>
+                    </div>
                     </td>
                     <td>
                         {{ form.sample_pool.errors }}
@@ -156,8 +163,9 @@ Blood samples are stored as...
                     <td class="form-rowhead">
                         Have you spiked samples with the analyte in question?
                     </td>
-                    <td>
-                        <input type="checkbox" name="sample_spike" class="check-input" onclick="toggleSpike()">(Yes)</input>
+                    <td><div class="form-check form-switch">
+                        <input type="checkbox" name="sample_spike" id="sample_spike" class="form-check-input" onclick="toggleSpike()"></input>
+                    </div>
                     </td>
                     <td>
                         {{ form.sample_spike.errors }}

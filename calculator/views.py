@@ -649,12 +649,12 @@ def add_parameter_form(request):
 
 
 def parameter_detail(request, pk):
-    parameter = get_object_or_404(ParameterUser, pk=pk)
-    if not parameter.owner == request.user:
+    parameter_user = get_object_or_404(ParameterUser, pk=pk)
+    if not parameter_user.owner == request.user:
         return HttpResponseForbidden
     else:
         context = {
-            "parameter": parameter
+            "parameter": parameter_user
         }
         return render(request, 'calculator/partials/parameter_detail.html', context)
 
@@ -672,12 +672,16 @@ def edit_parameter(request, pk):
     context = {
         "form": form,
         "parameter": parameter,
+        "parameter_name": parameter.parameter.name,
+        "parameter_unit": parameter.parameter.unit,
+        "parameter_cvg": parameter.parameter.cv_g,
+        "parameter_cvi": parameter.parameter.cv_i,
     }
     return render(request, 'calculator/partials/parameter_form.html', context)
 
 
 def delete_parameter(request, pk):
-    parameter = Parameter.objects.get(pk=pk)
+    parameter = ParameterUser.objects.get(pk=pk)
     parameter.delete()
     return HttpResponse('')
 

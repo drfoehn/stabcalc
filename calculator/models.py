@@ -253,7 +253,7 @@ class ParameterUser(OwnedModelMixin, models.Model):
 class Setting(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=255, blank=True, null=True,
                             help_text='Choose any name that identifies your stability study')
-    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE, blank=True, null=True)
+    parameter = models.ForeignKey(ParameterUser, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
     #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
@@ -265,7 +265,7 @@ class Setting(OwnedModelMixin, models.Model):
     HEALTHY = 2
     OTHER = 3
     TYPE = (
-        (PATIENT, _("Patient samples")),
+        (PATIENT, _("Patients")),
         (HEALTHY, _("Healthy volunteers")),
         (OTHER, _("Other")),
 

@@ -45,7 +45,10 @@
                         Exposure to <strong>light</strong> during storage?
                     </td>
                     <td>
-                        {{ form.light }}&nbsp;
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="light" id="id_light">
+                        </div>
+{#                        {{ form.light }}&nbsp;#}
                     </td>
                     <td>
                         {{ form.light.errors }}
@@ -56,7 +59,10 @@
                         Contact to <strong>cells</strong> during storage?
                     </td>
                     <td>
-                        {{ form.cell }}
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="cell" id="id_cell">
+                        </div>
+{#                        {{ form.cell }}#}
                     </td>
                     <td>
                         {{ form.cell.errors }}
@@ -68,8 +74,10 @@
                         Contact to <strong>air</strong> during storage?
                     </td>
                     <td>
-
-                        {{ form.air }}&nbsp;
+<div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="air" id="id_air">
+                        </div>
+{#                        {{ form.air }}&nbsp;#}
                     </td>
                     <td>
                         {{ form.air.errors }}
@@ -80,7 +88,10 @@
                         <strong>Agitation</strong> during storage?
                     </td>
                     <td>
-                        {{ form.agitation }}
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="agitation" id="id_agitation">
+                        </div>
+{#                        {{ form.agitation }}#}
                     </td>
                     <td>
                         {{ form.agitation.errors }}
