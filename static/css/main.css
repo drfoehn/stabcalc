@@ -437,6 +437,10 @@ th{
     font-style: italic;
 }
 
+.cvs{
+    color: var(--imperial-red);
+}
+
 /*---------------------ABOUT-PAGE---------------------*/
 
 .about_subheading{

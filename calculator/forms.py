@@ -1,4 +1,5 @@
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.forms import formset_factory, modelformset_factory
 from django.http import request
 
@@ -175,6 +176,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=ParameterUser.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
+    # duration = forms.ModelMultipleChoiceField(queryset=Duration.objects.filter(owner__duration=user))
     sample_type = forms.Select()
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     design_type = forms.Select()
@@ -235,6 +237,12 @@ class SettingForm(forms.ModelForm):
         self.fields['design_type'].widget.attrs['class'] = 'form-select'
         # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
+    # def clean_duration(self):
+    #     data = self.cleaned_data['duration']
+    #     baseline_duration = self.duration.filter(seconds=0)
+    #     if baseline_duration not in data:
+    #         raise ValidationError("You have forgotten to provide base")
+    #     return data
 
     def get_subjects_queryset(self):
         return Subject.objects.filter(owner=self.owner)
@@ -401,6 +409,24 @@ class UploadExcelForm(forms.Form):
         help_text='Please be sure to use the correct template and filetype'
     )
 
+class NewParameterForm(forms.Form):
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    unit = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    cv_a = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    cv_i = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    cv_g = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        fields = (
+            'name',
+            'unit',
+            'cv_g',
+            'cv_i',
+            'cv_a',
+            'email'
+
+        )
 # class ValueForm(forms.ModelForm):
 #     class Meta:
 #         model = Value

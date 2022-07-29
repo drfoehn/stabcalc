@@ -1,0 +1,8 @@
+{% csrf_token %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+
+<form action="POST">
+ {{ form|crispy }}
+</form>

@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.core.mail import EmailMessage
+from django.core.exceptions import ValidationError
+from django.core.mail import EmailMessage, send_mail, BadHeaderError
 from django.forms import modelformset_factory  # is grey but still needed for the result_add_view
 from datetime import datetime
 from wsgiref.util import FileWrapper
@@ -88,7 +89,7 @@ class ResultsView(DetailView):
             how="inner",
         )
 
-        merged_res_dur['hours'] = (merged_res_dur['seconds']/3600)
+        merged_res_dur['hours'] = (merged_res_dur['seconds'] / 3600)
         context["results_data222"] = merged_res_dur.to_html
 
         # ----------------Numpy-Arrays
@@ -107,7 +108,6 @@ class ResultsView(DetailView):
         # TODO: But why are there four different versions of Region when we only input one? Simply put, the formula expects continuous values in the form of numbers. By inputting region with data points as strings, the formula separates each string into categories and analyzes the category separately. Formatting your data ahead of time can help you organize and analyze this properly.
 
         # -----------------------LINEAR----------------------------------------
-
 
         vars = ['value', 'seconds']
         merged_res_dur = merged_res_dur[vars]
@@ -306,7 +306,8 @@ class ResultsView(DetailView):
 
         context["interpretation_1"] = 'Under these conditions, a ' + str(
             parameter.values('parameter__name')[0]['parameter__name']) + ' magnitude increase/decrease of ' + str(
-            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('parameter__unit')[0]['parameter__unit']) + ' per hour is expected'
+            round(res.params[1] * 3600, 3)) + ' ' + str(
+            parameter.values('parameter__unit')[0]['parameter__unit']) + ' per hour is expected'
 
         context["interpretation_2"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
             parameter.values('parameter__name')[0]['parameter__name']) + ' level to change by ' + str(
@@ -381,6 +382,23 @@ class ResultsView(DetailView):
         # context['power'] = panalysis
         # context['panalysis'] = panalysis
 
+        ############################### Calculate maximum permissible error (MPE)##########################
+
+        cv_g = ParameterUser.objects.filter(setting=self.object).values('parameter__cv_g')[0]['parameter__cv_g']
+        cv_i = ParameterUser.objects.filter(setting=self.object).values('parameter__cv_i')[0]['parameter__cv_i']
+        cv_a = ParameterUser.objects.filter(setting=self.object).values('cv_a')[0]['cv_a']
+        context['cv_g']= cv_g
+        context['cv_i']= cv_i
+        context['cv_a']= cv_a
+        rcv = 2 ** 0.5 * (1.96 * (cv_a ** 2 + cv_i ** 2) ** 0.5)
+        context['rcv']= round(rcv, 2)
+        allow_dev=0.5*cv_i
+        context['allow_dev']=round(allow_dev, 2)
+        accept_dev=0.7*allow_dev
+        context['accept_dev'] =round(accept_dev, 2)
+        allow_bias=0.25*math.sqrt(cv_i**2 + cv_g**2)
+        context['allow_bias'] =round(allow_bias, 2)
+
         ###################################  Data import / export ####################################
 
         # ---------------------------Import
@@ -450,10 +468,10 @@ class ResultsView(DetailView):
                 "durations": Duration.objects.all(),
                 "r_square": results_abs.rsquared,
                 "f_p_value": results_abs.f_pvalue,
-                "f_p_value_perc": results_abs.f_pvalue*100,
+                "f_p_value_perc": results_abs.f_pvalue * 100,
                 "f_value": results_abs.fvalue,
                 "f_p_log_value": res_log.f_pvalue,
-                "f_p_log_value_perc": res_log.f_pvalue*100,
+                "f_p_log_value_perc": res_log.f_pvalue * 100,
                 # Essentially, it asks, is this a useful variable? Does it help us explain the variability we have in this case?
             }
         )
@@ -593,20 +611,20 @@ def parameter_list(request):
 
     return render(request, 'calculator/parameter_list.html', context)
 
+
 def search_parameter(request):
     if 'name' in request.POST:
         try:
             parameters = Parameter.objects.filter(name__icontains=request.POST.get("name"))
         except Parameter.DoesNotExist:
             parameters = None
-            print('Parameter does not exist')
-
 
     context = {
         "parameters": parameters,
 
     }
     return render(request, 'calculator/partials/parameter_searchresult.html', context)
+
 
 def select_parameter(request, pk):
     parameter = Parameter.objects.get(pk=pk)
@@ -615,7 +633,7 @@ def select_parameter(request, pk):
     }
     form = ParameterUserForm(
         user=request.user,
-        initial= initial_dict
+        initial=initial_dict
     )
 
     # form.initial['parameter'].id = parameter.id
@@ -833,15 +851,20 @@ def setting_list(request):
         if form.is_valid():
             setting = form.save(commit=False)
             setting.owner = request.user
-            setting.save()
-            for duration in setting.duration.all():
-                setting.duration.pk.add(setting)
+            # if setting.duration.filter(seconds=0):
 
-            for subject in setting.subject.all():
-                setting.subject.pk.add(setting)
             setting.save()
             form.save_m2m()
             return redirect('setting-detail', pk=setting.id)
+            # else:
+            #     raise ValidationError('You are missing the Basline-Duration (0 Minutes). Please add this duration or create it in section #5 - Storage durations')
+
+                # context = {
+                #     'form': form,
+                #     'settings': settings,
+                #     'no_zero': 'You are missing the Basline-Duration (0 Minutes). Please add this duration or create it in section #5 - Storage durations'
+                # }
+                # return render(request, 'calculator/partials/setting_form.html', context)
         else:
             context = {
                 'form': form,
@@ -1086,7 +1109,7 @@ def delete_duration(request, pk):
 #     return render(request, 'calculator/result_list.html', context)
 def result_list(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
-    durations = Duration.objects.filter(setting=setting)
+    durations = Duration.objects.filter(settings=setting)
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
     form = ResultForm(subjects, durations, data=request.POST or None)
@@ -1301,145 +1324,22 @@ def item_lists(request):
     }
     return render(request, 'itemlists.html', context)
 
-# class InstrumentUpdateView(UpdateView):
-#     model = Instrument
-#     form_class = InstrumentForm
-#     # template_name = 'instrument_update.html'  # templete for updating
-#     success_url = "/dashboard"
 
+def new_parameter(request):
+    if request.method == 'GET':
+        form = NewParameterForm()
+    else:
+        form = NewParameterForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            from_email = form.cleaned_data['from_email']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, from_email, ['admin@example.com'])
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect('success')
+    return render(request, "calculator/partials/newparameter.html", {'form': form})
 
-# class SampleAddView(CreateView):
-#     # template_name = "xxx.html"
-#     model = Sample
-#     form_class = SampleForm
-#     success_url = "/dashboard"
-#
-#     def post(self, request, *args, **kwargs):
-#         return super().post(request, *args, **kwargs)
-
-
-# class SettingAddView(CreateView):
-#     template_name = "calculator/result_form.html"
-#     model = Setting
-#     form_class = SettingForm
-#     # success_url = "/dashboard"
-
-
-# class ValuesAddView(TemplateView):
-#     template_name = "calculator/result_form.html"
-#
-#     # model = Result
-#     # form_class = ResultForm
-#     # success_url = "/dashboard"
-#
-#     # Define method to handle GET request
-#     def get(self, *args, **kwargs):
-#         # Create an instance of the formset
-#         formset = ValueFormset(queryset=Result.objects.none())
-#         return self.render_to_response({"value_formset": formset})
-#
-#     def post(self, *args, **kwargs):
-#         formset = ValueFormset(data=self.request.POST)
-#         # Check if submitted forms are valid
-#         if formset.is_valid():
-#             formset.save()
-#             return redirect(reverse_lazy("add_results"))
-#
-#         return self.render_to_response({"value_formset": formset})
-#
-#     # def post(self, request, *args, **kwargs):
-#     #     return super().post(request, *args, **kwargs)
-
-
-# def result_view(request):
-#     if request.method == 'POST':
-#         Order=formset_factory(ResultForm,extra=4)
-#         formset=Order(request.POST)
-#         if formset.is_valid():
-#             for form in formset:
-#                 value=form.cleaned_data.get('value')
-#                 if value:
-#                     Result(value=value).save()
-#             return redirect(result_view)
-#     else:
-#         Order=formset_factory(ResultForm,extra=4)
-#         formset=Order()
-#         return render(request,'calculator/result_form.html',{'formset':formset})
-
-
-# class ParameterIndex(ListView):
-#     model = Parameter
-#
-#
-# class ParameterDetail(DetailView):
-#     model = Parameter
-#
-#
-# class ParameterAddView(CreateView):
-#     # template_name = "xxx.html"
-#     model = Parameter
-#     form_class = ParameterForm
-#
-#     def post(self, request, *args, **kwargs):
-#         return super().post(request, *args, **kwargs)
-#
-#
-# class MultiInputView(TemplateView):
-#     ### TemplateResponseMixin
-#     template_name = "calculator/calculator_form.html"
-#
-#     ### ContextMixin
-#     def get_context_data(self, **kwargs):
-#         """Adds extra content to our template"""
-#         context = super(MultiInputView, self).get_context_data(**kwargs)
-#
-#         context["setting_form"] = SettingForm(
-#             prefix="SettingForm",
-#             # Multiple 'submit' button paths should be handled in form's .save()/clean()
-#             data=self.request.POST
-#             if bool(
-#                 set(
-#                     [
-#                         "SettingForm-submit",
-#                     ]
-#                 ).intersection(self.request.POST)
-#             )
-#             else None,
-#         )
-#
-#         context["duration_form"] = DurationForm(
-#             prefix="duration",
-#             data=self.request.POST if "Duration-submit" in self.request.POST else None,
-#             files=self.request.FILES
-#             if "Duration-submit" in self.request.POST
-#             else None,
-#         )
-#
-#         context["value_form"] = ValueForm(
-#             prefix="value",
-#             data=self.request.POST if "Value-submit" in self.request.POST else None,
-#             files=self.request.FILES if "Value-submit" in self.request.POST else None,
-#         )
-#
-#         # context['value_form'] = ValueForm()
-#         return context
-#
-#     ### NegotiationGroupDetailView
-#     def post(self, request, *args, **kwargs):
-#         context = self.get_context_data(**kwargs)
-#
-#         if context["setting_form"].is_valid():
-#             instance = context["setting_form"].save()
-#             # messages.success(request, 'Setting saved.'.format(instance.pk))
-#         elif context["duration_form"].is_valid():
-#             instance = context["parameter_form"].save()
-#             # messages.success(request, 'Duration setting has been saved.'.format(instance.pk))
-#         elif context["value_form"].is_valid():
-#             instance = context["value_form"].save()
-#             # messages.success(request, 'Value has been saved.'.format(instance.pk))
-#             # advise of any errors
-#
-#         else:
-#             # messages.error('Error(s) encountered during form processing, please review below and re-submit')
-#             pass
-#         return self.render_to_response(context)
+def thankyou_mail(request):
+    return HttpResponse('Thank you for your message.')

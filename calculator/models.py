@@ -250,6 +250,7 @@ class ParameterUser(OwnedModelMixin, models.Model):
         return f"{self.parameter.name}"
 
 
+
 class Setting(OwnedModelMixin, models.Model):
     name = models.CharField(max_length=255, blank=True, null=True,
                             help_text='Choose any name that identifies your stability study')
@@ -257,9 +258,9 @@ class Setting(OwnedModelMixin, models.Model):
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
     #FIXME: rename in subjects
     subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
-    duration = models.ManyToManyField('Duration', blank=True)
+    duration = models.ManyToManyField('Duration', blank=True, related_name='settings')
     sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
-    freeze_thaw_cycles = models.SmallIntegerField(verbose_name=_('How many freeze/thaw cycles did the samples endure?'), blank=True, null=True)
+    freeze_thaw_cycles = models.PositiveIntegerField(verbose_name=_('How many freeze/thaw cycles did the samples endure?'), blank=True, null=True)
 
     PATIENT = 1
     HEALTHY = 2
@@ -308,7 +309,8 @@ class Setting(OwnedModelMixin, models.Model):
     comment = models.CharField(max_length=1000, blank=True, null=True, help_text='Insert all additional information to the setting here')
 
     def __str__(self):
-        return f"{self.name}: {self.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}"
+        return f"{self.name}: {self.parameter.parameter.name} / {self.condition.get_temperature_display()} / Other condition: {self.condition.other_condition}"
+
 
     def values_tot(self, duration: 'Duration') -> list[float]:
         return [v.value for v in Result.objects.filter(setting=self, duration=duration)]
@@ -386,6 +388,7 @@ class Setting(OwnedModelMixin, models.Model):
     #     # TODO: add if not
     #     self.duration_set.add(dur_zero)
     #     super().save(*args, **kwargs)
+
 
 
 class Duration(OwnedModelMixin, models.Model):

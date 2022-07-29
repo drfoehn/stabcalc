@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from django.conf.urls.static import static
+import environ
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -19,12 +20,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_TEMPLATE_DIR = Path(BASE_DIR, "templates")
 STATIC_DIR = Path(BASE_DIR, "static")
 
+env = environ.Env()
+if Path(".env").exists():
+    env.read_env(env_file=str(Path.cwd() / ".env"))
+else:
+    # if not, use the default location from django-environ
+    env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-from credentials import SECRET_KEY
+DEBUG = env("DEBUG", default=False)
+SECRET_KEY = env(
+    "SECRET_KEY", default="don't use this pseudo-secret-key on production!"
+)
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -94,13 +105,21 @@ WSGI_APPLICATION = 'stability_calculator.wsgi.application'
 
 # from credentials import DATABASES
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": env("DATABASE_NAME", default="db.sqlite3"),
+        "USER": env("DATABASE_USER", default=""),
+        "PASSWORD": env("DATABASE_PASS", default=""),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -160,7 +179,7 @@ EMAIL_USE_TLS = True
 ###################collage email id##############
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
-# When using Gmail, Settings in the account must be changed, enabling “Access for less secure apps”
+# FIXME: When using Gmail, Settings in the account must be changed, enabling “Access for less secure apps”
 #https://support.google.com/mail/thread/5621336?hl=en
 
 # LOGIN_URL = 'login'

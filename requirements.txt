@@ -12,3 +12,4 @@ statsmodels
 patsy
 django-guardian
 openpyxl
+django-environ

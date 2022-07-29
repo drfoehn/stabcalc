@@ -94,7 +94,7 @@ class PasswordsChangeView(PasswordChangeView):
 
 def user_dashboard(request):
     settings = Setting.objects.filter(owner=request.user)
-    parameters= Parameter.objects.filter(owner=request.user)
+    parameters= ParameterUser.objects.filter(owner=request.user)
     subjects= Subject.objects.filter(owner=request.user)
     durations= Duration.objects.filter(owner=request.user)
     samples= Sample.objects.filter(owner=request.user)

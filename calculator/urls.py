@@ -65,8 +65,11 @@ urlpatterns = [
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
 
-    path("download-xlsx", views.DownloadExcel, name="download-data")
+    path("download-xlsx", views.DownloadExcel, name="download-data"),
     # path("upload/", views.upload_view, name="upload"),
+
+    path('new_parameter/', new_parameter, name='new-parameter'),
+    path('thankyou', thankyou_mail, name='thankyou-mail'),
 
 
 

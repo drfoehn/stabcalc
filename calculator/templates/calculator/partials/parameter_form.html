@@ -1,12 +1,14 @@
 <div hx-target="this" hx-swap="outerHTML">
     <div class="col item-box">
         <form method="POST">
-            <h4>Select Parameter</h4>
+            <h4 {% if parameter.pk %}class="d-none"{% endif %}>Select Parameter</h4>
             {% csrf_token %}
-            <input class = "form-control"
+
+            <input class = "form-control {% if parameter.pk %}d-none{% endif %}"
                     type="search"
                     placeholder="Begin Typing To Search Parameters..."
                     name="name"
+                   {% if parameter.pk %}readonly{% endif %}
                     hx-trigger="keyup changed delay:500ms, search"
                     hx-post="{% url 'search-parameter' %}"
                     hx-target="#search-results"

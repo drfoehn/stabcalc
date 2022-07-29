@@ -23,6 +23,7 @@
     {#    -------------------------------DESCRIPTION TABLE -------------------------------#}
 
 
+
     <div class="info-accordion" id="accordionPanelsStayOpenExample">
         <div class="accordion-item">
             <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -135,7 +136,7 @@
                                 </tr>
                                 <tr>
                                     <th>Method Analytical Imprecision (Intra CV%)</th>
-                                    <td>{{ setting.parameter.CV_intra }} %</td>
+                                    <td>{{ setting.parameter.cv_a }} %</td>
                                 </tr>
 {#                                <tr>#}
 {#                                    <th>Method Inter CV%</th>#}
@@ -1382,33 +1383,38 @@
                     <div class="form-row align-items-center">
                         <div class="col-auto ">
                             <label class="sr-only calc_result" for="inlineFormInput">Analytical Imprecision (Intra-Assay-CV) (CV<sub>a</sub>)
-                                of {{ setting.parameter.name }}</label>
-                            {% if  setting.parameter.CV_intra  %}
-                                <span class="calc_result">{{ setting.parameter.CV_intra }} %</span><br>
-                                <span class="sub-italic">This value is derived from your input. You can change it in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.name }}</a></span>
+                                of {{ setting.parameter.parameter.name }}:</label>
+                            {% if  setting.parameter.cv_a  %}
+                                <span class="calc_result cvs">{{ cv_a }} %</span><br>
+                                <span class="sub-italic">This value is derived from your input. You can change it in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
                                 {% else %}
-                                <span class="calc_result">Please enter a value in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.name }}</a></span>
+                                <span class="calc_result">Please enter a value in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
                             {% endif %}
                         <p></p>
                         </div>
                         <div class="col-auto">
                             <label class="sr-only calc_result" for="inlineFormInput">Intra-Individual (Within-subject) Variation (CV<sub>i</sub>)
-                                of {{ setting.parameter.name }}</label>
-                            <input type="text" class="form-control mb-2" id="intra-cv"
-                                   placeholder="">
+                                of {{ setting.parameter.parameter.name }}: </label>
+                            <span class="calc_result cvs">{{ cv_i }} %</span><br>
+                             <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
+
+{#                            <input type="text" class="form-control mb-2" id="intra-cv"#}
+{#                                   placeholder="">#}
                         </div>
                         <br>
                         <div class="col-auto">
                             <label class="sr-only calc_result" for="inlineFormInput">Inter-Individual (Between-subject) Variation (CV<sub>g</sub>)
-                                of {{ setting.parameter.name }}</label>
-                            <input type="text" class="form-control mb-2" id="inter-cv"
-                                   placeholder="">
+                                of {{ setting.parameter.parameter.name }}</label>
+                            <span class="calc_result cvs">{{ cv_g }} %</span><br>
+                            <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
+{#                            <input type="text" class="form-control mb-2" id="inter-cv"#}
+{#                                   placeholder="">#}
                         </div>
-                        <div class="col-auto">
-                            <button id="button_calc" value="here goes result" onclick="calcValue()"
-                                    class="btn btn-outline-primary">Calculate
-                            </button>
-                        </div>
+{#                        <div class="col-auto">#}
+{#                            <button id="button_calc" value="here goes result" onclick="calcValue()"#}
+{#                                    class="btn btn-outline-primary">Calculate#}
+{#                            </button>#}
+{#                        </div>#}
                     </div>
                 </form>
             </div>
@@ -1422,12 +1428,12 @@
                             <span class="sub-italic">Formula:  RCV = 2<sup>1/2</sup> * Z * (CV<sub>a</sub><sup>2</sup> + CV<sub>i</sub><sup>2</sup>)<sup>1/2</sup> <br></span>
                         </th>
                         <td>
-                            <span id="calc_result_rcv" class="calc_result"></span>&nbsp;%<br>
+                            <span id="calc_result_rcv" class="calc_result cvs">{{ rcv }}&nbsp;%</span><br>
                         </td>
                     </tr>
                     <tr>
                         <td class="sub-italic">
-                            Z is set to 1.96 to represent a significance level of 0.05<br>
+                            Z is set to 1.96 to represent a significance level of 0.05 (two-sided p-value)<br>
                             Reference: Fraser C.G. Clin Chem Lab Med 2012;50(5):807–812 doi:
                             <a href="https://www.degruyter.com/document/doi/10.1515/CCLM.2011.733/html">10.1515/cclm-2011-733</a>
                             <br/>
@@ -1439,7 +1445,7 @@
                             <span class="sub-italic">Formula: 0.5 * CV<sub>i</sub> </span><br>
                         </th>
                         <td>
-                            <span id="calc_result_allow" class="calc_result"></span>&nbsp;%<br>
+                            <span id="calc_result_allow" class="calc_result cvs">{{ allow_dev }}&nbsp;%</span><br>
                         </td>
                     </tr>
                     <tr>
@@ -1457,7 +1463,7 @@
                             <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
                         </th>
                         <td>
-                            <span id="calc_result_accept" class="calc_result"></span>&nbsp;%<br>
+                            <span id="calc_result_accept" class="calc_result cvs">{{ accept_dev }}&nbsp;%</span><br>
                         </td>
                     </tr>
                     <tr>
@@ -1475,7 +1481,7 @@
                             <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CV<sub>i</sub><sup>2</sup> + CV<sub>g</sub><sup>2</sup>)&nbsp;</span></span><br>
                         </th>
                         <td>
-                            <span id="calc_bias_allow" class="calc_result"></span>&nbsp;%
+                            <span id="calc_bias_allow" class="calc_result cvs">{{ allow_bias }}&nbsp;%</span>
                         </td>
                     </tr>
                     <tr>
@@ -1492,22 +1498,22 @@
             </div>
         </div>
         {#    FIXME: Page jumps to start after funtion call#}
-        <script>
-
-            function calcValue() {
-                let cva = {{ setting.parameter.CV_intra }}
-                let cvi = document.getElementById("intra-cv").value;
-                let cvg = document.getElementById("inter-cv").value;
-                let rcv = 2^0.5*1.96*(cva^2+cvi^2)^0.5
-                let result_accept = 0.5 * cvi;
-                let result_allow = 0.7 * result_accept
-                let bias_allow = 0.25 * (Math.sqrt(cvi ^ 2 + cvg ^ 2))
-                document.getElementById("calc_result_rcv").innerHTML = rcv.toFixed(2);
-                document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);
-                document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);
-                document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);
-            }
-        </script>
+{#        <script>#}
+{##}
+{#            function calcValue() {#}
+{#                let cva = {{ setting.parameter.cv_a }}#}
+{#                let cvi = document.getElementById("intra-cv").value;#}
+{#                let cvg = document.getElementById("inter-cv").value;#}
+{#                let rcv = 2^0.5*1.96*(cva^2+cvi^2)^0.5#}
+{#                let result_accept = 0.5 * cvi;#}
+{#                let result_allow = 0.7 * result_accept#}
+{#                let bias_allow = 0.25 * (Math.sqrt(cvi ^ 2 + cvg ^ 2))#}
+{#                document.getElementById("calc_result_rcv").innerHTML = rcv.toFixed(2);#}
+{#                document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);#}
+{#                document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);#}
+{#                document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);#}
+{#            }#}
+{#        </script>#}
 
 
         {#    ---------------------------------RESULT TABLE------------------------------#}
