@@ -256,9 +256,8 @@ class Setting(OwnedModelMixin, models.Model):
                             help_text='Choose any name that identifies your stability study')
     parameter = models.ForeignKey(ParameterUser, on_delete=models.CASCADE, blank=True, null=True)
     condition = models.ForeignKey(Condition, on_delete=models.CASCADE, blank=True, null=True)
-    #FIXME: rename in subjects
-    subject = models.ManyToManyField('Subject', blank=True, related_name='settings')
-    duration = models.ManyToManyField('Duration', blank=True, related_name='settings')
+    subjects = models.ManyToManyField('Subject', blank=True, related_name='settings')
+    durations = models.ManyToManyField('Duration', blank=True, related_name='settings')
     sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
     freeze_thaw_cycles = models.PositiveIntegerField(verbose_name=_('How many freeze/thaw cycles did the samples endure?'), blank=True, null=True)
 

@@ -57,7 +57,7 @@ class ResultsView(DetailView):
         for subject in subjects:
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
-                for duration in self.object.duration.all():
+                for duration in self.object.durations.all():
                     if setting == self.object:
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 

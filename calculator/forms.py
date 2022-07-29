@@ -203,8 +203,8 @@ class SettingForm(forms.ModelForm):
             'sample_type',
             'freeze_thaw',
             'condition',
-            'duration',
-            'subject',
+            'durations',
+            'subjects',
             'design_type',
             'design_sample',
             'protocol',
@@ -217,11 +217,11 @@ class SettingForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
         # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
-        self.fields['duration'] = forms.ModelMultipleChoiceField(
+        self.fields['durations'] = forms.ModelMultipleChoiceField(
             Duration.objects.filter(owner=user),
             widget=forms.CheckboxSelectMultiple,
         )
-        self.fields['subject'] = forms.ModelMultipleChoiceField(
+        self.fields['subjects'] = forms.ModelMultipleChoiceField(
             queryset=Subject.objects.filter(owner=user),
             widget=forms.CheckboxSelectMultiple,
         )

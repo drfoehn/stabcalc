@@ -68,7 +68,7 @@
 {#                                   hx-swap="beforebegin">Add additional result rows per subject/sample</a>#}
  <form action="" method="post">
  {% csrf_token %}
-                    {% for subject in setting.subject.all %}
+                    {% for subject in setting.subjects.all %}
                         <div class="row">
                             <div class="col-2">
                                 <h4 class="display6">{{ subject }} </h4> <br>
