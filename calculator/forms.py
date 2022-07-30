@@ -176,7 +176,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=ParameterUser.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
-    # duration = forms.ModelMultipleChoiceField(queryset=Duration.objects.filter(owner__duration=user))
+    duration = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
     sample_type = forms.Select()
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     design_type = forms.Select()
@@ -217,10 +217,7 @@ class SettingForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
         # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
-        self.fields['durations'] = forms.ModelMultipleChoiceField(
-            Duration.objects.filter(owner=user),
-            widget=forms.CheckboxSelectMultiple,
-        )
+        self.fields['durations'].queryset = Duration.objects.filter(owner=user)
         self.fields['subjects'] = forms.ModelMultipleChoiceField(
             queryset=Subject.objects.filter(owner=user),
             widget=forms.CheckboxSelectMultiple,
@@ -415,7 +412,8 @@ class NewParameterForm(forms.Form):
     cv_a = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     cv_i = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     cv_g = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    email = forms.EmailField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    user = forms.CharField(max_length=255, widget=forms.HiddenInput())
+    email = forms.EmailField(widget=forms.HiddenInput())
 
     class Meta:
         fields = (

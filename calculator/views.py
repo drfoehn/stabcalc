@@ -851,20 +851,9 @@ def setting_list(request):
         if form.is_valid():
             setting = form.save(commit=False)
             setting.owner = request.user
-            # if setting.duration.filter(seconds=0):
-
             setting.save()
             form.save_m2m()
             return redirect('setting-detail', pk=setting.id)
-            # else:
-            #     raise ValidationError('You are missing the Basline-Duration (0 Minutes). Please add this duration or create it in section #5 - Storage durations')
-
-                # context = {
-                #     'form': form,
-                #     'settings': settings,
-                #     'no_zero': 'You are missing the Basline-Duration (0 Minutes). Please add this duration or create it in section #5 - Storage durations'
-                # }
-                # return render(request, 'calculator/partials/setting_form.html', context)
         else:
             context = {
                 'form': form,
@@ -1109,7 +1098,7 @@ def delete_duration(request, pk):
 #     return render(request, 'calculator/result_list.html', context)
 def result_list(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
-    durations = Duration.objects.filter(settings=setting)
+    durations = Duration.objects.filter(setting=setting)
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
     form = ResultForm(subjects, durations, data=request.POST or None)
@@ -1326,20 +1315,26 @@ def item_lists(request):
 
 
 def new_parameter(request):
-    if request.method == 'GET':
-        form = NewParameterForm()
-    else:
-        form = NewParameterForm(request.POST)
+    form = NewParameterForm(request.POST or None)
+    if request.method == 'POST':
         if form.is_valid():
-            subject = form.cleaned_data['subject']
-            from_email = form.cleaned_data['from_email']
-            message = form.cleaned_data['message']
-            try:
-                send_mail(subject, message, from_email, ['admin@example.com'])
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return redirect('success')
-    return render(request, "calculator/partials/newparameter.html", {'form': form})
+            parameter_request = form.save(commit=False)
+            parameter_request.user = request.user
+            parameter_request.user.email = request.user.email
+            parameter_request.save()
+            return redirect(thankyou_mail())
+        else:
+            context = {
+                'form': form,
+        }
+        return render(request, 'calculator/newparameter.html', context)
+
+        # try:
+        #     send_mail(subject, message, from_email, ['admin@example.com'])
+        # except BadHeaderError:
+        #     return HttpResponse('Invalid header found.')
+        # return redirect('success')
+    return render(request, "calculator/newparameter.html", {'form': form})
 
 def thankyou_mail(request):
     return HttpResponse('Thank you for your message.')

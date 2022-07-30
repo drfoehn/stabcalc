@@ -1,3 +1,5 @@
+
+
 {% if parameters %}
 
 
@@ -21,29 +23,8 @@
 {% endfor %}
 
 {% else %}
-Is the parameter you are serching for not in the list? <br>
-    <a href="#"></a>
-    <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newParameterModal">
-  Request insertion of a new parameter to the list
-</button>
 
-<!-- Modal -->
-<div class="modal fade" id="newParameterModal" tabindex="-1" aria-labelledby="newParameterModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="newParameterModalLabel">Request new parameter</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {% include 'calculator/partials/newparameter.html' %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-        <button type="button" class="btn btn-primary">Send</button>
-      </div>
-    </div>
-  </div>
-</div>
+Is the parameter you are serching for not in the list? <br>
+    <a href="{% url 'new-parameter' %}">Request new parameter</a>
+
 {% endif %}
