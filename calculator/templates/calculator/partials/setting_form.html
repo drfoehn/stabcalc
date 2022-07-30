@@ -107,20 +107,20 @@
                        </tr>
             <tr>
             <td>
-                {{ form.condition }}
+               {{ form.condition }}
             </td>
             <td>
                 {{ form.condition.errors }}
             </td>
         </tr>
-        <tr id="freeze_thaw_cycle">
+        <tr id="freeze_thaw_cycle_label" style="display: none">
 
             <td class="form-rowhead">
                 How many freeze/thaw cycles have the samples gone through? <br>
 
             </td>
                        </tr>
-            <tr>
+            <tr id="freeze_thaw_cycle" style="display: none">
             <td>
                 <i>(Select "1" for first thawing cycle)</i>
                 {{ form.freeze_thaw }}
@@ -219,34 +219,28 @@
     </form>
 </div>
 </div>
+
+
 <script>
-    document.getElementById('id_temperature').addEventListener('change', toggleTemp)
+    document.getElementById('id_condition').addEventListener('change', toggleFreeze)
 
 
-    function toggleTemp() {
-        let dropdown = document.getElementById('id_temperature').value;
-        let thaw = document.getElementById('sample_thaw');
-        let other = document.getElementById('id_temperature_other');
-        let other_label = document.getElementById('temp_other_label');
-        if (dropdown === "9") {
-            other.style.display = 'block'
-            other_label.style.display = 'block'
-            thaw.style.display = 'none'
-            thaw.value = ''
+    function toggleFreeze() {
+        let dropdown = document.getElementById('id_condition')
+        let selected_option = dropdown.options[dropdown.selectedIndex].innerText;
+        let freeze_thaw = document.getElementById('freeze_thaw_cycle');
+        let freeze_thaw_label = document.getElementById('freeze_thaw_cycle_label');
+        console.log(dropdown)
+        if (selected_option.includes('Frozen') || selected_option.includes('Deepfrozen')) {
+            console.log('yes')
+            freeze_thaw.style.display = 'block'
+            freeze_thaw_label.style.display = 'block'
             }
-            else if(dropdown === "4" || dropdown === "3"){
-            thaw.style.display = 'block'
-            other.style.display = 'none'
-            other_label.style.display = 'none'
-            other.value = ''
-        }
         else {
-            other.style.display = 'none'
-            other_label.style.display = 'none'
-            other.value = ''
-            thaw.style.display = 'none'
-            thaw.value = ''
+            freeze_thaw.style.display = 'none'
+            freeze_thaw_label.style.display = 'none'
+            console.log('no')
         }
     }
-window.onload = toggleTemp()
+window.onload = toggleFreeze()
 </script>
