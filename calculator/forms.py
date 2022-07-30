@@ -176,7 +176,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=ParameterUser.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
-    duration = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
+    durations = forms.ModelMultipleChoiceField(queryset=None)
     sample_type = forms.Select()
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     design_type = forms.Select()
@@ -216,8 +216,9 @@ class SettingForm(forms.ModelForm):
         self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
 
         super().__init__(*args, **kwargs)
-        # self.fields['subject'].queryset = Subject.objects.filter(owner=user)
+
         self.fields['durations'].queryset = Duration.objects.filter(owner=user)
+        # self.fields['durations'].widget = forms.CheckboxSelectMultiple
         self.fields['subjects'] = forms.ModelMultipleChoiceField(
             queryset=Subject.objects.filter(owner=user),
             widget=forms.CheckboxSelectMultiple,
@@ -234,12 +235,17 @@ class SettingForm(forms.ModelForm):
         self.fields['design_type'].widget.attrs['class'] = 'form-select'
         # self.fields['sample'].widget.attrs['class'] = 'form-select'
 
-    # def clean_duration(self):
-    #     data = self.cleaned_data['duration']
-    #     baseline_duration = self.duration.filter(seconds=0)
-    #     if baseline_duration not in data:
-    #         raise ValidationError("You have forgotten to provide base")
-    #     return data
+    def clean_durations(self):
+        data = self.cleaned_data['durations']
+        found = False
+        objects = Duration.objects.filter(id__in=data)
+        for d in objects:
+            if d.seconds == 0:
+                found = True
+                break
+        if not found:
+            raise ValidationError("Storage durations 0 Minutes required (Baseline)")
+        return data
 
     def get_subjects_queryset(self):
         return Subject.objects.filter(owner=self.owner)
@@ -425,6 +431,9 @@ class NewParameterForm(forms.Form):
             'email'
 
         )
+
+    def save(self, commit):
+        pass
 # class ValueForm(forms.ModelForm):
 #     class Meta:
 #         model = Value

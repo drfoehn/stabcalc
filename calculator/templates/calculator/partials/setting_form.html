@@ -90,18 +90,16 @@
         Note that at least 5 sampling times are necessary to verify whether the fit of the instability equation corresponds to a linear model or not.
     </td>
     </tr>
+        <tr>
             <td>
                 {{ form.durations }}
                 <p></p>
             </td>
-            <td>
-                {{ form.durations.errors }}
 
-            </td>
         </tr>
         <tr>
-            <td class="alert-danger">
-                {{ no_zero|safe }}
+            <td>
+                <strong>{{ form.durations.errors }}</strong>
             </td>
         </tr>
         <tr>

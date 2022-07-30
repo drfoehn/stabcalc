@@ -2,7 +2,7 @@
 # TODO: Incorporate EMA specifications? https://www.ema.europa.eu/en/specifications-control-tests-finished-product
 # TODO: Add automated 0 minutes duaration
 # TODO: Make switchable graph seconds / hours/ years ...
-# TODO: FORM for new Parameter
+# TODO: Email-Setting for NewForm Request...
 
 # FIXME: Freeze/Thaw cycle does not get saved
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error

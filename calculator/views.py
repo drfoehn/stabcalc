@@ -1322,7 +1322,7 @@ def new_parameter(request):
             parameter_request.user = request.user
             parameter_request.user.email = request.user.email
             parameter_request.save()
-            return redirect(thankyou_mail())
+            return render(request, 'calculator/thankyou.html')
         else:
             context = {
                 'form': form,
