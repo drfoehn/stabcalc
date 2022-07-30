@@ -1,10 +1,10 @@
 # TODO: Make data downloadable as Excel and PDF: https://www.xlwings.org/blog/reporting-with-python#pandas
 # TODO: Incorporate EMA specifications? https://www.ema.europa.eu/en/specifications-control-tests-finished-product
-# TODO: Add automated 0 minutes duaration
 # TODO: Make switchable graph seconds / hours/ years ...
 # TODO: Email-Setting for NewForm Request...
 
 # FIXME: Freeze/Thaw cycle does not get saved
+# FIXME: Multipleselectwidget settings form
 # FIXME: If a subject from a setting does not have any results, the results.html shows an error
 # FIXME: Upon fresh setup/migration, an anonymous user is being added
 

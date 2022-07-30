@@ -176,7 +176,7 @@ class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     parameter = forms.ModelChoiceField(queryset=ParameterUser.objects.all(), empty_label='---Select parameter---')
     sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
-    durations = forms.ModelMultipleChoiceField(queryset=None)
+    durations = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
     sample_type = forms.Select()
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     design_type = forms.Select()

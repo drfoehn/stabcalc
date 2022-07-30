@@ -60,25 +60,10 @@
                 {{ form.sample_type.errors }}
             </td>
         </tr>
-{#        {% if setting.condition.FREEZE or setting.condition.DEEPFREEZE %}#}
 
-                   <tr id="freeze_thaw_cycle">
-{#                   TODO: Check if this work without JS#}
-            <td class="form-rowhead">
-                How many freeze/thaw cycles have the samples gone through? <br>
 
-            </td>
-                       </tr>
-            <tr>
-            <td>
-                <i>(Select "1" for first thawing cycle)</i>
-                {{ form.freeze_thaw }}
-            </td>
-            <td>
-                {{ form.freeze_thaw.errors }}
-            </td>
-        </tr>
-{#        {% endif %}#}
+
+
         <tr>
             <td class="form-rowhead">
                 {{ form.durations.label_tag }}
@@ -128,13 +113,29 @@
                 {{ form.condition.errors }}
             </td>
         </tr>
+        <tr id="freeze_thaw_cycle">
+
+            <td class="form-rowhead">
+                How many freeze/thaw cycles have the samples gone through? <br>
+
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                <i>(Select "1" for first thawing cycle)</i>
+                {{ form.freeze_thaw }}
+            </td>
+            <td>
+                {{ form.freeze_thaw.errors }}
+            </td>
+        </tr>
         <tr>
             <td class="form-rowhead">
             How were samples analyzed?
                 <!-- Button trigger modal -->
-<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<span  data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: help">
   <i class="bi bi-info-circle"></i>
-</button>
+</span>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
