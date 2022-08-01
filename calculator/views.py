@@ -517,13 +517,13 @@ def DownloadExcel(request, setting_pk):
     ws1['A9'] = "Samples"
     ws1['B9'] = str(setting.sample)
     ws1['A10'] = "Source of samples"
-    ws1['B10'] = setting.sample_type
+    ws1['B10'] = str(setting.get_sample_type_display)
     ws1['A11'] = "Storage Condition"
     ws1['B11'] = str(setting.condition)
     ws1['A12'] = "Type of study design"
-    ws1['B12'] = str(setting.design_type)
+    ws1['B12'] = str(setting.get_design_type_display())
     ws1['A13'] = "Primary samples or aliquots"
-    ws1['B13'] = str(setting.design_sample)
+    ws1['B13'] = str(setting.get_design_sample_display())
     ws1['A14'] = "Freeze thaw cycles (n)"
     ws1['B14'] = str(setting.freeze_thaw_cycles)
     ws1['A15'] = "Protocol"
@@ -627,6 +627,7 @@ def DownloadExcel(request, setting_pk):
 
     ws3['A13'] = "Regression Analysis"
     ws3['A13'].font = Font(size=15, bold=True)
+    ws3['A15'] = 'Add regression formula, R2, etc???'
 
     ws3['A23'] = 'Maximal Permissible Error'
     cv_g = ParameterUser.objects.filter(setting=setting).values('parameter__cv_g')[0]['parameter__cv_g']
