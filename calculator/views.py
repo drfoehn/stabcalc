@@ -556,7 +556,7 @@ def DownloadExcel(request, setting_pk):
    # -------------sheet 2 - data ------------------
 
     ws2 = workbook.create_sheet('Data')
-    ws1.sheet_view.showGridLines = False
+    ws2.sheet_view.showGridLines = False
     # for subject in setting.subjects.all():
     #     ws2.append([str(subject)])
     #     for duration in setting.durations.all():
@@ -590,6 +590,7 @@ def DownloadExcel(request, setting_pk):
     # -------------sheet 3 - statistics ------------------
 
     ws3 = workbook.create_sheet('Statistics')
+    ws3.sheet_view.showGridLines = False
 
     ws3['A1'] = 'Descriptive statistics'
     ws3['A1'].font = Font(size=15, bold=True)
@@ -605,21 +606,58 @@ def DownloadExcel(request, setting_pk):
         ws3.cell(row=6, column=count+2).font = bold
 
     ws3['A7'] = 'Average'
-    ws3['A8'] = 'Standard deviation'
-    ws3['A9'] = 'Coefficient of Variation (%)'
-    ws3['A10'] = 'Deviation from baseline (%)'
+    ws3['A8'] = 'Standard deviation low'
+    ws3['A9'] = 'Standard deviation high'
+    ws3['A10'] = 'Coefficient of Variation (%)'
+    ws3['A11'] = 'Deviation from baseline (%)'
 
     for count, duration in enumerate(setting.durations.all()):
         ws3.cell(row=7, column=count+2).value = setting.average_tot(duration=duration)
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=8, column=count+2).value = setting.avg_tot_sd_l(duration=duration)
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=9, column=count + 2).value = setting.avg_tot_sd_h(duration=duration)
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=10, column=count+2).value = setting.cv_tot(duration=duration)
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=11, column=count+2).value = setting.deviation_tot(duration=duration)
 
-    for c in ws3['A7:A10']:
+    for c in ws3['A7:A11']:
         c[0].font = bold
 
-    ws3['A12'] = "Regression Analysis"
-    ws3['A12'].font = Font(size=15, bold=True)
+    ws3['A13'] = "Regression Analysis"
+    ws3['A13'].font = Font(size=15, bold=True)
 
-    ws3['A22'] = 'Maximal Permissible Error'
-    ws3['A22'].font = Font(size=15, bold=True)
+    ws3['A23'] = 'Maximal Permissible Error'
+    cv_g = ParameterUser.objects.filter(setting=setting).values('parameter__cv_g')[0]['parameter__cv_g']
+    cv_i = ParameterUser.objects.filter(setting=setting).values('parameter__cv_i')[0]['parameter__cv_i']
+    cv_a = ParameterUser.objects.filter(setting=setting).values('cv_a')[0]['cv_a']
+    rcv = 2 ** 0.5 * (1.96 * (cv_a ** 2 + cv_i ** 2) ** 0.5)
+    allow_dev = 0.5 * cv_i
+    accept_dev = 0.7 * allow_dev
+    allow_bias = 0.25 * math.sqrt(cv_i ** 2 + cv_g ** 2)
+    ws3['A23'].font = Font(size=15, bold=True)
+    ws3['A24'] = 'Analytical Imprecision (Intra-Assay-CV) (CVa)'
+    ws3['B24'] = cv_a
+    ws3['A25'] = 'Intra-Individual (Within-subject) Variation (CVi)'
+    ws3['B25'] = cv_i
+    ws3['A26'] = 'Inter-Individual (Between-subject) Variation (CVg)'
+    ws3['B26'] = cv_g
+    ws3['A28'] = 'Reference Change Value (RCV%)'
+    ws3['B28'] = round(rcv, 2)
+    ws3['C28'] = '*1'
+    ws3['A29'] = 'Allowable Deviation (%)'
+    ws3['B29'] = round(allow_dev, 2)
+    ws3['C29'] = '*2'
+    ws3['A30'] = 'Acceptable Deviation (%)'
+    ws3['B30'] = round(accept_dev, 2)
+    ws3['C30'] = '*2'
+    ws3['A31'] = 'Allowable Bias (%)'
+    ws3['B31'] = round(allow_bias, 2)
+    ws3['C31'] = '*2'
+    ws3['A33'] = '*1 - Source: doi: 10.1515/cclm-2011-733'
+    ws3['A34'] = '*2 - Source: doi: 10.1515/cclm-2019-0596'
+
 
     MIN_WIDTH = 10
     for i, column_cells in enumerate(ws3.columns, start=1):
