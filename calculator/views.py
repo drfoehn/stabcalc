@@ -481,6 +481,7 @@ from io import BytesIO
 from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from openpyxl.cell import cell
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.utils import get_column_letter
 
 def DownloadExcel(request, setting_pk):
     excelfile = BytesIO()
@@ -488,12 +489,13 @@ def DownloadExcel(request, setting_pk):
     workbook.remove(workbook.active)
     owner = request.user
     setting = Setting.objects.get(pk=setting_pk, owner=owner)
+    durations = setting.durations.all()
     results = setting.results.all()
     print(results)
     ws1 = workbook.create_sheet(title="Basic Information")
     ws1.sheet_view.showGridLines = False
 
-    now = timezone.now().strftime('%d-%m-%Y - %H-%M')
+    now = timezone.now().strftime('%d-%m-%Y - %H:%M')
 
 
     ws1['A1'] = "EFLM Stability Calculator"
@@ -503,6 +505,11 @@ def DownloadExcel(request, setting_pk):
     ws1['A4'] = 'Downloaded by ' + request.user.user_name + ' on ' + now
     ws1['A4'].font = Font(italic=True)
     ws1['A6'] = "Stability study setting details"
+    ws1['A6'].font = Font(size=20, bold=True, color="1d3557")
+    title3=Font(size=18, color='1d3557')
+    for c in ws1['A7:B8']:
+        c[0].font = title3
+        c[1].font = title3
     ws1['A7'] = "Name"
     ws1['B7'] = str(setting.name)
     ws1['A8'] = "Parameter"
@@ -524,12 +531,32 @@ def DownloadExcel(request, setting_pk):
     ws1['A16'] = "Comment"
     ws1['B16'] = str(setting.comment)
 
+    bold = Font(bold=True)
+    for c in ws1['A9:A16']:
+        c[0].font = bold
+
+    thin = Side(border_style="thin", color="000000")
+    bottom_line = Border(bottom=thin)
+    for c in ws1['A9:B16']:
+        c[0].border = bottom_line
+        c[1].border = bottom_line
+
+    MIN_WIDTH = 15
+    for i, column_cells in enumerate(ws1.columns, start=1):
+        width = (
+            length
+            if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                              for cell in column_cells)) >= MIN_WIDTH
+            else MIN_WIDTH
+        )
+        ws1.column_dimensions[get_column_letter(i)].width = width
 
 
 
    # -------------sheet 2 - data ------------------
 
     ws2 = workbook.create_sheet('Data')
+    ws1.sheet_view.showGridLines = False
     # for subject in setting.subjects.all():
     #     ws2.append([str(subject)])
     #     for duration in setting.durations.all():
@@ -540,17 +567,32 @@ def DownloadExcel(request, setting_pk):
     ws2["C1"] = 'Result'
     ws2["D1"] = 'Unit'
 
+    for c in ws2['A1:D1'][0]:
+        c.font = bold
+        c.border = bottom_line
+
     for count, result in enumerate(results):
         ws2.cell(row=count+2, column=1).value = str(result.subject)
         ws2.cell(row=count+2, column=2).value = str(result.duration)
         ws2.cell(row=count+2, column=3).value = result.value
         ws2.cell(row=count+2, column=4).value = str(result.setting.parameter.parameter.unit)
 
+        MIN_WIDTH = 10
+        for i, column_cells in enumerate(ws2.columns, start=1):
+            width = (
+                length
+                if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                                  for cell in column_cells)) >= MIN_WIDTH
+                else MIN_WIDTH
+            )
+            ws2.column_dimensions[get_column_letter(i)].width = width
+
     # -------------sheet 3 - statistics ------------------
 
     ws3 = workbook.create_sheet('Statistics')
 
     ws3['A1'] = 'Descriptive statistics'
+    ws3['A1'].font = Font(size=15, bold=True)
     ws3['A2'] = 'Number of Subjects'
     ws3['B2'] = Subject.objects.filter(settings__in=[setting]).count()
     ws3['A3'] = 'Number of tested storage durations'
@@ -560,17 +602,34 @@ def DownloadExcel(request, setting_pk):
 
     for count, duration in enumerate(setting.durations.all()):
         ws3.cell(row=6, column=count+2).value = str(duration)
+        ws3.cell(row=6, column=count+2).font = bold
 
     ws3['A7'] = 'Average'
     ws3['A8'] = 'Standard deviation'
     ws3['A9'] = 'Coefficient of Variation (%)'
     ws3['A10'] = 'Deviation from baseline (%)'
+
     for count, duration in enumerate(setting.durations.all()):
         ws3.cell(row=7, column=count+2).value = setting.average_tot(duration=duration)
 
+    for c in ws3['A7:A10']:
+        c[0].font = bold
 
+    ws3['A12'] = "Regression Analysis"
+    ws3['A12'].font = Font(size=15, bold=True)
 
+    ws3['A22'] = 'Maximal Permissible Error'
+    ws3['A22'].font = Font(size=15, bold=True)
 
+    MIN_WIDTH = 10
+    for i, column_cells in enumerate(ws3.columns, start=1):
+        width = (
+            length
+            if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                              for cell in column_cells)) >= MIN_WIDTH
+            else MIN_WIDTH
+        )
+        ws3.column_dimensions[get_column_letter(i)].width = width
 
     workbook.save(excelfile)
 
