@@ -39,7 +39,7 @@ class ResultsView(DetailView):
         global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
         subjects = Subject.objects.filter(settings__in=[self.object])
-        durations = Duration.objects.filter(setting=self.object)
+        durations = Duration.objects.filter(settings__in=[self.object])
         durations_val = durations.values()
         durations_data = pd.DataFrame(durations_val)
         results = Result.objects.filter(setting=self.object)
@@ -48,7 +48,7 @@ class ResultsView(DetailView):
         parameter = ParameterUser.objects.filter(setting=self.object).values('parameter__name', 'parameter__unit')
         setting = self.object
         context['subjects_n'] = Subject.objects.filter(settings__in=[self.object]).count()
-        context['durations_n'] = Duration.objects.filter(setting=self.object).count()
+        context['durations_n'] = Duration.objects.filter(settings__in=[self.object]).count()
         context['results_n'] = Result.objects.filter(setting=self.object).count()
 
         # ---------------------------Get deviation data for each subject setting and time individually in a dict
@@ -480,6 +480,7 @@ class ResultsView(DetailView):
 from io import BytesIO
 from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from openpyxl.cell import cell
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 
 def DownloadExcel(request, setting_pk):
     excelfile = BytesIO()
@@ -490,13 +491,17 @@ def DownloadExcel(request, setting_pk):
     results = setting.results.all()
     print(results)
     ws1 = workbook.create_sheet(title="Basic Information")
+    ws1.sheet_view.showGridLines = False
 
     now = timezone.now().strftime('%d-%m-%Y - %H-%M')
 
 
     ws1['A1'] = "EFLM Stability Calculator"
+    ws1['A1'].font = Font(size=25, color="e63946", bold=True)
     ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)"
-    ws1['A4'] = 'Downloaded by' + request.user.user_name + ' on ' + now
+    ws1['A2'].font = Font(size=20, color="e63946")
+    ws1['A4'] = 'Downloaded by ' + request.user.user_name + ' on ' + now
+    ws1['A4'].font = Font(italic=True)
     ws1['A6'] = "Stability study setting details"
     ws1['A7'] = "Name"
     ws1['B7'] = str(setting.name)
@@ -520,39 +525,52 @@ def DownloadExcel(request, setting_pk):
     ws1['B16'] = str(setting.comment)
 
 
-    worksheets = []
+
+
+   # -------------sheet 2 - data ------------------
+
     ws2 = workbook.create_sheet('Data')
     # for subject in setting.subjects.all():
     #     ws2.append([str(subject)])
     #     for duration in setting.durations.all():
     #         ws2.append([str(duration)])
     #         for result in setting.durations.
+    ws2["A1"] = 'Subject'
+    ws2["B1"] = 'Storage duration'
+    ws2["C1"] = 'Result'
+    ws2["D1"] = 'Unit'
 
     for count, result in enumerate(results):
-        print(result)
-        ws2.cell(row=count+1, column=1).value = str(result.subject)
-        ws2.cell(row=count+1, column=2).value = str(result.duration)
-        ws2.cell(row=count+1, column=3).value = result.value
-        ws2.cell(row=count+1, column=4).value = str(result.setting.parameter.parameter.unit)
+        ws2.cell(row=count+2, column=1).value = str(result.subject)
+        ws2.cell(row=count+2, column=2).value = str(result.duration)
+        ws2.cell(row=count+2, column=3).value = result.value
+        ws2.cell(row=count+2, column=4).value = str(result.setting.parameter.parameter.unit)
+
+    # -------------sheet 3 - statistics ------------------
+
+    ws3 = workbook.create_sheet('Statistics')
+
+    ws3['A1'] = 'Descriptive statistics'
+    ws3['A2'] = 'Number of Subjects'
+    ws3['B2'] = Subject.objects.filter(settings__in=[setting]).count()
+    ws3['A3'] = 'Number of tested storage durations'
+    ws3['B3'] = Duration.objects.filter(settings__in=[setting]).count()
+    ws3['A4'] = 'Number of results '
+    ws3['B4'] = Result.objects.filter(setting=setting).count()
+
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=6, column=count+2).value = str(duration)
+
+    ws3['A7'] = 'Average'
+    ws3['A8'] = 'Standard deviation'
+    ws3['A9'] = 'Coefficient of Variation (%)'
+    ws3['A10'] = 'Deviation from baseline (%)'
+    for count, duration in enumerate(setting.durations.all()):
+        ws3.cell(row=7, column=count+2).value = setting.average_tot(duration=duration)
 
 
 
 
-    # worksheet_dicts = {}
-    # keys = range(len(settings))
-    # values = worksheets
-    # for i in keys:
-    #     worksheet_dicts[i] = values[i]
-    #
-    # for ws, sheet in worksheet_dicts:
-    #     for duration in durations:
-    #         ws.append([str(duration)])
-
-
-
-    # durations = Duration.objects.filter(owner=owner)
-    # for duration in durations:
-    #     worksheets[0].append([str(duration)])
 
     workbook.save(excelfile)
 
