@@ -7,7 +7,6 @@ from datetime import datetime
 from wsgiref.util import FileWrapper
 import json
 from django.utils import timezone
-from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from statsmodels.stats.power import TTestIndPower
@@ -479,29 +478,86 @@ class ResultsView(DetailView):
 
 
 from io import BytesIO
+from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
+from openpyxl.cell import cell
 
-
-def DownloadExcel(request):
+def DownloadExcel(request, setting_pk):
     excelfile = BytesIO()
     workbook = Workbook()
     workbook.remove(workbook.active)
-    ws1 = workbook.create_sheet(title="Basic Information")
-    ws2 = workbook.create_sheet(title="Data")
     owner = request.user
+    setting = Setting.objects.get(pk=setting_pk, owner=owner)
+    results = setting.results.all()
+    print(results)
+    ws1 = workbook.create_sheet(title="Basic Information")
+
     now = timezone.now().strftime('%d-%m-%Y - %H-%M')
 
-    ws1['A1'] = "EFLM Stability Calculator"
-    ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)" + request.user.user_name
-    ws1['A5'] = 'Downloaded on ' + now
 
-    durations = Duration.objects.filter(owner=owner)
-    for duration in durations:
-        ws2.append([str(duration)])
+    ws1['A1'] = "EFLM Stability Calculator"
+    ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)"
+    ws1['A4'] = 'Downloaded by' + request.user.user_name + ' on ' + now
+    ws1['A6'] = "Stability study setting details"
+    ws1['A7'] = "Name"
+    ws1['B7'] = str(setting.name)
+    ws1['A8'] = "Parameter"
+    ws1['B8'] = str(setting.parameter)
+    ws1['A9'] = "Samples"
+    ws1['B9'] = str(setting.sample)
+    ws1['A10'] = "Source of samples"
+    ws1['B10'] = setting.sample_type
+    ws1['A11'] = "Storage Condition"
+    ws1['B11'] = str(setting.condition)
+    ws1['A12'] = "Type of study design"
+    ws1['B12'] = str(setting.design_type)
+    ws1['A13'] = "Primary samples or aliquots"
+    ws1['B13'] = str(setting.design_sample)
+    ws1['A14'] = "Freeze thaw cycles (n)"
+    ws1['B14'] = str(setting.freeze_thaw_cycles)
+    ws1['A15'] = "Protocol"
+    ws1['B15'] = str(setting.protocol)
+    ws1['A16'] = "Comment"
+    ws1['B16'] = str(setting.comment)
+
+
+    worksheets = []
+    ws2 = workbook.create_sheet('Data')
+    # for subject in setting.subjects.all():
+    #     ws2.append([str(subject)])
+    #     for duration in setting.durations.all():
+    #         ws2.append([str(duration)])
+    #         for result in setting.durations.
+
+    for count, result in enumerate(results):
+        print(result)
+        ws2.cell(row=count+1, column=1).value = str(result.subject)
+        ws2.cell(row=count+1, column=2).value = str(result.duration)
+        ws2.cell(row=count+1, column=3).value = result.value
+        ws2.cell(row=count+1, column=4).value = str(result.setting.parameter.parameter.unit)
+
+
+
+
+    # worksheet_dicts = {}
+    # keys = range(len(settings))
+    # values = worksheets
+    # for i in keys:
+    #     worksheet_dicts[i] = values[i]
+    #
+    # for ws, sheet in worksheet_dicts:
+    #     for duration in durations:
+    #         ws.append([str(duration)])
+
+
+
+    # durations = Duration.objects.filter(owner=owner)
+    # for duration in durations:
+    #     worksheets[0].append([str(duration)])
 
     workbook.save(excelfile)
 
     response = HttpResponse(excelfile.getvalue(), content_type='application/')
-    response['Content-Disposition'] = f'attachment; filename=stability-study-data-{now}.xlsx'
+    response['Content-Disposition'] = f'attachment; filename=stability-study-data-{setting.name}-{now}.xlsx'
     return response
 
 
@@ -1098,7 +1154,7 @@ def delete_duration(request, pk):
 #     return render(request, 'calculator/result_list.html', context)
 def result_list(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
-    durations = Duration.objects.filter(setting=setting)
+    durations = Duration.objects.filter(settings__in=[setting])
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
     form = ResultForm(subjects, durations, data=request.POST or None)

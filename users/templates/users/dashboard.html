@@ -69,7 +69,7 @@
             {{ setting.result_set.count }}<br>
             <a href="{% url 'create-result' setting.id %}">Add Results</a>
         </td>
-    <td><a href="{% url 'download-data' %}" class="bi bi-box-arrow-down result_buttons"></a></td>
+    <td><a href="{% url 'download-data' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a></td>
             </tr>
     {% endfor %}
     </table>

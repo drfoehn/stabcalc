@@ -301,7 +301,7 @@ class Setting(OwnedModelMixin, models.Model):
 
     design_sample = models.SmallIntegerField(
         choices=DESIGN_SAMPLE,
-        verbose_name='Type of study design'
+        verbose_name='Primary samples or aliquots'
     )
 
     protocol = models.TextField(verbose_name=_('Study protocol'), blank=True, null=True)
@@ -508,7 +508,7 @@ class Subject(OwnedModelMixin, models.Model):
 
 class Result(OwnedModelMixin, models.Model):
     value = models.FloatField()
-    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True)
+    setting = models.ForeignKey(Setting, on_delete=models.CASCADE, blank=True, related_name='results')
     duration = models.ForeignKey(Duration, on_delete=models.CASCADE)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
 
