@@ -382,11 +382,6 @@ class Setting(OwnedModelMixin, models.Model):
         else:
             return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
-    # def save(self, *args, **kwargs):
-    #     dur_zero = Duration.objects.create(duration_number=0, duration_unit="1")
-    #     # TODO: add if not
-    #     self.duration_set.add(dur_zero)
-    #     super().save(*args, **kwargs)
 
 
 
@@ -530,12 +525,6 @@ class Result(OwnedModelMixin, models.Model):
     #     print("Average: ", average)
 
 
-# TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
-# def number_of_subjects(self, setting: Setting):
-#     nr = self.objects.count(setting)
-#     if not nr:
-#         return "-"
-#     else:
-#         return nr
+
 
 

@@ -17,13 +17,23 @@ from django import forms
 class InstrumentForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     manufacturer = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
     class Meta:
         model = Instrument
         fields = (
             'name',
             'manufacturer',
         )
+
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
 
 
 class ParameterUserForm(forms.ModelForm):
@@ -39,7 +49,7 @@ class ParameterUserForm(forms.ModelForm):
     # sample = models.ForeignKey(Sample)
     #
     # ----------------------Botcatcher-------------------------
-    # TODO: Check if working: Bots should not get an error. It should silently fail.
+
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
@@ -83,7 +93,6 @@ class SampleForm(forms.ModelForm):
     sample_type_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     storage = forms.Select()
     sample_leftover = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
-    # FIXME: Sample Pool, Sample Spike does not show Bootstrap attrs and upon edit the checks are gone.
     sample_pool = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     sample_pool_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     sample_spike = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
@@ -97,7 +106,11 @@ class SampleForm(forms.ModelForm):
     container_material_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     gel = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     preanalytical_set = forms.ModelChoiceField(queryset=PreanalyticalSet.objects.all(), empty_label='---Select preanalytical set---')
-
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
 
     class Meta:
         model = Sample
@@ -136,6 +149,11 @@ class SampleForm(forms.ModelForm):
         self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
         self.fields['preanalytical_set'].widget.attrs['class'] = 'form-select'
 
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
 
 class PreanalyticalSetForm(forms.ModelForm):
     collection_instrument = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -149,6 +167,11 @@ class PreanalyticalSetForm(forms.ModelForm):
     centrifugation_time = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     centrifugation_temp = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     comment = forms.Textarea(attrs={'class': 'form-control'})
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
 
     class Meta:
         model = PreanalyticalSet
@@ -171,6 +194,12 @@ class PreanalyticalSetForm(forms.ModelForm):
         self.fields['transportation_time_unit'].widget.attrs['class'] = 'form-select'
         self.fields['transportation_method'].widget.attrs['class'] = 'form-select'
 
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback
+
 
 class SettingForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -186,7 +215,7 @@ class SettingForm(forms.ModelForm):
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     owner = None
     # ----------------------Botcatcher-------------------------
-    # TODO: Check if working: Bots should not get an error. It should silently fail.
+
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
@@ -269,7 +298,7 @@ class ConditionForm(forms.ModelForm):
     other_condition = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}),  required=False)
 
     # ----------------------Botcatcher-------------------------
-    # TODO: Check if working: Bots should not get an error. It should silently fail.
+
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
@@ -316,7 +345,7 @@ class DurationForm(forms.ModelForm):
 
 
     # ----------------------Botcatcher-------------------------
-    # TODO: Check if working: Bots should not get an error. It should silently fail.
+
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
@@ -346,7 +375,11 @@ class DurationForm(forms.ModelForm):
 
 class SubjectForm(forms.ModelForm):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # setting = forms.ModelMultipleChoiceField(queryset=(Setting.objects.all()))
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
 
 
     class Meta:

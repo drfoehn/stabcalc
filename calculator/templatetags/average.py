@@ -96,20 +96,6 @@ def deviation_tot(setting: Setting, duration: Duration):
     return setting.deviation_tot(duration)
 
 
-# @register.simple_tag #FIXME: Does not work
-# def seconds_to_text(setting: Setting, duration:Duration):
-#     return setting.seconds_to_text(duration)
-
-# def current_subject(value): # Only one argument.
-#     """Converts a string into all lowercase"""
-#     return value.self
-
-# TODO: Funktion funzt nicht - Alternativ derzeit .count im templatetag
-# @register.simple_tag
-# def number_of_subjects(subject: Subject, setting: Setting):
-#     return subject.number_of_subjects(setting)
-
-
 @register.filter(name="human_readable_seconds")
 def human_readable_seconds(secs: int):
     years = secs // (86400 * 365)  # TODO: muss ich noch neu berechnen

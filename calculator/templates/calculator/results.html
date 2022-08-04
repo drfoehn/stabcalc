@@ -829,9 +829,9 @@
                                         Interpretation:
                                         {% if f_p_value >= 0.05  %}
                                         The hypothesis test is not significant - It is impossible to distinguish whether
-                                        there is no loss in {{ setting.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
+                                        there is no loss in {{ setting.parameter.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
                                     {% else %}
-                                        The chance of the change in {{ setting.parameter.name }}-values
+                                        The chance of the change in {{ setting.parameter.parameter.name }}-values
                                         not being related to the storage time/condition is
                                         {% if f_p_value < 0.0001 %}
                                         < 0.01
@@ -936,13 +936,6 @@
                                     {% for data in log_data %}
                                         {{ data }},
                                     {% endfor %}
-                                    {#                                {% for duration in setting.duration.all %}#}
-                                    {#                                    {% deviation_tot setting duration as dev_tot %}#}
-                                    {#                                        {% if dev_tot %}#}
-                                    {#                                         {% deviation_tot setting duration %},#}
-                                    {#                                {% endif %}#}
-                                    {#                                {% endfor %}#}
-                                    {##FIXME - Gonzo: combine log_sec with acording dev-value#}
                                 ]);
 
                                 var options = {
@@ -1031,9 +1024,9 @@
                                     Interpretation:
                                     {% if f_p_log_value >= 0.05  %}
                                         The hypothesis test is not significant - It is impossible to distinguish whether
-                                        there is no loss in {{ setting.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
+                                        there is no loss in {{ setting.parameter.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
                                     {% else %}
-                                        The chance of the change in {{ setting.parameter.name }}-values
+                                        The chance of the change in {{ setting.parameter.parameter.name }}-values
                                         not being related to the storage time/condition is
                                         {% if f_p_log_value < 0.0001 %}
                                         < 0.01
@@ -1497,23 +1490,6 @@
 
             </div>
         </div>
-        {#    FIXME: Page jumps to start after funtion call#}
-{#        <script>#}
-{##}
-{#            function calcValue() {#}
-{#                let cva = {{ setting.parameter.cv_a }}#}
-{#                let cvi = document.getElementById("intra-cv").value;#}
-{#                let cvg = document.getElementById("inter-cv").value;#}
-{#                let rcv = 2^0.5*1.96*(cva^2+cvi^2)^0.5#}
-{#                let result_accept = 0.5 * cvi;#}
-{#                let result_allow = 0.7 * result_accept#}
-{#                let bias_allow = 0.25 * (Math.sqrt(cvi ^ 2 + cvg ^ 2))#}
-{#                document.getElementById("calc_result_rcv").innerHTML = rcv.toFixed(2);#}
-{#                document.getElementById("calc_result_allow").innerHTML = result_accept.toFixed(2);#}
-{#                document.getElementById("calc_result_accept").innerHTML = result_allow.toFixed(2);#}
-{#                document.getElementById("calc_bias_allow").innerHTML = bias_allow.toFixed(2);#}
-{#            }#}
-{#        </script>#}
 
 
         {#    ---------------------------------RESULT TABLE------------------------------#}
@@ -1571,10 +1547,6 @@
                                     {% for result in subject.result_set.all %}
                                         {% if result.duration == duration %}
                                             {% if result.setting == setting %}
-                                                {#                                            {% if result.subject == subject %}#}
-                                                {#                                                {% if not result.value %}#}
-                                                {# FIXME: Does not work                      'No results entered'#}
-                                                {#                                                {% else %}#}
                                                 {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}
                                                 <span style="color: red">
                                                 {{ result.value }} {{ setting.parameter.unit }} <br>
