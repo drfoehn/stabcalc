@@ -61,6 +61,7 @@ class ResultsView(DetailView):
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 
         deviation_array = pd.DataFrame(deviation_dict)
+        print(deviation_array)
         deviation_array.index.name = "duration"
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
@@ -76,8 +77,15 @@ class ResultsView(DetailView):
                     y_rel.append(result)
                     x1_rel.append(duration)
 
-        # print(y_rel)
-        # print(x1_rel)
+        # ---convert x (seconds) into hours
+        x1_rel_hours = []
+        for x in x1_rel:
+            if x == 0:
+                x_hour = 0
+            else:
+                x_hour = x / 3600
+            x1_rel_hours.append(x_hour)
+
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
         merged_res_dur = pd.merge(
@@ -97,6 +105,7 @@ class ResultsView(DetailView):
         # -------------------Variable absolute results
         y_abs = merged_res_dur["value"]  # dependent variable
         x1_abs = merged_res_dur["seconds"]  # independent variable
+
 
         ################################# REGRESSION ANALYSIS ######################################
 
@@ -124,7 +133,8 @@ class ResultsView(DetailView):
         y = merged_res_dur.iloc[:, 0]  # value
 
         # Calculate Regression equation - linear
-        eq1 = np.poly1d(np.polyfit(X, y, 1))
+        eq1 = np.poly1d(np.polyfit(x1_rel_hours, y_rel, 1))
+
         context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
         # predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
@@ -132,7 +142,7 @@ class ResultsView(DetailView):
 
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
-        eq2 = np.poly1d(np.polyfit(X, y, 2))
+        eq2 = np.poly1d(np.polyfit(x1_rel_hours, y_rel, 2))
         context["eq_model_poly2"] = str("y = " + str(round(eq2[2], 5))
                                         + " * x^2 + " + str(round(eq2[1], 5)) + " * x + " + str(round(eq2[0], 5)))
         # FIXME: Only the last two numbers get rounded on 5 digits ?!?!?
@@ -153,7 +163,7 @@ class ResultsView(DetailView):
 
         # ---------------------------------Calculate Regression equation - polynomial 3rd degree
 
-        eq3 = np.poly1d(np.polyfit(X, y, 3))
+        eq3 = np.poly1d(np.polyfit(x1_rel_hours, y_rel, 3))
         context["eq_model_poly3"] = str("y = " + str(round(eq3[3], 5)) + " * x^3 + " + str(round(eq3[2], 5))
                                         + " * x^2 + " + str(round(eq3[1], 5)) + " * x + " + str(round(eq3[0], 5)))
 
@@ -249,7 +259,7 @@ class ResultsView(DetailView):
         # ------------------------Absolute
 
         x1_abs = sm.add_constant(
-            x1_abs)  # add a row of ones as constant #TODO: Is this line necessary ? - https://365datascience.com/tutorials/python-tutorials/linear-regression/
+            x1_abs)  # add a row of ones as constant  https://365datascience.com/tutorials/python-tutorials/linear-regression/
         model = sm.OLS(y_abs, x1_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
         context["statistics_extended_abs_lin"] = results_abs.summary()
@@ -386,17 +396,23 @@ class ResultsView(DetailView):
         cv_g = ParameterUser.objects.filter(setting=self.object).values('parameter__cv_g')[0]['parameter__cv_g']
         cv_i = ParameterUser.objects.filter(setting=self.object).values('parameter__cv_i')[0]['parameter__cv_i']
         cv_a = ParameterUser.objects.filter(setting=self.object).values('cv_a')[0]['cv_a']
-        context['cv_g']= cv_g
-        context['cv_i']= cv_i
-        context['cv_a']= cv_a
+        context['cv_g'] = cv_g
+        context['cv_i'] = cv_i
+        context['cv_a'] = cv_a
         rcv = 2 ** 0.5 * (1.96 * (cv_a ** 2 + cv_i ** 2) ** 0.5)
-        context['rcv']= round(rcv, 2)
-        allow_dev=0.5*cv_i
-        context['allow_dev']=round(allow_dev, 2)
-        accept_dev=0.7*allow_dev
-        context['accept_dev'] =round(accept_dev, 2)
-        allow_bias=0.25*math.sqrt(cv_i**2 + cv_g**2)
-        context['allow_bias'] =round(allow_bias, 2)
+        context['rcv'] = round(rcv, 2)
+        allow_dev = 0.5 * cv_i
+        context['allow_dev'] = round(allow_dev, 2)
+        accept_dev = 0.7 * allow_dev
+        context['accept_dev'] = round(accept_dev, 2)
+        allow_bias = 0.25 * math.sqrt(cv_i ** 2 + cv_g ** 2)
+        context['allow_bias'] = round(allow_bias, 2)
+
+        rcv_mpe = ((rcv - eq1[0]) / eq1[1]) / 3600
+        rcv_mpe_zero = ((rcv) / eq1[1]) / 3600  # forced through zero
+
+        context["rcv_mpe"] = rcv_mpe
+        context["rcv_mpe_zero"] = rcv_mpe_zero
 
         ###################################  Data import / export ####################################
 
@@ -483,6 +499,7 @@ from openpyxl.cell import cell
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 from openpyxl.utils import get_column_letter
 
+
 def DownloadExcel(request, setting_pk):
     excelfile = BytesIO()
     workbook = Workbook()
@@ -497,7 +514,6 @@ def DownloadExcel(request, setting_pk):
 
     now = timezone.now().strftime('%d-%m-%Y - %H:%M')
 
-
     ws1['A1'] = "EFLM Stability Calculator"
     ws1['A1'].font = Font(size=25, color="e63946", bold=True)
     ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)"
@@ -506,7 +522,7 @@ def DownloadExcel(request, setting_pk):
     ws1['A4'].font = Font(italic=True)
     ws1['A6'] = "Stability study setting details"
     ws1['A6'].font = Font(size=20, bold=True, color="1d3557")
-    title3=Font(size=18, color='1d3557')
+    title3 = Font(size=18, color='1d3557')
     for c in ws1['A7:B8']:
         c[0].font = title3
         c[1].font = title3
@@ -551,9 +567,7 @@ def DownloadExcel(request, setting_pk):
         )
         ws1.column_dimensions[get_column_letter(i)].width = width
 
-
-
-   # -------------sheet 2 - data ------------------
+    # -------------sheet 2 - data ------------------
 
     ws2 = workbook.create_sheet('Data')
     ws2.sheet_view.showGridLines = False
@@ -572,10 +586,10 @@ def DownloadExcel(request, setting_pk):
         c.border = bottom_line
 
     for count, result in enumerate(results):
-        ws2.cell(row=count+2, column=1).value = str(result.subject)
-        ws2.cell(row=count+2, column=2).value = str(result.duration)
-        ws2.cell(row=count+2, column=3).value = result.value
-        ws2.cell(row=count+2, column=4).value = str(result.setting.parameter.parameter.unit)
+        ws2.cell(row=count + 2, column=1).value = str(result.subject)
+        ws2.cell(row=count + 2, column=2).value = str(result.duration)
+        ws2.cell(row=count + 2, column=3).value = result.value
+        ws2.cell(row=count + 2, column=4).value = str(result.setting.parameter.parameter.unit)
 
         MIN_WIDTH = 10
         for i, column_cells in enumerate(ws2.columns, start=1):
@@ -602,8 +616,8 @@ def DownloadExcel(request, setting_pk):
     ws3['B4'] = Result.objects.filter(setting=setting).count()
 
     for count, duration in enumerate(setting.durations.all()):
-        ws3.cell(row=6, column=count+2).value = str(duration)
-        ws3.cell(row=6, column=count+2).font = bold
+        ws3.cell(row=6, column=count + 2).value = str(duration)
+        ws3.cell(row=6, column=count + 2).font = bold
 
     ws3['A7'] = 'Average'
     ws3['A8'] = 'Standard deviation low'
@@ -612,15 +626,15 @@ def DownloadExcel(request, setting_pk):
     ws3['A11'] = 'Deviation from baseline (%)'
 
     for count, duration in enumerate(setting.durations.all()):
-        ws3.cell(row=7, column=count+2).value = setting.average_tot(duration=duration)
+        ws3.cell(row=7, column=count + 2).value = setting.average_tot(duration=duration)
     for count, duration in enumerate(setting.durations.all()):
-        ws3.cell(row=8, column=count+2).value = setting.avg_tot_sd_l(duration=duration)
+        ws3.cell(row=8, column=count + 2).value = setting.avg_tot_sd_l(duration=duration)
     for count, duration in enumerate(setting.durations.all()):
         ws3.cell(row=9, column=count + 2).value = setting.avg_tot_sd_h(duration=duration)
     for count, duration in enumerate(setting.durations.all()):
-        ws3.cell(row=10, column=count+2).value = setting.cv_tot(duration=duration)
+        ws3.cell(row=10, column=count + 2).value = setting.cv_tot(duration=duration)
     for count, duration in enumerate(setting.durations.all()):
-        ws3.cell(row=11, column=count+2).value = setting.deviation_tot(duration=duration)
+        ws3.cell(row=11, column=count + 2).value = setting.deviation_tot(duration=duration)
 
     for c in ws3['A7:A11']:
         c[0].font = bold
@@ -658,7 +672,6 @@ def DownloadExcel(request, setting_pk):
     ws3['C31'] = '*2'
     ws3['A33'] = '*1 - Source: doi: 10.1515/cclm-2011-733'
     ws3['A34'] = '*2 - Source: doi: 10.1515/cclm-2019-0596'
-
 
     MIN_WIDTH = 10
     for i, column_cells in enumerate(ws3.columns, start=1):
@@ -1498,7 +1511,7 @@ def new_parameter(request):
         else:
             context = {
                 'form': form,
-        }
+            }
         return render(request, 'calculator/newparameter.html', context)
 
         # try:
@@ -1507,6 +1520,7 @@ def new_parameter(request):
         #     return HttpResponse('Invalid header found.')
         # return redirect('success')
     return render(request, "calculator/newparameter.html", {'form': form})
+
 
 def thankyou_mail(request):
     return HttpResponse('Thank you for your message.')

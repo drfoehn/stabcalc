@@ -807,11 +807,16 @@
                             <tr>
                                 <td class="sub-italic">
                                     <br>
-                                    y...Testresult (dependent variable) <br>
-                                    x1...Storage Duration (independent variable)
+                                    y...Deviation (dependent variable) <br>
+                                    x1...Storage Duration in seconds (independent variable)
 
                                 </td>
                             </tr>
+                        <tr>
+                            <td>RCV-MPE: {{ rcv_mpe | floatformat:2 }} hours</td>
+                            <td>RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours</td>
+{#                            TODO: Which Regression-Equation should be used and how can it be forced through zero#}
+                        </tr>
                             <tr>
                                 <td class="calc_result">
                                 <p></p>
