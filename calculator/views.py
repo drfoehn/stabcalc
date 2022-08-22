@@ -61,7 +61,7 @@ class ResultsView(DetailView):
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 
         deviation_array = pd.DataFrame(deviation_dict)
-        print(deviation_array)
+
         deviation_array.index.name = "duration"
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
@@ -229,6 +229,9 @@ class ResultsView(DetailView):
         y_a = np.array(y)
         y_1D = y_a.ravel()
 
+
+
+
         # --Calcualting equation
         eq_model_log = np.polyfit(X_log_1D, y_1D, 1)
         context["eq_model_log"] = str(
@@ -258,8 +261,7 @@ class ResultsView(DetailView):
 
         # ------------------------Absolute
 
-        x1_abs = sm.add_constant(
-            x1_abs)  # add a row of ones as constant  https://365datascience.com/tutorials/python-tutorials/linear-regression/
+        x1_abs = sm.add_constant(x1_abs)  # add a row of ones as constant  https://365datascience.com/tutorials/python-tutorials/linear-regression/
         model = sm.OLS(y_abs, x1_abs)
         results_abs = model.fit()  # OLS = Ordinary Least Squares
         context["statistics_extended_abs_lin"] = results_abs.summary()
@@ -267,7 +269,7 @@ class ResultsView(DetailView):
         # -------------------------Extract single parameters from summary - linear regression
         b0_abs_lin = results_abs.params[0]  # constant coefficient / Intercept
         b1_abs_lin = results_abs.params[1]  # seconds coefficient / Slope
-        print(results_abs.f_pvalue)
+
         b0_r_abs_lin = round(b0_abs_lin, 5)
         context["intercept_abs_lin"] = b0_r_abs_lin
         b1_r_abs_lin = round(b1_abs_lin, 5)
@@ -282,16 +284,17 @@ class ResultsView(DetailView):
         model = sm.OLS(y_rel, x_rel)
         results_rel = model.fit()  # OLS = Ordinary Least Squares
 
-        # -------------------------Extract single parameters from summary - linear regression
-        b0_rel_lin = results_rel.params[0]  # constant coefficient / Intercept
-        b1_rel_lin = results_rel.params[1]  # seconds coefficient / Slope
-        b0_r_rel_lin = round(b0_rel_lin, 5)
-        context["intercept_rel_lin"] = b0_r_rel_lin
-        b1_r_rel_lin = round(b1_rel_lin, 5)
-        context["slope_rel_lin"] = b1_r_rel_lin
-        context["reg_eq_rel_lin"] = (
-                "y = " + str(b0_r_rel_lin) + " + x1 * " + str(b1_r_rel_lin)
-        )
+
+        # # -------------------------Extract single parameters from summary - linear regression
+        # b0_rel_lin = results_rel.params[0]  # constant coefficient / Intercept
+        # b1_rel_lin = results_rel.params[1]  # seconds coefficient / Slope
+        # b0_r_rel_lin = round(b0_rel_lin, 5)
+        # context["intercept_rel_lin"] = b0_r_rel_lin
+        # b1_r_rel_lin = round(b1_rel_lin, 5)
+        # context["slope_rel_lin"] = b1_r_rel_lin
+        # context["reg_eq_rel_lin"] = (
+        #         "y = " + str(b0_r_rel_lin) + " + x1 * " + str(b1_r_rel_lin)
+        # )
 
         ######################################INTERPRETATION ################################################
 
@@ -407,9 +410,11 @@ class ResultsView(DetailView):
         context['accept_dev'] = round(accept_dev, 2)
         allow_bias = 0.25 * math.sqrt(cv_i ** 2 + cv_g ** 2)
         context['allow_bias'] = round(allow_bias, 2)
-
-        rcv_mpe = ((rcv - eq1[0]) / eq1[1]) / 3600
-        rcv_mpe_zero = ((rcv) / eq1[1]) / 3600  # forced through zero
+        print(eq1)
+        print(rcv)
+        print(eq1[0], eq1[1])
+        rcv_mpe = ((rcv - eq1[0]) / eq1[1])
+        rcv_mpe_zero = ((rcv) / eq1[1])  # forced through zero
 
         context["rcv_mpe"] = rcv_mpe
         context["rcv_mpe_zero"] = rcv_mpe_zero

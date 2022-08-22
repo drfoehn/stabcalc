@@ -812,11 +812,7 @@
 
                                 </td>
                             </tr>
-                        <tr>
-                            <td>RCV-MPE: {{ rcv_mpe | floatformat:2 }} hours</td>
-                            <td>RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours</td>
-{#                            TODO: Which Regression-Equation should be used and how can it be forced through zero#}
-                        </tr>
+
                             <tr>
                                 <td class="calc_result">
                                 <p></p>
@@ -847,6 +843,13 @@
                                     </span>
                                 </td>
                             </tr>
+                        <tr>
+                            <td class="calc_result">Maximal permissible error:
+                                <br>
+                                The RCV-threshhold of {{ rcv}}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage</td>
+                            <td>RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours</td>
+{#                            TODO: Which Regression-Equation should be used and how can it be forced through zero#}
+                        </tr>
                         </table>
                         {#                 ------------- Button-Extended Statictics ----------------#}
                         <br>
