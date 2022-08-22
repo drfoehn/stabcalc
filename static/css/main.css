@@ -182,6 +182,15 @@ color: lightgray; !important;
     color: black; !important;
 }
 
+.button-index{
+    border-radius: 70px;
+    background: linear-gradient(145deg, #ffffff, #dcdcdc);
+    box-shadow:  18px 18px 35px #cfcfcf,
+                 -18px -18px 35px #ffffff;
+    text-align: center;
+
+}
+
 .instrument-toggle{
     display: block;
 }
