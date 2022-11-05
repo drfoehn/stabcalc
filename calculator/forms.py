@@ -213,6 +213,7 @@ class SettingForm(forms.ModelForm):
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
+    # replicate_count = ...
     owner = None
     # ----------------------Botcatcher-------------------------
 
@@ -237,7 +238,8 @@ class SettingForm(forms.ModelForm):
             'design_type',
             'design_sample',
             'protocol',
-            'comment'
+            'comment',
+            "replicate_count"
         )
 
     def __init__(self, *args, **kwargs):

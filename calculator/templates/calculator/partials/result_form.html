@@ -21,7 +21,7 @@
     {#    <form action="" method="post">#}
     {#    {% csrf_token %}#}
     {{ form.value.label_tag }} {{ form.value }}
-    {{ form }}
+    {{ form.as_table }}
     {#    </form>#}
 
 </div>

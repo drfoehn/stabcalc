@@ -260,6 +260,7 @@ class Setting(OwnedModelMixin, models.Model):
     durations = models.ManyToManyField('Duration', blank=True, related_name='settings')
     sample = models.ForeignKey('Sample', on_delete=models.CASCADE)
     freeze_thaw_cycles = models.PositiveIntegerField(verbose_name=_('How many freeze/thaw cycles did the samples endure?'), blank=True, null=True)
+    replicate_count = models.PositiveIntegerField(verbose_name=_("How many replicate measurements were performed per subject and storage duration?"), default=2)
 
     PATIENT = 1
     HEALTHY = 2

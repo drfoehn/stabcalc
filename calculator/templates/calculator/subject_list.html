@@ -19,7 +19,7 @@
     {% else %}
         <br>
         <div class="alert alert-primary" role="alert">
-            Currently no subjects saved - <a hx-get="{% url 'create-subject-form' %}" hx-swap="beforeend"
+            Currently no subjects saved - <a hx-get="{% url 'create-subject-form' %}" hx-swap="innerHTML"
                                                 hx-target="#subject_form" class="alert-link">Create your first
             subject</a>.
         </div>

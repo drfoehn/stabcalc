@@ -1286,11 +1286,20 @@ def delete_duration(request, pk):
 #     }
 #
 #     return render(request, 'calculator/result_list.html', context)
+class ResultsFormset(forms.BaseFormSet):
+    pass
+
 def result_list(request, setting_pk):
     setting = Setting.objects.get(pk=setting_pk)
     durations = Duration.objects.filter(settings__in=[setting])
     subjects = Subject.objects.filter(settings__in=[setting])
     results = Result.objects.filter(setting=setting)
+    # formset = modelformset_factory(
+    #     model=Result,
+    #     form=ResultForm,
+    #     extra=setting.replicate_count*len(subjects),
+    #     formset=ResultsFormset,
+    # )
     form = ResultForm(subjects, durations, data=request.POST or None)
 
     if request.method == 'POST':
@@ -1436,13 +1445,13 @@ def subject_list(request):
         else:
             context = {
                 'form': form,
-                'subjects': Subject.objects.all()
+                'subjects': Subject.objects.filter(owner=request.user)
             }
             return render(request, 'calculator/partials/subject_form.html', context)
 
     context = {
         'form': form,
-        'subjects': subjects,
+        'subjects': Subject.objects.filter(owner=request.user),
     }
 
     return render(request, 'calculator/subject_list.html', context)
