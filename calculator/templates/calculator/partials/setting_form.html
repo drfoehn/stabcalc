@@ -100,6 +100,19 @@
                 {{ form.subjects.errors }}
             </td>
         </tr>
+                <tr>
+            <td class="form-rowhead">
+                How many replicates did you measure per study subject/sample/aliquot?
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.replicate_count }}
+            </td>
+            <td>
+                {{ form.replicate_count.errors }}
+            </td>
+        </tr>
         <tr>
             <td class="form-rowhead">
                 {{ form.condition.label_tag }}

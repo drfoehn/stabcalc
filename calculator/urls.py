@@ -65,6 +65,7 @@ urlpatterns = [
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
 
+    path("result_template_download/<setting_pk>", views.result_template_download, name="download-xls-template"),
     path("download-xlsx/<setting_pk>", views.DownloadExcel, name="download-data"),
     # path("upload/", views.upload_view, name="upload"),
 

@@ -42,7 +42,7 @@
 
         {% if setting.condition.other_condition %}
              Other condition: {{ setting.condition.other_condition }}
-            {% endif %}
+        {% endif %}
             <br>
             {{ setting.condition.get_temperature_display }}
             <br>
@@ -58,6 +58,7 @@
                 {% if duration.seconds == 0%}
                 Baseline <br>
             {% else %}
+
             {{ duration }} <br>
                 {% endif %}
             {% endfor %}

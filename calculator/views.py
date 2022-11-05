@@ -1421,6 +1421,145 @@ def delete_result(request, pk):
     result.delete()
     return HttpResponse('')
 
+# -------------------------------------EXCEL Result input ---------------------------------------
+
+# def result_template_download(request, setting_pk):
+#     setting = Setting.objects.get(pk=setting_pk)
+#     durations = Duration.objects.filter(settings__in=[setting])
+#     subjects = Subject.objects.filter(settings__in=[setting])
+#     results = Result.objects.filter(setting=setting)
+def result_template_download(request, setting_pk):
+    excelfile = BytesIO()
+    workbook = Workbook()
+    workbook.remove(workbook.active)
+    owner = request.user
+    setting = Setting.objects.get(pk=setting_pk, owner=owner)
+    subjects = setting.subjects.all()
+    durations = setting.durations.all()
+    replicates = setting.replicate_count
+    parameter_unit = setting.parameter.parameter.unit
+    # results = setting.results.all()
+    print(subjects)
+
+    # -----sheet#1 - Basic setting info
+    ws1 = workbook.create_sheet(title=f"Basic Info - {setting.name}")
+    ws1.sheet_view.showGridLines = False
+
+    now = timezone.now().strftime('%d-%m-%Y - %H:%M')
+
+    ws1['A1'] = "EFLM Stability Calculator"
+    ws1['A1'].font = Font(size=25, color="e63946", bold=True)
+    ws1['A2'] = "EFLM Working Group Preanalytical Phase (WG-PRE)"
+    ws1['A2'].font = Font(size=20, color="e63946")
+    ws1['A4'] = f"Downloaded by  {request.user.user_name} on {now}"
+    ws1['A4'].font = Font(italic=True)
+    ws1['A6'] = f"stability study '{setting.name}' Template Sheet"
+    ws1['A6'].font = Font(size=20, bold=True, color="1d3557")
+    title3 = Font(size=18, color='1d3557')
+    for c in ws1['A7:B8']:
+        c[0].font = title3
+        c[1].font = title3
+    ws1['A7'] = "Name"
+    ws1['B7'] = str(setting.name)
+    ws1['A8'] = "Parameter"
+    ws1['B8'] = str(setting.parameter)
+    ws1['A9'] = "Samples"
+    ws1['B9'] = str(setting.sample)
+    ws1['A10'] = "Source of samples"
+    ws1['B10'] = str(setting.get_sample_type_display)
+    ws1['A11'] = "Storage Condition"
+    ws1['B11'] = str(setting.condition)
+    ws1['A12'] = "Type of study design"
+    ws1['B12'] = str(setting.get_design_type_display())
+    ws1['A13'] = "Primary samples or aliquots"
+    ws1['B13'] = str(setting.get_design_sample_display())
+    ws1['A14'] = "Freeze thaw cycles (n)"
+    ws1['B14'] = str(setting.freeze_thaw_cycles)
+    ws1['A15'] = "Protocol"
+    ws1['B15'] = str(setting.protocol)
+    ws1['A16'] = "Comment"
+    ws1['B16'] = str(setting.comment)
+
+    bold = Font(bold=True)
+    for c in ws1['A9:A16']:
+        c[0].font = bold
+
+    thin = Side(border_style="thin", color="000000")
+    bottom_line = Border(bottom=thin)
+    for c in ws1['A9:B16']:
+        c[0].border = bottom_line
+        c[1].border = bottom_line
+
+    MIN_WIDTH = 15
+    for i, column_cells in enumerate(ws1.columns, start=1):
+        width = (
+            length
+            if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                              for cell in column_cells)) >= MIN_WIDTH
+            else MIN_WIDTH
+        )
+        ws1.column_dimensions[get_column_letter(i)].width = width
+
+    # -------------sheet 2 - data ------------------
+
+    ws2 = workbook.create_sheet(title=f"Input results - {setting.name}")
+    ws2.sheet_view.showGridLines = True
+    # for subject in setting.subjects.all():
+    #     ws2.append([str(subject)])
+    #     for duration in setting.durations.all():
+    #         ws2.append([str(duration)])
+    #         for result in setting.durations.
+    ws2["B1"] = 'Storage duration'
+    ws2["A2"] = 'Subject'
+    ws2["B2"] = 'Replicate'
+    i = 0
+    for duration in durations:
+        ws2.cell(row=1, column =i+3).value = f"{duration.duration_number} {duration.get_duration_unit_display()}"
+        i=i+2
+    i = 0
+    for subject in subjects:
+        ws2.cell(row=i + 3, column=1).value = subject.name
+        for rep in range(0, replicates):
+            ws2.cell(row=i + 3, column=2).value = f"#{rep + 1}"
+            i = i + 1
+    c=0
+
+    for duration in durations:
+        r = 3
+        for subject in subjects:
+            for replicate in range(0, replicates):
+                ws2.cell(row=replicate + r, column= c + 4).value = parameter_unit
+            r = r + replicates
+        c= c + 2
+
+
+
+
+    # for c in ws2['A1:D1'][0]:
+    #     c.font = bold
+    #     c.border = bottom_line
+    #
+    # for count, result in enumerate(results):
+    #     ws2.cell(row=count + 2, column=1).value = str(result.subject)
+    #     ws2.cell(row=count + 2, column=2).value = str(result.duration)
+    #     ws2.cell(row=count + 2, column=3).value = result.value
+    #     ws2.cell(row=count + 2, column=4).value = str(result.setting.parameter.parameter.unit)
+    #
+    #     MIN_WIDTH = 10
+    #     for i, column_cells in enumerate(ws2.columns, start=1):
+    #         width = (
+    #             length
+    #             if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+    #                               for cell in column_cells)) >= MIN_WIDTH
+    #             else MIN_WIDTH
+    #         )
+    #         ws2.column_dimensions[get_column_letter(i)].width = width
+
+    workbook.save(excelfile)
+
+    response = HttpResponse(excelfile.getvalue(), content_type='application/')
+    response['Content-Disposition'] = f'attachment; filename=stability-study-{setting.name}-template.xlsx'
+    return response
 
 # -------------------------------------SUBJECT----------------------------------------
 

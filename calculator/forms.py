@@ -210,10 +210,11 @@ class SettingForm(forms.ModelForm):
     freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     design_type = forms.Select()
     design_sample = forms.Select()
+    replicate_count = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=True)
     condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
     protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    # replicate_count = ...
+
     owner = None
     # ----------------------Botcatcher-------------------------
 
