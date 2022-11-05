@@ -137,8 +137,8 @@ class ResultsView(DetailView):
 
         context["eq_model_lin"] = str("y = " + str(round(eq1[1], 5)) + " * x + " + str(round(eq1[0], 5)))
 
-        # predition_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
-        # predition_lin.predict(exog=new_values_dict)
+        # prediction_lin= sm.ols("y ~ x", data=merged_res_dur).fit()
+        # prediction_lin.predict(exog=new_values_dict)
 
         # --------------------------Calculate Regression equation - polynomial 2rd degree - https://www.statology.org/polynomial-regression-python/
 
@@ -1417,14 +1417,22 @@ def delete_result(request, pk):
 
 def subject_list(request):
     form = SubjectForm(request.POST or None)
-    subjects = Subject.objects.all()
-
     if request.method == 'POST':
         if form.is_valid():
-            subject = form.save(commit=False)
-            subject.owner = request.user
-            subject.save()
-            return redirect('subject-detail', pk=subject.id)
+            # subject = form.save(commit=False)
+            # subject.owner = request.user
+            # subject.save()
+            number:int = form.cleaned_data["number"]
+            subject_prefix:str = form.cleaned_data["subject_prefix"]
+
+            for n in range(0, number):
+                subject: Subject = Subject(
+                    name=f"{subject_prefix}_{n+1}",
+                    owner=request.user
+                )
+                subject.save()
+            context={'subjects': Subject.objects.filter(owner=request.user)}
+            return render(request, 'calculator/subject_list.html', context)
         else:
             context = {
                 'form': form,

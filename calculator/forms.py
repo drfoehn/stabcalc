@@ -373,8 +373,10 @@ class DurationForm(forms.ModelForm):
         return feedback
 
 
-class SubjectForm(forms.ModelForm):
-    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+class SubjectForm(forms.Form):
+    number = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    subject_prefix = forms.CharField(max_length=25, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
@@ -382,13 +384,15 @@ class SubjectForm(forms.ModelForm):
     )
 
 
-    class Meta:
-        model = Subject
-        fields = (
-            'name',
-            # 'setting',
-
-        )
+    # class Meta:
+    #     model = Subject
+    #     fields = (
+    #         'number',
+    #         'subject_prefix',
+    #         'name',
+    #         # 'setting',
+    #
+    #     )
 
     # def __init__(self, *args, **kwargs):
     #     super(SubjectForm, self).__init__(*args, **kwargs)
