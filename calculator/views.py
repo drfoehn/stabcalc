@@ -1,3 +1,6 @@
+from tempfile import NamedTemporaryFile
+
+import pandas
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
@@ -27,7 +30,12 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import math
 from patsy.highlevel import dmatrices
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect
+from io import BytesIO
+from openpyxl import Workbook, load_workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
+from openpyxl.cell import cell
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.utils import get_column_letter
 
 
 class ResultsView(DetailView):
@@ -498,11 +506,7 @@ class ResultsView(DetailView):
         return context
 
 
-from io import BytesIO
-from openpyxl import Workbook  # Documentation at https://openpyxl.readthedocs.io/en/stable/tutorial.html
-from openpyxl.cell import cell
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
-from openpyxl.utils import get_column_letter
+
 
 
 def DownloadExcel(request, setting_pk):
@@ -1362,14 +1366,6 @@ def add_result_form(request, setting_pk, duration_pk):
     return render(request, 'calculator/partials/result_form.html', context)
 
 
-# def add_result_form(request):
-#     form = ResultForm()
-#     context = {
-#         "form": form
-#     }
-#     return render(request, 'calculator/partials/result_form.html', context)
-
-
 def result_detail(request, pk):
     result = get_object_or_404(Result, pk=pk)
     if not result.owner == request.user:
@@ -1399,29 +1395,127 @@ def edit_result(request, pk):
     return render(request, 'calculator/partials/result_form.html', context)
 
 
-# def edit_result(request, pk):
-#     result = Result.objects.get(pk=pk)
-#     form = ResultForm(request.POST or None, instance=result)
-#
-#     # This part is so that the update does not produce more objects
-#     if request.method == 'POST':
-#         if form.is_valid():
-#             result = form.save()
-#             return redirect('result-detail', pk=result.id)
-#
-#     context = {
-#         "form": form,
-#         "result": result,
-#     }
-#     return render(request, 'calculator/partials/result_form.html', context)
-
-
 def delete_result(request, pk):
     result = Result.objects.get(pk=pk)
     result.delete()
     return HttpResponse('')
 
-# -------------------------------------EXCEL Result input ---------------------------------------
+
+
+def import_export(request, setting_pk):
+        setting = Setting.objects.get(pk=setting_pk)
+        if not setting.owner == request.user:
+            return HttpResponseForbidden
+        else:
+            context = {
+                "setting": setting
+            }
+            return render(request, 'calculator/import_export.html', context)
+
+def result_template_upload(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ResultTemplateUploadForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/')
+
+        # if a GET (or any other method) we'll create a blank form
+    else:
+        form = ResultTemplateUploadForm()
+
+    return render(request, 'calculator/import_export.html', form)
+
+
+
+def import_test(self):
+    workbook = load_workbook('other_data/test.xlsx')
+    print(workbook.sheetnames)
+    ws1 = workbook['Basic Info']
+    ws2 = workbook['Input results']
+    owner_pk = ws1['B18'].value
+    setting_pk = ws1["B19"].value
+
+    # ----get last row and col from input sheet using pandas (openpyxl does not count empty cells)
+    resultfile = 'other_data/test.xlsx'
+    df = pandas.read_excel(resultfile, sheet_name=[1])
+    max_row = 1
+    max_col = 1
+    for sh_name, sh_content in df.items():
+        max_row = len(sh_content) + 1
+        max_col = len(sh_content.columns)
+
+    print(max_row, max_col)
+    first_result_cell = ws2.cell(row=3, column=3)
+    last_result_cell = ws2.cell(row=max_row, column=max_col-1)
+    from openpyxl.utils.cell import coordinate_to_tuple
+    for row in ws2.iter_rows(min_row=3, min_col= 3, max_col=max_col-1, max_row=max_row):
+        print(row)
+        for column in ws2.iter_cols(min_row=3, min_col= 3, max_col=max_col-1, max_row=max_row):
+            # result_col = get_column_letter(cell)
+            print(column)
+            for c in column:
+                c_duration = ws2.cell(row=1, column=c.column).value
+                c_subject = ws2.cell(row=c.row, column=1).value
+                c_replicate = ws2.cell(row=c.row, column=2).value
+                print(c_duration, c_subject, c_replicate)
+                print(c.value)
+                print(c.row)
+                print(c.column)
+            # print(cell.column)
+            # print(result_row)
+            # print(result_col)
+            # print(column.value)
+    
+    # for col in ws2.CellRange [first_result_cell:last_result_cell]:
+    #     for cell in col:
+    #         print(cell.value)
+    # durations = ws2["C1:E1"]
+    # print(durations)
+    # for duration in durations:
+    #     print(str(duration))
+
+    # print("owner: " + str(owner_pk))
+    # print("setting: " + str(setting_pk))
+
+    # for duration in range(0, )
+
+
+    # result = Result.objects.create(
+    #     owner_id=owner_pk,
+    #     setting_id=setting_pk
+    #
+    # )
+    # print(result)
+
+
+
+
+    
+    return HttpResponseRedirect('/calculator/import_export/13')
+    #
+    # with open('some/file/name.txt', 'wb+') as destination:
+    #     for chunk in f.chunks():
+    #         destination.write(chunk)
+
+
+# def result_template_upload(request, setting_pk):
+#     if request.method == 'POST':
+#         form = ResultTemplateUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # form.save()
+#             # df = pandas.read_excel(request.FILES)
+#             # print(df)
+#             # handle_uploaded_file(request.FILES['uploaded_template'])
+#             return HttpResponseRedirect('/')
+#     else:
+#         form = ResultTemplateUploadForm()
+#     return render(request, 'calculator/partials/upload_form.html', {'form': form})
+
+# -------------------------------------EXCEL Result Template Download ---------------------------------------
 
 # def result_template_download(request, setting_pk):
 #     setting = Setting.objects.get(pk=setting_pk)
@@ -1429,7 +1523,7 @@ def delete_result(request, pk):
 #     subjects = Subject.objects.filter(settings__in=[setting])
 #     results = Result.objects.filter(setting=setting)
 def result_template_download(request, setting_pk):
-    excelfile = BytesIO()
+    exceltemplate = BytesIO()
     workbook = Workbook()
     workbook.remove(workbook.active)
     owner = request.user
@@ -1438,11 +1532,9 @@ def result_template_download(request, setting_pk):
     durations = setting.durations.all()
     replicates = setting.replicate_count
     parameter_unit = setting.parameter.parameter.unit
-    # results = setting.results.all()
-    print(subjects)
-
+    #
     # -----sheet#1 - Basic setting info
-    ws1 = workbook.create_sheet(title=f"Basic Info - {setting.name}")
+    ws1 = workbook.create_sheet(title=f"Basic Info")
     ws1.sheet_view.showGridLines = False
 
     now = timezone.now().strftime('%d-%m-%Y - %H:%M')
@@ -1479,6 +1571,12 @@ def result_template_download(request, setting_pk):
     ws1['B15'] = str(setting.protocol)
     ws1['A16'] = "Comment"
     ws1['B16'] = str(setting.comment)
+    ws1["A18"] = "User-ID"
+    ws1["B18"] = int(request.user.pk)
+    ws1["B18"].alignment = Alignment(horizontal='left')
+    ws1["A19"] = "Setting-ID"
+    ws1["B19"] = int(setting_pk)
+    ws1["B19"].alignment = Alignment(horizontal='left')
 
     bold = Font(bold=True)
     for c in ws1['A9:A16']:
@@ -1502,64 +1600,68 @@ def result_template_download(request, setting_pk):
 
     # -------------sheet 2 - data ------------------
 
-    ws2 = workbook.create_sheet(title=f"Input results - {setting.name}")
+    ws2 = workbook.create_sheet(title=f"Input results")
+    ws2.sheet_properties.tabColor = "1072BA"
     ws2.sheet_view.showGridLines = True
-    # for subject in setting.subjects.all():
-    #     ws2.append([str(subject)])
-    #     for duration in setting.durations.all():
-    #         ws2.append([str(duration)])
-    #         for result in setting.durations.
-    ws2["B1"] = 'Storage duration'
-    ws2["A2"] = 'Subject'
-    ws2["B2"] = 'Replicate'
+
+    ws2["A1"] = 'Storage duration'
+    ws2.merge_cells('A1:B1')
+    ws2["A3"] = 'Subject'
+    ws2["B3"] = 'Replicate'
+
+    # ------Add durations in row 1 and seconds in row 2
     i = 0
     for duration in durations:
         ws2.cell(row=1, column =i+3).value = f"{duration.duration_number} {duration.get_duration_unit_display()}"
-        i=i+2
+        ws2.cell(row=2, column =i+3).value = duration.seconds
+        ws2.cell(row=2, column=i + 3).font = Font(color="ffffff")
+        i=i+1
     i = 0
+
+    # -----Add subjects and replicates in col 1 and 2
     for subject in subjects:
-        ws2.cell(row=i + 3, column=1).value = subject.name
         for rep in range(0, replicates):
+            ws2.cell(row=i + 3, column=1).value = subject.name
             ws2.cell(row=i + 3, column=2).value = f"#{rep + 1}"
             i = i + 1
     c=0
 
-    for duration in durations:
-        r = 3
-        for subject in subjects:
-            for replicate in range(0, replicates):
-                ws2.cell(row=replicate + r, column= c + 4).value = parameter_unit
-            r = r + replicates
-        c= c + 2
+    # for duration in durations:
+    r = 3
+    for subject in subjects:
+        for replicate in range(0, replicates):
+            ws2.cell(row=replicate + r, column=3 + durations.count()).value = parameter_unit
+        r = r + replicates
+        # c= c + 2
+
+    #-----Format
+    # ws2.cell_range(min_row=2, max_row=2, min_column=0, max_column=30).font = Font(color="000000")
+
+  # ---autofit column width
+    MIN_WIDTH = 10
+    for i, column_cells in enumerate(ws2.columns, start=1):
+        width = (
+            length
+            if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
+                              for cell in column_cells)) >= MIN_WIDTH
+            else MIN_WIDTH
+        )
+        ws2.column_dimensions[get_column_letter(i)].width = width
 
 
-
-
-    # for c in ws2['A1:D1'][0]:
-    #     c.font = bold
-    #     c.border = bottom_line
-    #
-    # for count, result in enumerate(results):
-    #     ws2.cell(row=count + 2, column=1).value = str(result.subject)
-    #     ws2.cell(row=count + 2, column=2).value = str(result.duration)
-    #     ws2.cell(row=count + 2, column=3).value = result.value
-    #     ws2.cell(row=count + 2, column=4).value = str(result.setting.parameter.parameter.unit)
-    #
-    #     MIN_WIDTH = 10
-    #     for i, column_cells in enumerate(ws2.columns, start=1):
-    #         width = (
-    #             length
-    #             if (length := max(len(str(cell_value) if (cell_value := cell.value) is not None else "")
-    #                               for cell in column_cells)) >= MIN_WIDTH
-    #             else MIN_WIDTH
-    #         )
-    #         ws2.column_dimensions[get_column_letter(i)].width = width
-
-    workbook.save(excelfile)
-
-    response = HttpResponse(excelfile.getvalue(), content_type='application/')
+    workbook.save(exceltemplate)
+    response = HttpResponse(exceltemplate.getvalue(), content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = f'attachment; filename=stability-study-{setting.name}-template.xlsx'
     return response
+
+
+
+# -------------------------------------EXCEL Result Template UPLOAD ---------------------------------------
+
+
+
+
+
 
 # -------------------------------------SUBJECT----------------------------------------
 

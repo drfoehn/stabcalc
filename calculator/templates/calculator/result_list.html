@@ -22,7 +22,7 @@
     ">Show statistical evaluation</a></h4>
     Parameter: {{ setting.parameter.name }}<br>
     Temperature: {{ setting.condition.get_temperature_display }}<br>
-    <a href="{% url 'download-xls-template' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a>
+    <a href="{% url 'export-xls-template' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a>
     <br>
 
     <div class="row">

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+    <div class="jumbotron">
+        <h1 class="display-4">Study data Import / Export</h1>
+
+    <div class="row">
+        <div class="row">
+            <h4>
+            Dear {{ setting.owner }}, <br>
+            Here you can import or export the EXCEL-Template for your Stability-Study <br>
+{#            Name: {{ setting. }}<br>#}
+{#                TODO: Insert Setting Name#}
+{#            ID: {{ setting.pk }}<br>#}
+            </h4>
+
+        </div>
+        <div class="col">
+            <h3>1) Download your template</h3>
+            <a href="{% url 'import_test' %}" class="">Test import</a>
+            <div class="row">
+                <div class="col">
+
+                    <a href="{% url 'export-xls-template' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h3>2) Upload your results</h3>
+{#                  {% include 'calculator/partials/upload_form.html' %}#}
+                    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+          {{ form.result_template_upload_field.label }}
+          lala{{ form }}lulu
+          <input type="submit" value="Submit">
+
+      </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <img src="{% static 'images/import_export.png' %}" alt="" width="100%">
+            <p class="image_attribution"><a href="https://storyset.com/technology">Technology illustrations by Storyset</a>
+               </p>
+
+        </div>
+    </div>
+
+
+{% endblock %}

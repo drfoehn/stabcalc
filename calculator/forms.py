@@ -446,11 +446,25 @@ class ResultForm(forms.Form):
     #     self.fields['subject'].widget.attrs['class'] = 'form-check-input'
 
 
-class UploadExcelForm(forms.Form):
-    stability_data_excel = forms.FileField(
-        label='Upload Excel File',
-        help_text='Please be sure to use the correct template and filetype'
+class ResultTemplateUploadForm(forms.Form):
+    result_template_upload_field = forms.FileField(
+        label='Upload Excel File with your results',
+        help_text='Please be sure to use the correct template and filetype (.xlsx)'
     )
+
+
+
+    # class Meta:
+    #
+    #     model = Result
+    #     fields = (
+    #         'value',
+    #         'setting',
+    #         'duration',
+    #         'subject',
+    #
+    #     )
+
 
 class NewParameterForm(forms.Form):
     name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))

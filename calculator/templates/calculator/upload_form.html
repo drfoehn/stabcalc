@@ -1,24 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 {% load static %}
-
-{% block headadditional %}
-{% endblock %}
-
-{% block title %}Stability Calculator - Upload{% endblock %}
-
+{% load i18n %}
 {% block content %}
-  <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
-    <h2 class="display-4">Upload Stability Data</h2>
-  </div>
+
+    <div class="jumbotron">
+        <h1 class="display-4">Study data Import / Export</h1>
   <div class="container-fluid">
     <div class="row">
-      <form method="POST">
+      <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-          {{ form.as_p }}
+
+          {{ form.result_template_upload_field.label }}
+          lala{{ form }}lulu
           <input type="submit" value="Submit">
 
       </form>
     </div>
 
   </div>
-{% endblock content %}
+    </div>
+        {% endblock %}

@@ -1,1 +1,10 @@
-django-jazzmin
+
+django-import-export
+django-countries
+django-crispy_forms
+crispy_bootstrap5
+patsy
+django-guardian
+django-pandas
+statsmodels
+numpy
