@@ -1452,23 +1452,42 @@ def import_test(self):
     first_result_cell = ws2.cell(row=3, column=3)
     last_result_cell = ws2.cell(row=max_row, column=max_col-1)
     from openpyxl.utils.cell import coordinate_to_tuple
-    for row in ws2.iter_rows(min_row=3, min_col= 3, max_col=max_col-1, max_row=max_row):
+    for row in ws2.iter_rows(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
         print(row)
-        for column in ws2.iter_cols(min_row=3, min_col= 3, max_col=max_col-1, max_row=max_row):
+        for column in ws2.iter_cols(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
             # result_col = get_column_letter(cell)
             print(column)
             for c in column:
-                c_duration = ws2.cell(row=1, column=c.column).value
-                c_subject = ws2.cell(row=c.row, column=1).value
-                c_replicate = ws2.cell(row=c.row, column=2).value
-                print(c_duration, c_subject, c_replicate)
-                print(c.value)
-                print(c.row)
+                if not setting_pk:
+                    break
+
+                c_duration_pk = ws2.cell(row=2, column=c.column).value
+                c_subject_pk = ws2.cell(row=c.row, column=2).value
+                c_replicate = ws2.cell(row=c.row, column=3).value
+                c_value = c.value
+
+                if not c_value or not c_subject_pk or not c_duration_pk:
+                    continue
+
                 print(c.column)
-            # print(cell.column)
-            # print(result_row)
-            # print(result_col)
-            # print(column.value)
+                print(c.row)
+                print("owner: " + str(owner_pk))
+                print("setting: " + str(setting_pk))
+                print("value: " + str(c_value))
+                print("subject: " + str(c_subject_pk))
+                print("duration: " + str(c_duration_pk))
+
+
+
+                result_object = Result(
+                    setting_id=setting_pk,
+                    duration_id=c_duration_pk,
+                    subject_id=c_subject_pk,
+                    value=c_value,
+                    owner_id=owner_pk
+                )
+                result_object.save()
+
     
     # for col in ws2.CellRange [first_result_cell:last_result_cell]:
     #     for cell in col:
@@ -1502,26 +1521,22 @@ def import_test(self):
     #         destination.write(chunk)
 
 
-# def result_template_upload(request, setting_pk):
-#     if request.method == 'POST':
-#         form = ResultTemplateUploadForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             # form.save()
-#             # df = pandas.read_excel(request.FILES)
-#             # print(df)
-#             # handle_uploaded_file(request.FILES['uploaded_template'])
-#             return HttpResponseRedirect('/')
-#     else:
-#         form = ResultTemplateUploadForm()
-#     return render(request, 'calculator/partials/upload_form.html', {'form': form})
+def result_template_upload(request, setting_pk):
+    if request.method == 'POST':
+        form = ResultTemplateUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            # form.save()
+            # df = pandas.read_excel(request.FILES)
+            # print(df)
+            import_test(request.FILES['uploaded_template'])
+            return HttpResponseRedirect('/')
+    else:
+        form = ResultTemplateUploadForm()
+    return render(request, 'calculator/partials/upload_form.html', {'form': form})
 
 # -------------------------------------EXCEL Result Template Download ---------------------------------------
+from openpyxl.styles import PatternFill
 
-# def result_template_download(request, setting_pk):
-#     setting = Setting.objects.get(pk=setting_pk)
-#     durations = Duration.objects.filter(settings__in=[setting])
-#     subjects = Subject.objects.filter(settings__in=[setting])
-#     results = Result.objects.filter(setting=setting)
 def result_template_download(request, setting_pk):
     exceltemplate = BytesIO()
     workbook = Workbook()
@@ -1605,37 +1620,89 @@ def result_template_download(request, setting_pk):
     ws2.sheet_view.showGridLines = True
 
     ws2["A1"] = 'Storage duration'
-    ws2.merge_cells('A1:B1')
+    ws2.merge_cells('A1:A2')
+    ws2["A1"].alignment = Alignment(vertical="center")
+    ws2["B1"] = 'Name'
+    ws2["B2"] = 'ID'
     ws2["A3"] = 'Subject'
-    ws2["B3"] = 'Replicate'
+    ws2.merge_cells('A3:B3')
+    ws2["C3"] = 'Replicate'
+    ws2.merge_cells('C3:C4')
+    ws2["A4"] = 'Name'
+    ws2["B4"] = 'ID'
 
     # ------Add durations in row 1 and seconds in row 2
+
     i = 0
     for duration in durations:
-        ws2.cell(row=1, column =i+3).value = f"{duration.duration_number} {duration.get_duration_unit_display()}"
-        ws2.cell(row=2, column =i+3).value = duration.seconds
-        ws2.cell(row=2, column=i + 3).font = Font(color="ffffff")
+        ws2.cell(row=1, column =i+4).value = f"{duration.duration_number} {duration.get_duration_unit_display()}"
+        # ws2.cell(row=1, column =i+4).font = Font(bold=True)
+        # ws2.cell(row=1, column=i + 4).fill = PatternFill(bgColor="1c61ae", fill_type="solid")
+        ws2.cell(row=2, column =i+4).value = duration.id
+        # ws2.cell(row=2, column =i+4).font = Font(bold=True)
+        # ws2.cell(row=2, column=i + 4).fill = PatternFill(bgColor="1c61ae", fill_type="solid")
+
         i=i+1
     i = 0
+
+
+
 
     # -----Add subjects and replicates in col 1 and 2
     for subject in subjects:
         for rep in range(0, replicates):
-            ws2.cell(row=i + 3, column=1).value = subject.name
-            ws2.cell(row=i + 3, column=2).value = f"#{rep + 1}"
+            ws2.cell(row=i + 5, column=1).value = subject.name
+            ws2.cell(row=i + 5, column=2).value = subject.id
+            ws2.cell(row=i + 5, column=3).value = f"#{rep + 1}"
             i = i + 1
     c=0
 
-    # for duration in durations:
-    r = 3
+    # -----Add parameter unit
+    r = 5
     for subject in subjects:
         for replicate in range(0, replicates):
-            ws2.cell(row=replicate + r, column=3 + durations.count()).value = parameter_unit
+            ws2.cell(row=replicate + r, column=4 + durations.count()).value = parameter_unit
         r = r + replicates
         # c= c + 2
 
     #-----Format
-    # ws2.cell_range(min_row=2, max_row=2, min_column=0, max_column=30).font = Font(color="000000")
+    white_border = Border(left=Side(style='thin', color="ffffff"),
+                          right=Side(style='thin', color="ffffff"),
+                          top=Side(style='thin', color="ffffff"),
+                          bottom=Side(style='thin', color="ffffff"),
+                          )
+    black_border = Border(left=Side(style='thin', color="000000"),
+                          right=Side(style='thin', color="000000"),
+                          top=Side(style='thin', color="000000"),
+                          bottom=Side(style='thin', color="000000"),
+                          )
+    # -format durations
+    for col_range in range(1, durations.count() + 4):
+        ws2.cell(1, col_range).fill = PatternFill(start_color="1c61ae", end_color="1c61ae", fill_type="solid")
+        ws2.cell(2, col_range).fill = PatternFill(start_color="1c61ae", end_color="1c61ae", fill_type="solid")
+        ws2.cell(1, col_range).font = Font(bold=True, color="ffffff")
+        ws2.cell(2, col_range).font = Font(bold=True, color="ffffff")
+        ws2.cell(1, col_range).border = white_border
+        ws2.cell(2, col_range).border = white_border
+
+    # -format subjects
+    subject_rows = subjects.count()*replicates + 5
+    for row_range in range(3, subject_rows):
+        ws2.cell(row_range, 1).fill = PatternFill(start_color="62b0df", end_color="62b0df", fill_type="solid")
+        ws2.cell(row_range, 2).fill = PatternFill(start_color="62b0df", end_color="62b0df", fill_type="solid")
+        ws2.cell(row_range, 1).font = Font(bold=True)
+        ws2.cell(row_range, 2).font = Font(bold=True)
+        ws2.cell(row_range, 1).border = black_border
+        ws2.cell(row_range, 2).border = black_border
+        ws2.cell(row_range, 2).alignment = Alignment(horizontal="center")
+
+    # -format replicates
+    for row_range in range(3, subject_rows):
+        ws2.cell(row_range, 3).fill = PatternFill(start_color="eff6fb", end_color="eff6fb", fill_type="solid")
+        ws2.cell(row_range, 3).font = Font(bold=True)
+        ws2.cell(row_range, 3).border = black_border
+        ws2.cell(row_range, 3).alignment = Alignment(horizontal="center")
+
 
   # ---autofit column width
     MIN_WIDTH = 10
