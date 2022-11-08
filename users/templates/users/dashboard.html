@@ -21,7 +21,8 @@
                 <td class="display-7">Storage conditions</td>
                 <td class="display-7">Storage durations</td>
                 <td class="display-7">Study subjects/volunteers/samples (n)</td>
-                <td class="display-7">Results (n)</td>
+                <td class="display-7">Recorded Results (n)</td>
+                <td class="display-7">Action</td>
                 <td></td>
             </tr>
         {% for setting in settings %}
@@ -51,7 +52,6 @@
             Air: {{ setting.condition.air }}
             <br>
             Agitation: {{ setting.condition.agitation }}
-
         </td>
         <td class="table-dashboard-td">
             {% for duration in setting.durations.all %}
@@ -62,19 +62,26 @@
             {{ duration }} <br>
                 {% endif %}
             {% endfor %}
-
-
         </td>
-            <td  class="table-dashboard-td">{{ subjects.count }}</td>
-        <td  class="table-dashboard-td">
-            {{ setting.result_set.count }}<br>
-            <a href="{% url 'create-result' setting.id %}">Add Results</a>
+        <td  class="table-dashboard-td">{{ setting.subjects.count }}</td>
+        <td  class="table-dashboard-td">{{ setting.results.count}}</td>
+        <td>
+        <ul>
+           <li> <a href="{% url 'export_template_view' setting.pk %}">Add Results</a> <br></li>
+            <li><a href="{% url 'create-result' setting.pk %}">Edit Results</a> <br></li>
+            <li>{% if setting.result_set.count < 10 %}
+                   onclick="alert10()"><a href="
+            {% else %}
+               <a href="{% url 'results' setting.id %}
+                {% endif %}
+            ">Show statistical evaluation</a><br></li>
+            <li><a href="{% url 'download-data' setting.pk %}">Show Report</a> <br></li>
+        </ul>
         </td>
-    <td><a href="{% url 'download-data' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a></td>
-            </tr>
+    </tr>
     {% endfor %}
-    </table>
-    </div>
+</table>
+</div>
 
     <div class="col-2">
     <h4 class="heading2">Add / Edit / Delete</h4>

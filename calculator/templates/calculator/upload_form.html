@@ -7,8 +7,11 @@
 
     <div class="jumbotron">
         <h1 class="display-4">Study data Import</h1>
-        <div class="container-fluid">
-            <div class="row">
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
                 {% if messages %}
                     <ul>
                         {% for message in messages %}
@@ -16,14 +19,43 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
+            <div   >
+
+                    Here you can import the filled in EXCEL-Template for your Stability-Study <br>
+                <p>
+                    Please use only the template you downloaded specifically for your setting of interest. <br>
+                    If you haven´t dowloaded the according template, please visit your dashbord. You can access template download links for all of yor settings there.
+
+                </p>
+                 <p><strong>Before you upload your data, please make sure that:</strong></p>
+                <ul>
+                    <li>You used the correct template</li>
+                    <li>You did not alter the template in any places other than the cells for result input</li>
+                    <li>You have a file ending with ".xlsx" (The rest of the filename does not matter)</li>
+                </ul>
+                <p>
+                    Please note that, depending on the number of results in your template, the upload may take a while.
+                    <span class="alert-danger"> Please do not refresh or leave this page after hitting the "Upload"-Button.</span>
+                </p>
+                </div>
                 <div style="max-width:470px;">
                     <form method='POST' enctype="multipart/form-data">
-                        {{ form.as_p }}
+                        {{ form|crispy }}
                         {% csrf_token %}
                         <input type="submit" class="btn btn-primary" value="submit">
                     </form>
                 </div>
 
             </div>
+
+            <div class="col">
+                <img src="{% static 'images/import_export.png' %}" alt="" width="100%">
+                <p class="image_attribution"><a href="https://storyset.com/technology">Technology illustrations by
+                    Storyset</a>
+                </p>
+
+            </div>
         </div>
+        {#                </div>#}
+    </div>
 {% endblock %}

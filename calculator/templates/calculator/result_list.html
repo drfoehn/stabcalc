@@ -12,17 +12,21 @@
             }
       </script>
 
-    <h4 class="display-5">List / Add results of/to setting: "{{ setting.name }}"</h4>
-    <h4 class="display6"
+    <h4 class="display-5">List / Edit / Add results"</h4>
+
+    <h4>
+    Setting:  {{ setting.name }}<br>
+    Parameter: {{ setting.parameter.parameter.name }}<br>
+    Temperature: {{ setting.condition.get_temperature_display }}<br>
+</h4>
+        <h4 class="display6"
     {% if setting.result_set.count < 10 %}
            onclick="alert10()"><a href="
     {% else %}
        ><a href="{% url 'results' setting.id %}
         {% endif %}
-    ">Show statistical evaluation</a></h4>
-    Parameter: {{ setting.parameter.name }}<br>
-    Temperature: {{ setting.condition.get_temperature_display }}<br>
-    <a href="{% url 'export-xls-template' setting.pk %}" class="bi bi-box-arrow-down result_buttons"></a>
+    ">Show statistical evaluation</a>
+        </h4>
     <br>
 
     <div class="row">
@@ -78,13 +82,14 @@
 
                                 <div class="row" id="result_form-{{ duration.id }}-{{ subject.id }}"></div>
 
-
                                 {##}
 {#                                {% include 'calculator/partials/result_form.html' %}#}
                                 {% for field in form %}
                                     {% if field.field.subject_id == subject.id and field.field.duration_id == duration.id %}
 {#                                        {{ field.label }}#}
                                         {{ field }}
+                                        Enter result in {{ setting.parameter.parameter.unit }}
+
                                     {% endif %}
                                 {% endfor %}
 {#                                {{ form.value-.label_tag }} {{ form.value }}#}

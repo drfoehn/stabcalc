@@ -6,69 +6,50 @@
 {% block content %}
 
     <div class="jumbotron">
-        <h1 class="display-4">Study data Import / Export</h1>
+        <h1 class="display-4">Download EXCEL-Template</h1>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div>
+                Dear {{ setting.owner }}, <br>
 
-        <div class="row">
-            <div class="row">
+                Please chose your preferred method of data acquisition for the following Setting: <br>
+                <strong>
+                    Setting-Name: {{ setting.name }}<br>
+                    Setting-ID: {{ setting.pk }}<br>
+                </strong>
+                <br>
+            </div>
+            <div>
                 <h4>
-                    Dear {{ setting.owner }}, <br>
-                    Here you can import or export the EXCEL-Template for your Stability-Study <br>
-                    {#            Name: {{ setting. }}<br>#}
-                    {#                TODO: Insert Setting Name#}
-                    {#            ID: {{ setting.pk }}<br>#}
+                    1.)<a href="{% url 'create-result' setting.id %}">Input Data online</a>
                 </h4>
-
+                <br>
             </div>
-            <div class="col">
-                <h3>1) Download your template</h3>
+            <div>
+                <h4>
+                    2.)<a href="{% url 'export-xls-template' setting.pk %}"
+                       >Download an Excel-Template</a>
+                </h4>
+                <p>
 
-                <div class="row">
-                    <div class="col">
+                    If chosing this method, <span class="alert-danger">please do not alter the template in any way other than inputting the results on sheet #2</span>,
+                    otherwise, the upload of your data will not be possible. <br>
+                    You can upload the template with your results and all the data will be imported automatically.
 
-                        <a href="{% url 'export-xls-template' setting.pk %}"
-                           class="bi bi-box-arrow-down result_buttons"></a>
-                    </div>
-                </div>
-{#                <div class="row">#}
-{#                    <div class="col">#}
-{#                        <h3>2) Upload your results</h3>#}
-{#                                <a href="{% url 'import_test' %}" class="">Test import</a>#}
-{#                                {% if messages %}#}
-{#                                    <ul>#}
-{#                                        {% for message in messages %}#}
-{#                                        <li>{{ message }}</li>#}
-{#                                        {% endfor %}#}
-{#                                    </ul>#}
-{#                                {% endif %}#}
-{#                                <div style = "max-width:470px;">#}
-{#                                <form method = 'POST' enctype="multipart/form-data">#}
-{#                                    {{ form.as_p }}#}
-{#                                    {% csrf_token %}#}
-{#                                    <input type="submit" class="btn btn-primary" value="submit">#}
-{#                                </form>#}
-{#                </div>#}
-{#                        <form method="POST" enctype="multipart/form-data">#}
-{#                            {% csrf_token %}#}
-{##}
-{#                            {{ form.result_template_upload_field.label }}#}
-{#                            <br>#}
-{#                            {{ form.name }}#}
-{#                            lala{{ form }}lulu#}
-{#                            <input type="submit" value="Submit">#}
-{##}
-{#                        </form>#}
-{#                    </div>#}
-{#                </div>#}
-            </div>
-
-            <div class="col">
-                <img src="{% static 'images/import_export.png' %}" alt="" width="100%">
-                <p class="image_attribution"><a href="https://storyset.com/technology">Technology illustrations by
-                    Storyset</a>
                 </p>
-
             </div>
+
         </div>
+
+        <div class="col">
+            <img src="{% static 'images/import_export.png' %}" alt="" width="100%">
+            <p class="image_attribution"><a href="https://storyset.com/technology">Technology illustrations by
+                Storyset</a>
+            </p>
+
+        </div>
+    </div>
 
 
 {% endblock %}
