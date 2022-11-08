@@ -447,7 +447,7 @@ class ResultForm(forms.Form):
 
 
 class ResultTemplateUploadForm(forms.Form):
-    result_template_upload_field = forms.FileField(
+    result_template_upload_file = forms.FileField(
         label='Upload Excel File with your results',
         help_text='Please be sure to use the correct template and filetype (.xlsx)'
     )

@@ -6,19 +6,24 @@
 {% block content %}
 
     <div class="jumbotron">
-        <h1 class="display-4">Study data Import / Export</h1>
-  <div class="container-fluid">
-    <div class="row">
-      <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+        <h1 class="display-4">Study data Import</h1>
+        <div class="container-fluid">
+            <div class="row">
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div style="max-width:470px;">
+                    <form method='POST' enctype="multipart/form-data">
+                        {{ form.as_p }}
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-primary" value="submit">
+                    </form>
+                </div>
 
-          {{ form.result_template_upload_field.label }}
-          lala{{ form }}lulu
-          <input type="submit" value="Submit">
-
-      </form>
-    </div>
-
-  </div>
-    </div>
-        {% endblock %}
+            </div>
+        </div>
+{% endblock %}

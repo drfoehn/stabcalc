@@ -65,10 +65,10 @@ urlpatterns = [
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
 
-    path("import_export/<setting_pk>", views.import_export, name="import_export"),
-    path("import_export/lala/", views.import_test, name="import_test"),
-    path("import_export/<setting_pk>/export", views.result_template_download, name="export-xls-template"),
-    path("import_export/<setting_pk>/import", views.result_template_upload, name="import-xls-template"),
+    path("export/<setting_pk>", views.export_template, name="export_template_view"),
+    path("import_export/lala/", views.import_excel, name="import_test"),
+    path("export/<setting_pk>/export", views.result_template_download, name="export-xls-template"),
+    path("import", views.result_template_upload, name="import-xls-template"),
 
     path("download-xlsx/<setting_pk>", views.DownloadExcel, name="download-data"),
     # path("upload/", views.upload_view, name="upload"),

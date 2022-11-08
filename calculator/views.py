@@ -4,6 +4,7 @@ import pandas
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
+from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage, send_mail, BadHeaderError
 from django.forms import modelformset_factory  # is grey but still needed for the result_add_view
 from datetime import datetime
@@ -36,6 +37,8 @@ from openpyxl import Workbook, load_workbook  # Documentation at https://openpyx
 from openpyxl.cell import cell
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 from openpyxl.utils import get_column_letter
+from openpyxl.styles import PatternFill
+
 
 
 class ResultsView(DetailView):
@@ -1402,36 +1405,13 @@ def delete_result(request, pk):
 
 
 
-def import_export(request, setting_pk):
-        setting = Setting.objects.get(pk=setting_pk)
-        if not setting.owner == request.user:
-            return HttpResponseForbidden
-        else:
-            context = {
-                "setting": setting
-            }
-            return render(request, 'calculator/import_export.html', context)
-
-def result_template_upload(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = ResultTemplateUploadForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/')
-
-        # if a GET (or any other method) we'll create a blank form
-    else:
-        form = ResultTemplateUploadForm()
-
-    return render(request, 'calculator/import_export.html', form)
 
 
 
-def import_test(self):
+
+
+
+def import_excel(self):
     workbook = load_workbook('other_data/test.xlsx')
     print(workbook.sheetnames)
     ws1 = workbook['Basic Info']
@@ -1448,14 +1428,9 @@ def import_test(self):
         max_row = len(sh_content) + 1
         max_col = len(sh_content.columns)
 
-    print(max_row, max_col)
-    first_result_cell = ws2.cell(row=3, column=3)
-    last_result_cell = ws2.cell(row=max_row, column=max_col-1)
-    from openpyxl.utils.cell import coordinate_to_tuple
     for row in ws2.iter_rows(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
         print(row)
         for column in ws2.iter_cols(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
-            # result_col = get_column_letter(cell)
             print(column)
             for c in column:
                 if not setting_pk:
@@ -1463,19 +1438,18 @@ def import_test(self):
 
                 c_duration_pk = ws2.cell(row=2, column=c.column).value
                 c_subject_pk = ws2.cell(row=c.row, column=2).value
-                c_replicate = ws2.cell(row=c.row, column=3).value
                 c_value = c.value
 
                 if not c_value or not c_subject_pk or not c_duration_pk:
                     continue
-
-                print(c.column)
-                print(c.row)
-                print("owner: " + str(owner_pk))
-                print("setting: " + str(setting_pk))
-                print("value: " + str(c_value))
-                print("subject: " + str(c_subject_pk))
-                print("duration: " + str(c_duration_pk))
+                #
+                # print(c.column)
+                # print(c.row)
+                # print("owner: " + str(owner_pk))
+                # print("setting: " + str(setting_pk))
+                # print("value: " + str(c_value))
+                # print("subject: " + str(c_subject_pk))
+                # print("duration: " + str(c_duration_pk))
 
 
 
@@ -1489,53 +1463,58 @@ def import_test(self):
                 result_object.save()
 
     
-    # for col in ws2.CellRange [first_result_cell:last_result_cell]:
-    #     for cell in col:
-    #         print(cell.value)
-    # durations = ws2["C1:E1"]
-    # print(durations)
-    # for duration in durations:
-    #     print(str(duration))
-
-    # print("owner: " + str(owner_pk))
-    # print("setting: " + str(setting_pk))
-
-    # for duration in range(0, )
-
-
-    # result = Result.objects.create(
-    #     owner_id=owner_pk,
-    #     setting_id=setting_pk
-    #
-    # )
-    # print(result)
-
-
-
-
-    
-    return HttpResponseRedirect('/calculator/import_export/13')
+    # return HttpResponseRedirect('/calculator/import_export/13')
     #
     # with open('some/file/name.txt', 'wb+') as destination:
     #     for chunk in f.chunks():
     #         destination.write(chunk)
 
+def result_template_upload(request):
+    form = ResultTemplateUploadForm()
+    if request.method == 'POST' and request.FILES['result_template_upload_file']:
+        uploaded_file = request.FILES['result_template_upload_file']
+        import_excel(request.FILES[uploaded_file])
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        uploaded_File_Size = 'Size of Uploaded file: ' + str(uploaded_file.size)
+        content_type_of_uploaded_file = 'Content type of uploaded file: ' + str(uploaded_file.content_type)
+        uploaded_file_name = 'Name of Uploaded file: ' + str(uploaded_file.name)
+        uploaded_file_url = fs.url(filename)
+        print("uploaded file url", uploaded_file_url)
+        messages.success(request, '!!! File upload successful !!!')
+        messages.success(request, uploaded_File_Size)
+        messages.success(request, uploaded_file_name)
+        messages.success(request, content_type_of_uploaded_file)
 
-def result_template_upload(request, setting_pk):
-    if request.method == 'POST':
-        form = ResultTemplateUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            # form.save()
-            # df = pandas.read_excel(request.FILES)
-            # print(df)
-            import_test(request.FILES['uploaded_template'])
-            return HttpResponseRedirect('/')
+        return render(request, 'calculator/upload_form.html', {"form":form})
     else:
         form = ResultTemplateUploadForm()
-    return render(request, 'calculator/partials/upload_form.html', {'form': form})
+    return render(request, 'calculator/upload_form.html', {'form': form})
+
+
+    #     form = ResultTemplateUploadForm(request.POST, request.FILES)
+    #     if form.is_valid():
+    #         # form.save()
+    #         # df = pandas.read_excel(request.FILES)
+    #         # print(df)
+    #         import_excel(request.FILES['result_template_upload_file'])
+    #         return HttpResponseRedirect('/')
+    # else:
+    #     form = ResultTemplateUploadForm()
+    # return render(request, 'calculator/import_export.html', {'form': form})
 
 # -------------------------------------EXCEL Result Template Download ---------------------------------------
-from openpyxl.styles import PatternFill
+
+
+def export_template(request, setting_pk):
+    setting = Setting.objects.get(pk=setting_pk)
+    if not setting.owner == request.user:
+        return HttpResponseForbidden
+    else:
+        context = {
+            "setting": setting
+        }
+        return render(request, 'calculator/export_template.html', context)
 
 def result_template_download(request, setting_pk):
     exceltemplate = BytesIO()
