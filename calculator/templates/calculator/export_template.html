@@ -6,7 +6,7 @@
 {% block content %}
 
     <div class="jumbotron">
-        <h1 class="display-4">Download EXCEL-Template</h1>
+        <h1 class="display-4">Add Results</h1>
     </div>
     <div class="row">
         <div class="col">
@@ -38,6 +38,13 @@
                     You can upload the template with your results and all the data will be imported automatically.
 
                 </p>
+            </div>
+             <div>
+                <h4>
+                    3.)<a href="{% url 'import-xls-template' %}">Upload template with data</a>
+                </h4>
+                <br>
+<a href="{% url 'import_excel' %}">test</a>
             </div>
 
         </div>

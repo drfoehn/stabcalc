@@ -28,16 +28,8 @@
         {% for setting in settings %}
         <tr>
             <th id="table-dashboard-settingname"><a href="{% url 'create-setting' %}">{{ setting.name }}</a>
-                <hr>
 
-
-    <div class="display6"
-    {% if setting.result_set.count < 10 %}
-           onclick="alert10()"><a href="
-    {% else %}
-       ><a href="{% url 'results' setting.id %}
-        {% endif %}
-    ">Show statistical evaluation</a></div></th>
+            </th>
 
         <td id="table-dashboard-condition">
 
@@ -66,17 +58,25 @@
         <td  class="table-dashboard-td">{{ setting.subjects.count }}</td>
         <td  class="table-dashboard-td">{{ setting.results.count}}</td>
         <td>
-        <ul>
-           <li> <a href="{% url 'export_template_view' setting.pk %}">Add Results</a> <br></li>
-            <li><a href="{% url 'create-result' setting.pk %}">Edit Results</a> <br></li>
-            <li>{% if setting.result_set.count < 10 %}
-                   onclick="alert10()"><a href="
-            {% else %}
-               <a href="{% url 'results' setting.id %}
-                {% endif %}
-            ">Show statistical evaluation</a><br></li>
-            <li><a href="{% url 'download-data' setting.pk %}">Show Report</a> <br></li>
-        </ul>
+            <!-- Example single danger button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Action
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'export_template_view' setting.pk %}">Add Results</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'create-result' setting.pk %}">Edit Results</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <li>{% if setting.results.count < 10 or setting.subjects.count < 5  %}
+                        <element class="dropdown-item"onclick="alert10()">No Report available </element>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'results' setting.id %}">Show Report</a></li>
+                        {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'download-data' setting.pk %}">Download Data and Report</a></li>
+              </ul>
+            </div>
         </td>
     </tr>
     {% endfor %}
@@ -107,7 +107,7 @@
 
 <script type = "text/javascript">
             function alert10() {
-               alert ("Please insert at least 10 results for a statistical evaluation");
+               alert ("Please insert at least 10 results from 5 study subjects/samples for a statistical evaluation");
             }
       </script>
 

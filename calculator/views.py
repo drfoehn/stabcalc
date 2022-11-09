@@ -1428,42 +1428,45 @@ def import_excel(self):
         max_row = len(sh_content) + 1
         max_col = len(sh_content.columns)
 
-    for row in ws2.iter_rows(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
-        print(row)
-        for column in ws2.iter_cols(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
-            print(column)
-            for c in column:
-                if not setting_pk:
-                    break
-
-                c_duration_pk = ws2.cell(row=2, column=c.column).value
-                c_subject_pk = ws2.cell(row=c.row, column=2).value
-                c_value = c.value
-
-                if not c_value or not c_subject_pk or not c_duration_pk:
-                    continue
-                #
-                # print(c.column)
-                # print(c.row)
-                # print("owner: " + str(owner_pk))
-                # print("setting: " + str(setting_pk))
-                # print("value: " + str(c_value))
-                # print("subject: " + str(c_subject_pk))
-                # print("duration: " + str(c_duration_pk))
+    # for row in ws2.iter_rows(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
+    #     print(row)
+    for column in ws2.iter_cols(min_row=5, min_col=4, max_col=max_col-1, max_row=max_row):
+        # print(column)
+        for c in column:
+            if not setting_pk:
+                break
+            #
+            c_duration_pk = ws2.cell(row=2, column=c.column).value
+            c_subject_pk = ws2.cell(row=c.row, column=2).value
+            c_value = c.value
+            #
+            # if not c_value or not c_subject_pk or not c_duration_pk:
+            #     continue
 
 
 
-                result_object = Result(
-                    setting_id=setting_pk,
-                    duration_id=c_duration_pk,
-                    subject_id=c_subject_pk,
-                    value=c_value,
-                    owner_id=owner_pk
-                )
-                result_object.save()
+            # print(c.column)
+            # print(c.row)
+            # print("owner: " + str(owner_pk))
+            # print("setting: " + str(setting_pk))
+            # print("value: " + str(c_value))
+            # print("subject: " + str(c_subject_pk))
+            # print("duration: " + str(c_duration_pk))
 
-    
-    # return HttpResponseRedirect('/calculator/import_export/13')
+
+            # FIXME: Results get saved several times
+            # TODO: Check if results already exist and delete them before new import
+            result_object = Result(
+                setting_id=setting_pk,
+                duration_id=c_duration_pk,
+                subject_id=c_subject_pk,
+                value=c_value,
+                owner_id=owner_pk
+            )
+            result_object.save()
+
+    # return redirect('calculator/ )
+    return HttpResponseRedirect('/calculator/results/'+ str(setting_pk))
     #
     # with open('some/file/name.txt', 'wb+') as destination:
     #     for chunk in f.chunks():
