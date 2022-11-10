@@ -15,7 +15,8 @@
                 {% if messages %}
                     <ul>
                         {% for message in messages %}
-                            <li>{{ message }}</li>
+                            {{ message|safe }} <br>
+
                         {% endfor %}
                     </ul>
                 {% endif %}

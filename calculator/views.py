@@ -12,6 +12,7 @@ from wsgiref.util import FileWrapper
 import json
 from django.utils import timezone
 from django.urls import reverse_lazy
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from statsmodels.stats.power import TTestIndPower
 from django.views.generic import (
@@ -1412,7 +1413,7 @@ def delete_result(request, pk):
 
 
 def import_excel(self):
-    workbook = load_workbook('other_data/test.xlsx')
+    workbook = load_workbook(result_template_upload)
     print(workbook.sheetnames)
     ws1 = workbook['Basic Info']
     ws2 = workbook['Input results']
@@ -1478,18 +1479,82 @@ def result_template_upload(request):
     form = ResultTemplateUploadForm()
     if request.method == 'POST' and request.FILES['result_template_upload_file']:
         uploaded_file = request.FILES['result_template_upload_file']
-        import_excel(request.FILES[uploaded_file])
-        fs = FileSystemStorage()
-        filename = fs.save(uploaded_file.name, uploaded_file)
-        uploaded_File_Size = 'Size of Uploaded file: ' + str(uploaded_file.size)
-        content_type_of_uploaded_file = 'Content type of uploaded file: ' + str(uploaded_file.content_type)
-        uploaded_file_name = 'Name of Uploaded file: ' + str(uploaded_file.name)
-        uploaded_file_url = fs.url(filename)
-        print("uploaded file url", uploaded_file_url)
-        messages.success(request, '!!! File upload successful !!!')
-        messages.success(request, uploaded_File_Size)
-        messages.success(request, uploaded_file_name)
-        messages.success(request, content_type_of_uploaded_file)
+
+        workbook = load_workbook(uploaded_file)
+        print(workbook.sheetnames)
+        ws1 = workbook['Basic Info']
+        ws2 = workbook['Input results']
+        owner_pk = ws1['B18'].value
+        setting_pk = ws1["B19"].value
+        setting = Setting.objects.get(id=setting_pk)
+
+        # ----get last row and col from input sheet using pandas (openpyxl does not count empty cells)
+        resultfile = 'other_data/test.xlsx'
+        df = pandas.read_excel(resultfile, sheet_name=[1])
+        max_row = 1
+        max_col = 1
+        for sh_name, sh_content in df.items():
+            max_row = len(sh_content) + 1
+            max_col = len(sh_content.columns)
+
+        def save_results():
+            # ----Go through the Excel-File and save results to database/model
+            for column in ws2.iter_cols(min_row=5, min_col=4, max_col=max_col - 1, max_row=max_row):
+                # print(column)
+                for c in column:
+                    if not setting_pk:
+                        break
+
+                    c_duration_pk = ws2.cell(row=2, column=c.column).value
+                    c_subject_pk = ws2.cell(row=c.row, column=2).value
+                    c_value = c.value
+
+                    if not c_value or not c_subject_pk or not c_duration_pk:
+                        continue
+
+                    # print(c.column)
+                    # print(c.row)
+                    # print("owner: " + str(owner_pk))
+                    # print("setting: " + str(setting_pk))
+                    # print("value: " + str(c_value))
+                    # print("subject: " + str(c_subject_pk))
+                    # print("duration: " + str(c_duration_pk))
+
+                    result_object = Result(
+                        setting_id=setting_pk,
+                        duration_id=c_duration_pk,
+                        subject_id=c_subject_pk,
+                        value=c_value,
+                        owner_id=owner_pk
+                    )
+                    result_object.save()
+
+        # ---- Check if the setting already has existing results
+        if setting.results.exists():
+            # ---- Delete all existing results for this setting
+            for result in setting.results.all():
+                result.delete()
+            save_results()
+        else:
+            save_results()
+
+        # return HttpResponseRedirect('/calculator/results/' + str(setting_pk))
+        
+        
+        
+        
+        
+        
+
+        # import_excel(request.FILES[uploaded_file])
+        # fs = FileSystemStorage()
+        # filename = fs.save(uploaded_file.name, uploaded_file)
+        # uploaded_File_Size = 'Size of Uploaded file: ' + str(uploaded_file.size)
+        # content_type_of_uploaded_file = 'Content type of uploaded file: ' + str(uploaded_file.content_type)
+        # uploaded_file_name = 'Name of Uploaded file: ' + str(uploaded_file.name)
+        messages.success(request, 'Your file "' + str(uploaded_file.name) + '" (' + str(uploaded_file.size) + ' bytes) has been uploaded succesfully')
+        message = format_html('<br><a href="results/' + str(setting_pk) + '">Please click here for statistical evaluation of you data</a>')
+        messages.success(request, message)
 
         return render(request, 'calculator/upload_form.html', {"form":form})
     else:
