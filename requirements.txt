@@ -13,5 +13,5 @@ patsy
 django-guardian
 openpyxl
 django-environ
-plotly
 sklearn
+seaborn

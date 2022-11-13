@@ -103,8 +103,11 @@ class ResultsView(DetailView):
 
         lin_regr.fit(duration_arr, result_arr)
         prediction = lin_regr.predict(np.sort(duration_arr, axis=0))
-
-        r2_linregr = lin_regr.score(duration_arr, result_arr) * 100
+        intercept_lin = lin_regr.intercept_
+        r2_linregr = lin_regr.score(duration_arr, result_arr)
+        coeff_lin_1 = lin_regr.coef_[0][0]
+        context['r2_linregr'] = r2_linregr
+        context['eq_linregr'] = "y= storage duration * " + str(coeff_lin_1)
 
 
         # plt.scatter(duration_list, result_list)
@@ -113,9 +116,7 @@ class ResultsView(DetailView):
         # plt.show()
         # plt_lin = mplimage(kaka)
         # context["plt_lin"] = plt_lin
-        intercept_lin = lin_regr.intercept_
-        r2_linregr = lin_regr.score(duration_arr, result_arr)
-        coeff_lin_1 = lin_regr.coef_[0][0]
+
 
         deviation_array = pd.DataFrame(deviation_dict)
         deviation_array.index.name = "duration"
@@ -152,6 +153,9 @@ class ResultsView(DetailView):
         fig, ax = plt.subplots()
         sns.boxplot(x='Duration', y='Deviation', data=df, ax=ax)
         sns.regplot(x='Duration', y='Deviation', data=df, ax=ax, scatter=False)
+        ax.set_title('Linear Regression')
+        ax.set_xlabel("Storage Duration")
+        ax.set_ylabel("Deviation (PD%)")
         flike = BytesIO()
         fig.savefig(flike)
         b64 = base64.b64encode(flike.getvalue()).decode()

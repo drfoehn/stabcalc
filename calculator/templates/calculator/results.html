@@ -709,7 +709,7 @@
         {#    ######################################   Regression Graph   ##########################################}
         <hr>
         <h1 class="display-6">Regression Analysis</h1>
-    <img src='data:image/png;base64,{{ chart }}'>
+
 
         <div class="row">
 
@@ -719,34 +719,35 @@
                 {#                    --------------------Graph----------------#}
                 <div class="row">
                     <div class="col">
-                        <div id="linear_div"></div>
-                        <div class="sub-italic">
-                            Select area of interest with left click to zoom. Right-click to reset. <br>
-                            PD% = Percent deviation from baseline
-                        </div>
-                        <script type="text/javascript">
-
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Storage Duration', 'PD%'],
-                                    [0, 0],
-                                    {% for duration in setting.durations.all %}
-                                        {% deviation_tot setting duration as dev_tot %}
-                                        {% if dev_tot %}
-                                            [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
-                                        {% endif %}
-                                    {% endfor %}
-                                ]);
-
-                                var options = {
-                                    title: 'Parameter percent deviation (PD) at selected storage durations',
-                                    vAxis: {title: "PD%"},
-                                    hAxis: {
-                                        title: "Storage duration (hours)",
-                                        minValue: 0,
+                    <img src='data:image/png;base64,{{ chart }}'>
+{#                        <div id="linear_div"></div>#}
+{#                        <div class="sub-italic">#}
+{#                            Select area of interest with left click to zoom. Right-click to reset. <br>#}
+{#                            PD% = Percent deviation from baseline#}
+{#                        </div>#}
+{#                        <script type="text/javascript">#}
+{##}
+{#                            google.charts.load("current", {packages: ["corechart"]});#}
+{#                            google.charts.setOnLoadCallback(drawChart);#}
+{##}
+{#                            function drawChart() {#}
+{#                                var data = google.visualization.arrayToDataTable([#}
+{#                                    ['Storage Duration', 'PD%'],#}
+{#                                    [0, 0],#}
+{#                                    {% for duration in setting.durations.all %}#}
+{#                                        {% deviation_tot setting duration as dev_tot %}#}
+{#                                        {% if dev_tot %}#}
+{#                                            [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],#}
+{#                                        {% endif %}#}
+{#                                    {% endfor %}#}
+{#                                ]);#}
+{##}
+{#                                var options = {#}
+{#                                    title: 'Parameter percent deviation (PD) at selected storage durations',#}
+{#                                    vAxis: {title: "PD%"},#}
+{#                                    hAxis: {#}
+{#                                        title: "Storage duration (hours)",#}
+{#                                        minValue: 0,#}
                                         {#gridlines:#}
                                         {#    {multiple: 1,#}
                                         {#     units: {#}
@@ -754,28 +755,28 @@
                                         {#        seconds: {format: [/*format strings here*/]},#}
                                         {#            }#}
                                         {#    },#}
-                                    },
-                                    fontName: 'Ubuntu',
-                                    curveType: 'function',
-                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                    legend: 'top',
-                                    crosshair: {trigger: 'both', orientation: 'both'},
-                                    trendlines: {
-                                        0: {
-                                            type: 'linear',
-                                            visibleInLegend: false,
-                                            interpolateNulls: true,
-                                            tooltips: false
-                                        }
-                                    }
-                                };
-
-                                var chart = new google.visualization.ScatterChart(document.getElementById('linear_div'));
-                                chart.draw(data, options);
-
-
-                            }
-                        </script>
+{#                                    },#}
+{#                                    fontName: 'Ubuntu',#}
+{#                                    curveType: 'function',#}
+{#                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},#}
+{#                                    legend: 'top',#}
+{#                                    crosshair: {trigger: 'both', orientation: 'both'},#}
+{#                                    trendlines: {#}
+{#                                        0: {#}
+{#                                            type: 'linear',#}
+{#                                            visibleInLegend: false,#}
+{#                                            interpolateNulls: true,#}
+{#                                            tooltips: false#}
+{#                                        }#}
+{#                                    }#}
+{#                                };#}
+{##}
+{#                                var chart = new google.visualization.ScatterChart(document.getElementById('linear_div'));#}
+{#                                chart.draw(data, options);#}
+{##}
+{##}
+{#                            }#}
+{#                        </script>#}
                     </div>
                 </div>
                 {#                      --------------------Statistics--------------#}
@@ -789,22 +790,22 @@
                                     R<sup>2</sup>
                                 </td>
                                 <td class="calc_result">
-                                    {{ r_squared_lin | floatformat:4 }}
+                                    {{ r2_linregr | floatformat:4 }}
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="calc_result">
-                                    R<sup>2</sup> adjusted
-                                </td>
-                                <td class="calc_result">
-                                    {{ r_squared_lin_adj  | floatformat:4 }}
-                                </td>
-                            </tr>
+{#                            <tr>#}
+{#                                <td class="calc_result">#}
+{#                                    R<sup>2</sup> adjusted#}
+{#                                </td>#}
+{#                                <td class="calc_result">#}
+{#                                    {{ r_squared_lin_adj  | floatformat:4 }}#}
+{#                                </td>#}
+{#                            </tr>#}
                             <tr>
                                 <td class="calc_result">Stability equation: <br></td>
                             </tr>
                             <tr>
-                                <td class="calc_result">{{ eq_model_lin }} <br></td>
+                                <td class="calc_result">{{ eq_linregr }} <br></td>
                             </tr>
                             <tr>
                                 <td class="sub-italic">
