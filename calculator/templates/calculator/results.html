@@ -709,6 +709,8 @@
         {#    ######################################   Regression Graph   ##########################################}
         <hr>
         <h1 class="display-6">Regression Analysis</h1>
+    <img src='data:image/png;base64,{{ chart }}'>
+
         <div class="row">
 
             {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
@@ -1547,21 +1549,22 @@
                         <tr>
                             <th scope="row" rowspan="2">{{ subject }}</th>
                             {% for duration in setting.durations.all %}
-                                {% cv_max_abs_high duration setting as cv_max_abs_high%}
-                                {% cv_max_abs_low duration setting as cv_max_abs_low%}
+{#                                TODO: Does not work for integers for some reason - also in very low numbers (i.e. 0,6 mg/dl) the cvs are always >5%#}
+{#                                {% cv_max_abs_high duration setting as cv_max_abs_high%}#}
+{#                                {% cv_max_abs_low duration setting as cv_max_abs_low%}#}
                                 <td >
 
 
                                     {% for result in subject.result_set.all %}
                                         {% if result.duration == duration %}
                                             {% if result.setting == setting %}
-                                                {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}
-                                                <span style="color: red">
-                                                {{ result.value }} {{ setting.parameter.unit }} <br>
-                                                    </span>
-                                                    {% else %}
+{#                                                {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}#}
+{#                                                <span style="color: red">#}
+{#                                                {{ result.value }} {{ setting.parameter.unit }} <br>#}
+{#                                                    </span>#}
+{#                                                    {% else %}#}
                                                     {{ result.value }} {{ setting.parameter.unit }} <br>
-                                                {% endif %}
+{#                                                {% endif %}#}
                                             {% endif %}
                                         {% endif %}
                                         {##}

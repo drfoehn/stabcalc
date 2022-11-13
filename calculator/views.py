@@ -1,3 +1,4 @@
+import base64
 from tempfile import NamedTemporaryFile
 
 import pandas
@@ -12,6 +13,7 @@ from wsgiref.util import FileWrapper
 import json
 from django.utils import timezone
 from django.urls import reverse_lazy
+
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from statsmodels.stats.power import TTestIndPower
@@ -29,6 +31,13 @@ from .models import *
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import plotly.express as px
+import plotly.graph_objects as go
+import seaborn as sns
+import sklearn
+from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 import math
 from patsy.highlevel import dmatrices
@@ -72,8 +81,43 @@ class ResultsView(DetailView):
                     if setting == self.object:
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 
-        deviation_array = pd.DataFrame(deviation_dict)
+        # ----- trasform deviation-Dictionary into 2D-Array for SKLearn
 
+        duration_list=[]
+        result_list = []
+        for key, value in deviation_dict.items():
+            for duration, result in value.items():
+                if duration == None or result == None:
+                    pass
+                else:
+                    duration_list.append(duration/3600)
+                    result_list.append(result)
+
+
+        result_arr = np.array(result_list).reshape(-1,1)
+        duration_arr = np.array(duration_list).reshape(-1,1)
+
+        #---------Linear Regression with SKLearn
+
+        lin_regr = LinearRegression(fit_intercept=False, )
+
+        lin_regr.fit(duration_arr, result_arr)
+        prediction = lin_regr.predict(np.sort(duration_arr, axis=0))
+
+        r2_linregr = lin_regr.score(duration_arr, result_arr) * 100
+
+
+        # plt.scatter(duration_list, result_list)
+        # kaka = plt.plot(np.sort(duration_list, axis=0), prediction, label=r2_linregr)
+        # plt.legend()
+        # plt.show()
+        # plt_lin = mplimage(kaka)
+        # context["plt_lin"] = plt_lin
+        intercept_lin = lin_regr.intercept_
+        r2_linregr = lin_regr.score(duration_arr, result_arr)
+        coeff_lin_1 = lin_regr.coef_[0][0]
+
+        deviation_array = pd.DataFrame(deviation_dict)
         deviation_array.index.name = "duration"
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
@@ -97,6 +141,29 @@ class ResultsView(DetailView):
             else:
                 x_hour = x / 3600
             x1_rel_hours.append(x_hour)
+
+        stor_dur = x1_rel_hours
+        stor_dev = y_rel
+        zipped = list(zip(stor_dur, stor_dev))
+        df = pd.DataFrame(zipped, columns=['Duration', 'Deviation'])
+
+
+        sns.set_style('whitegrid')
+        fig, ax = plt.subplots()
+        sns.boxplot(x='Duration', y='Deviation', data=df, ax=ax)
+        sns.regplot(x='Duration', y='Deviation', data=df, ax=ax, scatter=False)
+        flike = BytesIO()
+        fig.savefig(flike)
+        b64 = base64.b64encode(flike.getvalue()).decode()
+        context['chart'] = b64
+        return context
+        
+        # plt.show()
+        # sns.boxplot(x='Duration', y='Deviation', data=df)
+        # plt.title('Title using Matplotlib Function')
+        #
+        # plt.show()
+
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
@@ -130,11 +197,24 @@ class ResultsView(DetailView):
         # -----------------------LINEAR----------------------------------------
 
         vars = ['value', 'seconds']
+        # print(merged_res_dur)
         merged_res_dur = merged_res_dur[vars]
+        # print(merged_res_dur)
         merged_res_dur = merged_res_dur.dropna()
-        y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
+        # print(merged_res_dur)
+        y=merged_res_dur['value']
+        X=merged_res_dur['seconds']
+
+        X = sm.add_constant(X)
+        # y, X = dmatrices('value~seconds', data=merged_res_dur, return_type='dataframe')
+
         mod = sm.OLS(y, X)  # Describe model
+        # mod = sm.OLS(formula="seconds ~ value", data=merged_res_dur)
         res = mod.fit()  # Fit model
+        # print(res.summary())
+
+
+
         context["statistics_extended_abs_lin"] = res.summary()
 
         r_squared_lin = res.rsquared
@@ -636,7 +716,7 @@ def DownloadExcel(request, setting_pk):
     ws3['A8'] = 'Standard deviation low'
     ws3['A9'] = 'Standard deviation high'
     ws3['A10'] = 'Coefficient of Variation (%)'
-    ws3['A11'] = 'Deviation from baseline (%)'
+    ws3['A11'] = 'Percent difference from baseline (%)'
 
     for count, duration in enumerate(setting.durations.all()):
         ws3.cell(row=7, column=count + 2).value = setting.average_tot(duration=duration)
