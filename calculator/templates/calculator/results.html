@@ -746,14 +746,16 @@
                 <br>
                 Stability equation: {{ eq_linregr }} <br>
                 <br>
+                Statistical Power: {{ power_lin }} <br>
+                <hr>
                 Maximal permissible error: <br>
                 <br>
-
-            </div>
             <div>
                 The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage<br>
                 RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours
             </div>
+            </div>
+
             {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
 
         </div>
@@ -772,14 +774,16 @@
                 <br>
                 Stability equation: {{ eq_polyregr }} <br>
                 <br>
+                Statistical Power: {{ power_poly }} <br>
+                <hr>
                 Maximal permissible error: <br>
                 <br>
-
-            </div>
             <div>
                 The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage<br>
                 RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours
             </div>
+            </div>
+
         </div>
     </div>
     <p></p>
@@ -837,185 +841,6 @@
                 }
             </script>
         </div>
-    </div>
-
-    {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
-    <div class="row">
-        <div class="col">
-            <p class="th_category_heading">Polynomial Model 2°</p>
-            <div class="row">
-                <div class="col">
-                    <div id="poly2_div"></div>
-                    <div class="sub-italic">
-                        Select area of interest with left click to zoom. Right-click to reset.<br>
-                        PD% = Percent deviation from baseline
-                    </div>
-
-                    <script type="text/javascript">
-                        google.charts.load("current", {packages: ["corechart"]});
-                        google.charts.setOnLoadCallback(drawChart);
-
-                        function drawChart() {
-                            var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'PD%'],
-                                [0, 0],
-                                {% for duration in setting.durations.all %}
-                                    {% deviation_tot setting duration as dev_tot %}
-                                    {% if dev_tot %}
-                                        [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
-                                    {% endif %}
-                                {% endfor %}
-                            ]);
-
-                            var options = {
-                                title: 'Parameter deviation at selected storage durations',
-                                vAxis: {title: "PD%"},
-                                hAxis: {title: "Storage duration (hours)"},
-                                legend: 'top',
-                                fontName: 'Ubuntu',
-                                curveType: 'function',
-                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                crosshair: {trigger: 'both', orientation: 'both'},
-                                trendlines: {
-                                    0: {
-                                        type: 'polynomial',
-                                        degree: 2,
-                                        visibleInLegend: false,
-                                        interpolateNulls: true,
-                                    }
-                                }
-                            };
-
-                            var chart = new google.visualization.ScatterChart(document.getElementById('poly2_div'));
-                            chart.draw(data, options);
-                        }
-                    </script>
-                </div>
-            </div>
-            {#                      --------------------Statistics--------------#}
-            <div class="row">
-                <div class="col">
-                    <table>
-                        <tr>
-                            <td class="calc_result">R<sup>2</sup></td>
-                            <td class="calc_result">{{ r_squared_poly2 |floatformat:4 }}</td>
-                        </tr>
-                        <tr>
-                            <td class="calc_result">
-                                Stability equation
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td class="calc_result">
-                                {{ eq_model_poly2 }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <hr>
-                                y...Testresult (dependent variable) <br>
-                                x1...Timepoint (independent variable) <br>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-            </div>
-
-
-        </div>
-
-
-        {#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
-
-
-        <div class="col">
-            <p class="th_category_heading">Ploynomial Model 3° (Cubic)</p>
-            <div class="row">
-                <div class="col">
-                    <div id="poly3_div"></div>
-                    <div class="sub-italic">
-                        Select area of interest with left click to zoom. Right-click to reset.<br>
-                        PD% = Percent deviation from baseline
-                    </div>
-
-                    <script type="text/javascript">
-                        google.charts.load("current", {packages: ["corechart"]});
-                        google.charts.setOnLoadCallback(drawChart);
-
-                        function drawChart() {
-                            var data = google.visualization.arrayToDataTable([
-                                ['Storage Duration', 'PD%'],
-                                [0, 0],
-                                {% for duration in setting.durations.all %}
-                                    {% deviation_tot setting duration as dev_tot %}
-                                    {% if dev_tot %}
-                                        [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
-                                    {% endif %}
-                                {% endfor %}
-
-
-                            ]);
-
-                            var options = {
-                                title: 'Parameter deviation at selected storage durations',
-                                vAxis: {title: "PD%"},
-                                hAxis: {title: "Storage duration (hours)"},
-                                legend: 'top',
-                                fontName: 'Ubuntu',
-                                curveType: 'function',
-                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                crosshair: {trigger: 'both', orientation: 'both'},
-                                trendlines: {
-                                    0: {
-                                        type: 'polynomial',
-                                        degree: 3,
-                                        visibleInLegend: false,
-                                        interpolateNulls: true,
-                                    }
-                                }
-                            };
-
-                            var chart = new google.visualization.ScatterChart(document.getElementById('poly3_div'));
-                            chart.draw(data, options);
-                        }
-                    </script>
-                </div>
-            </div>
-            {#                      --------------------Statistics--------------#}
-            <div class="row">
-                <div class="col">
-                    <table>
-                        <tr>
-                            <td class="calc_result">R<sup>2</sup></td>
-                            <td class="calc_result">{{ r_squared_poly3 |floatformat:4 }}</td>
-                        </tr>
-                        <tr>
-                            <td class="calc_result">
-                                Stability equation
-                            </td>
-
-                        </tr>
-                        <tr>
-                            <td class="calc_result">
-                                {{ eq_model_poly3 }}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <hr>
-                                y...Testresult (dependent variable) <br>
-                                x1...Timepoint (independent variable) <br>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-
-        </div>
-    </div>
     </div>
 
     {#-----------------------------Maximum permissible error Calculator-------------------------#}

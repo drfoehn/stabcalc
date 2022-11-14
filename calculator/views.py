@@ -502,7 +502,8 @@ class ResultsView(DetailView):
         ###################################  Power Analysis #########################################
 
         #  ---------------- power analysis - linear regression
-        effect_lin = r_squared_lin
+        effect_lin = r2_linregr
+        effect_poly = r2_polyregr
         effect_log = r_squared_log
         alpha = 0.05
         nobs = Subject.objects.filter(settings__in=[self.object]).count()
@@ -510,9 +511,11 @@ class ResultsView(DetailView):
         # perform power analysis
         analysis = TTestIndPower()
         power_lin = analysis.solve_power(effect_lin, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
+        power_poly = analysis.solve_power(effect_poly, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
         power_log = analysis.solve_power(effect_log, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
 
         context["power_lin"] = round(power_lin, 2)
+        context["power_poly"] = round(power_poly, 2)
         context["power_log"] = round(power_log, 2)
 
         power_lin_est = []
