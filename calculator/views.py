@@ -36,8 +36,10 @@ from matplotlib.figure import Figure
 import plotly.express as px
 import plotly.graph_objects as go
 import seaborn as sns
+import seaborn.objects as so
 import sklearn
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures, SplineTransformer
 import statsmodels.api as sm
 import math
 from patsy.highlevel import dmatrices
@@ -94,28 +96,9 @@ class ResultsView(DetailView):
                     result_list.append(result)
 
 
-        result_arr = np.array(result_list).reshape(-1,1)
-        duration_arr = np.array(duration_list).reshape(-1,1)
+        # result_arr = np.array(result_list).reshape(-1,1)
+        # duration_arr = np.array(duration_list).reshape(-1,1)
 
-        #---------Linear Regression with SKLearn
-
-        lin_regr = LinearRegression(fit_intercept=False, )
-
-        lin_regr.fit(duration_arr, result_arr)
-        prediction = lin_regr.predict(np.sort(duration_arr, axis=0))
-        intercept_lin = lin_regr.intercept_
-        r2_linregr = lin_regr.score(duration_arr, result_arr)
-        coeff_lin_1 = lin_regr.coef_[0][0]
-        context['r2_linregr'] = r2_linregr
-        context['eq_linregr'] = "y= storage duration * " + str(coeff_lin_1)
-
-
-        # plt.scatter(duration_list, result_list)
-        # kaka = plt.plot(np.sort(duration_list, axis=0), prediction, label=r2_linregr)
-        # plt.legend()
-        # plt.show()
-        # plt_lin = mplimage(kaka)
-        # context["plt_lin"] = plt_lin
 
 
         deviation_array = pd.DataFrame(deviation_dict)
@@ -123,9 +106,9 @@ class ResultsView(DetailView):
 
         # https://www.delftstack.com/howto/python-pandas/how-to-iterate-through-rows-of-a-dataframe-in-pandas/
 
-        #################################### VARIABLES ######################################
 
-        # ---------------------------Relative Deviation from Baseline
+
+        # ------------Relative Deviation from Baseline
         y_rel = []
         x1_rel = []
         for (duration, results) in deviation_array.iterrows():
@@ -143,34 +126,114 @@ class ResultsView(DetailView):
                 x_hour = x / 3600
             x1_rel_hours.append(x_hour)
 
+        #------preparing data for regression analysis and plotting
         stor_dur = x1_rel_hours
+        stor_dur_arr = np.array(stor_dur).reshape(-1,1)
         stor_dev = y_rel
-        zipped = list(zip(stor_dur, stor_dev))
-        df = pd.DataFrame(zipped, columns=['Duration', 'Deviation'])
+        stor_dev_arr = np.array(stor_dev).reshape(-1, 1)
+        zipped_lin = list(zip(stor_dur, stor_dev))
+        df_lin = pd.DataFrame(zipped_lin, columns=['Duration', 'Deviation'])
+
+        stor_dur_square = []
+        for dur in stor_dur:
+            dur_square = dur**2
+            stor_dur_square.append(dur_square)
+
+        zipped_poly = list(zip(stor_dur_square, stor_dev))
+        df_poly = pd.DataFrame(zipped_poly, columns=['Duration', 'Deviation'])
 
 
+        # ---------Linear Regression with SKLearn
+        lin_regr = LinearRegression(fit_intercept=False)
+        lin_regr.fit(stor_dur_arr, stor_dev_arr)
+        prediction = lin_regr.predict(np.sort(stor_dur_arr, axis=0))
+        intercept_lin = lin_regr.intercept_
+        r2_linregr = lin_regr.score(stor_dur_arr, stor_dev_arr)
+        coeff_lin_1 = round(lin_regr.coef_[0][0], 2)
+        context['r2_linregr'] = r2_linregr
+        context['eq_linregr'] = "PD% = " + str(coeff_lin_1) + "* storage duration"
+
+
+        #-------------Linear regression Graph
         sns.set_style('whitegrid')
-        fig, ax = plt.subplots()
-        sns.boxplot(x='Duration', y='Deviation', data=df, ax=ax)
-        sns.regplot(x='Duration', y='Deviation', data=df, ax=ax, scatter=False)
-        ax.set_title('Linear Regression')
-        ax.set_xlabel("Storage Duration")
-        ax.set_ylabel("Deviation (PD%)")
-        flike = BytesIO()
-        fig.savefig(flike)
-        b64 = base64.b64encode(flike.getvalue()).decode()
-        context['chart'] = b64
-        return context
-        
-        # plt.show()
-        # sns.boxplot(x='Duration', y='Deviation', data=df)
-        # plt.title('Title using Matplotlib Function')
-        #
+        lin_plot = sns.lmplot(x='Duration', y='Deviation', data=df_lin)
+        lin_plot_file = BytesIO()
+        lin_plot.figure.savefig(lin_plot_file, format='png')
+        b64 = base64.b64encode(lin_plot_file.getvalue()).decode()
+        context['chart_lin'] = b64
+
+
+   
+
+
+        # sns.regplot().add(so.Line(), so.PolyFit())
+        # lin_plot_file = BytesIO()
+        # lin_plot.figure.savefig(lin_plot_file, format='png')
+        # b64 = base64.b64encode(lin_plot_file.getvalue()).decode()
+        # fig, ax = plt.subplots()
+        # sns.boxplot(x='Duration', y='Deviation', data=df_lin, ax=ax)
+        # sns.regplot(x='Duration', y='Deviation', data=df_lin, ax=ax, scatter=False)
+        # ax.set_title('Linear Regression')
+        # ax.set_xlabel("Storage Duration")
+        # ax.set_ylabel("Deviation (PD%)")
+        # flike = BytesIO()
+        # fig.savefig(flike)
+        # b64 = base64.b64encode(flike.getvalue()).decode()
+
+        # context['chart_lin'] = b64
+
+
+        # ---------Polynomial Regression 2nd° with SKLearn
+        poly = PolynomialFeatures(degree=2, include_bias=False) # include_bias=False means that we deliberately want the y intercept (ß0) to be equal to 0
+        stor_dur_poly = poly.fit_transform(stor_dur_arr) # create x2 values from our x values
+        poly_regr = LinearRegression(fit_intercept=False)
+        poly_regr.fit(stor_dur_poly, stor_dev_arr)
+        prediction_poly = poly_regr.predict(np.sort(stor_dur_poly, axis=0))
+        intercept_poly = poly_regr.intercept_
+        r2_polyregr = poly_regr.score(stor_dur_poly, stor_dev_arr)
+        coeff_poly_1 = round(poly_regr.coef_[0][0], 2)
+        coeff_poly_2 = round(poly_regr.coef_[0][1], 2)
+        context['r2_polyregr'] = r2_polyregr
+        context['eq_polyregr'] = "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(coeff_poly_1) + "* storage duration"
+
+        #-------------Polynomial 2nd° regression Graph
+        sns.set_style('whitegrid')
+        poly_plot = sns.lmplot(x='Duration', y='Deviation', data=df_lin, order=2)
+        poly_plot_file = BytesIO()
+        poly_plot.figure.savefig(poly_plot_file, format='png')
+        b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
+        context['chart_poly'] = b64_poly
+
+        # x = [1, 2, 3]
+        # y = [3, 45, 5]
+        # z = np.polyfit(x, y, 2)
+        # print(z)
+        # coef = np.polyfit(x, y, 2)
+        # poly1d_fn = np.poly1d(coef)
+        # plt.plot(x, y, 'yo', x, poly1d_fn(x))
         # plt.show()
 
+        # sns.set_style('whitegrid')
+        # poly_plot = sns.lmplot(x='Duration', y='Deviation', data=df_poly)
+        # poly_plot_file = BytesIO()
+        # poly_plot.figure.savefig(poly_plot_file, format='png')
+        # b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
+        # sns.set_style('whitegrid')
+        # fig, ax = plt.subplots()
+        # sns.boxplot(x='Duration', y='Deviation', data=df_poly, ax=ax)
+        # sns.lmplot(x='Duration', y='Deviation', data=df_poly, order=2)
+        # ax.set_title('Polynomial Regression 2nd Degree')
+        # ax.set_xlabel("Storage Duration^2")
+        # ax.set_ylabel("Deviation (PD%)")
+        # flike_poly = BytesIO()
+        # fig.savefig(flike_poly)
+        # b64_poly = base64.b64encode(flike_poly.getvalue()).decode()
+        # context['chart_poly'] = b64_poly
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
+
+
         merged_res_dur = pd.merge(
             results_data,
             durations_data,
@@ -178,6 +241,7 @@ class ResultsView(DetailView):
             right_on="id",
             how="inner",
         )
+
 
         merged_res_dur['hours'] = (merged_res_dur['seconds'] / 3600)
         context["results_data222"] = merged_res_dur.to_html

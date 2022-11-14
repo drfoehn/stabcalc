@@ -436,6 +436,7 @@ th{
 .calc_result{
     font-size: large;
     font-weight: bold;
+    float: left
 }
 
 .modal-body-stat{
@@ -448,6 +449,10 @@ th{
 
 .cvs{
     color: var(--imperial-red);
+}
+
+.reg_image{
+    text-align: center;
 }
 
 /*---------------------ABOUT-PAGE---------------------*/

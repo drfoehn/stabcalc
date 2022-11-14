@@ -8,11 +8,14 @@
     <div class="jumbotron">
         <h1 class="display-4">Results - Stability study "{{ setting.name }}"</h1>
 
-            {#    --------------------------------BUTTONS--------------------------------#}
+        {#    --------------------------------BUTTONS--------------------------------#}
         <div class="col d-flex justify-content-end">
-            <a href="javascript:window.print()" class="bi bi-printer result_buttons" data-toggle="tooltip" data-placement="top" title="Print this page"></a>
-            <a href="{% url 'download-data' setting.pk %}" class="bi bi-box-arrow-down result_buttons" data-toggle="tooltip" data-placement="top" title="Download data"></a>
-            <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons" data-toggle="tooltip" data-placement="top" title="Add results"></a>
+            <a href="javascript:window.print()" class="bi bi-printer result_buttons" data-toggle="tooltip"
+               data-placement="top" title="Print this page"></a>
+            <a href="{% url 'download-data' setting.pk %}" class="bi bi-box-arrow-down result_buttons"
+               data-toggle="tooltip" data-placement="top" title="Download data"></a>
+            <a href="{% url 'create-result' setting.pk %}" class="bi bi-plus-circle result_buttons"
+               data-toggle="tooltip" data-placement="top" title="Add results"></a>
 
         </div>
         <hr class="my-4">
@@ -84,12 +87,12 @@
                                 {{ setting.condition.get_temperature_display }}
                             </td>
                         </tr>
-                    <tr>
-                        <th>Study design:</th>
-                        <td>
-                            {{ setting.get_design_type_display }}
-                        </td>
-                    </tr>
+                        <tr>
+                            <th>Study design:</th>
+                            <td>
+                                {{ setting.get_design_type_display }}
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -112,10 +115,10 @@
                                 <thead>
                                 <th class="th_category_heading" colspan="2">Analytical method</th>
                                 </thead>
-                            <tr>
-                                <th>Analytical Method</th>
-                                <td>{{ setting.parameter.analytical_method }}</td>
-                            </tr>
+                                <tr>
+                                    <th>Analytical Method</th>
+                                    <td>{{ setting.parameter.analytical_method }}</td>
+                                </tr>
                                 <tr>
                                     <th>Instrument:</th>
                                     <td>{{ setting.parameter.instrument }}</td>
@@ -138,10 +141,10 @@
                                     <th>Method Analytical Imprecision (Intra CV%)</th>
                                     <td>{{ setting.parameter.cv_a }} %</td>
                                 </tr>
-{#                                <tr>#}
-{#                                    <th>Method Inter CV%</th>#}
-{#                                    <td>{{ setting.parameter.CV_inter }} %</td>#}
-{#                                </tr>#}
+                                {#                                <tr>#}
+                                {#                                    <th>Method Inter CV%</th>#}
+                                {#                                    <td>{{ setting.parameter.CV_inter }} %</td>#}
+                                {#                                </tr>#}
 
                             </table>
                         </div>
@@ -154,36 +157,36 @@
                                     <th>Sample Type:</th>
                                     <td>{{ setting.sample.get_sample_type_display }}</td>
                                 </tr>
-                            {% if setting.sample.storage %}
+                                {% if setting.sample.storage %}
                                     <tr>
-                                    <th>Storage of blood as:</th>
-                                    <td>{{ setting.sample.get_storage_display}}</td>
+                                        <th>Storage of blood as:</th>
+                                        <td>{{ setting.sample.get_storage_display }}</td>
                                     </tr>
-                            {% endif %}
-                            {% if setting.sample.container_additive_other %}
-                                <tr>
-                                <th>Additive:</th>
-                                <td>
-                                    {{ setting.sample.container_additive_other }}
-                                </td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <th>Additive:</th>
-                                    <td>{{ setting.sample.get_container_additive_display }}</td>
-                                </tr>
-                            {% endif %}
+                                {% endif %}
+                                {% if setting.sample.container_additive_other %}
+                                    <tr>
+                                        <th>Additive:</th>
+                                        <td>
+                                            {{ setting.sample.container_additive_other }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <th>Additive:</th>
+                                        <td>{{ setting.sample.get_container_additive_display }}</td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
                                     <th>Container:</th>
                                     <td>Filling volume: {{ setting.sample.container_fillingvolume }} mL <br>
                                         {% if setting.sample.container_dimension_other %}
-                                        Dimension: {{ setting.sample.container_dimension_other }} <br>
-                                            {% else %}
+                                            Dimension: {{ setting.sample.container_dimension_other }} <br>
+                                        {% else %}
                                             Dimension: {{ setting.sample.get_container_dimension_display }} <br>
                                         {% endif %}
-                                    {% if setting.sample.container_material_other %}
-                                        Material: {{ setting.sample.container_material_other }} <br>
-                                            {% else %}
+                                        {% if setting.sample.container_material_other %}
+                                            Material: {{ setting.sample.container_material_other }} <br>
+                                        {% else %}
                                             Material: {{ setting.sample.get_container_material_display }} <br>
                                         {% endif %}
 
@@ -194,20 +197,20 @@
                                         {% endif %}
                                     </td>
                                 </tr>
-                            {% if setting.sample.sample_spike_text %}
-                                <tr>
-                                <th>Sample spiking</th>
-                                </tr>
+                                {% if setting.sample.sample_spike_text %}
                                     <tr>
-                                    <td colspan="2">{{ setting.sample.sample_spike_text }}</td>
+                                        <th>Sample spiking</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">{{ setting.sample.sample_spike_text }}</td>
                                     </tr>
                                 {% endif %}
-                            {% if setting.sample.sample_pool_text %}
-                                <tr>
-                                <th>Sample pooling</th>
-                                </tr>
+                                {% if setting.sample.sample_pool_text %}
                                     <tr>
-                                    <td colspan="2">{{ setting.sample.sample_pool_text }}</td>
+                                        <th>Sample pooling</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">{{ setting.sample.sample_pool_text }}</td>
                                     </tr>
                                 {% endif %}
                             </table>
@@ -227,14 +230,14 @@
                                         {{ setting.condition.get_temperature_display }}
                                     </td>
                                 </tr>
-                            {% if setting.condition.other_condition %}
+                                {% if setting.condition.other_condition %}
 
 
-                                <tr>
-                                    <th>Other condition</th>
-                                    <td>{{ setting.condition.other_condition }}</td>
-                                </tr>
-                            {% endif %}
+                                    <tr>
+                                        <th>Other condition</th>
+                                        <td>{{ setting.condition.other_condition }}</td>
+                                    </tr>
+                                {% endif %}
                                 <tr>
                                     <th colspan="2">Exposure/Contact during storage to...</th>
                                 </tr>
@@ -248,7 +251,7 @@
                                         {% endif %}
                                     </td>
                                 </tr>
-                            <tr>
+                                <tr>
                                     <th>...cells</th>
                                     <td>
                                         {% if setting.condition.cell == True %}
@@ -308,7 +311,8 @@
                                 <tr>
                                     <td>
                                         {% if setting.sample.preanalytical_set.transportation_method_other %}
-                                            Method: {{ setting.sample.preanalytical_set.transportation_method_other }}<br>
+                                            Method: {{ setting.sample.preanalytical_set.transportation_method_other }}
+                                            <br>
                                         {% else %}
                                             Method:
                                             {{ setting.sample.preanalytical_set.get_transportation_method_display }}<br>
@@ -336,13 +340,13 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                    <td>
-                                     {% if setting.freeze_thaw_cycles == '1' %}
-                                    Samples were thawed for the first time after freezing.
-                                        {% else %}
-                                        Samples were thawed and refrozen {{ setting.freeze_thaw_cycles }} times.
-                                    {% endif %}
-                                    </td>
+                                        <td>
+                                            {% if setting.freeze_thaw_cycles == '1' %}
+                                                Samples were thawed for the first time after freezing.
+                                            {% else %}
+                                                Samples were thawed and refrozen {{ setting.freeze_thaw_cycles }} times.
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>
@@ -350,13 +354,14 @@
                                         </td>
                                     </tr>
                                 {% endif %}
-                            {% if setting.sample.preanalytical_set.comment %}
+                                {% if setting.sample.preanalytical_set.comment %}
                                     <tr>
-                                    <th>Preanalytical comment</th>
-                                        </tr><tr>
-                                    <td>{{ setting.sample.preanalytical_set.comment }}</td>
+                                        <th>Preanalytical comment</th>
                                     </tr>
-                            {% endif %}
+                                    <tr>
+                                        <td>{{ setting.sample.preanalytical_set.comment }}</td>
+                                    </tr>
+                                {% endif %}
                             </table>
                         </div>
                         <div class="row">
@@ -404,237 +409,232 @@
         </div>
     </div>
 
-        <hr class="my-4">
+    <hr class="my-4">
 
 
-        {#    -----------------------------------Interpretation--------------------------------#}
-        <h1 class="display-6">Interpretation</h1>
+    {#    -----------------------------------Interpretation--------------------------------#}
+    <h1 class="display-6">Interpretation</h1>
 
-        <br>
-        {{ interpretation_dist }} <br>
-        The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the
-        analyte variability observed during sample storage.<br>
+    <br>
+    {{ interpretation_dist }} <br>
+    The model fitting best to your data is <strong>{{ best_fit_model }}</strong>, explaining {{ best_fit }} of the
+    analyte variability observed during sample storage.<br>
     <p></p>
 
 
     <div class="row">
-                            <div class="col">
+        <div class="col">
 
 
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                                        data-bs-target="#interpretModal">
-                                    Recommended interpretation / expression of results
-                                </button>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                    data-bs-target="#interpretModal">
+                Recommended interpretation / expression of results
+            </button>
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="interpretModal" tabindex="-1"
-                                     aria-labelledby="interpretModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="interpretModalLabel">Recommended interpretation / expression of results </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <ul>
-                                                    <li>
-                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a non-linear model,
-                                                        <br>indicate <strong>"Under these conditions, a non-linear increase/decrease in magnitude is observed"</strong>
-                                                    <p></p>
-                                                    </li>
-                                                    <li>
-                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a linear model, but in the maximum study time, a DP% above the maximum permissible error (MPE) is not reached,
-                                                        <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n (units) per hour is expected. In the time studied (indicate), the error due to loss of stability does not exceed the maximum permissible error criterion of x% (based on ...)".</strong>
-                                                    <p></p>
-                                                    </li>
-                                                    <li>
-                                                        If the result is an instability equation with statistical significance (p<0.05) and sufficient strength (R2>0.7), with a linear model,
-                                                        <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n (units) per hour is expected”</strong>
-                                                    <p></p>
-                                                    </li>
-                                                    <li>
-                                                        If the slope obtained is not significantly different from zero,
-                                                        <br>indicate, <strong>"Under these conditions and with this experimental design, no loss of stability is expècted up to XX hours".</strong>
-                                                    <p></p>
-                                                    </li>
-                                                    <li>
-                                                        If the slope obtained is significantly different from zero, but the R2 obtained is <0.7,
-                                                        <br>indicate <strong>"Under these conditions, a possible loss of stability effect is observed and needs to be confirmed".</strong>
-                                                    <p></p>
-                                                    </li>
-                                                </ul>
-                                           </div>
-                                        </div>
-                                    </div>
-                                </div>
-<p></p>
-
-                            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="interpretModal" tabindex="-1"
+                 aria-labelledby="interpretModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="interpretModalLabel">Recommended interpretation / expression of
+                                results </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                         </div>
+                        <div class="modal-body">
+                            <ul>
+                                <li>
+                                    If the result is an instability equation with statistical significance (p<0.05) and
+                                    sufficient strength (R2>0.7), with a non-linear model,
+                                    <br>indicate <strong>"Under these conditions, a non-linear increase/decrease in
+                                    magnitude is observed"</strong>
+                                    <p></p>
+                                </li>
+                                <li>
+                                    If the result is an instability equation with statistical significance (p<0.05) and
+                                    sufficient strength (R2>0.7), with a linear model, but in the maximum study time, a
+                                    DP% above the maximum permissible error (MPE) is not reached,
+                                    <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n
+                                    (units) per hour is expected. In the time studied (indicate), the error due to loss
+                                    of stability does not exceed the maximum permissible error criterion of x% (based on
+                                    ...)".</strong>
+                                    <p></p>
+                                </li>
+                                <li>
+                                    If the result is an instability equation with statistical significance (p<0.05) and
+                                    sufficient strength (R2>0.7), with a linear model,
+                                    <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n
+                                    (units) per hour is expected”</strong>
+                                    <p></p>
+                                </li>
+                                <li>
+                                    If the slope obtained is not significantly different from zero,
+                                    <br>indicate, <strong>"Under these conditions and with this experimental design, no
+                                    loss of stability is expècted up to XX hours".</strong>
+                                    <p></p>
+                                </li>
+                                <li>
+                                    If the slope obtained is significantly different from zero, but the R2 obtained is
+                                    <0.7,
+                                    <br>indicate <strong>"Under these conditions, a possible loss of stability effect is
+                                    observed and needs to be confirmed".</strong>
+                                    <p></p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p></p>
+
+        </div>
+    </div>
 
 
 
     <img src="{% static 'images/icon/quote1.png' %}" alt="">
-        <span class="interpretation">
+    <span class="interpretation">
             {% if r_squared_lin > 0.7 and f_p_value < 0.05 %}
-            {{ interpretation_1 }}
-                {% else  %}
-            {{ interpretation_2 }}
+                {{ interpretation_1 }}
+            {% else %}
+                {{ interpretation_2 }}
             {% endif %}
-            <sup>*</sup></span>
+        <sup>*</sup></span>
     <img src="{% static 'images/icon/quote2.png' %}" alt="">
     <br><sup>*</sup> Valid for linear model only.
-    
-        <br>
-        <br>
-        <hr class="my-4">
+
+    <br>
+    <br>
+    <hr class="my-4">
 
 
-        {#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
+    {#-----------------------------------------OVERALL STATISTICS-----------------------------------------#}
 
-        <div class="row">
-            <div class="col">
-                <p class="th_category_heading">Data</p>
-                Number of Subjects: {{ subjects_n }}<br>
-                Number of tested storage durations: {{ durations_n }}<br>
-                Number of results: {{ results_n }}
-                <br>
-                <p></p>
-            </div>
-            <div class="col">
-                <p class="th_category_heading">Data Statistics</p>
-                Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
-                Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
-                {% if results_n < 20 %}
-                    Kurtosistest only valid for n>=20
-                {% else %}
-                    {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }}
-                {% endif %}
-            </div>
+    <div class="row">
+        <div class="col">
+            <p class="th_category_heading">Data</p>
+            Number of Subjects: {{ subjects_n }}<br>
+            Number of tested storage durations: {{ durations_n }}<br>
+            Number of results: {{ results_n }}
+            <br>
+            <p></p>
         </div>
+        <div class="col">
+            <p class="th_category_heading">Data Statistics</p>
+            Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
+            Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
+            {% if results_n < 20 %}
+                Kurtosistest only valid for n>=20
+            {% else %}
+                {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }}
+            {% endif %}
+        </div>
+    </div>
 
-        <br>
-        <hr class="my-4">
+    <br>
+    <hr class="my-4">
 
-        {#    ----------------------------------Google Charts ---------------------------------------#}
+    {#    ----------------------------------Google Charts ---------------------------------------#}
 
-        {#--------------------------------------Switch Graph Total Values------------------------------#}
-        <div class="row">
-            <div class="col-6">
+    {#--------------------------------------Switch Graph Total Values------------------------------#}
+    <div class="row">
+        <div class="col-6">
 
-                <p class="th_category_heading">Overall Results</p>
-                <div id="visualization"></div>
-                <div class="sub-italic">
-                    Select area of interest with left click to zoom. Right-click to reset.
-                </div>
-                <button id="button_results_total" class="btn btn-outline-primary">
-                    <p id="button_switch"></p></button>
-                <script>
-                    google.charts.load('current', {'packages': ['corechart']});
-                    google.charts.setOnLoadCallback(drawTotal);
-
-                    function drawTotal() {
-                        var rowData1 = [['Duration', 'Average PD%'],
-                            {% for duration in setting.durations.all %}
-                                ['{{ duration }}', {% deviation_tot setting duration %}],
-                            {% endfor %}];
-
-                        var rowData2 = [['Duration', 'Average absolute'],
-                            {% for duration in setting.durations.all %}
-                                ['{{ duration }}', {% average_tot setting duration %}],
-                            {% endfor %}];
-
-                        // Create and populate the data tables.
-                        var data = [];
-                        data[0] = google.visualization.arrayToDataTable(rowData1);
-                        data[1] = google.visualization.arrayToDataTable(rowData2);
-
-                        var options = {
-                            {#width: 600,#}
-                            {#height: 240,#}
-                            vAxis: {title: "abs / PD% Value"},
-                            hAxis: {title: "Storage duration"},
-                            seriesType: "line",
-                            fontName: 'Ubuntu',
-                            curveType: 'function',
-                            explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                            legend: {position: 'top'},
-                            interpolateNulls: true,
-                            {#series: {5: {type: "line"}},#}
-                            animation: {
-                                duration: 1000,
-                                easing: 'out'
-                            },
-                        };
-                        var current = 0;
-                        // Create and draw the visualization.
-                        var chart = new google.visualization.ComboChart(document.getElementById('visualization'));
-                        var button = document.getElementById('button_results_total');
-
-                        function drawChart() {
-                            // Disabling the button while the chart is drawing.
-                            button.disabled = true;
-                            google.visualization.events.addListener(chart, 'ready',
-                                function () {
-                                    button.disabled = false;
-                                    button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
-                                    button.innerHTML = button.value
-                                });
-
-                            options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
-
-                            chart.draw(data[current], options);
-                        }
-
-                        drawChart();
-
-                        button.onclick = function () {
-                            current = 1 - current;
-                            drawChart();
-                        }
-                    }
-                </script>
-
+            <p class="th_category_heading">Overall Results</p>
+            <div id="visualization"></div>
+            <div class="sub-italic">
+                Select area of interest with left click to zoom. Right-click to reset.
             </div>
-            {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
+            <button id="button_results_total" class="btn btn-outline-primary">
+                <p id="button_switch"></p></button>
+            <script>
+                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.setOnLoadCallback(drawTotal);
+
+                function drawTotal() {
+                    var rowData1 = [['Duration', 'Average PD%'],
+                        {% for duration in setting.durations.all %}
+                            ['{{ duration }}', {% deviation_tot setting duration %}],
+                        {% endfor %}];
+
+                    var rowData2 = [['Duration', 'Average absolute'],
+                        {% for duration in setting.durations.all %}
+                            ['{{ duration }}', {% average_tot setting duration %}],
+                        {% endfor %}];
+
+                    // Create and populate the data tables.
+                    var data = [];
+                    data[0] = google.visualization.arrayToDataTable(rowData1);
+                    data[1] = google.visualization.arrayToDataTable(rowData2);
+
+                    var options = {
+                        {#width: 600,#}
+                        {#height: 240,#}
+                        vAxis: {title: "abs / PD% Value"},
+                        hAxis: {title: "Storage duration"},
+                        seriesType: "line",
+                        fontName: 'Ubuntu',
+                        curveType: 'function',
+                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
+                        legend: {position: 'top'},
+                        interpolateNulls: true,
+                        {#series: {5: {type: "line"}},#}
+                        animation: {
+                            duration: 1000,
+                            easing: 'out'
+                        },
+                    };
+                    var current = 0;
+                    // Create and draw the visualization.
+                    var chart = new google.visualization.ComboChart(document.getElementById('visualization'));
+                    var button = document.getElementById('button_results_total');
+
+                    function drawChart() {
+                        // Disabling the button while the chart is drawing.
+                        button.disabled = true;
+                        google.visualization.events.addListener(chart, 'ready',
+                            function () {
+                                button.disabled = false;
+                                button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
+                                button.innerHTML = button.value
+                            });
+
+                        options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
+
+                        chart.draw(data[current], options);
+                    }
+
+                    drawChart();
+
+                    button.onclick = function () {
+                        current = 1 - current;
+                        drawChart();
+                    }
+                }
+            </script>
+
+        </div>
+        {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
 
-            <div class="col-6">
-                <p class="th_category_heading">Single Results</p>
-                <div id="visualization_single"></div>
-                <div class="sub-italic">
-                    Select area of interest with left click to zoom. Right-click to reset.
-                </div>
-                <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p>
-                </button>
-                <script>
-                    google.charts.load('current', {'packages': ['corechart']});
-                    google.charts.setOnLoadCallback(drawSingle);
+        <div class="col-6">
+            <p class="th_category_heading">Single Results</p>
+            <div id="visualization_single"></div>
+            <div class="sub-italic">
+                Select area of interest with left click to zoom. Right-click to reset.
+            </div>
+            <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p>
+            </button>
+            <script>
+                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.setOnLoadCallback(drawSingle);
 
-                    function drawSingle() {
-                        var rowData1 =
-                            [[
-                                'Storage Duration',
-                                {% for subject in subjects %}
-                                    '{{ subject }}',
-                                {% endfor %}
-                            ],
-                                {% for duration in setting.durations.all %}
-
-                                    [
-                                        '{{ duration }}',
-                                        {% for subject in subjects %}
-                                            {% deviation subject duration setting %},
-                                        {% endfor %}
-                                    ],
-
-                                {% endfor %}];
-
-
-                        var rowData2 = [[
+                function drawSingle() {
+                    var rowData1 =
+                        [[
                             'Storage Duration',
                             {% for subject in subjects %}
                                 '{{ subject }}',
@@ -645,489 +645,211 @@
                                 [
                                     '{{ duration }}',
                                     {% for subject in subjects %}
-                                        {% average subject duration setting %},
+                                        {% deviation subject duration setting %},
                                     {% endfor %}
                                 ],
 
                             {% endfor %}];
 
-                        // Create and populate the data tables.
-                        var data = [];
-                        data[0] = google.visualization.arrayToDataTable(rowData1);
-                        data[1] = google.visualization.arrayToDataTable(rowData2);
 
-                        var options = {
-                            {#width: 600,#}
-                            {#height: 240,#}
-                            vAxis: {title: "abs/rel Value"},
-                            hAxis: {title: "Storage duration"},
-                            seriesType: "line",
-                            curveType: 'function',
-                            fontName: 'Ubuntu',
-                            explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                            legend: {position: 'top'},
-                            interpolateNulls: true,
-                            {#series: {5: {type: "line"}},#}
-                            animation: {
-                                duration: 1000,
-                                easing: 'out'
-                            },
-                        };
-                        var current = 0;
-                        // Create and draw the visualization.
-                        var chart = new google.visualization.ComboChart(document.getElementById('visualization_single'));
-                        var button = document.getElementById('button_results_single');
+                    var rowData2 = [[
+                        'Storage Duration',
+                        {% for subject in subjects %}
+                            '{{ subject }}',
+                        {% endfor %}
+                    ],
+                        {% for duration in setting.durations.all %}
 
-                        function drawChart() {
-                            // Disabling the button while the chart is drawing.
-                            button.disabled = true;
-                            google.visualization.events.addListener(chart, 'ready',
-                                function () {
-                                    button.disabled = false;
-                                    button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
-                                    button.innerHTML = button.value
-                                });
+                            [
+                                '{{ duration }}',
+                                {% for subject in subjects %}
+                                    {% average subject duration setting %},
+                                {% endfor %}
+                            ],
 
-                            options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
+                        {% endfor %}];
 
-                            chart.draw(data[current], options);
-                        }
+                    // Create and populate the data tables.
+                    var data = [];
+                    data[0] = google.visualization.arrayToDataTable(rowData1);
+                    data[1] = google.visualization.arrayToDataTable(rowData2);
 
-                        drawChart();
+                    var options = {
+                        {#width: 600,#}
+                        {#height: 240,#}
+                        vAxis: {title: "abs/rel Value"},
+                        hAxis: {title: "Storage duration"},
+                        seriesType: "line",
+                        curveType: 'function',
+                        fontName: 'Ubuntu',
+                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
+                        legend: {position: 'top'},
+                        interpolateNulls: true,
+                        {#series: {5: {type: "line"}},#}
+                        animation: {
+                            duration: 1000,
+                            easing: 'out'
+                        },
+                    };
+                    var current = 0;
+                    // Create and draw the visualization.
+                    var chart = new google.visualization.ComboChart(document.getElementById('visualization_single'));
+                    var button = document.getElementById('button_results_single');
 
-                        button.onclick = function () {
-                            current = 1 - current;
-                            drawChart();
-                        }
+                    function drawChart() {
+                        // Disabling the button while the chart is drawing.
+                        button.disabled = true;
+                        google.visualization.events.addListener(chart, 'ready',
+                            function () {
+                                button.disabled = false;
+                                button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
+                                button.innerHTML = button.value
+                            });
+
+                        options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
+
+                        chart.draw(data[current], options);
                     }
-                </script>
+
+                    drawChart();
+
+                    button.onclick = function () {
+                        current = 1 - current;
+                        drawChart();
+                    }
+                }
+            </script>
 
 
+        </div>
+    </div>
+
+    {#    ######################################   Regression Graph   ##########################################}
+    <hr>
+    <h1 class="display-6">Regression Analysis</h1>
+
+
+    <div class="row">
+
+        {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_lin }}'>
+            </div>
+
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+            <div class="calc_result">
+                R<sup>2</sup> = {{ r2_linregr | floatformat:3 }} <br>
+                <br>
+                Stability equation: {{ eq_linregr }} <br>
+                <br>
+                Maximal permissible error: <br>
+                <br>
+
+            </div>
+            <div>
+                The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage<br>
+                RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours
+            </div>
+            {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
+
+        </div>
+        {#    ooooooooooooooooooooooooooo  Poly2nd ° Regression  ooooooooooooooooooooooooooooooooo#}
+
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_poly }}'>
+            </div>
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+            <div class="calc_result">
+                R<sup>2</sup> = {{ r2_polyregr | floatformat:3 }} <br>
+                <br>
+                Stability equation: {{ eq_polyregr }} <br>
+                <br>
+                Maximal permissible error: <br>
+                <br>
+
+            </div>
+            <div>
+                The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage<br>
+                RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours
             </div>
         </div>
+    </div>
+    <p></p>
 
-        {#    ######################################   Regression Graph   ##########################################}
-        <hr>
-        <h1 class="display-6">Regression Analysis</h1>
+    {#        ---------------------------- Power estimator graph---------------------------#}
+    <div class="row">
+        <div class="col">
+            <p class="th_category_heading">Power estimation</p>
+            <p>This graph shows you the number of subjects/observations you need to achieve the corresponding
+                statistical power, given the correlation of your data.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
 
+            <div id="power_linear_div"></div>
 
-        <div class="row">
+            <script type="text/javascript">
+                google.charts.load("current", {packages: ["corechart"]});
+                google.charts.setOnLoadCallback(drawChart);
 
-            {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
-            <div class="col">
-                <p class="th_category_heading">Linear Model</p>
-                {#                    --------------------Graph----------------#}
-                <div class="row">
-                    <div class="col">
-                    <img src='data:image/png;base64,{{ chart }}'>
-{#                        <div id="linear_div"></div>#}
-{#                        <div class="sub-italic">#}
-{#                            Select area of interest with left click to zoom. Right-click to reset. <br>#}
-{#                            PD% = Percent deviation from baseline#}
-{#                        </div>#}
-{#                        <script type="text/javascript">#}
-{##}
-{#                            google.charts.load("current", {packages: ["corechart"]});#}
-{#                            google.charts.setOnLoadCallback(drawChart);#}
-{##}
-{#                            function drawChart() {#}
-{#                                var data = google.visualization.arrayToDataTable([#}
-{#                                    ['Storage Duration', 'PD%'],#}
-{#                                    [0, 0],#}
-{#                                    {% for duration in setting.durations.all %}#}
-{#                                        {% deviation_tot setting duration as dev_tot %}#}
-{#                                        {% if dev_tot %}#}
-{#                                            [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],#}
-{#                                        {% endif %}#}
-{#                                    {% endfor %}#}
-{#                                ]);#}
-{##}
-{#                                var options = {#}
-{#                                    title: 'Parameter percent deviation (PD) at selected storage durations',#}
-{#                                    vAxis: {title: "PD%"},#}
-{#                                    hAxis: {#}
-{#                                        title: "Storage duration (hours)",#}
-{#                                        minValue: 0,#}
-                                        {#gridlines:#}
-                                        {#    {multiple: 1,#}
-                                        {#     units: {#}
-                                        {#        hours: {format: ['HH:mm']},#}
-                                        {#        seconds: {format: [/*format strings here*/]},#}
-                                        {#            }#}
-                                        {#    },#}
-{#                                    },#}
-{#                                    fontName: 'Ubuntu',#}
-{#                                    curveType: 'function',#}
-{#                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},#}
-{#                                    legend: 'top',#}
-{#                                    crosshair: {trigger: 'both', orientation: 'both'},#}
-{#                                    trendlines: {#}
-{#                                        0: {#}
-{#                                            type: 'linear',#}
-{#                                            visibleInLegend: false,#}
-{#                                            interpolateNulls: true,#}
-{#                                            tooltips: false#}
-{#                                        }#}
-{#                                    }#}
-{#                                };#}
-{##}
-{#                                var chart = new google.visualization.ScatterChart(document.getElementById('linear_div'));#}
-{#                                chart.draw(data, options);#}
-{##}
-{##}
-{#                            }#}
-{#                        </script>#}
-                    </div>
-                </div>
-                {#                      --------------------Statistics--------------#}
-                <div class="row">
-                    <div class="col">
-                        <br>
-                        <table>
-
-                            <tr>
-                                <td class="calc_result">
-                                    R<sup>2</sup>
-                                </td>
-                                <td class="calc_result">
-                                    {{ r2_linregr | floatformat:4 }}
-                                </td>
-                            </tr>
-{#                            <tr>#}
-{#                                <td class="calc_result">#}
-{#                                    R<sup>2</sup> adjusted#}
-{#                                </td>#}
-{#                                <td class="calc_result">#}
-{#                                    {{ r_squared_lin_adj  | floatformat:4 }}#}
-{#                                </td>#}
-{#                            </tr>#}
-                            <tr>
-                                <td class="calc_result">Stability equation: <br></td>
-                            </tr>
-                            <tr>
-                                <td class="calc_result">{{ eq_linregr }} <br></td>
-                            </tr>
-                            <tr>
-                                <td class="sub-italic">
-                                    <br>
-                                    y...Deviation (dependent variable) <br>
-                                    x1...Storage Duration in seconds (independent variable)
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="calc_result">
-                                <p></p>
-                                    <i>p</i>-value: {% if f_p_value < 0.0001 %}
-                                        < 0.0001
-                                    {% elif f_p_value >= 0.05  %}
-                                        Non-significant ({{ f_p_value | floatformat:4 }})
-                                        {% else %}
-                                        {{ f_p_value | floatformat:4 }}
-                                    {% endif %}
-                                </td>
-                            </tr><tr>
-                                <td>
-                                    <span class="sub-italic">Performed statistics: t-test <br>
-                                        Interpretation:
-                                        {% if f_p_value >= 0.05  %}
-                                        The hypothesis test is not significant - It is impossible to distinguish whether
-                                        there is no loss in {{ setting.parameter.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
-                                    {% else %}
-                                        The chance of the change in {{ setting.parameter.parameter.name }}-values
-                                        not being related to the storage time/condition is
-                                        {% if f_p_value < 0.0001 %}
-                                        < 0.01
-                                        {% else %}
-                                        {{ f_p_value_perc | floatformat:2 }}
-                                    {% endif %} %.
-                                    {% endif %}
-                                    </span>
-                                </td>
-                            </tr>
-                        <tr>
-                            <td class="calc_result">Maximal permissible error:
-                                <br>
-                                The RCV-threshhold of {{ rcv}}, is surpassed after {{ rcv_mpe | floatformat:2 }} hours of storage</td>
-                            <td>RCV-MPE-ZERO: {{ rcv_mpe_zero | floatformat:2 }} hours</td>
-{#                            TODO: Which Regression-Equation should be used and how can it be forced through zero#}
-                        </tr>
-                        </table>
-                        {#                 ------------- Button-Extended Statictics ----------------#}
-                        <br>
-                        <div class="row">
-                            <div class="col">
+                function drawChart() {
+                    var data = google.visualization.arrayToDataTable([
+                        ['Samplesize', 'Power'],
+                        [0, 0],
 
 
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#linearModal">
-                                    Extended Statistics
-                                </button>
+                        {% for data_p in power_lin_est %}
+                            [{{ data_p.0 }}, {{ data_p.1 }}],
+                        {% endfor %}
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="linearModal" tabindex="-1"
-                                     aria-labelledby="linearModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="linearModalLabel">Stability study
-                                                    "{{ setting.name }}" <br> Extended Statistics - Linear model</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body-stat">
-                                                <pre style="font-family: monospace, monospace">{{ statistics_extended_abs_lin|safe }}</pre>
-                                            </div>
-                                            <div>
-                                                For an explanation of the numbers visit <a href="https://medium.com/swlh/interpreting-linear-regression-through-statsmodels-summary-4796d359035a">this link</a>.
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="javascript:window.print()" class="bi bi-printer print"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                    ]);
 
-
-                            </div>
-                        </div>
-
-                        <hr>
-                        {#         -------------------------Power-----------------------------------           #}
-                        <table>
-                            <tr>
-                                <td class="calc_result">
-
-                                    Power
-                                </td>
-                                <td class="calc_result">
-                                    {{ power_lin }}<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="sub-italic">
-                                    <br>
-                                    Alpha: 0.05 <br>
-                                    Effect-size: {{ r_squared_lin  | floatformat:4  }} <br>
-                                    Sample size: {{ subjects_n }}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <hr>
-
-
-            </div>
-            {#    ooooooooooooooooooooooooooo  Linear Regression Log transformed  ooooooooooooooooooooooooooooooooo#}
-
-            <div class="col">
-                <p class="th_category_heading">Log transformed model</p>
-                {#                    --------------------Graph----------------#}
-                <div class="row">
-                    <div class="col">
-                        <div id="log_div"></div>
-                        <div class="sub-italic">
-                            Select area of interest with left click to zoom. Right-click to reset.<br>
-                            PD% = Percent deviation from baseline
-                        </div>
-
-                        <script type="text/javascript">
-                            google.charts.load("current", {packages: ["corechart"]});
-                            google.charts.setOnLoadCallback(drawChart);
-
-                            function drawChart() {
-                                var data = google.visualization.arrayToDataTable([
-                                    ['Storage Duration', 'PD%'],
-                                    [0, 0],
-
-                                    {% for data in log_data %}
-                                        {{ data }},
-                                    {% endfor %}
-                                ]);
-
-                                var options = {
-
-                                    title: 'Parameter deviation at selected storage durations',
-                                    vAxis: {
-                                        title: "PD%",
-                                        minValue: 0,
-                                    },
-                                    hAxis: {
-                                        title: "Storage duration - log-seconds",
-                                        logscale: true,
-                                    },
-                                    legend: 'top',
-                                    {#fontsize: '10',#}
-                                    fontName: 'Ubuntu',
-                                    curveType: 'function',
-                                    explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                    crosshair: {trigger: 'both', orientation: 'both', color: '#e63'},
-                                    focusTarget: 'datum',
-                                    trendlines: {
-                                        0: {
-                                            type: 'exponential',
-                                            visibleInLegend: false,
-                                            interpolateNulls: true,
-                                        }
-                                    }
-                                };
-
-                                var chart = new google.visualization.ScatterChart(document.getElementById('log_div'));
-                                chart.draw(data, options);
+                    var options = {
+                        title: 'Estimation of samplesize, based on calculated effect size',
+                        vAxis: {title: "Power"},
+                        hAxis: {title: "Number of observations"},
+                        legend: 'top',
+                        crosshair: {trigger: 'both', orientation: 'both'},
+                        trendlines: {
+                            0: {
+                                type: 'polynomial',
+                                degree: 2,
+                                visibleInLegend: false,
+                                interpolateNulls: true,
+                                tooltips: false
                             }
-                        </script>
-                    </div>
-                </div>
-                {#                      --------------------Statistics--------------#}
-                <div class="row">
-                    <div class="col">
-                        <br>
-                        <table>
+                        }
+                    };
 
-                            <tr>
-                                <td class="calc_result">
-                                    R<sup>2</sup>
-                                </td>
-                                <td class="calc_result">
-                                    {{ r_squared_log | floatformat:4 }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="calc_result">
-                                    R<sup>2</sup> adjusted
-                                </td>
-                                <td class="calc_result">
-                                    {{ r_squared_log_adj  | floatformat:4 }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="calc_result">Stability equation: <br></td>
-                            </tr>
-                            <tr>
-                                <td class="calc_result">{{ eq_model_log }}<br></td>
-                            </tr>
-                            <tr>
-                                <td class="sub-italic">
-                                    <br>
-                                    y...Testresult (dependent variable) <br>
-                                    x...Storage Duration (independent variable)
-
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="calc_result">
-                                <p></p>
-                                    <i>p</i>-value: {% if f_p_log_value < 0.0001 %}
-                                        < 0.0001
-                                    {% elif f_p_log_value >= 0.05  %}
-                                        Non-significant ({{ f_p_log_value | floatformat:4 }})
-                                        {% else %}
-                                        {{ f_p_log_value | floatformat:4 }}
-                                    {% endif %}
-                                </td>
-                            </tr><tr>
-                                <td>
-                                    <span class="sub-italic">Performed statistics: t-test <br>
-                                    Interpretation:
-                                    {% if f_p_log_value >= 0.05  %}
-                                        The hypothesis test is not significant - It is impossible to distinguish whether
-                                        there is no loss in {{ setting.parameter.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
-                                    {% else %}
-                                        The chance of the change in {{ setting.parameter.parameter.name }}-values
-                                        not being related to the storage time/condition is
-                                        {% if f_p_log_value < 0.0001 %}
-                                        < 0.01
-                                        {% else %}
-                                        {{ f_p_log_value_perc | floatformat:2 }}
-                                    {% endif %} %.
-                                    {% endif %}</span>
-                                </td>
-                            </tr>
-                        </table>
-
-                        {#                 ------------- Button-Extended Statictics ----------------#}
-                        <br>
-                        <div class="row">
-                            <div class="col">
+                    var chart = new google.visualization.ScatterChart(document.getElementById('power_linear_div'));
+                    chart.draw(data, options);
 
 
-                                <!-- Button trigger modal -->
+                }
+            </script>
+        </div>
+    </div>
 
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#logModal">
-                                    Extended Statistics
-                                </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="logModal" tabindex="-1" aria-labelledby="logModalLabel"
-                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="logModalLabel">Stability study
-                                                    "{{ setting.name }}" <br> Extended Statistics - Logarithmic model
-                                                </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body-stat">
-                                                <pre style="font-family: monospace, monospace">{{ statistics_extended_log|safe }}</pre>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <a href="javascript:window.print()" class="bi bi-printer print"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <hr>
-                        {#         --------------------------------Power----------------------------           #}
-                        <table>
-                            <tr>
-                                <td class="calc_result">
-
-                                    Power
-                                </td>
-                                <td class="calc_result">
-                                    {{ power_log }}<br>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="sub-italic">
-                                    <br>
-                                    Alpha: 0.05 <br>
-                                    Effect-size: {{ r_squared_log   | floatformat:4  }} <br>
-                                    Sample size: {{ subjects_n }}
-                                </td>
-                            </tr>
-                        </table>
-
-
-                    </div>
-                </div>
-
-            </div>
-            <p></p>
-            <hr>
-            {#        ---------------------------- Power estimator graph---------------------------#}
+    {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
+    <div class="row">
+        <div class="col">
+            <p class="th_category_heading">Polynomial Model 2°</p>
             <div class="row">
                 <div class="col">
-                    <p class="th_category_heading">Power estimation</p>
-                    <p>This graph shows you the number of subjects/observations you need to achieve the corresponding
-                        statistical power, given the correlation of your data.</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-
-                    <div id="power_linear_div"></div>
+                    <div id="poly2_div"></div>
+                    <div class="sub-italic">
+                        Select area of interest with left click to zoom. Right-click to reset.<br>
+                        PD% = Percent deviation from baseline
+                    </div>
 
                     <script type="text/javascript">
                         google.charts.load("current", {packages: ["corechart"]});
@@ -1135,21 +857,24 @@
 
                         function drawChart() {
                             var data = google.visualization.arrayToDataTable([
-                                ['Samplesize', 'Power'],
+                                ['Storage Duration', 'PD%'],
                                 [0, 0],
-
-
-                                {% for data_p in power_lin_est %}
-                                    [{{ data_p.0 }}, {{ data_p.1 }}],
+                                {% for duration in setting.durations.all %}
+                                    {% deviation_tot setting duration as dev_tot %}
+                                    {% if dev_tot %}
+                                        [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
+                                    {% endif %}
                                 {% endfor %}
-
                             ]);
 
                             var options = {
-                                title: 'Estimation of samplesize, based on calculated effect size',
-                                vAxis: {title: "Power"},
-                                hAxis: {title: "Number of observations"},
+                                title: 'Parameter deviation at selected storage durations',
+                                vAxis: {title: "PD%"},
+                                hAxis: {title: "Storage duration (hours)"},
                                 legend: 'top',
+                                fontName: 'Ubuntu',
+                                curveType: 'function',
+                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
                                 crosshair: {trigger: 'both', orientation: 'both'},
                                 trendlines: {
                                     0: {
@@ -1157,450 +882,402 @@
                                         degree: 2,
                                         visibleInLegend: false,
                                         interpolateNulls: true,
-                                        tooltips: false
                                     }
                                 }
                             };
 
-                            var chart = new google.visualization.ScatterChart(document.getElementById('power_linear_div'));
+                            var chart = new google.visualization.ScatterChart(document.getElementById('poly2_div'));
                             chart.draw(data, options);
-
-
                         }
                     </script>
                 </div>
             </div>
-
-            {#    oooooooooooooooooooooooooooooooooooo  Polynomal Regression 2rd degree  oooooooooooooooooooooooooooooo#}
+            {#                      --------------------Statistics--------------#}
             <div class="row">
                 <div class="col">
-                    <p class="th_category_heading">Polynomial Model 2°</p>
-                    <div class="row">
-                        <div class="col">
-                            <div id="poly2_div"></div>
-                            <div class="sub-italic">
-                                Select area of interest with left click to zoom. Right-click to reset.<br>
-                                PD% = Percent deviation from baseline
-                            </div>
+                    <table>
+                        <tr>
+                            <td class="calc_result">R<sup>2</sup></td>
+                            <td class="calc_result">{{ r_squared_poly2 |floatformat:4 }}</td>
+                        </tr>
+                        <tr>
+                            <td class="calc_result">
+                                Stability equation
+                            </td>
 
-                            <script type="text/javascript">
-                                google.charts.load("current", {packages: ["corechart"]});
-                                google.charts.setOnLoadCallback(drawChart);
-
-                                function drawChart() {
-                                    var data = google.visualization.arrayToDataTable([
-                                        ['Storage Duration', 'PD%'],
-                                        [0, 0],
-                                        {% for duration in setting.durations.all %}
-                                            {% deviation_tot setting duration as dev_tot %}
-                                            {% if dev_tot %}
-                                                [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
-                                            {% endif %}
-                                        {% endfor %}
-                                    ]);
-
-                                    var options = {
-                                        title: 'Parameter deviation at selected storage durations',
-                                        vAxis: {title: "PD%"},
-                                        hAxis: {title: "Storage duration (hours)"},
-                                        legend: 'top',
-                                        fontName: 'Ubuntu',
-                                        curveType: 'function',
-                                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                        crosshair: {trigger: 'both', orientation: 'both'},
-                                        trendlines: {
-                                            0: {
-                                                type: 'polynomial',
-                                                degree: 2,
-                                                visibleInLegend: false,
-                                                interpolateNulls: true,
-                                            }
-                                        }
-                                    };
-
-                                    var chart = new google.visualization.ScatterChart(document.getElementById('poly2_div'));
-                                    chart.draw(data, options);
-                                }
-                            </script>
-                        </div>
-                    </div>
-                    {#                      --------------------Statistics--------------#}
-                    <div class="row">
-                        <div class="col">
-                            <table>
-                                <tr>
-                                    <td class="calc_result">R<sup>2</sup></td>
-                                    <td class="calc_result">{{ r_squared_poly2 |floatformat:4 }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="calc_result">
-                                        Stability equation
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td class="calc_result">
-                                        {{ eq_model_poly2 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <hr>
-                                        y...Testresult (dependent variable) <br>
-                                        x1...Timepoint (independent variable) <br>
-                                    </td>
-                                </tr>
-                            </table>
-
-                        </div>
-                    </div>
-
+                        </tr>
+                        <tr>
+                            <td class="calc_result">
+                                {{ eq_model_poly2 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr>
+                                y...Testresult (dependent variable) <br>
+                                x1...Timepoint (independent variable) <br>
+                            </td>
+                        </tr>
+                    </table>
 
                 </div>
+            </div>
 
 
-                {#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
+        </div>
 
 
+        {#     oooooooooooooooooooooooooooooooooooooo Polynomal Regression 3rd degree  ooooooooooooooooooooooooooooooooooo#}
+
+
+        <div class="col">
+            <p class="th_category_heading">Ploynomial Model 3° (Cubic)</p>
+            <div class="row">
                 <div class="col">
-                    <p class="th_category_heading">Ploynomial Model 3° (Cubic)</p>
-                    <div class="row">
-                        <div class="col">
-                            <div id="poly3_div"></div>
-                            <div class="sub-italic">
-                                Select area of interest with left click to zoom. Right-click to reset.<br>
-                                PD% = Percent deviation from baseline
-                            </div>
+                    <div id="poly3_div"></div>
+                    <div class="sub-italic">
+                        Select area of interest with left click to zoom. Right-click to reset.<br>
+                        PD% = Percent deviation from baseline
+                    </div>
 
-                            <script type="text/javascript">
-                                google.charts.load("current", {packages: ["corechart"]});
-                                google.charts.setOnLoadCallback(drawChart);
+                    <script type="text/javascript">
+                        google.charts.load("current", {packages: ["corechart"]});
+                        google.charts.setOnLoadCallback(drawChart);
 
-                                function drawChart() {
-                                    var data = google.visualization.arrayToDataTable([
-                                        ['Storage Duration', 'PD%'],
-                                    [0, 0],
-                                        {% for duration in setting.durations.all %}
-                                            {% deviation_tot setting duration as dev_tot %}
-                                            {% if dev_tot %}
-                                                [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
-                                            {% endif %}
-                                        {% endfor %}
+                        function drawChart() {
+                            var data = google.visualization.arrayToDataTable([
+                                ['Storage Duration', 'PD%'],
+                                [0, 0],
+                                {% for duration in setting.durations.all %}
+                                    {% deviation_tot setting duration as dev_tot %}
+                                    {% if dev_tot %}
+                                        [{{ duration.seconds | hours }}, {% deviation_tot setting duration %}],
+                                    {% endif %}
+                                {% endfor %}
 
 
-                                    ]);
+                            ]);
 
-                                    var options = {
-                                        title: 'Parameter deviation at selected storage durations',
-                                        vAxis: {title: "PD%"},
-                                        hAxis: {title: "Storage duration (hours)"},
-                                        legend: 'top',
-                                        fontName: 'Ubuntu',
-                                        curveType: 'function',
-                                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                                        crosshair: {trigger: 'both', orientation: 'both'},
-                                        trendlines: {
-                                            0: {
-                                                type: 'polynomial',
-                                                degree: 3,
-                                                visibleInLegend: false,
-                                                interpolateNulls: true,
-                                            }
-                                        }
-                                    };
-
-                                    var chart = new google.visualization.ScatterChart(document.getElementById('poly3_div'));
-                                    chart.draw(data, options);
+                            var options = {
+                                title: 'Parameter deviation at selected storage durations',
+                                vAxis: {title: "PD%"},
+                                hAxis: {title: "Storage duration (hours)"},
+                                legend: 'top',
+                                fontName: 'Ubuntu',
+                                curveType: 'function',
+                                explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
+                                crosshair: {trigger: 'both', orientation: 'both'},
+                                trendlines: {
+                                    0: {
+                                        type: 'polynomial',
+                                        degree: 3,
+                                        visibleInLegend: false,
+                                        interpolateNulls: true,
+                                    }
                                 }
-                            </script>
-                        </div>
-                    </div>
-                    {#                      --------------------Statistics--------------#}
-                    <div class="row">
-                        <div class="col">
-                            <table>
-                                <tr>
-                                    <td class="calc_result">R<sup>2</sup></td>
-                                    <td class="calc_result">{{ r_squared_poly3 |floatformat:4 }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="calc_result">
-                                        Stability equation
-                                    </td>
+                            };
 
-                                </tr>
-                                <tr>
-                                    <td class="calc_result">
-                                        {{ eq_model_poly3 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <hr>
-                                        y...Testresult (dependent variable) <br>
-                                        x1...Timepoint (independent variable) <br>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-
-
+                            var chart = new google.visualization.ScatterChart(document.getElementById('poly3_div'));
+                            chart.draw(data, options);
+                        }
+                    </script>
                 </div>
             </div>
-        </div>
+            {#                      --------------------Statistics--------------#}
+            <div class="row">
+                <div class="col">
+                    <table>
+                        <tr>
+                            <td class="calc_result">R<sup>2</sup></td>
+                            <td class="calc_result">{{ r_squared_poly3 |floatformat:4 }}</td>
+                        </tr>
+                        <tr>
+                            <td class="calc_result">
+                                Stability equation
+                            </td>
 
-        {#-----------------------------Maximum permissible error Calculator-------------------------#}
-        <div class="row">
-            <div class="col">
-                <hr>
-                <p class="th_category_heading">Calculate maximum permissible error (MPE)</p> <br>
+                        </tr>
+                        <tr>
+                            <td class="calc_result">
+                                {{ eq_model_poly3 }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <hr>
+                                y...Testresult (dependent variable) <br>
+                                x1...Timepoint (independent variable) <br>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
+
+
         </div>
+    </div>
+    </div>
+
+    {#-----------------------------Maximum permissible error Calculator-------------------------#}
+    <div class="row">
+        <div class="col">
+            <hr>
+            <p class="th_category_heading">Calculate maximum permissible error (MPE)</p> <br>
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             There are no explicit specifications for maximum permissible error (MPE) for pre-analytical deterioration,
             and in any case, they should be related to the quality specifications of the laboratory and the intended use
             of the results. <br>
-            In accordance with the analytical quality specifications, in the <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2015-0067/pdf">
-            1st Strategic Conference of the European Federation of Laboratory Medicine</a>, three models were defined for the choice of specifications:
+            In accordance with the analytical quality specifications, in the <a
+                href="https://www.degruyter.com/document/doi/10.1515/cclm-2015-0067/pdf">
+            1st Strategic Conference of the European Federation of Laboratory Medicine</a>, three models were defined
+            for the choice of specifications:
             <ul>
                 <li>the clinical impact,</li>
                 <li>biological variation,</li>
                 <li>and state of the art.</li>
-                </ul>
+            </ul>
             The following sources of biological variation data may be used:
-                <ul>
-                    <li><a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">
-            The EuBIVAS study</a></li>
-                    <li><a href="https://biologicalvariation.eu/">The EFLM Biological Variation Database</a></li>
-                </ul>
-      </div>
-    </div>
-        <hr>
-        <div class="row">
-            <div class="col">
-
-
-                <form>
-                    {% csrf_token %}
-                    <div class="form-row align-items-center">
-                        <div class="col-auto ">
-                            <label class="sr-only calc_result" for="inlineFormInput">Analytical Imprecision (Intra-Assay-CV) (CV<sub>a</sub>)
-                                of {{ setting.parameter.parameter.name }}:</label>
-                            {% if  setting.parameter.cv_a  %}
-                                <span class="calc_result cvs">{{ cv_a }} %</span><br>
-                                <span class="sub-italic">This value is derived from your input. You can change it in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
-                                {% else %}
-                                <span class="calc_result">Please enter a value in the Parameter <a href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
-                            {% endif %}
-                        <p></p>
-                        </div>
-                        <div class="col-auto">
-                            <label class="sr-only calc_result" for="inlineFormInput">Intra-Individual (Within-subject) Variation (CV<sub>i</sub>)
-                                of {{ setting.parameter.parameter.name }}: </label>
-                            <span class="calc_result cvs">{{ cv_i }} %</span><br>
-                             <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
-
-{#                            <input type="text" class="form-control mb-2" id="intra-cv"#}
-{#                                   placeholder="">#}
-                        </div>
-                        <br>
-                        <div class="col-auto">
-                            <label class="sr-only calc_result" for="inlineFormInput">Inter-Individual (Between-subject) Variation (CV<sub>g</sub>)
-                                of {{ setting.parameter.parameter.name }}</label>
-                            <span class="calc_result cvs">{{ cv_g }} %</span><br>
-                            <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
-{#                            <input type="text" class="form-control mb-2" id="inter-cv"#}
-{#                                   placeholder="">#}
-                        </div>
-{#                        <div class="col-auto">#}
-{#                            <button id="button_calc" value="here goes result" onclick="calcValue()"#}
-{#                                    class="btn btn-outline-primary">Calculate#}
-{#                            </button>#}
-{#                        </div>#}
-                    </div>
-                </form>
-            </div>
-
-            <div class="col">
-
-                <table>
-                    <tr>
-                        <th>
-                            <span class="calc_result">Reference Change Value (RCV): </span><br>
-                            <span class="sub-italic">Formula:  RCV = 2<sup>1/2</sup> * Z * (CV<sub>a</sub><sup>2</sup> + CV<sub>i</sub><sup>2</sup>)<sup>1/2</sup> <br></span>
-                        </th>
-                        <td>
-                            <span id="calc_result_rcv" class="calc_result cvs">{{ rcv }}&nbsp;%</span><br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sub-italic">
-                            Z is set to 1.96 to represent a significance level of 0.05 (two-sided p-value)<br>
-                            Reference: Fraser C.G. Clin Chem Lab Med 2012;50(5):807–812 doi:
-                            <a href="https://www.degruyter.com/document/doi/10.1515/CCLM.2011.733/html">10.1515/cclm-2011-733</a>
-                            <br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="calc_result">Allowable Deviation: </span><br>
-                            <span class="sub-italic">Formula: 0.5 * CV<sub>i</sub> </span><br>
-                        </th>
-                        <td>
-                            <span id="calc_result_allow" class="calc_result cvs">{{ allow_dev }}&nbsp;%</span><br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sub-italic">
-                            Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
-                            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
-                               target="_blank">10.1515/cclm-2019-0596</a>.
-                            PMID: 31702996.
-                            <br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="calc_result">Acceptable Deviation: </span><br>
-                            <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
-                        </th>
-                        <td>
-                            <span id="calc_result_accept" class="calc_result cvs">{{ accept_dev }}&nbsp;%</span><br>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sub-italic">
-                            Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
-                            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
-                               target="_blank">10.1515/cclm-2019-0596</a>.
-                            PMID: 31702996.
-                            <br/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="calc_result">Allowable Bias: </span><br>
-                            <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CV<sub>i</sub><sup>2</sup> + CV<sub>g</sub><sup>2</sup>)&nbsp;</span></span><br>
-                        </th>
-                        <td>
-                            <span id="calc_bias_allow" class="calc_result cvs">{{ allow_bias }}&nbsp;%</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sub-italic">
-                            Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
-                            <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
-                               target="_blank">10.1515/cclm-2019-0596</a>.
-                            PMID: 31702996.
-                            <br/>
-                        </td>
-                    </tr>
-                </table>
-
-            </div>
+            <ul>
+                <li><a href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">
+                    The EuBIVAS study</a></li>
+                <li><a href="https://biologicalvariation.eu/">The EFLM Biological Variation Database</a></li>
+            </ul>
         </div>
-
-
-        {#    ---------------------------------RESULT TABLE------------------------------#}
-        <h1 class="display-6">Single results</h1>
+    </div>
+    <hr>
     <div class="row">
         <div class="col">
-            {%  cv_max setting as cv_max %}
+
+
+            <form>
+                {% csrf_token %}
+                <div class="form-row align-items-center">
+                    <div class="col-auto ">
+                        <label class="sr-only calc_result" for="inlineFormInput">Analytical Imprecision (Intra-Assay-CV)
+                            (CV<sub>a</sub>)
+                            of {{ setting.parameter.parameter.name }}:</label>
+                        {% if  setting.parameter.cv_a %}
+                            <span class="calc_result cvs">{{ cv_a }} %</span><br>
+                            <span class="sub-italic">This value is derived from your input. You can change it in the Parameter <a
+                                    href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
+                        {% else %}
+                            <span class="calc_result">Please enter a value in the Parameter <a
+                                    href="{% url 'create-parameter' %}">settings of {{ setting.parameter.parameter.name }}</a></span>
+                        {% endif %}
+                        <p></p>
+                    </div>
+                    <div class="col-auto">
+                        <label class="sr-only calc_result" for="inlineFormInput">Intra-Individual (Within-subject)
+                            Variation (CV<sub>i</sub>)
+                            of {{ setting.parameter.parameter.name }}: </label>
+                        <span class="calc_result cvs">{{ cv_i }} %</span><br>
+                        <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a
+                                href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
+
+                        {#                            <input type="text" class="form-control mb-2" id="intra-cv"#}
+                        {#                                   placeholder="">#}
+                    </div>
+                    <br>
+                    <div class="col-auto">
+                        <label class="sr-only calc_result" for="inlineFormInput">Inter-Individual (Between-subject)
+                            Variation (CV<sub>g</sub>)
+                            of {{ setting.parameter.parameter.name }}</label>
+                        <span class="calc_result cvs">{{ cv_g }} %</span><br>
+                        <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a
+                                href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
+                        {#                            <input type="text" class="form-control mb-2" id="inter-cv"#}
+                        {#                                   placeholder="">#}
+                    </div>
+                    {#                        <div class="col-auto">#}
+                    {#                            <button id="button_calc" value="here goes result" onclick="calcValue()"#}
+                    {#                                    class="btn btn-outline-primary">Calculate#}
+                    {#                            </button>#}
+                    {#                        </div>#}
+                </div>
+            </form>
+        </div>
+
+        <div class="col">
+
+            <table>
+                <tr>
+                    <th>
+                        <span class="calc_result">Reference Change Value (RCV): </span><br>
+                        <span class="sub-italic">Formula:  RCV = 2<sup>1/2</sup> * Z * (CV<sub>a</sub><sup>2</sup> + CV<sub>i</sub><sup>2</sup>)<sup>1/2</sup> <br></span>
+                    </th>
+                    <td>
+                        <span id="calc_result_rcv" class="calc_result cvs">{{ rcv }}&nbsp;%</span><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sub-italic">
+                        Z is set to 1.96 to represent a significance level of 0.05 (two-sided p-value)<br>
+                        Reference: Fraser C.G. Clin Chem Lab Med 2012;50(5):807–812 doi:
+                        <a href="https://www.degruyter.com/document/doi/10.1515/CCLM.2011.733/html">10.1515/cclm-2011-733</a>
+                        <br/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="calc_result">Allowable Deviation: </span><br>
+                        <span class="sub-italic">Formula: 0.5 * CV<sub>i</sub> </span><br>
+                    </th>
+                    <td>
+                        <span id="calc_result_allow" class="calc_result cvs">{{ allow_dev }}&nbsp;%</span><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sub-italic">
+                        Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                        <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                           target="_blank">10.1515/cclm-2019-0596</a>.
+                        PMID: 31702996.
+                        <br/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="calc_result">Acceptable Deviation: </span><br>
+                        <span class="sub-italic">Formula: 0.7 * Allowable Deviation </span><br>
+                    </th>
+                    <td>
+                        <span id="calc_result_accept" class="calc_result cvs">{{ accept_dev }}&nbsp;%</span><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sub-italic">
+                        Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                        <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                           target="_blank">10.1515/cclm-2019-0596</a>.
+                        PMID: 31702996.
+                        <br/>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <span class="calc_result">Allowable Bias: </span><br>
+                        <span class="sub-italic">Formula: 0.25 * &radic;<span style="text-decoration:overline;">&nbsp;(CV<sub>i</sub><sup>2</sup> + CV<sub>g</sub><sup>2</sup>)&nbsp;</span></span><br>
+                    </th>
+                    <td>
+                        <span id="calc_bias_allow" class="calc_result cvs">{{ allow_bias }}&nbsp;%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="sub-italic">
+                        Reference: Pum JKW. CCLM. 2020 Jan 28;58(2):188-196. doi:
+                        <a href="https://www.degruyter.com/document/doi/10.1515/cclm-2019-0596/html"
+                           target="_blank">10.1515/cclm-2019-0596</a>.
+                        PMID: 31702996.
+                        <br/>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+
+
+    {#    ---------------------------------RESULT TABLE------------------------------#}
+    <h1 class="display-6">Single results</h1>
+    <div class="row">
+        <div class="col">
+            {% cv_max setting as cv_max %}
             {% if cv_max %}
-            <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>
+                <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>
             In case more than 5% of all results are outliers, the analytical performance should be reviwed in depth. <br>
             </span>
-            <span class="sub-italic">Definition of outliers: Greater than the 3-fold analytical-CV (According to your input: {% cv_max setting %} %)</span>
+                <span class="sub-italic">Definition of outliers: Greater than the 3-fold analytical-CV (According to your input: {% cv_max setting %} %)</span>
             {% else %}
                 <span class="calc_result">If you want outliers to be calculated (highly recommended), please indicate the analytical CV of your method in the
                 <a href="{% url 'create-parameter' %}">"Parameter"-Section</a></span>
             {% endif %}
-    <p></p>
+            <p></p>
         </div>
     </div>
-        <div class="row">
-            <div class="col">
-                <table class="table table-hover">
-                    <thead class="th_category_heading">
-                    <tr>
-                        <th scope="col">Subject</th>
-                        {% for duration in setting.durations.all %}
-                            <th>{{ duration.seconds | human_readable_seconds }}</th>
-                        {% endfor %}
+    <div class="row">
+        <div class="col">
+            <table class="table table-hover">
+                <thead class="th_category_heading">
+                <tr>
+                    <th scope="col">Subject</th>
+                    {% for duration in setting.durations.all %}
+                        <th>{{ duration.seconds | human_readable_seconds }}</th>
+                    {% endfor %}
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="total_results">
-                        <td>No of subjects: {{ subjects.count }}</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="total_results">
+                    <td>No of subjects: {{ subjects.count }}</td>
+                    {% for duration in setting.durations.all %}
+                        <td>
+                            <br>
+                            AVG Total: {% average_tot setting duration %} {{ setting.parameter.unit }}<br>
+                            SD Total: {% stdv_tot setting duration %} <br>
+                            CV Total: {% cv_tot setting duration %} %<br>
+                            Dev Total: {% deviation_tot setting duration %} %
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% for subject in subjects %}
+
+                    <tr>
+                        <th scope="row" rowspan="2">{{ subject }}</th>
                         {% for duration in setting.durations.all %}
+                            {#                                TODO: Does not work for integers for some reason - also in very low numbers (i.e. 0,6 mg/dl) the cvs are always >5%#}
+                            {#                                {% cv_max_abs_high duration setting as cv_max_abs_high%}#}
+                            {#                                {% cv_max_abs_low duration setting as cv_max_abs_low%}#}
                             <td>
-                                <br>
-                                AVG Total: {% average_tot setting duration %} {{ setting.parameter.unit }}<br>
-                                SD Total: {% stdv_tot setting duration %} <br>
-                                CV Total: {% cv_tot setting duration %} %<br>
-                                Dev Total: {% deviation_tot setting duration %} %
+
+
+                                {% for result in subject.result_set.all %}
+                                    {% if result.duration == duration %}
+                                        {% if result.setting == setting %}
+                                            {#                                                {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}#}
+                                            {#                                                <span style="color: red">#}
+                                            {#                                                {{ result.value }} {{ setting.parameter.unit }} <br>#}
+                                            {#                                                    </span>#}
+                                            {#                                                    {% else %}#}
+                                            {{ result.value }} {{ setting.parameter.unit }} <br>
+                                            {#                                                {% endif %}#}
+                                        {% endif %}
+                                    {% endif %}
+                                    {##}
+                                    {#                                        {% endif %}#}
+                                    {#                                    {% endfor %}#}
+                                {% endfor %}
+
                             </td>
                         {% endfor %}
                     </tr>
-                    {% for subject in subjects %}
+                    <tr>
 
-                        <tr>
-                            <th scope="row" rowspan="2">{{ subject }}</th>
-                            {% for duration in setting.durations.all %}
-{#                                TODO: Does not work for integers for some reason - also in very low numbers (i.e. 0,6 mg/dl) the cvs are always >5%#}
-{#                                {% cv_max_abs_high duration setting as cv_max_abs_high%}#}
-{#                                {% cv_max_abs_low duration setting as cv_max_abs_low%}#}
-                                <td >
+                        {% for duration in setting.durations.all %}
 
+                            <td>
+                                AVG: {% average subject duration setting %} {{ setting.parameter.unit }}<br>
+                                SD: {% stdv subject duration setting %}<br>
+                                CV: {% cv subject duration setting %}%<br>
+                                DEV: {% deviation subject duration setting %}%<br>
+                            </td>
+                        {% endfor %}
 
-                                    {% for result in subject.result_set.all %}
-                                        {% if result.duration == duration %}
-                                            {% if result.setting == setting %}
-{#                                                {% if result.value > cv_max_abs_high or result.value < cv_max_abs_low%}#}
-{#                                                <span style="color: red">#}
-{#                                                {{ result.value }} {{ setting.parameter.unit }} <br>#}
-{#                                                    </span>#}
-{#                                                    {% else %}#}
-                                                    {{ result.value }} {{ setting.parameter.unit }} <br>
-{#                                                {% endif %}#}
-                                            {% endif %}
-                                        {% endif %}
-                                        {##}
-                                        {#                                        {% endif %}#}
-                                        {#                                    {% endfor %}#}
-                                    {% endfor %}
+                        <td></td>
+                    </tr>
+                {% endfor %}
 
-                                </td>
-                            {% endfor %}
-                        </tr>
-                        <tr>
-
-                            {% for duration in setting.durations.all %}
-
-                                <td>
-                                    AVG: {% average subject duration setting %} {{ setting.parameter.unit }}<br>
-                                    SD: {% stdv subject duration setting %}<br>
-                                    CV: {% cv subject duration setting %}%<br>
-                                    DEV: {% deviation subject duration setting %}%<br>
-                                </td>
-                            {% endfor %}
-
-                            <td></td>
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
+                </tbody>
 
 
-                </table>
+            </table>
 
-
-            </div>
 
         </div>
+
+    </div>
 
 
 
