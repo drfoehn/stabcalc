@@ -151,7 +151,7 @@ class ResultsView(DetailView):
         r2_linregr = lin_regr.score(stor_dur_arr, stor_dev_arr)
         coeff_lin_1 = round(lin_regr.coef_[0][0], 2)
         context['r2_linregr'] = r2_linregr
-        context['eq_linregr'] = "PD% = " + str(coeff_lin_1) + "* storage duration"
+        context['eq_linregr'] = "PD% = " + str(coeff_lin_1) + " * storage duration"
 
 
         #-------------Linear regression Graph
@@ -204,31 +204,6 @@ class ResultsView(DetailView):
         b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
         context['chart_poly'] = b64_poly
 
-        # x = [1, 2, 3]
-        # y = [3, 45, 5]
-        # z = np.polyfit(x, y, 2)
-        # print(z)
-        # coef = np.polyfit(x, y, 2)
-        # poly1d_fn = np.poly1d(coef)
-        # plt.plot(x, y, 'yo', x, poly1d_fn(x))
-        # plt.show()
-
-        # sns.set_style('whitegrid')
-        # poly_plot = sns.lmplot(x='Duration', y='Deviation', data=df_poly)
-        # poly_plot_file = BytesIO()
-        # poly_plot.figure.savefig(poly_plot_file, format='png')
-        # b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
-        # sns.set_style('whitegrid')
-        # fig, ax = plt.subplots()
-        # sns.boxplot(x='Duration', y='Deviation', data=df_poly, ax=ax)
-        # sns.lmplot(x='Duration', y='Deviation', data=df_poly, order=2)
-        # ax.set_title('Polynomial Regression 2nd Degree')
-        # ax.set_xlabel("Storage Duration^2")
-        # ax.set_ylabel("Deviation (PD%)")
-        # flike_poly = BytesIO()
-        # fig.savefig(flike_poly)
-        # b64_poly = base64.b64encode(flike_poly.getvalue()).decode()
-        # context['chart_poly'] = b64_poly
 
         # ----------------------Absolute values
         # ----------------------Merge data absolute results + duration
@@ -573,14 +548,13 @@ class ResultsView(DetailView):
         context['accept_dev'] = round(accept_dev, 2)
         allow_bias = 0.25 * math.sqrt(cv_i ** 2 + cv_g ** 2)
         context['allow_bias'] = round(allow_bias, 2)
-        print(eq1)
-        print(rcv)
-        print(eq1[0], eq1[1])
-        rcv_mpe = ((rcv - eq1[0]) / eq1[1])
-        rcv_mpe_zero = ((rcv) / eq1[1])  # forced through zero
 
-        context["rcv_mpe"] = rcv_mpe
+        rcv_mpe_zero = ((rcv) / coeff_lin_1)  # forced through zero
         context["rcv_mpe_zero"] = rcv_mpe_zero
+
+        rcv_mpe_poly_zero = ((-coeff_poly_1+math.sqrt(coeff_poly_1**2 + 4*coeff_poly_2*rcv))/(2*coeff_poly_2))
+        context["rcv_mpe_poly_zero"] = rcv_mpe_poly_zero
+        print(rcv_mpe_poly_zero)
 
         ###################################  Data import / export ####################################
 
