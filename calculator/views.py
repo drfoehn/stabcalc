@@ -447,15 +447,16 @@ class ResultsView(DetailView):
                 return 'Polynomial Regression Model 2° degree'
 
         context["best_fit_model"] = best_fit_model()
+        
+        one_hour_lin = coeff_lin_1
+        one_hour_poly = coeff_poly_1+coeff_poly_2
 
         context["interpretation_1"] = 'Under these conditions, a ' + str(
             parameter.values('parameter__name')[0]['parameter__name']) + ' magnitude increase/decrease of ' + str(
-            round(res.params[1] * 3600, 3)) + ' ' + str(
-            parameter.values('parameter__unit')[0]['parameter__unit']) + ' per hour is expected'
+            round(one_hour_lin, 3)) + '% per hour is expected'
 
         context["interpretation_2"] = '1 hour of sample storage under the tested conditions causes the the ' + str(
-            parameter.values('parameter__name')[0]['parameter__name']) + ' level to change by ' + str(
-            round(res.params[1] * 3600, 3)) + ' ' + str(parameter.values('parameter__unit')[0]['parameter__unit'])
+            parameter.values('parameter__name')[0]['parameter__name']) + ' level to change by ' + str(round(one_hour_lin, 3)) + '%'
 
         # print(res.params[1])
 
