@@ -15,3 +15,4 @@ openpyxl
 django-environ
 sklearn
 seaborn
+django_filter

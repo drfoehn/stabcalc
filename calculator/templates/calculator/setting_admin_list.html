@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+    <div class="row">
+        <h4>blablas</h4>
+        <p></p>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <form method="GET">
+                {{ filter.form | crispy }}
+                <button type="submit" class="btn button_hike filter_button">
+                    ...und LOS
+                </button>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+aaaaaaaaaaaaaaaaaaaaaaa
+            <div class="row d-flex justify-content-center">
+                <!-- Must include the class "list" for the div containing the data to be paginated -->
+
+                {% for setting in filter.qs %}
+
+                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                            <div class="hike-card card h-60" style="margin-bottom: 15px">
+                                <a href="{% url 'setting-detail' setting.pk %}"></a>
+                                <div class="card-body">
+                                    <h5 class="card-title"><a
+                                            href="{% url 'setting-detail' setting.pk %}">{{ setting.name }}</a></h5>
+                                    <hr>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        Dauer: {{ setting.condition }}</h6>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        Anforderung: {{ setting.sample }}</h6>
+
+                                    <hr>
+
+                                </div>
+                            </div>
+                        </div>
+
+                {% endfor %}
+                {#            </div>#}
+                {#            <ul class="pagination"></ul>#}
+                {#        </div>#}
+
+            </div>
+
+    </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,7 @@ import base64
 from tempfile import NamedTemporaryFile
 
 import pandas
+
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
@@ -11,6 +12,8 @@ from django.forms import modelformset_factory  # is grey but still needed for th
 from datetime import datetime
 from wsgiref.util import FileWrapper
 import json
+
+from django.template.loader import render_to_string
 from django.utils import timezone
 from django.urls import reverse_lazy
 
@@ -22,9 +25,10 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
-    TemplateView,
+    TemplateView, FormView,
 )
 
+from .filters import SettingFilter
 from .forms import *
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
@@ -2001,15 +2005,33 @@ def item_lists(request):
     return render(request, 'itemlists.html', context)
 
 
+
 def new_parameter(request):
     form = NewParameterForm(request.POST or None)
+    subject='New Parameter request for Stability Calculator'
     if request.method == 'POST':
         if form.is_valid():
-            parameter_request = form.save(commit=False)
-            parameter_request.user = request.user
-            parameter_request.user.email = request.user.email
-            parameter_request.save()
+            name = form.cleaned_data['name'],
+            unit = form.cleaned_data['unit'],
+            cv_a = form.cleaned_data['cv_a'],
+            cv_i = form.cleaned_data['cv_i'],
+            cv_g = form.cleaned_data['cv_g'],
+            user = request.user,
+            email = request.user.email,
+            context = {
+                name:form.cleaned_data['name'],
+                unit:form.cleaned_data['unit'],
+                cv_a:form.cleaned_data['cv_a'],
+                cv_i:form.cleaned_data['cv_i'],
+                cv_g:form.cleaned_data['cv_g'],
+                user:request.user,
+                email:request.user.email,
+            }
+            # Build the .txt file with the context data just like you build HTML templates!
+            plain_message = render_to_string('email_template.txt', context)
+            send_mail(subject, plain_message,  'your_account@gmail.com', ['xy@eflm.eu'], fail_silently=False)
             return render(request, 'calculator/thankyou.html')
+        # TODO: Add E-Mail Notification
         else:
             context = {
                 'form': form,
@@ -2026,3 +2048,14 @@ def new_parameter(request):
 
 def thankyou_mail(request):
     return HttpResponse('Thank you for your message.')
+
+
+def SettingListView(request):
+    filter = SettingFilter(request.GET, queryset=Setting.objects.all())
+    return render(request, 'calculator/setting_admin_list.html', {'filter': filter})
+
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["filter"] = StabilityStudyFilter(self.request.GET, queryset=self.get_queryset())
+    #     return context

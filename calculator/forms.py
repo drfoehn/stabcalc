@@ -155,6 +155,7 @@ class SampleForm(forms.ModelForm):
             raise forms.ValidationError("We don´t serve your kind here!")
         return feedback
 
+
 class PreanalyticalSetForm(forms.ModelForm):
     collection_instrument = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     collection_site =forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -472,8 +473,8 @@ class NewParameterForm(forms.Form):
     cv_a = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
     cv_i = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
     cv_g = forms.FloatField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    user = forms.CharField(max_length=255, widget=forms.HiddenInput())
-    email = forms.EmailField(widget=forms.HiddenInput())
+    user = forms.CharField(max_length=255, widget=forms.HiddenInput(), required=False)
+    email = forms.EmailField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         fields = (
@@ -488,9 +489,78 @@ class NewParameterForm(forms.Form):
 
     def save(self, commit):
         pass
-# class ValueForm(forms.ModelForm):
-#     class Meta:
-#         model = Value
-#         fields = '__all__'
-#
-# ValueFormset = modelformset_factory(Subject, fields=("duration",), extra=1)
+
+
+class SettingAdminForm(forms.ModelForm):
+    name = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    parameter = forms.ModelChoiceField(queryset=ParameterUser.objects.all(), empty_label='---Select parameter---')
+    sample = forms.ModelChoiceField(queryset=Sample.objects.all(), empty_label='---Select sample---')
+    # durations = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple)
+    sample_type = forms.Select()
+    # freeze_thaw = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=False)
+    # design_type = forms.Select()
+    design_sample = forms.Select()
+    # replicate_count = forms.IntegerField(widget=forms.NumberInput(attrs={'class': 'form-control'}), required=True)
+    condition = forms.ModelChoiceField(queryset=Condition.objects.all(), empty_label='---Select storage condition---')
+    # protocol = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
+    # comment = forms.CharField(max_length=1000, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
+
+    # owner = None
+    # ----------------------Botcatcher-------------------------
+
+    feedback = forms.CharField(
+        widget=forms.HiddenInput,
+        required=False,
+        validators=[validators.MaxLengthValidator(0)],
+    )
+    # -----------------------------------------------------------
+
+    class Meta:
+        model = Setting
+        fields = (
+            'name',
+            'parameter',
+            'sample',
+            'sample_type',
+            # 'freeze_thaw',
+            'condition',
+            # 'durations',
+            # 'subjects',
+            # 'design_type',
+            'design_sample',
+            # 'protocol',
+            # 'comment',
+            # "replicate_count"
+        )
+
+    def __init__(self, *args, **kwargs):
+        # user = kwargs.pop('user')   #get the correct user for the dropdown-selections
+        # self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
+
+        super().__init__(*args, **kwargs)
+
+        # self.fields['durations'].queryset = Duration.objects.filter(owner=user)
+        # self.fields['durations'].widget = forms.CheckboxSelectMultiple
+        self.fields['subjects'] = forms.ModelMultipleChoiceField(
+            # queryset=Subject.objects.filter(owner=user),
+            widget=forms.CheckboxSelectMultiple,
+        )
+        self.fields['sample'] = forms.ModelChoiceField(
+            # queryset=Sample.objects.filter(owner=user),
+            widget=forms.Select,
+        )
+        self.fields['parameter'].widget.attrs['class'] = 'form-select'
+        self.fields['condition'].widget.attrs['class'] = 'form-select'
+        self.fields['sample'].widget.attrs['class'] = 'form-select'
+        self.fields['sample_type'].widget.attrs['class'] = 'form-select'
+        self.fields['design_sample'].widget.attrs['class'] = 'form-select'
+        self.fields['design_type'].widget.attrs['class'] = 'form-select'
+        # self.fields['sample'].widget.attrs['class'] = 'form-select'
+
+
+    # -------------------Botcatcher-------------------------------------
+    def clean_feedback(self):
+        feedback = self.cleaned_data["feedback"]
+        if len(feedback) > 0:
+            raise forms.ValidationError("We don´t serve your kind here!")
+        return feedback

@@ -13,80 +13,80 @@
     <div class="col">
         <form method="POST">
     {% csrf_token %}
-{#  {{ form | crispy }}#}
-            <table>
-                <tr>
-                    <td  class="form-rowhead">
-                        <br>
-                        Parameter name:
-                    </td>
-                </tr>
-                    <tr>
-                    <td>
-                        {{ form.name }}
-                    </td>
-                    <td>
-                        {{ form.name.errors }}
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="form-rowhead">
-                        <br>
-
-                        Parameter unit:
-                    </td>
-                </tr>
-                    <tr>
-                    <td>
-                        {{ form.unit }}
-                    </td>
-                    <td>
-                        {{ form.unit.errors }}
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="form-rowhead">
-                        <br>
-                        Intra-Individual (Within-subject) Variation (CV<sub>i</sub>)
-                    </td>
-                </tr>
-                    <tr>
-                    <td>
-                        {{ form.cv_i }}
-                    </td>
-                    <td>
-                        {{ form.cv_i.errors }}
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="form-rowhead">
-                        <br>
-                        Inter-Individual (Between-subject) Variation (CV<sub>g</sub>)
-                    </td>
-                </tr>
-                    <tr>
-                    <td>
-                        {{ form.cv_g }}
-                    </td>
-                    <td>
-                        {{ form.cv_g.errors }}
-                    </td>
-                </tr>
-                <tr>
-                    <td  class="form-rowhead">
-                        <br>
-                        Analytical imprecision (CV<sub>a</sub>)
-                    </td>
-                </tr>
-                    <tr>
-                    <td>
-                        {{ form.cv_a }}
-                    </td>
-                    <td>
-                        {{ form.cv_a.errors }}
-                    </td>
-                </tr>
-            </table>
+  {{ form | crispy }}
+{#            <table>#}
+{#                <tr>#}
+{#                    <td  class="form-rowhead">#}
+{#                        <br>#}
+{#                        Parameter name:#}
+{#                    </td>#}
+{#                </tr>#}
+{#                    <tr>#}
+{#                    <td>#}
+{#                        {{ form.name }}#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        {{ form.name.errors }}#}
+{#                    </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td  class="form-rowhead">#}
+{#                        <br>#}
+{##}
+{#                        Parameter unit:#}
+{#                    </td>#}
+{#                </tr>#}
+{#                    <tr>#}
+{#                    <td>#}
+{#                        {{ form.unit }}#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        {{ form.unit.errors }}#}
+{#                    </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td  class="form-rowhead">#}
+{#                        <br>#}
+{#                        Intra-Individual (Within-subject) Variation (CV<sub>i</sub>)#}
+{#                    </td>#}
+{#                </tr>#}
+{#                    <tr>#}
+{#                    <td>#}
+{#                        {{ form.cv_i }}#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        {{ form.cv_i.errors }}#}
+{#                    </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td  class="form-rowhead">#}
+{#                        <br>#}
+{#                        Inter-Individual (Between-subject) Variation (CV<sub>g</sub>)#}
+{#                    </td>#}
+{#                </tr>#}
+{#                    <tr>#}
+{#                    <td>#}
+{#                        {{ form.cv_g }}#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        {{ form.cv_g.errors }}#}
+{#                    </td>#}
+{#                </tr>#}
+{#                <tr>#}
+{#                    <td  class="form-rowhead">#}
+{#                        <br>#}
+{#                        Analytical imprecision (CV<sub>a</sub>)#}
+{#                    </td>#}
+{#                </tr>#}
+{#                    <tr>#}
+{#                    <td>#}
+{#                        {{ form.cv_a }}#}
+{#                    </td>#}
+{#                    <td>#}
+{#                        {{ form.cv_a.errors }}#}
+{#                    </td>#}
+{#                </tr>#}
+{#            </table>#}
             <button class="btn btn-secondary" type="submit" style="margin-top: 1em">
                     Send
                 </button>
