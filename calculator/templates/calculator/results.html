@@ -448,14 +448,14 @@
                             <ul>
                                 <li>
                                     If the result is an instability equation with statistical significance (p<0.05) and
-                                    sufficient strength (R2>0.7), with a non-linear model,
+                                    sufficient strength (R<sup>2</sup> > 0.7), with a non-linear model,
                                     <br>indicate <strong>"Under these conditions, a non-linear increase/decrease in
                                     magnitude is observed"</strong>
                                     <p></p>
                                 </li>
                                 <li>
                                     If the result is an instability equation with statistical significance (p<0.05) and
-                                    sufficient strength (R2>0.7), with a linear model, but in the maximum study time, a
+                                    sufficient strength ((R<sup>2</sup> > 0.7), with a linear model, but in the maximum study time, a
                                     DP% above the maximum permissible error (MPE) is not reached,
                                     <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n
                                     (units) per hour is expected. In the time studied (indicate), the error due to loss
@@ -465,7 +465,7 @@
                                 </li>
                                 <li>
                                     If the result is an instability equation with statistical significance (p<0.05) and
-                                    sufficient strength (R2>0.7), with a linear model,
+                                    sufficient strength (R<sup>2</sup> > 0.7), with a linear model,
                                     <br>indicate <strong>"Under these conditions, a magnitude increase/decrease of n
                                     (units) per hour is expected”</strong>
                                     <p></p>
@@ -477,7 +477,7 @@
                                     <p></p>
                                 </li>
                                 <li>
-                                    If the slope obtained is significantly different from zero, but the R2 obtained is
+                                    If the slope obtained is significantly different from zero, but the R<sup>2</sup> obtained is
                                     <0.7,
                                     <br>indicate <strong>"Under these conditions, a possible loss of stability effect is
                                     observed and needs to be confirmed".</strong>
@@ -497,7 +497,7 @@
 
     <img src="{% static 'images/icon/quote1.png' %}" alt="">
     <span class="interpretation">
-            {% if r_squared_lin > 0.7 and f_p_value < 0.05 %}
+            {% if r2_linregr > 0.7 and f_p_value < 0.05 %}
                 {{ interpretation_1 }}
             {% else %}
                 {{ interpretation_2 }}
@@ -524,13 +524,46 @@
         </div>
         <div class="col">
             <p class="th_category_heading">Data Statistics</p>
-            Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br>
-            Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
+        <table>
+        <tr>
+                <td class="calc_result"><i>p</i>-value: {% if f_p_value < 0.0001 %}
+                                        < 0.0001
+                                    {% elif f_p_value >= 0.05  %}
+                                        Non-significant ({{ f_p_value | floatformat:4 }})
+                                        {% else %}
+                                        {{ f_p_value | floatformat:4 }}
+                                    {% endif %}</td>
+            </tr>
+        <tr>
+            <td  class="sub-italic"><u>Performed statistics:</u> t-test using absolut values<br>
+                                        <u>Interpretation:</u>
+                                        {% if f_p_value >= 0.05  %}
+                                        The hypothesis test is not significant - It is impossible to distinguish whether
+                                        there is no loss in {{ setting.parameter.parameter.name }}-stability or whether the design is underpowered to demonstrate it.
+                                    {% else %}
+                                        The chance of the change in {{ setting.parameter.parameter.name }}-values
+                                        not being related to the storage time/condition is
+                                        {% if f_p_value < 0.0001 %}
+                                        < 0.01
+                                        {% else %}
+                                        {{ f_p_value_perc | floatformat:2 }}
+                                    {% endif %} %.
+                                    {% endif %}</td>
+        </tr>
+        <tr>
+            <td>Rainbow-Test: F: {{ rainbow_f | floatformat:3 }} / p: {{ rainbow_p | floatformat:3 }}<br></td>
+        </tr>
+        <tr>
+            <td>Lilliefors’ test (Kolmogorov - Smirnov test with estimated parameters):
             {% if results_n < 20 %}
                 Kurtosistest only valid for n>=20
             {% else %}
                 {{ ksstat | floatformat:3 }} / p: {{ ksstat_p | floatformat:3 }}
-            {% endif %}
+            {% endif %}</td>
+        </tr>
+        </table>
+
+
         </div>
     </div>
 
@@ -741,19 +774,22 @@
             {#                      --------------------Statistics--------------#}
 
             <br>
-            <div class="calc_result">
-                R<sup>2</sup> = {{ r2_linregr | floatformat:3 }} <br>
-                <br>
-                Stability equation: {{ eq_linregr }} <br>
-                <br>
-                Statistical Power: {{ power_lin }} <br>
-                <hr>
-                Maximal permissible error: <br>
-                <br>
-            <div>
-                The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_zero | floatformat:2 }} hours of storage<br>
-            </div>
-            </div>
+        <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_linregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_linregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_lin }} </td>
+        </tr>
+        <tr>
+            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_zero | floatformat:2 }} hours of storage</td>
+        </tr>
+        </table>
+
 
             {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
 
@@ -768,19 +804,22 @@
             {#                      --------------------Statistics--------------#}
 
             <br>
-            <div class="calc_result">
-                R<sup>2</sup> = {{ r2_polyregr | floatformat:3 }} <br>
-                <br>
-                Stability equation: {{ eq_polyregr }} <br>
-                <br>
-                Statistical Power: {{ power_poly }} <br>
-                <hr>
-                Maximal permissible error: <br>
-                <br>
-            <div>
-                The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_poly_zero | floatformat:2 }} hours of storage<br>
-            </div>
-            </div>
+            <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_polyregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_polyregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_poly }} </td>
+        </tr>
+        <tr>
+            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_poly_zero  | floatformat:2 }} hours of storage</td>
+        </tr>
+        </table>
+
 
         </div>
     </div>
@@ -908,9 +947,9 @@
                         <label class="sr-only calc_result" for="inlineFormInput">Inter-Individual (Between-subject)
                             Variation (CV<sub>g</sub>)
                             of {{ setting.parameter.parameter.name }}</label>
-                        <span class="calc_result cvs">{{ cv_g }} %</span><br>
-                        <span class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a
-                                href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></span>
+                        <p class="calc_result cvs">{{ cv_g }} %</p><br>
+                        <p class="sub-italic">Source: Carobene A et al. CCLM 2021;60(4):505-517. <a
+                                href="https://www.degruyter.com/document/doi/10.1515/cclm-2021-0370/pdf">doi: 10.1515/cclm-2021-0370.</a></p>
                         {#                            <input type="text" class="form-control mb-2" id="inter-cv"#}
                         {#                                   placeholder="">#}
                     </div>
@@ -1007,16 +1046,17 @@
     <h1 class="display-6">Single results</h1>
     <div class="row">
         <div class="col">
-            {% cv_max setting as cv_max %}
-            {% if cv_max %}
-                <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>
-            In case more than 5% of all results are outliers, the analytical performance should be reviwed in depth. <br>
-            </span>
-                <span class="sub-italic">Definition of outliers: Greater than the 3-fold analytical-CV (According to your input: {% cv_max setting %} %)</span>
-            {% else %}
-                <span class="calc_result">If you want outliers to be calculated (highly recommended), please indicate the analytical CV of your method in the
-                <a href="{% url 'create-parameter' %}">"Parameter"-Section</a></span>
-            {% endif %}
+{#            TODO - Outlier calculation in very low results#}
+{#            {% cv_max setting as cv_max %}#}
+{#            {% if cv_max %}#}
+{#                <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>#}
+{#            In case more than 5% of all results are outliers, the analytical performance should be reviwed in depth. <br>#}
+{#            </span>#}
+{#                <span class="sub-italic">Definition of outliers: Greater than the 3-fold analytical-CV (According to your input: {% cv_max setting %} %)</span>#}
+{#            {% else %}#}
+{#                <span class="calc_result">If you want outliers to be calculated (highly recommended), please indicate the analytical CV of your method in the#}
+{#                <a href="{% url 'create-parameter' %}">"Parameter"-Section</a></span>#}
+{#            {% endif %}#}
             <p></p>
         </div>
     </div>

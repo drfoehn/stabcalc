@@ -435,19 +435,16 @@ class ResultsView(DetailView):
 
         # --------------------------Calculate best fitting model
 
-        r_sq_list = [r_squared_lin, r_squared_log, r_squared_poly2, r_squared_poly3]
+        r_sq_list = [r2_linregr, r2_polyregr]
         best_fit = max(r_sq_list)
         context["best_fit"] = str(str(round(best_fit * 100, 2)) + " %")
 
         def best_fit_model() -> str:
-            if r_squared_lin == best_fit:
+            if r2_linregr == best_fit:
                 return 'Linear Regression Model'
-            elif r_squared_log == best_fit:
-                return 'Logarithmic regression model'
-            elif r_squared_poly2 == best_fit:
-                return 'Polynomial Regression Model 2° degree'
+            # elif r2_polyregr == best_fit:
             else:
-                return 'Polynomial Regression Model 3° degree'
+                return 'Polynomial Regression Model 2° degree'
 
         context["best_fit_model"] = best_fit_model()
 
@@ -828,9 +825,9 @@ def DownloadExcel(request, setting_pk):
     return response
 
 
-def upload_view(request):
-    form = UploadExcelForm
-    return render(request, 'calculator/upload_form.html', {"form": form})
+# def upload_view(request):
+#     form = UploadExcelForm
+#     return render(request, 'calculator/upload_form.html', {"form": form})
 
 
 # --------------------------------------INSTRUMENT-----------------------------------------
