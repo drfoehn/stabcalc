@@ -20,7 +20,6 @@ class SettingFilter(django_filters.FilterSet):
     #                                          )
     #
     #
-    #
     # tags = django_filters.ModelMultipleChoiceFilter(
     #     queryset=HikeTag.objects.all(), widget=forms.CheckboxSelectMultiple
     # )
@@ -49,12 +48,22 @@ class SettingFilter(django_filters.FilterSet):
     class Meta:
         model = Setting
         fields = [
-            # 'name',
+            'name',
             'parameter',
             'sample',
-            # 'sample_type',
+            'sample_type',
             'condition',
-            # 'design_sample',
+            # 'durations',
+            # 'subjects',
+            'design_type',
+            'design_sample',
+            # 'protocol',
+            # 'comment',
+            # "replicate_count"
+            "parameter__reagent_manufacturer",
+            "parameter__reagent_name",
+            # "parameter__parameter__instrument_manufacturer",
+            # "parameter__parameter__instrument_name"
         ]
 
 
