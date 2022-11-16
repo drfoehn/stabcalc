@@ -67,3 +67,28 @@ class SettingFilter(django_filters.FilterSet):
         ]
 
 
+class ResultFilter(django_filters.FilterSet):
+
+    setting__parameter__parameter__name = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
+
+    class Meta:
+        model = Result
+        fields = [
+
+            'setting__parameter__parameter__name',
+            "setting__parameter__instrument__manufacturer",
+            "setting__parameter__instrument__name",
+            'setting__sample__sample_type',
+            'setting__sample__storage',
+            'setting__sample__container_additive',
+            'setting__sample__gel',
+            'setting__condition__temperature',
+            'setting__condition__other_condition',
+            'setting__parameter__reagent_name',
+            'setting__parameter__reagent_manufacturer',
+            'setting__parameter__analytical_method',
+
+            'setting__sample_type',
+            'setting__design_type',
+
+        ]

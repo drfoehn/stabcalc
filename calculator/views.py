@@ -28,7 +28,7 @@ from django.views.generic import (
     TemplateView, FormView,
 )
 
-from .filters import SettingFilter
+from .filters import SettingFilter, ResultFilter
 from .forms import *
 from django.shortcuts import redirect, render, get_object_or_404
 from .models import *
@@ -2050,9 +2050,23 @@ def thankyou_mail(request):
     return HttpResponse('Thank you for your message.')
 
 
-def SettingListView(request):
+def SettingAdminList(request):
+
     filter = SettingFilter(request.GET, queryset=Setting.objects.all())
     return render(request, 'calculator/setting_admin_list.html', {'filter': filter})
+
+def ResultAdminList(request):
+    results = Result.objects.all()
+
+    resFilter = ResultFilter(request.GET, queryset=results)
+    results = resFilter.qs
+
+    context = {
+        'results' : results,
+        'ResultFilter': resFilter
+    }
+
+    return render(request, 'calculator/results_admin_list.html', context)
 
 
     # def get_context_data(self, **kwargs):

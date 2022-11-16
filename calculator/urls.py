@@ -76,7 +76,8 @@ urlpatterns = [
     path('new_parameter/', new_parameter, name='new-parameter'),
     path('thankyou', thankyou_mail, name='thankyou-mail'),
 
-    path('overall-evaluation/', views.SettingListView, name='overall-evaluation'),
+    path('show-settings/', views.SettingAdminList, name='show-settings'),
+    path('select-results/', views.ResultAdminList, name='select-results'),
 
 
 
