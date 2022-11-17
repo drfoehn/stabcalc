@@ -2060,6 +2060,7 @@ def ResultAdminList(request):
 
     resFilter = ResultFilter(request.GET, queryset=results)
     results = resFilter.qs
+    print(results)
 
     context = {
         'results' : results,

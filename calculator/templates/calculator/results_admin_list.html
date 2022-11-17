@@ -61,7 +61,8 @@
                             {{ result.value }} / {{ result.setting }}
                         </div>
                     <div class="col">
-                            {{ setting.parameter.parameter.name }}
+                            {{ result.setting.sample.sample_type }}
+                        <a href="{% url 'results' result.setting_id %}">lulu</a>
                     </div>
                         <div class="col">
                         {{ setting.sample.get_sample_type_display }} <br>
