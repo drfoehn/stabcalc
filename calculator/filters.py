@@ -72,6 +72,7 @@ class SettingFilter(django_filters.FilterSet):
 class ResultFilter(django_filters.FilterSet):
 
     SAMPLETYPE = (
+        (None, _("All")),
         (1, _("Venous Blood")),
         (2, _("Capillary Blood")),
         (3, _("Arterial Blood")),
@@ -79,6 +80,50 @@ class ResultFilter(django_filters.FilterSet):
         (5, _("CSF")),
         (6, _("Stool")),
         (7, _("Other - Please specify")),
+    )
+
+    STORAGE = (
+        (None, _("All")),
+        (1, _("Whole Blood")),
+        (2, _("Plasma/Serum")),
+    )
+
+    CONTAINERADDITIVE = (
+        (None, _("All")),
+        (0, _("No additive")),
+        (1, _("EDTA")),
+        (2, _("Heparin")),
+        (3, _("Citrate")),
+        (4, _("Clotactivator (Serum)")),
+        (5, _("Other - Please specify")),
+    )
+
+    GEL = (
+        (None, _("All")),
+        (0, 'False'),
+        (1, 'True'),
+    )
+
+    TYPE = (
+        (None, _("All")),
+        (1, _("Patients")),
+        (2, _("Healthy volunteers")),
+        (3, _("Other")),
+    )
+
+    DESIGN_SAMPLE = (
+        (None, _("All")),
+        (1, _("primary samples")),
+        (2, _("aliquots")),
+    )
+
+    TEMPERATURE = (
+        (None, _("All")),
+        (1, _("Roomtemperature (20 to 25°C)")),
+        (2, _("Refrigerated (2 to 6°C)")),
+        (3, _("Frozen (-15 to -25°C)")),
+        (4, _("Deepfrozen (-60 to -80°C)")),
+        (5, _("Other - Please specify")),
 
     )
 
@@ -86,17 +131,16 @@ class ResultFilter(django_filters.FilterSet):
     setting__parameter__instrument__manufacturer = django_filters.CharFilter(field_name="setting__parameter__instrument__manufacturer", lookup_expr='icontains')
     setting__parameter__instrument__name  = django_filters.CharFilter(field_name="setting__parameter__instrument__name", lookup_expr='icontains')
     setting__sample__sample_type = django_filters.TypedChoiceFilter(field_name="setting__sample__sample_type", choices=SAMPLETYPE)
-    print(setting__sample__sample_type)
-    setting__sample__storage = django_filters.ModelChoiceFilter(queryset=Sample.objects.all())
-    setting__sample__container_additive = django_filters.ModelChoiceFilter(queryset=Sample.objects.all())
-    setting__sample__gel = django_filters.ModelChoiceFilter(queryset=Sample.objects.all())
-    setting__condition__temperature = django_filters.ModelChoiceFilter(queryset=Condition.objects.all())
+    setting__sample__storage = django_filters.TypedChoiceFilter(field_name="setting__sample__storage", choices=STORAGE)
+    setting__sample__container_additive = django_filters.TypedChoiceFilter(field_name="setting__sample__container_additive", choices=CONTAINERADDITIVE)
+    setting__sample__gel = django_filters.TypedChoiceFilter(field_name="setting__sample__gel", choices=GEL)
+    setting__condition__temperature = django_filters.TypedChoiceFilter(field_name="setting__condition__temperature", choices=TEMPERATURE)
     setting__condition__other_condition = django_filters.ModelChoiceFilter(queryset=Condition.objects.all())
     setting__parameter__reagent_name = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
     setting__parameter__reagent_manufacturer = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
     setting__parameter__analytical_method = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
-    setting__sample_type = django_filters.ModelChoiceFilter(queryset=Setting.objects.all())
-    setting__design_type = django_filters.ModelChoiceFilter(queryset=Setting.objects.all())
+    setting__sample_type = django_filters.TypedChoiceFilter(field_name="setting__sample_type", choices=TYPE)
+    setting__design_sample = django_filters.TypedChoiceFilter(field_name="setting__design_sample", choices=DESIGN_SAMPLE)
 
 
     class Meta:
@@ -116,6 +160,6 @@ class ResultFilter(django_filters.FilterSet):
             'setting__parameter__reagent_manufacturer',
             'setting__parameter__analytical_method',
             'setting__sample_type',
-            'setting__design_type',
+            'setting__design_sample',
 
         ]
