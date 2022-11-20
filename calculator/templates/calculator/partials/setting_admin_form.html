@@ -1,0 +1,180 @@
+{% load crispy_forms_filters %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+<div hx-target="this" hx-swap="outerHTML" >
+<div class="col object-list-div">
+   <div class="row">
+        <div class="col">
+            <form method="GET">
+
+{#                {{ filter_form | crispy }}#}
+                <div class="row">
+                    <div class="col">
+                                {{ filter_form.setting__parameter__parameter__name.label_tag }}
+                                {{ filter_form.setting__parameter__parameter__name }}
+                                {{ filter_form.setting__parameter__parameter__name.error | as_crispy_errors }}
+                    </div>
+                </div>
+                <div class="row">
+                    <h3 class="heading_resultfilter">Sample</h3>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__sample__sample_type.label_tag }}
+                                {{ filter_form.setting__sample__sample_type }}
+                                {{ filter_form.setting__sample__sample_type.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__sample__container_additive.label_tag }}
+                                {{ filter_form.setting__sample__container_additive }}
+                                {{ filter_form.setting__sample__container_additive.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__sample__container_additive.label_tag }}
+                                {{ filter_form.setting__sample__container_additive }}
+                                {{ filter_form.setting__sample__container_additive.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__sample__gel.label_tag }}
+                                {{ filter_form.setting__sample__gel }}
+                                {{ filter_form.setting__sample__gel.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="heading_resultfilter">Storage</h3>
+
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ filter_form.setting__condition__temperature.label_tag }}</h5>
+                                {{ filter_form.setting__condition__temperature }}
+                                {{ filter_form.setting__condition__temperature.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ filter_form.setting__condition__other_condition.label_tag }}</h5>
+                                {{ filter_form.setting__condition__other_condition }}
+                                {{ filter_form.setting__condition__other_condition.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ filter_form.setting__sample__storage.label_tag }}</h5>
+                                {{ filter_form.setting__sample__storage }}
+                                {{ filter_form.setting__sample__storage.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="heading_resultfilter">Analysis</h3>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__instrument__manufacturer.label_tag }}
+                                {{ filter_form.setting__parameter__instrument__manufacturer }}
+                                {{ filter_form.setting__parameter__instrument__manufacturer.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__instrument__name.label_tag }}
+                                {{ filter_form.setting__parameter__instrument__name }}
+                                {{ filter_form.setting__parameter__instrument__name.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__reagent_manufacturer.label_tag }}
+                                {{ filter_form.setting__parameter__reagent_manufacturer }}
+                                {{ filter_form.setting__parameter__reagent_manufacturer.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__analytical_method.label_tag }}
+                                {{ filter_form.setting__parameter__analytical_method }}
+                                {{ filter_form.setting__parameter__analytical_method.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3 class="heading_resultfilter">XXXXXX</h3>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__instrument__manufacturer.label_tag }}
+                                {{ filter_form.setting__parameter__instrument__manufacturer }}
+                                {{ filter_form.setting__parameter__instrument__manufacturer.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__parameter__instrument__name.label_tag }}
+                                {{ filter_form.setting__parameter__instrument__name }}
+                                {{ filter_form.setting__parameter__instrument__name.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__sample_type.label_tag }}
+                                {{ filter_form.setting__sample_type }}
+                                {{ filter_form.setting__sample_type.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col">
+                                {{ filter_form.setting__design_sample.label_tag }}
+                                {{ filter_form.setting__design_sample }}
+                                {{ filter_form.setting__design_sample.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+                <br>
+            </form>
+{#            {% crispy ResultFilter form %}#}
+        </div>
+</div>
+</div>
+
+
+{#<script>#}
+{#    document.getElementById('id_condition').addEventListener('change', toggleFreeze)#}
+{##}
+{##}
+{#    function toggleFreeze() {#}
+{#        let dropdown = document.getElementById('id_condition')#}
+{#        let selected_option = dropdown.options[dropdown.selectedIndex].innerText;#}
+{#        let freeze_thaw = document.getElementById('freeze_thaw_cycle');#}
+{#        let freeze_thaw_label = document.getElementById('freeze_thaw_cycle_label');#}
+{#        console.log(dropdown)#}
+{#        if (selected_option.includes('Frozen') || selected_option.includes('Deepfrozen')) {#}
+{#            console.log('yes')#}
+{#            freeze_thaw.style.display = 'block'#}
+{#            freeze_thaw_label.style.display = 'block'#}
+{#            }#}
+{#        else {#}
+{#            freeze_thaw.style.display = 'none'#}
+{#            freeze_thaw_label.style.display = 'none'#}
+{#            console.log('no')#}
+{#        }#}
+{#    }#}
+{#window.onload = toggleFreeze()#}
+{#</script>#}

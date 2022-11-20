@@ -396,6 +396,12 @@ th{
 /*    display: none;*/
 /*}*/
 
+/*---------------------------------ResultAdminFilter------------------------------*/
+
+.heading_resultfilter{
+    padding-top: 1em;
+}
+
 /*---------------------------------Resultpage------------------------------------*/
 .result_buttons,
 .print{

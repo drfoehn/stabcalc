@@ -16,3 +16,4 @@ django-environ
 sklearn
 seaborn
 django_filter
+django_bootstrap5

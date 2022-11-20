@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django_countries',
     "crispy_forms",
     "crispy_bootstrap5",
+    "django_bootstrap5",
     "patsy",
     "guardian",
     'django_filters',

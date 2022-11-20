@@ -1,8 +1,12 @@
 import django_filters
+from crispy_forms.bootstrap import InlineCheckboxes
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit, Reset, Layout
+
 from calculator.models import *
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from django.template.defaultfilters import default
 from django import forms
 
 
@@ -72,7 +76,7 @@ class SettingFilter(django_filters.FilterSet):
 class ResultFilter(django_filters.FilterSet):
 
     SAMPLETYPE = (
-        (None, _("All")),
+        # (None, _("All")),
         (1, _("Venous Blood")),
         (2, _("Capillary Blood")),
         (3, _("Arterial Blood")),
@@ -83,13 +87,11 @@ class ResultFilter(django_filters.FilterSet):
     )
 
     STORAGE = (
-        (None, _("All")),
         (1, _("Whole Blood")),
         (2, _("Plasma/Serum")),
     )
 
     CONTAINERADDITIVE = (
-        (None, _("All")),
         (0, _("No additive")),
         (1, _("EDTA")),
         (2, _("Heparin")),
@@ -99,26 +101,22 @@ class ResultFilter(django_filters.FilterSet):
     )
 
     GEL = (
-        (None, _("All")),
         (0, 'False'),
         (1, 'True'),
     )
 
     TYPE = (
-        (None, _("All")),
         (1, _("Patients")),
         (2, _("Healthy volunteers")),
         (3, _("Other")),
     )
 
     DESIGN_SAMPLE = (
-        (None, _("All")),
         (1, _("primary samples")),
         (2, _("aliquots")),
     )
 
     TEMPERATURE = (
-        (None, _("All")),
         (1, _("Roomtemperature (20 to 25°C)")),
         (2, _("Refrigerated (2 to 6°C)")),
         (3, _("Frozen (-15 to -25°C)")),
@@ -127,20 +125,82 @@ class ResultFilter(django_filters.FilterSet):
 
     )
 
-    setting__parameter__parameter__name = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
-    setting__parameter__instrument__manufacturer = django_filters.CharFilter(field_name="setting__parameter__instrument__manufacturer", lookup_expr='icontains')
-    setting__parameter__instrument__name  = django_filters.CharFilter(field_name="setting__parameter__instrument__name", lookup_expr='icontains')
-    setting__sample__sample_type = django_filters.TypedChoiceFilter(field_name="setting__sample__sample_type", choices=SAMPLETYPE)
-    setting__sample__storage = django_filters.TypedChoiceFilter(field_name="setting__sample__storage", choices=STORAGE)
-    setting__sample__container_additive = django_filters.TypedChoiceFilter(field_name="setting__sample__container_additive", choices=CONTAINERADDITIVE)
-    setting__sample__gel = django_filters.TypedChoiceFilter(field_name="setting__sample__gel", choices=GEL)
-    setting__condition__temperature = django_filters.TypedChoiceFilter(field_name="setting__condition__temperature", choices=TEMPERATURE)
-    setting__condition__other_condition = django_filters.ModelChoiceFilter(queryset=Condition.objects.all())
-    setting__parameter__reagent_name = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
-    setting__parameter__reagent_manufacturer = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
-    setting__parameter__analytical_method = django_filters.ModelChoiceFilter(queryset=Parameter.objects.all())
-    setting__sample_type = django_filters.TypedChoiceFilter(field_name="setting__sample_type", choices=TYPE)
-    setting__design_sample = django_filters.TypedChoiceFilter(field_name="setting__design_sample", choices=DESIGN_SAMPLE)
+    setting__parameter__parameter__name = django_filters.ModelChoiceFilter(
+        queryset=Parameter.objects.all(),
+        label = "Select Parameter"
+    )
+    setting__parameter__instrument__manufacturer = django_filters.CharFilter(
+        field_name="setting__parameter__instrument__manufacturer",
+        lookup_expr='icontains',
+        label="Analytical Instrument Manufacturer Name contains"
+    )
+    setting__parameter__instrument__name  = django_filters.CharFilter(
+        field_name="setting__parameter__instrument__name",
+        lookup_expr='icontains',
+        label="Analytical Instrument Name contains"
+    )
+    setting__sample__sample_type = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__sample__sample_type",
+        choices=SAMPLETYPE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Sample type / Matrix"
+    )
+    setting__sample__storage = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__sample__storage",
+        choices=STORAGE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Samples stored as"
+    )
+    setting__sample__container_additive = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__sample__container_additive",
+        choices=CONTAINERADDITIVE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Collection tube additive"
+    )
+    setting__sample__gel = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__sample__gel",
+        choices=GEL,
+        widget=forms.CheckboxSelectMultiple,
+        label="Storage in Sample with gel?"
+    )
+    setting__condition__temperature = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__condition__temperature",
+        choices=TEMPERATURE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Storage temperature"
+    )
+    setting__condition__other_condition = django_filters.CharFilter(
+        field_name="setting__condition__other_condition",
+        lookup_expr='icontains',
+        label="Other storage condition contains"
+    )
+    setting__parameter__reagent_name = django_filters.CharFilter(
+        field_name="setting__parameter__reagent_name",
+        lookup_expr='icontains',
+        label="Assay Name contains"
+    )
+    setting__parameter__reagent_manufacturer = django_filters.CharFilter(
+        field_name="setting__parameter__reagent_manufacturer",
+        lookup_expr='icontains',
+        label="Assay Manufacturer contains"
+    )
+    setting__parameter__analytical_method = django_filters.CharFilter(
+        field_name="setting__parameter__analytical_method",
+        lookup_expr='icontains',
+        label="Analytical Method contains"
+    )
+    setting__sample_type = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__sample_type",
+        choices=TYPE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Type of study subjects"
+    )
+    setting__design_sample = django_filters.TypedMultipleChoiceFilter(
+        field_name="setting__design_sample",
+        choices=DESIGN_SAMPLE,
+        widget=forms.CheckboxSelectMultiple,
+        label="Samples stored in"
+    )
 
 
     class Meta:
@@ -163,3 +223,27 @@ class ResultFilter(django_filters.FilterSet):
             'setting__design_sample',
 
         ]
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.helper = FormHelper(self)
+    #     self.helper.form_id = 'results_search_form'
+    #     self.helper.form_class = 'search-filter-form mb-4'
+    #     self.helper.form_method = 'GET'
+    #     self.helper.use_custom_control = True
+    #     self.helper.label_class = 'font-wight-bold'
+    #
+    #     self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-wide btn-dark-custom mr-3'))
+    #     self.helper.add_input(Reset('clear-search', 'Clear Filters', css_class='btn btn-wide btn-light'))
+    #
+    #     self.helper.layout = Layout(
+    #         # Row(
+    #         #     Column('email', css_class='form-group col-md-6 mb-0'),
+    #         #     Column('password', css_class='form-group col-md-6 mb-0'),
+    #         #     css_class='form-row'
+    #         # ),
+    #         # 'search_text',
+    #         # InlineCheckboxes('One', css_class="checkboxes-filter-form"),
+    #         # InlineCheckboxes('Two', css_class="checkboxes-filter-form"),
+    #         # InlineCheckboxes('Three', css_class="checkboxes-filter-form"),
+    #     )

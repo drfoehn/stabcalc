@@ -6,7 +6,7 @@
 {% block content %}
 
     <div class="row">
-        <h4>Overall Evaluation </h4>
+        <h4 class="display-5">Select available Stability Studies</h4>
         <p></p>
     </div>
 
@@ -22,97 +22,56 @@
             </form>
         </div>
     </div>
-    </div>
+
     <br>
     <hr>
-    <div class="row">
-
-            <div class="row d-flex justify-content-center">
-                <!-- Must include the class "list" for the div containing the data to be paginated -->
-                                <div class="row">
-                        <div class="col">
-                            Setting Name
-                        </div>
-                    <div class="col">
-                          Parameter
-                    </div>
-                        <div class="col">
-                        Sample
-                    </div>
-                    <div class="col">
-                        Storage Condition
-                    </div>
-
-                    <div class="col">
-                        Analytical Instrument
-                    </div>
-                        <div class="col">
-                        Reagent / Assay
-                    </div>
-                    <div class="col">
-
-                    </div>
-
-                    </div>
-                    <hr>
-                {% for setting in filter.qs %}
-                    <div class="row">
-                        <div class="col">
-                            <a href="{% url 'results' setting.id %}">{{ setting.name }}</a>
-                        </div>
-                    <div class="col">
-                            {{ setting.parameter.parameter.name }}
-                    </div>
-                        <div class="col">
+    <br>
+        <table class="table table-hover dashboard-table">
+            <tr class="table-header">
+                <td class="display-7">Setting Name</td>
+                <td class="display-7">Parameter</td>
+                <td class="display-7">Sample</td>
+                <td class="display-7">Storage Condition</td>
+                <td class="display-7">Analytical Instrument</td>
+                <td class="display-7">Reagent / Assay</td>
+                <td class="display-7">Subjects/Results (n)</td>
+            </tr>
+            {% for setting in filter.qs %}
+                <tr>
+                    <th>
+                        <a href="{% url 'results' setting.id %}">{{ setting.name }}</a>
+                    </th>
+                    <td>
+                        {{ setting.parameter.parameter.name }}
+                    </td>
+                    <td>
                         {{ setting.sample.get_sample_type_display }} <br>
-                            {{ setting.sample.get_container_additive_display }} <br>
-                            {{ setting.sample.get_storage_display }} <br>
-                            {{ setting.get_design_sample_display }}
-                    </div>
-                    <div class="col">
+                        {{ setting.sample.get_container_additive_display }} <br>
+                        {{ setting.sample.get_storage_display }} <br>
+                        {{ setting.get_design_sample_display }}
+                    </td>
+                    <td>
                         {{ setting.condition.get_temperature_display }} <br>
                         {{ setting.condition.other_condition }}
-                    </div>
+                    </td>
 
-                    <div class="col">
+                    <td>
                         {{ setting.parameter.instrument.name }} / {{ setting.parameter.instrument.manufacturer }}
-                    </div>
-                        <div class="col">
+                    </td>
+                    <td>
                         {{ setting.parameter.reagent_name }} / {{ setting.parameter.reagent_manufacturer }}
-                    </div>
-                    <div class="col">
+                    </td>
+                    <td>
                         Subjects (n): {{ setting.subjects.count }} <br>
-                        Results (n): {{ setting.results.count}}
-                    </div>
+                        Results (n): {{ setting.results.count }}
+                    </td>
 
-                    </div>
-                    <hr>
+                </tr>
 
-{#                        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">#}
-{#                            <div class="hike-card card h-60" style="margin-bottom: 15px">#}
-{#                                <a href="{% url 'setting-detail' setting.pk %}"></a>#}
-{#                                <div class="card-body">#}
-{#                                    <h5 class="card-title"><a#}
-{#                                            href="{% url 'setting-detail' setting.pk %}">{{ setting.name }}</a></h5>#}
-{#                                    <hr>#}
-{#                                    <h6 class="card-subtitle mb-2 text-muted">#}
-{#                                        Dauer: {{ setting.condition }}</h6>#}
-{#                                    <h6 class="card-subtitle mb-2 text-muted">#}
-{#                                        Anforderung: {{ setting.sample }}</h6>#}
-{##}
-{#                                    <hr>#}
-{##}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
 
-                {% endfor %}
-                {#            </div>#}
-                {#            <ul class="pagination"></ul>#}
-                {#        </div>#}
 
-            </div>
 
-    </div>
-    </div>
+            {% endfor %}
+        </table>
+
 {% endblock %}

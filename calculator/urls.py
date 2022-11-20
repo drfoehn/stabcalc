@@ -33,6 +33,7 @@ urlpatterns = [
     path('settings/setting/<pk>/edit', edit_setting, name="edit-setting"),
     path('settings/create-setting-form/', add_setting_form, name='create-setting-form'),
 
+
     path('conditions/', condition_list, name='create-condition'),
     path('conditions/condition/<pk>/', condition_detail, name="condition-detail"),
     path('conditions/condition/<pk>/delete', delete_condition, name="delete-condition"),
@@ -64,6 +65,7 @@ urlpatterns = [
     path('results/create-result-form/<setting_pk>/<duration_pk>', add_result_form, name='create-result-form'),
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
+    path("results-admin/<pk>", views.ResultsAdminView.as_view(), name="results-admin"),
 
     path("export/<setting_pk>", views.export_template, name="export_template_view"),
     path("import_export/lala/", views.import_excel, name="import_excel"),
@@ -76,7 +78,7 @@ urlpatterns = [
     path('new_parameter/', new_parameter, name='new-parameter'),
     path('thankyou', thankyou_mail, name='thankyou-mail'),
 
-    path('show-settings/', views.SettingAdminList, name='show-settings'),
+    path('select-settings/', views.SettingAdminList, name='show-settings'),
     path('select-results/', views.ResultAdminList, name='select-results'),
 
 

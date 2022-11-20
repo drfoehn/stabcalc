@@ -1,8 +1,6 @@
 import base64
 from tempfile import NamedTemporaryFile
-
 import pandas
-
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
@@ -12,7 +10,6 @@ from django.forms import modelformset_factory  # is grey but still needed for th
 from datetime import datetime
 from wsgiref.util import FileWrapper
 import json
-
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.urls import reverse_lazy
@@ -55,7 +52,9 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Fo
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
 
-
+class ResultsAdminView(DetailView):
+    model = Result
+    template_name = 'calculator/results_admin.html'
 
 class ResultsView(DetailView):
     template_name = "calculator/results.html"
@@ -635,6 +634,7 @@ class ResultsView(DetailView):
             }
         )
         return context
+
 
 
 
@@ -1241,6 +1241,7 @@ def delete_setting(request, pk):
     return HttpResponse('')
 
 
+
 # -------------------------------------CONDITION----------------------------------------
 
 def condition_list(request):
@@ -1530,13 +1531,6 @@ def delete_result(request, pk):
     result = Result.objects.get(pk=pk)
     result.delete()
     return HttpResponse('')
-
-
-
-
-
-
-
 
 
 def import_excel(self):
@@ -2055,16 +2049,63 @@ def SettingAdminList(request):
     filter = SettingFilter(request.GET, queryset=Setting.objects.all())
     return render(request, 'calculator/setting_admin_list.html', {'filter': filter})
 
+
 def ResultAdminList(request):
     results = Result.objects.all()
 
     resFilter = ResultFilter(request.GET, queryset=results)
     results = resFilter.qs
-    print(results)
+
+
+    subject_list = []
+    for result in results:
+        if result.subject in subject_list:
+            continue
+        else:
+            subject_list.append(result.subject)
+
+    subject_count = len(subject_list)
+
+    duration_list = []
+    for result in results:
+        if result.duration in duration_list:
+            continue
+        else:
+            duration_list.append(result.duration)
+
+    setting_list = []
+    for result in results:
+        if result.setting in setting_list:
+            continue
+        else:
+            setting_list.append(result.setting)
+
+    print(subject_list)
+    print(duration_list)
+
+    # subject_list = []
+    # for subject in results.:
+    #     if subject in subject_list:
+    #         continue
+    #     else:
+    #         subject_list.append(subject)
+    #
+    # durations = Duration.objects.all()
+    # duration_list = []
+    # for duration in durations:
+    #     if duration in duration_list:
+    #         continue
+    #     else:
+    #         duration_list.append(duration)
+    # print(duration_list)
 
     context = {
         'results' : results,
-        'ResultFilter': resFilter
+        'ResultFilter': resFilter,
+        'subject_list' : subject_list,
+        'duration_list': duration_list,
+        'setting_list': setting_list,
+        'subject_count': subject_count,
     }
 
     return render(request, 'calculator/results_admin_list.html', context)
@@ -2074,3 +2115,7 @@ def ResultAdminList(request):
     #     context = super().get_context_data(**kwargs)
     #     context["filter"] = StabilityStudyFilter(self.request.GET, queryset=self.get_queryset())
     #     return context
+
+
+    
+        
