@@ -2056,7 +2056,6 @@ def ResultAdminList(request):
     resFilter = ResultFilter(request.GET, queryset=results)
     results = resFilter.qs
 
-
     subject_list = []
     for result in results:
         if result.subject in subject_list:
@@ -2076,28 +2075,154 @@ def ResultAdminList(request):
     setting_list = []
     for result in results:
         if result.setting in setting_list:
+
             continue
         else:
             setting_list.append(result.setting)
 
-    print(subject_list)
-    print(duration_list)
 
-    # subject_list = []
-    # for subject in results.:
-    #     if subject in subject_list:
-    #         continue
-    #     else:
-    #         subject_list.append(subject)
+    # ----------Statistical evaluation------------
+
+    # deviation_dict: dict[int, dict[int, int]] = {}
+    # for subject in results.subjects:
+    #     if not subject.id in deviation_dict:
+    #         deviation_dict[subject.id] = {}
+    #         for duration in request.object.durations.all():
+    #             if setting == self.object:
+    #                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
+
+
+    # -----Calculate deviation values
+    
+    
+    # ----get values from qs
+    results_val = results.values()
+    # make dataframe from qs
+    results_df= pd.DataFrame(results_val)
+    # ---add column headers
+    results_df.columns = ['result_id', 'owner_id', 'result', 'setting_id', 'duration_id', 'subject_id', ]
+    # ---get seconds values from duration_id
+    seconds = []
+    for duration in results_df['duration_id']:
+        duration = Duration.objects.get(id=duration)
+        seconds.append(duration.seconds)
+    # ---make an additional column in dataframe with seconds
+    results_df["seconds"] = seconds
+    # print(results_df)
+
+    print(results_df.loc[(results_df['seconds'] == 0) & (results_df['setting_id'] == 13)])
+
+    deviations=[]
+    for deviation in results_df['result']:
+        # setting_id = deviation.setting_id
+        baseline = results_df.loc[(results_df['seconds'] == 0) & (results_df['setting_id'] == 13)]
+        # result = deviation.value
+        # print(baseline['seconds'])
+        # print(deviation)
+    # results_df = results_df.sort_values(by=['setting_id', 'subject_id'])
+    print(results_df)
+    # for row in results_df['setting_id']:
+    #     print(results_df[(results_df["seconds"]==0) & (results_df["setting_id"]==13)].result)
+    result_groups = results_df.groupby(['setting_id', 'subject_id', 'seconds'])
+    average_df = result_groups.aggregate(np.mean).reset_index()
+    average_df = average_df.rename(columns={'result':'average'})
+    # print(average_df.to_string())
+    average_df.columns = ['setting_id', 'subject_id', 'seconds', 'result_id',  'owner_id',  'average',  'duration_id']
+
+
+    df1 = {
+        'setting_id': [7,7,7],
+        'subject_id': [1,1,1],
+        'seconds': [0, 3600, 10800],
+        'owner_id': [2,2,2],
+        'average': [24, 46, 101],
+        'deviation': [0, 192, 421],
+        'duration_id': [1,2,4],
+        }
+
+    # Create a DataFrame
+    df1 = pd.DataFrame(df1)
+    print(df1)
+    
+
+    # print(average_df['seconds'].to_string())
+    # for (columnName, columnData) in average_df.iteritems():
+    #     print('Column Name : ', columnName)
+    #     print('Column Contents : ', columnData.values)
+
+
+
+    # Iterate over two given columns
+    # only from the dataframe
+    # for setting in average_df['setting_id']:
+    #     for subject in average_df['subject_id']:
+    #         for second in average_df['seconds']:
+    #             print(second)
+        # Select column contents by column name using [] operator
+        #     columnSeriesObj = average_df[setting]
+        #     print('Column Name : ', subject)
+        #     print('Column Contents : ', columnSeriesObj.values)
+
+    # average_df['deviation'] = (average_df['average'] / average_df['average'].sum()) * 100
+    # print(average_df)
+
+
+    # for setting_id, group in result_groups:
+    #     print(setting_id),
     #
-    # durations = Duration.objects.all()
-    # duration_list = []
-    # for duration in durations:
-    #     if duration in duration_list:
-    #         continue
-    #     else:
-    #         duration_list.append(duration)
-    # print(duration_list)
+    #     print(group)
+
+
+    # duration_id = result_df['duration_id']
+    # print(duration_id)
+    # duration_str = Duration.objects.get(duration_id=duration_id)
+    # print(duration_str)
+    # results_data = pd.DataFrame(results_val)
+    # print(results_data)
+    # print(results)
+
+
+
+
+        # # ---------------------------Get deviation data for each subject setting and time individually in a dict
+        # deviation_dict: dict[int, dict[int, int]] = {}
+        # for subject in subjects:
+        #     if not subject.id in deviation_dict:
+        #         deviation_dict[subject.id] = {}
+        #         for duration in self.object.durations.all():
+        #             if setting == self.object:
+        #                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
+
+
+
+    # result_zero = 0
+    # for result in results:
+    #     if result.duration.duration_number == 0:
+    #         result_zero = result
+    #
+    # print(result_zero)
+
+        # if not result or not result_zero:
+        #     return None
+        # else:
+            # print(math.ceil((((result - result_zero) / result_zero) * 100) * 100) / 100)
+        # if result.duration.duration_number == 0:
+        #     results_zero.append(result)
+            # result_zero = result
+            # result_zero_value = result.value
+            # result_zero_subject = result.subject
+            # print(f"This is the zero result {result_zero_subject} - {result_zero_value}" )
+            # if result_zero.setting == result.setting and result_zero_subject == result.subject:
+            #     print(f"{result_zero_value} - {result_zero.setting} - {result_zero_subject} - {result}")
+
+
+        # else:
+        #     print(f"Duration {result.duration} - Result {result}")
+        # result_zero = results(duration_zero)
+        # if not average or not average_zero:
+        #     return None
+        # else:
+        #     return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
 
     context = {
         'results' : results,
@@ -2115,6 +2240,7 @@ def ResultAdminList(request):
     #     context = super().get_context_data(**kwargs)
     #     context["filter"] = StabilityStudyFilter(self.request.GET, queryset=self.get_queryset())
     #     return context
+
 
 
     

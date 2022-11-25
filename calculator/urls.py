@@ -65,7 +65,7 @@ urlpatterns = [
     path('results/create-result-form/<setting_pk>/<duration_pk>', add_result_form, name='create-result-form'),
 
     path("results/<pk>", views.ResultsView.as_view(), name="results"),
-    path("results-admin/<pk>", views.ResultsAdminView.as_view(), name="results-admin"),
+    # path("results-admin/<pk>", views.ResultsAdminView.as_view(), name="results-admin"),
 
     path("export/<setting_pk>", views.export_template, name="export_template_view"),
     path("import_export/lala/", views.import_excel, name="import_excel"),
@@ -80,6 +80,7 @@ urlpatterns = [
 
     path('select-settings/', views.SettingAdminList, name='show-settings'),
     path('select-results/', views.ResultAdminList, name='select-results'),
+    # path('results-admin-stat/', views.ResultAdminView, name='results-admin_stat'),
 
 
 

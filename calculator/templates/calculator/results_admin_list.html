@@ -146,14 +146,11 @@
 
 
 
-                      <h2>  Number of results matching your criteria: {{ results.count }}</h2>
+                      <h2>  Number of results matching your criteria: <span class="alert-danger">{{ results.count }} from  {{ subject_count }} subjects.</span></h2>
                 <hr>
             <h3>Filtered Results Attributes:</h3>
                 <div class="row">
-                <div class="col">
-                    <h4>Subjects (n)</h4>
-                        {{ subject_count }}
-                    </div>
+
                     <div class="col">
                     <h4>Durations:</h4>
                         {% for duration in duration_list %}
@@ -163,7 +160,8 @@
                 <div class="col">
                     <h4>Settings:</h4>
                         {% for setting in setting_list %}
-                    <a href="{% url 'results' setting.id %}">{{ setting.name }}</a>
+                    <a href="{% url 'results' setting.id %}">{{ setting.name }}</a> from {{ setting.owner }}<br>
+
                 {% endfor %}
                     </div>
                 </div>
@@ -173,6 +171,17 @@
 
             </div>
 
-    </div>
 
+    </div>
+    <hr>
+    <div class="row">
+    <div class="col">
+        <h3>Statistical evaluation of filtered data:</h3>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col">
+
+    </div>
+    </div>
 {% endblock %}
