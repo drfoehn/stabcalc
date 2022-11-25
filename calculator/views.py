@@ -2129,21 +2129,47 @@ def ResultAdminList(request):
     # print(average_df.to_string())
     average_df.columns = ['setting_id', 'subject_id', 'seconds', 'result_id',  'owner_id',  'average',  'duration_id']
 
+    # identify rows with 0
+    m = average_df['seconds'].eq(0)
+    # compute the sum of rows with 0
+    s = (average_df['average'].where(m)
+         .groupby([average_df['setting_id'], average_df['subject_id']])
+         .sum()
+         )
 
-    df1 = {
-        'setting_id': [7,7,7],
-        'subject_id': [1,1,1],
-        'seconds': [0, 3600, 10800],
-        'owner_id': [2,2,2],
-        'average': [24, 46, 101],
-        'deviation': [0, 192, 421],
-        'duration_id': [1,2,4],
-        }
+    # compute the deviation per group
+    deviation = (
+        average_df[['setting_id', 'subject_id']]
+            .merge(s, left_on=['setting_id', 'subject_id'], right_index=True, how='left')
+        ['average']
+            .rdiv(average_df['average']).mul(100)
+            .round().astype(int)  # optional
+            .mask(m, 0)
+    )
 
-    # Create a DataFrame
-    df1 = pd.DataFrame(df1)
-    print(df1)
-    
+    average_df['deviation'] = deviation
+    print(average_df)
+    # or
+    # out = df.assign(deviation=deviation)
+
+
+    # m = average_df['seconds'].eq(0)
+    # s = (average_df['average'].where(m)
+    #      .groupby([average_df['setting_id'], average_df['subject_id']])
+    #      .sum()
+    #      )
+    #
+    # deviation = (
+    #     average_df[['setting_id', 'subject_id']]
+    #         .merge(s, left_on=['setting_id', 'subject_id'], right_index=True, how='left')
+    #     ['average']
+    #         .rdiv(average_df['average']).mul(100)
+    # )
+    #
+    # out = average_df[~m].assign(deviation=deviation.round())
+    #
+    # print(out.to_string)
+
 
     # print(average_df['seconds'].to_string())
     # for (columnName, columnData) in average_df.iteritems():
