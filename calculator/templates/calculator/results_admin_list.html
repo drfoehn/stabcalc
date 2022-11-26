@@ -202,16 +202,18 @@
                     var rowData1 =
                         [[
                             'Storage Duration',
-                            {% for subject in subjects %}
-                                '{{ subject }}',
-                            {% endfor %}
+                                {% for item in data %}
+                                  <tr>
+                                    {{ item.subject_id }}
+                                  </tr>
+                                {% endfor %}
                         ],
-                            {% for duration in setting.durations.all %}
+                            {% for item in data %}
 
                                 [
-                                    '{{ duration }}',
-                                    {% for subject in subjects %}
-                                        {% deviation subject duration setting %},
+                                    '{{ item.duration }}',
+                                    {% for subject in item.subject_id.all %}
+                                        {{ subject.deviation }},
                                     {% endfor %}
                                 ],
 
@@ -357,7 +359,54 @@
         </div>
     </div>
     <p></p>
-    {{ result_table | safe }}
+
+        <hr>
+    <table class="table">
+    <thead>
+    <th scope="col">
+        Setting
+    </th>
+    <th scope="col">
+        Subject
+    </th>
+    <th scope="col">
+        Duration (h)
+    </th>
+    <th scope="col">
+        Average
+    </th>
+        <th scope="col">
+        Deviation (%)
+    </th>
+    <th scope="col">
+        Owner
+    </th>
+    </thead>
+    <tbody>
+    {% for item in data %}
+      <tr>
+      <td>
+          {{ item.setting_name }}
+      </td>
+          <td>
+              {{ item.subject_name }}
+          </td>
+      <td>
+        {{ item.duration }} h
+          </td>
+      <td>
+          {{ item.average }}
+      </td>
+          <td>
+              {{ item.deviation }} %
+          </td>
+      <td>
+          {{ item.owner_name }}
+      </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
     </div>
     </div>
 

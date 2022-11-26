@@ -2165,7 +2165,7 @@ def ResultAdminList(request):
     # ---add duration hours to dataframe
     average_df['duration'] = x1_rel_hours
 
-    print(average_df.to_string())
+    # print(average_df.to_string())
 
     y_rel = []
     for y in average_df['deviation']:
@@ -2178,8 +2178,8 @@ def ResultAdminList(request):
     stor_dev_arr = np.array(stor_dev).reshape(-1, 1)
     zipped_lin = list(zip(stor_dur, stor_dev))
     df_lin = pd.DataFrame(zipped_lin, columns=['Duration', 'Deviation'])
-    print(stor_dur_arr)
-    print(stor_dev_arr)
+    # print(stor_dur_arr)
+    # print(stor_dev_arr)
 
     stor_dur_square = []
     for dur in stor_dur:
@@ -2227,7 +2227,32 @@ def ResultAdminList(request):
     b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
 
 
+    #-----add values to IDs
+    
+    setting_name = []
+    for id in average_df['setting_id']:
+        setting = Setting.objects.get(id = id)
+        setting_name.append(setting.name)
+    average_df['setting_name'] = setting_name
 
+    owner_name = []
+    for id in average_df['owner_id']:
+        owner = LabUser.objects.get(id=id)
+        owner_name.append(owner.user_name)
+    average_df['owner_name'] = owner_name
+
+    subject_name = []
+    for id in average_df['subject_id']:
+        subject = Subject.objects.get(id=id)
+        subject_name.append(subject.name)
+    average_df['subject_name'] = subject_name
+
+
+    # -------Print Dataframe to json to render in template
+    json_records = average_df.reset_index().to_json(orient='records')
+    data = []
+    data = json.loads(json_records)
+    print(data)
 
     context = {
         'results' : results,
@@ -2240,10 +2265,11 @@ def ResultAdminList(request):
         'eq_linregr' : "PD% = " + str(coeff_lin_1) + " * storage duration",
         'chart_lin' : b64,
         'r2_polyregr' : r2_polyregr,
-        'eq_polyregr' : "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(
-        coeff_poly_1) + "* storage duration",
+        'eq_polyregr' : "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(coeff_poly_1) + "* storage duration",
         'chart_poly' : b64_poly,
         'result_table': average_df.to_html(),
+        'df': average_df,
+        'data': data,
     }
 
     return render(request, 'calculator/results_admin_list.html', context)
