@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load average %}
 {% load crispy_forms_filters %}
 {% load crispy_forms_tags %}
 {% load static %}
@@ -182,6 +183,263 @@
     <div class="row">
     <div class="col">
 
+            {#    ----------------------------------Google Charts ---------------------------------------#}
+
+    {#--------------------------------------Switch Graph Total Values------------------------------#}
+{#    <div class="row">#}
+{#        <div class="col-6">#}
+{##}
+{#            <p class="th_category_heading">Overall Results</p>#}
+{#            <div id="visualization"></div>#}
+{#            <div class="sub-italic">#}
+{#                Select area of interest with left click to zoom. Right-click to reset.#}
+{#            </div>#}
+{#            <button id="button_results_total" class="btn btn-outline-primary">#}
+{#                <p id="button_switch"></p></button>#}
+{#            <script>#}
+{#                google.charts.load('current', {'packages': ['corechart']});#}
+{#                google.charts.setOnLoadCallback(drawTotal);#}
+{##}
+{#                function drawTotal() {#}
+{#                    var rowData1 = [['Duration', 'Average PD%'],#}
+{#                        {% for duration in setting.durations.all %}#}
+{#                            ['{{ duration }}', {% deviation_tot setting duration %}],#}
+{#                        {% endfor %}];#}
+{##}
+{#                    var rowData2 = [['Duration', 'Average absolute'],#}
+{#                        {% for duration in setting.durations.all %}#}
+{#                            ['{{ duration }}', {% average_tot setting duration %}],#}
+{#                        {% endfor %}];#}
+{##}
+{#                    // Create and populate the data tables.#}
+{#                    var data = [];#}
+{#                    data[0] = google.visualization.arrayToDataTable(rowData1);#}
+{#                    data[1] = google.visualization.arrayToDataTable(rowData2);#}
+{##}
+{#                    var options = {#}
+                        {#width: 600,#}
+                        {#height: 240,#}
+{#                        vAxis: {title: "abs / PD% Value"},#}
+{#                        hAxis: {title: "Storage duration"},#}
+{#                        seriesType: "line",#}
+{#                        fontName: 'Ubuntu',#}
+{#                        curveType: 'function',#}
+{#                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},#}
+{#                        legend: {position: 'top'},#}
+{#                        interpolateNulls: true,#}
+                        {#series: {5: {type: "line"}},#}
+{#                        animation: {#}
+{#                            duration: 1000,#}
+{#                            easing: 'out'#}
+{#                        },#}
+{#                    };#}
+{#                    var current = 0;#}
+{#                    // Create and draw the visualization.#}
+{#                    var chart = new google.visualization.ComboChart(document.getElementById('visualization'));#}
+{#                    var button = document.getElementById('button_results_total');#}
+{##}
+{#                    function drawChart() {#}
+{#                        // Disabling the button while the chart is drawing.#}
+{#                        button.disabled = true;#}
+{#                        google.visualization.events.addListener(chart, 'ready',#}
+{#                            function () {#}
+{#                                button.disabled = false;#}
+{#                                button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');#}
+{#                                button.innerHTML = button.value#}
+{#                            });#}
+{##}
+{#                        options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';#}
+{##}
+{#                        chart.draw(data[current], options);#}
+{#                    }#}
+{##}
+{#                    drawChart();#}
+{##}
+{#                    button.onclick = function () {#}
+{#                        current = 1 - current;#}
+{#                        drawChart();#}
+{#                    }#}
+{#                }#}
+{#            </script>#}
+{##}
+{#        </div>#}
+        {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
+{##}
+{##}
+{#        <div class="col-6">#}
+{#            <p class="th_category_heading">Single Results</p>#}
+{#            <div id="visualization_single"></div>#}
+{#            <div class="sub-italic">#}
+{#                Select area of interest with left click to zoom. Right-click to reset.#}
+{#            </div>#}
+{#            <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p>#}
+{#            </button>#}
+{#            <script>#}
+{#                google.charts.load('current', {'packages': ['corechart']});#}
+{#                google.charts.setOnLoadCallback(drawSingle);#}
+{##}
+{#                function drawSingle() {#}
+{#                    var rowData1 =#}
+{#                        [[#}
+{#                            'Storage Duration',#}
+{#                            {% for subject in subjects %}#}
+{#                                '{{ subject }}',#}
+{#                            {% endfor %}#}
+{#                        ],#}
+{#                            {% for duration in setting.durations.all %}#}
+{##}
+{#                                [#}
+{#                                    '{{ duration }}',#}
+{#                                    {% for subject in subjects %}#}
+{#                                        {% deviation subject duration setting %},#}
+{#                                    {% endfor %}#}
+{#                                ],#}
+{##}
+{#                            {% endfor %}];#}
+{##}
+{##}
+{#                    var rowData2 = [[#}
+{#                        'Storage Duration',#}
+{#                        {% for subject in subjects %}#}
+{#                            '{{ subject }}',#}
+{#                        {% endfor %}#}
+{#                    ],#}
+{#                        {% for duration in setting.durations.all %}#}
+{##}
+{#                            [#}
+{#                                '{{ duration }}',#}
+{#                                {% for subject in subjects %}#}
+{#                                    {% average subject duration setting %},#}
+{#                                {% endfor %}#}
+{#                            ],#}
+{##}
+{#                        {% endfor %}];#}
+{##}
+{#                    // Create and populate the data tables.#}
+{#                    var data = [];#}
+{#                    data[0] = google.visualization.arrayToDataTable(rowData1);#}
+{#                    data[1] = google.visualization.arrayToDataTable(rowData2);#}
+{##}
+{#                    var options = {#}
+                        {#width: 600,#}
+                        {#height: 240,#}
+{#                        vAxis: {title: "abs/rel Value"},#}
+{#                        hAxis: {title: "Storage duration"},#}
+{#                        seriesType: "line",#}
+{#                        curveType: 'function',#}
+{#                        fontName: 'Ubuntu',#}
+{#                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},#}
+{#                        legend: {position: 'top'},#}
+{#                        interpolateNulls: true,#}
+                        {#series: {5: {type: "line"}},#}
+{#                        animation: {#}
+{#                            duration: 1000,#}
+{#                            easing: 'out'#}
+{#                        },#}
+{#                    };#}
+{#                    var current = 0;#}
+{#                    // Create and draw the visualization.#}
+{#                    var chart = new google.visualization.ComboChart(document.getElementById('visualization_single'));#}
+{#                    var button = document.getElementById('button_results_single');#}
+{##}
+{#                    function drawChart() {#}
+{#                        // Disabling the button while the chart is drawing.#}
+{#                        button.disabled = true;#}
+{#                        google.visualization.events.addListener(chart, 'ready',#}
+{#                            function () {#}
+{#                                button.disabled = false;#}
+{#                                button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');#}
+{#                                button.innerHTML = button.value#}
+{#                            });#}
+{##}
+{#                        options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';#}
+{##}
+{#                        chart.draw(data[current], options);#}
+{#                    }#}
+{##}
+{#                    drawChart();#}
+{##}
+{#                    button.onclick = function () {#}
+{#                        current = 1 - current;#}
+{#                        drawChart();#}
+{#                    }#}
+{#                }#}
+{#            </script>#}
+{##}
+{##}
+{#        </div>#}
+{#    </div>#}
+
+    {#    ######################################   Regression Graph   ##########################################}
+    <hr>
+    <h1 class="display-6">Regression Analysis</h1>
+
+
+    <div class="row">
+
+        {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_lin }}'>
+            </div>
+
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+        <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_linregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_linregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_lin }} </td>
+        </tr>
+        <tr>
+            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_zero | floatformat:2 }} hours of storage</td>
+        </tr>
+        </table>
+
+
+            {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
+
+        </div>
+        {#    ooooooooooooooooooooooooooo  Poly2nd ° Regression  ooooooooooooooooooooooooooooooooo#}
+
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_poly }}'>
+            </div>
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+            <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_polyregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_polyregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_poly }} </td>
+        </tr>
+        <tr>
+            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_poly_zero  | floatformat:2 }} hours of storage</td>
+        </tr>
+        </table>
+
+
+        </div>
+    </div>
+    <p></p>
+
     </div>
     </div>
+
+
 {% endblock %}

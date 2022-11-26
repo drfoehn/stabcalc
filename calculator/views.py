@@ -2110,7 +2110,7 @@ def ResultAdminList(request):
     results_df["seconds"] = seconds
     # print(results_df)
 
-    print(results_df.loc[(results_df['seconds'] == 0) & (results_df['setting_id'] == 13)])
+    # print(results_df.loc[(results_df['seconds'] == 0) & (results_df['setting_id'] == 13)])
 
     deviations=[]
     for deviation in results_df['result']:
@@ -2120,7 +2120,7 @@ def ResultAdminList(request):
         # print(baseline['seconds'])
         # print(deviation)
     # results_df = results_df.sort_values(by=['setting_id', 'subject_id'])
-    print(results_df)
+
     # for row in results_df['setting_id']:
     #     print(results_df[(results_df["seconds"]==0) & (results_df["setting_id"]==13)].result)
     result_groups = results_df.groupby(['setting_id', 'subject_id', 'seconds'])
@@ -2140,115 +2140,72 @@ def ResultAdminList(request):
     # compute the deviation per group
     deviation = (
         average_df[['setting_id', 'subject_id']]
-            .merge(s, left_on=['setting_id', 'subject_id'], right_index=True, how='left')
-        ['average']
+            .merge(s, left_on=['setting_id', 'subject_id'], right_index=True, how='left')['average']
             .rdiv(average_df['average']).mul(100)
+            .sub(100)
             .round().astype(int)  # optional
             .mask(m, 0)
     )
 
+
     average_df['deviation'] = deviation
-    print(average_df)
-    # or
-    # out = df.assign(deviation=deviation)
-
-
-    # m = average_df['seconds'].eq(0)
-    # s = (average_df['average'].where(m)
-    #      .groupby([average_df['setting_id'], average_df['subject_id']])
-    #      .sum()
-    #      )
-    #
-    # deviation = (
-    #     average_df[['setting_id', 'subject_id']]
-    #         .merge(s, left_on=['setting_id', 'subject_id'], right_index=True, how='left')
-    #     ['average']
-    #         .rdiv(average_df['average']).mul(100)
-    # )
-    #
-    # out = average_df[~m].assign(deviation=deviation.round())
-    #
-    # print(out.to_string)
-
-
-    # print(average_df['seconds'].to_string())
-    # for (columnName, columnData) in average_df.iteritems():
-    #     print('Column Name : ', columnName)
-    #     print('Column Contents : ', columnData.values)
-
-
-
-    # Iterate over two given columns
-    # only from the dataframe
-    # for setting in average_df['setting_id']:
-    #     for subject in average_df['subject_id']:
-    #         for second in average_df['seconds']:
-    #             print(second)
-        # Select column contents by column name using [] operator
-        #     columnSeriesObj = average_df[setting]
-        #     print('Column Name : ', subject)
-        #     print('Column Contents : ', columnSeriesObj.values)
-
-    # average_df['deviation'] = (average_df['average'] / average_df['average'].sum()) * 100
     # print(average_df)
 
+    # or
+    # out = df.assign(deviation=deviation)
+    # ---convert x (seconds) into hours
+    x1_rel_hours = []
+    for x in average_df['seconds']:
+        if x == 0:
+            x_hour = 0
+        else:
+            x_hour = x / 3600
+        x1_rel_hours.append(x_hour)
 
-    # for setting_id, group in result_groups:
-    #     print(setting_id),
-    #
-    #     print(group)
+    # ---add duration hours to dataframe
+    average_df['duration'] = x1_rel_hours
 
+    print(average_df.to_string())
 
-    # duration_id = result_df['duration_id']
-    # print(duration_id)
-    # duration_str = Duration.objects.get(duration_id=duration_id)
-    # print(duration_str)
-    # results_data = pd.DataFrame(results_val)
-    # print(results_data)
-    # print(results)
+    y_rel = []
+    for y in average_df['deviation']:
+        y_rel.append(y)
 
+    # ------preparing data for regression analysis and plotting
+    stor_dur = x1_rel_hours
+    stor_dur_arr = np.array(stor_dur).reshape(-1, 1)
+    stor_dev = y_rel
+    stor_dev_arr = np.array(stor_dev).reshape(-1, 1)
+    zipped_lin = list(zip(stor_dur, stor_dev))
+    df_lin = pd.DataFrame(zipped_lin, columns=['Duration', 'Deviation'])
+    print(stor_dur_arr)
+    print(stor_dev_arr)
 
+    stor_dur_square = []
+    for dur in stor_dur:
+        dur_square = dur ** 2
+        stor_dur_square.append(dur_square)
 
+    zipped_poly = list(zip(stor_dur_square, stor_dev))
+    df_poly = pd.DataFrame(zipped_poly, columns=['Duration', 'Deviation'])
 
-        # # ---------------------------Get deviation data for each subject setting and time individually in a dict
-        # deviation_dict: dict[int, dict[int, int]] = {}
-        # for subject in subjects:
-        #     if not subject.id in deviation_dict:
-        #         deviation_dict[subject.id] = {}
-        #         for duration in self.object.durations.all():
-        #             if setting == self.object:
-        #                 deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
-
-
-
-    # result_zero = 0
-    # for result in results:
-    #     if result.duration.duration_number == 0:
-    #         result_zero = result
-    #
-    # print(result_zero)
-
-        # if not result or not result_zero:
-        #     return None
-        # else:
-            # print(math.ceil((((result - result_zero) / result_zero) * 100) * 100) / 100)
-        # if result.duration.duration_number == 0:
-        #     results_zero.append(result)
-            # result_zero = result
-            # result_zero_value = result.value
-            # result_zero_subject = result.subject
-            # print(f"This is the zero result {result_zero_subject} - {result_zero_value}" )
-            # if result_zero.setting == result.setting and result_zero_subject == result.subject:
-            #     print(f"{result_zero_value} - {result_zero.setting} - {result_zero_subject} - {result}")
+    # ---------Linear Regression with SKLearn
+    lin_regr = LinearRegression(fit_intercept=False)
+    lin_regr.fit(stor_dur_arr, stor_dev_arr)
+    prediction = lin_regr.predict(np.sort(stor_dur_arr, axis=0))
+    intercept_lin = lin_regr.intercept_
+    r2_linregr = lin_regr.score(stor_dur_arr, stor_dev_arr)
+    coeff_lin_1 = round(lin_regr.coef_[0][0], 2)
 
 
-        # else:
-        #     print(f"Duration {result.duration} - Result {result}")
-        # result_zero = results(duration_zero)
-        # if not average or not average_zero:
-        #     return None
-        # else:
-        #     return math.ceil((((average - average_zero) / average_zero) * 100) * 100) / 100
+    # -------------Linear regression Graph
+    sns.set_style('whitegrid')
+    lin_plot = sns.lmplot(x='Duration', y='Deviation', data=df_lin)
+    lin_plot_file = BytesIO()
+    lin_plot.figure.savefig(lin_plot_file, format='png')
+    b64 = base64.b64encode(lin_plot_file.getvalue()).decode()
+    # context['chart_lin'] = b64
+
 
     context = {
         'results' : results,
@@ -2257,6 +2214,9 @@ def ResultAdminList(request):
         'duration_list': duration_list,
         'setting_list': setting_list,
         'subject_count': subject_count,
+        'r2_linregr' : r2_linregr,
+        'eq_linregr' : "PD% = " + str(coeff_lin_1) + " * storage duration",
+        'chart_lin' : b64,
     }
 
     return render(request, 'calculator/results_admin_list.html', context)
