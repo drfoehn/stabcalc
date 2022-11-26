@@ -2206,6 +2206,28 @@ def ResultAdminList(request):
     b64 = base64.b64encode(lin_plot_file.getvalue()).decode()
     # context['chart_lin'] = b64
 
+    # ---------Polynomial Regression 2nd° with SKLearn
+    poly = PolynomialFeatures(degree=2,
+                              include_bias=False)  # include_bias=False means that we deliberately want the y intercept (ß0) to be equal to 0
+    stor_dur_poly = poly.fit_transform(stor_dur_arr)  # create x2 values from our x values
+    poly_regr = LinearRegression(fit_intercept=False)
+    poly_regr.fit(stor_dur_poly, stor_dev_arr)
+    prediction_poly = poly_regr.predict(np.sort(stor_dur_poly, axis=0))
+    intercept_poly = poly_regr.intercept_
+    r2_polyregr = poly_regr.score(stor_dur_poly, stor_dev_arr)
+    coeff_poly_1 = round(poly_regr.coef_[0][0], 2)
+    coeff_poly_2 = round(poly_regr.coef_[0][1], 2)
+
+
+    # -------------Polynomial 2nd° regression Graph
+    sns.set_style('whitegrid')
+    poly_plot = sns.lmplot(x='Duration', y='Deviation', data=df_lin, order=2)
+    poly_plot_file = BytesIO()
+    poly_plot.figure.savefig(poly_plot_file, format='png')
+    b64_poly = base64.b64encode(poly_plot_file.getvalue()).decode()
+
+
+
 
     context = {
         'results' : results,
@@ -2217,6 +2239,11 @@ def ResultAdminList(request):
         'r2_linregr' : r2_linregr,
         'eq_linregr' : "PD% = " + str(coeff_lin_1) + " * storage duration",
         'chart_lin' : b64,
+        'r2_polyregr' : r2_polyregr,
+        'eq_polyregr' : "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(
+        coeff_poly_1) + "* storage duration",
+        'chart_poly' : b64_poly,
+        'result_table': average_df.to_html(),
     }
 
     return render(request, 'calculator/results_admin_list.html', context)
