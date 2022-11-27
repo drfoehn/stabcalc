@@ -2252,7 +2252,39 @@ def ResultAdminList(request):
     json_records = average_df.reset_index().to_json(orient='records')
     data = []
     data = json.loads(json_records)
-    print(data)
+
+
+    #---generating data for Google Chart of single stabilities
+
+    average_df['_'.join(['subject_name', 'setting_name'])] = pd.Series(average_df.reindex(['subject_name', 'setting_name'], axis='columns')
+                                   .astype('str')
+                                   .values.tolist()
+                                   ).str.join('_')
+
+    # PLOT WITH hue
+
+
+
+    sns.set_style('whitegrid')
+    single_subj_plot = sns.lineplot(
+        x='duration',
+        y='deviation',
+        hue='_'.join(['subject_name', 'setting_name']),
+        data=average_df)
+    single_subj_plot_file = BytesIO()
+    single_subj_plot.figure.savefig(single_subj_plot_file, format='png')
+    b64_single_subj_plot = base64.b64encode(single_subj_plot_file.getvalue()).decode()
+
+
+    # -----Power Analysis
+    effect_lin = r2_linregr
+    effect_poly = r2_polyregr
+    alpha = 0.05
+    nobs = subject_count
+
+    analysis = TTestIndPower()
+    power_lin = analysis.solve_power(effect_lin, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
+    power_poly = analysis.solve_power(effect_poly, power=None, nobs1=nobs, ratio=1.0, alpha=alpha)
 
     context = {
         'results' : results,
@@ -2267,9 +2299,12 @@ def ResultAdminList(request):
         'r2_polyregr' : r2_polyregr,
         'eq_polyregr' : "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(coeff_poly_1) + "* storage duration",
         'chart_poly' : b64_poly,
+        'single_subject_chart': b64_single_subj_plot,
         'result_table': average_df.to_html(),
         'df': average_df,
         'data': data,
+        'power_lin': power_lin,
+        'power_poly': power_poly,
     }
 
     return render(request, 'calculator/results_admin_list.html', context)

@@ -149,7 +149,7 @@
 
                       <h2>  Number of results matching your criteria: <span class="alert-danger">{{ results.count }} from  {{ subject_count }} subjects.</span></h2>
                 <hr>
-            <h3>Filtered Results Attributes:</h3>
+            <h1 class="display-6">Filtered Results Attributes:</h1>
                 <div class="row">
 
                     <div class="col">
@@ -183,113 +183,11 @@
 
     {#--------------------------------------Switch Graph Total Values------------------------------#}
     <div class="row">
+        <div class="col d-flex justify-content-center">
+            <img src='data:image/png;base64,{{ single_subject_chart }}'>
+        </div>
         {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
-
-        <div class="col-6">
-            <p class="th_category_heading">Single Results</p>
-            <div id="visualization_single"></div>
-            <div class="sub-italic">
-                Select area of interest with left click to zoom. Right-click to reset.
-            </div>
-            <button id="button_results_single" class="btn btn-outline-primary"><p id="button_switch_single"></p>
-            </button>
-            <script>
-                google.charts.load('current', {'packages': ['corechart']});
-                google.charts.setOnLoadCallback(drawSingle);
-
-                function drawSingle() {
-                    var rowData1 =
-                        [[
-                            'Storage Duration',
-                                {% for item in data %}
-                                  <tr>
-                                    {{ item.subject_id }}
-                                  </tr>
-                                {% endfor %}
-                        ],
-                            {% for item in data %}
-
-                                [
-                                    '{{ item.duration }}',
-                                    {% for subject in item.subject_id.all %}
-                                        {{ subject.deviation }},
-                                    {% endfor %}
-                                ],
-
-                            {% endfor %}];
-
-
-                    var rowData2 = [[
-                        'Storage Duration',
-                        {% for subject in subjects %}
-                            '{{ subject }}',
-                        {% endfor %}
-                    ],
-                        {% for duration in setting.durations.all %}
-
-                            [
-                                '{{ duration }}',
-                                {% for subject in subjects %}
-                                    {% average subject duration setting %},
-                                {% endfor %}
-                            ],
-
-                        {% endfor %}];
-
-                    // Create and populate the data tables.
-                    var data = [];
-                    data[0] = google.visualization.arrayToDataTable(rowData1);
-                    data[1] = google.visualization.arrayToDataTable(rowData2);
-
-                    var options = {
-                        width: 600,
-                        height: 240,
-                        vAxis: {title: "abs/rel Value"},
-                        hAxis: {title: "Storage duration"},
-                        seriesType: "line",
-                        curveType: 'function',
-                        fontName: 'Ubuntu',
-                        explorer: {actions: ['dragToZoom', 'rightClickToReset'], keepInBounds: true},
-                        legend: {position: 'top'},
-                        interpolateNulls: true,
-                        series: {5: {type: "line"}},
-                        animation: {
-                            duration: 1000,
-                            easing: 'out'
-                        },
-                    };
-                    var current = 0;
-                    // Create and draw the visualization.
-                    var chart = new google.visualization.ComboChart(document.getElementById('visualization_single'));
-                    var button = document.getElementById('button_results_single');
-
-                    function drawChart() {
-                        // Disabling the button while the chart is drawing.
-                        button.disabled = true;
-                        google.visualization.events.addListener(chart, 'ready',
-                            function () {
-                                button.disabled = false;
-                                button.value = 'Switch to ' + (current ? 'Relative' : 'Absolute');
-                                button.innerHTML = button.value
-                            });
-
-                        options['title'] = (current ? 'ABSOLUTE' : 'RELATIVE') + ' deviation of testresults from baseline';
-
-                        chart.draw(data[current], options);
-                    }
-
-                    drawChart();
-
-                    button.onclick = function () {
-                        current = 1 - current;
-                        drawChart();
-                    }
-                }
-            </script>
-
-
-        </div>
     </div>
 
     {#    ######################################   Regression Graph   ##########################################}
@@ -318,11 +216,9 @@
             </tr>
 
         <tr>
-            <td class="calc_result">Statistical Power: {{ power_lin }} </td>
+            <td class="calc_result">Statistical Power: {{ power_lin | floatformat:2 }} </td>
         </tr>
-        <tr>
-            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_zero | floatformat:2 }} hours of storage</td>
-        </tr>
+
         </table>
 
 
@@ -348,11 +244,9 @@
             </tr>
 
         <tr>
-            <td class="calc_result">Statistical Power: {{ power_poly }} </td>
+            <td class="calc_result">Statistical Power: {{ power_poly | floatformat:2 }} </td>
         </tr>
-        <tr>
-            <td class="calc_result">The RCV-threshhold of {{ rcv }}, is surpassed after {{ rcv_mpe_poly_zero  | floatformat:2 }} hours of storage</td>
-        </tr>
+
         </table>
 
 
