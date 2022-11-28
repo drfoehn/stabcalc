@@ -2,6 +2,8 @@ import base64
 from tempfile import NamedTemporaryFile
 import pandas
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ValidationError
 from django.core.files.storage import FileSystemStorage
@@ -25,6 +27,7 @@ from django.views.generic import (
     TemplateView, FormView,
 )
 
+from .decorators import only_for_staff
 from .filters import SettingFilter, ResultFilter
 from .forms import *
 from django.shortcuts import redirect, render, get_object_or_404
@@ -52,14 +55,16 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Fo
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import PatternFill
 
-class ResultsAdminView(DetailView):
-    model = Result
-    template_name = 'calculator/results_admin.html'
+# class ResultsAdminView(DetailView):
+#     model = Result
+#     template_name = 'calculator/results_admin.html'
 
-class ResultsView(DetailView):
+# @login_required
+class ResultsView(LoginRequiredMixin,DetailView):
     template_name = "calculator/results.html"
     model = Setting
     context_object_name = "setting"
+    login_url = '/'
 
     def get_context_data(self, **kwargs):
         global single_results_value, single_results_duration
@@ -639,7 +644,7 @@ class ResultsView(DetailView):
 
 
 
-
+# @login_required
 def DownloadExcel(request, setting_pk):
     excelfile = BytesIO()
     workbook = Workbook()
@@ -2049,8 +2054,10 @@ def SettingAdminList(request):
     filter = SettingFilter(request.GET, queryset=Setting.objects.all())
     return render(request, 'calculator/setting_admin_list.html', {'filter': filter})
 
-
+@only_for_staff
 def ResultAdminList(request):
+    # if not request.user.is_staff:
+    #     return redirect('/')
     results = Result.objects.all()
 
     resFilter = ResultFilter(request.GET, queryset=results)
@@ -2266,14 +2273,31 @@ def ResultAdminList(request):
 
 
     sns.set_style('whitegrid')
-    single_subj_plot = sns.lineplot(
+    # plt.figure(figsize=(10, 8))
+    single_subj_plot_dev = sns.lineplot(
         x='duration',
         y='deviation',
         hue='_'.join(['subject_name', 'setting_name']),
-        data=average_df)
-    single_subj_plot_file = BytesIO()
-    single_subj_plot.figure.savefig(single_subj_plot_file, format='png')
-    b64_single_subj_plot = base64.b64encode(single_subj_plot_file.getvalue()).decode()
+        data=average_df,
+        markers=True)
+    single_subj_plot_dev_file = BytesIO()
+    single_subj_plot_dev.figure.savefig(single_subj_plot_dev_file, format='png')
+    b64_single_subj_plot_dev = base64.b64encode(single_subj_plot_dev_file.getvalue()).decode()
+
+
+    sns.set_style('whitegrid')
+    # plt.figure(figsize=(10, 8))
+    # sns.set(rc={'figure.figsize': (15, 8)})
+    single_subj_plot_avg = sns.lineplot(
+        x='duration',
+        y='average',
+        hue='_'.join(['subject_name', 'setting_name']),
+        data=average_df,
+    )
+    # sns.move_legend(single_subj_plot_avg, "upper left", bbox_to_anchor=(1, 1))
+    single_subj_plot_avg_file = BytesIO()
+    single_subj_plot_avg.figure.savefig(single_subj_plot_avg_file, format='png')
+    b64_single_subj_plot_avg = base64.b64encode(single_subj_plot_avg_file.getvalue()).decode()
 
 
     # -----Power Analysis
@@ -2299,7 +2323,8 @@ def ResultAdminList(request):
         'r2_polyregr' : r2_polyregr,
         'eq_polyregr' : "PD% = " + str(coeff_poly_2) + " * storage duration^2 + " + str(coeff_poly_1) + "* storage duration",
         'chart_poly' : b64_poly,
-        'single_subject_chart': b64_single_subj_plot,
+        'single_subject_chart_dev': b64_single_subj_plot_dev,
+        'single_subject_chart_avg': b64_single_subj_plot_avg,
         'result_table': average_df.to_html(),
         'df': average_df,
         'data': data,

@@ -23,7 +23,7 @@ from calculator.views import *
 
 urlpatterns = [
 
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     path("about/", TemplateView.as_view(template_name="about.html"), name='about'),
     path("terms_condition/", TemplateView.as_view(template_name="terms_conditions.html"), name='terms_conditions'),

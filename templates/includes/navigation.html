@@ -25,7 +25,13 @@
                 <li><a class="dropdown-item" href="{% url 'create-instrument' %}">Start new stability study</a></li>
                 <li><a class="dropdown-item" href="{% url 'dashboard' %}">My Dashboard</a></li>
                 <li><a class="dropdown-item" href="{% url 'user_profile' %}">My Profile</a></li>
-                <li><a class="dropdown-item" href="{%  url 'logout' %}">Logout</a></li>
+                {% if user.is_staff %}
+                 <li><a class="dropdown-item" href="{% url 'select-results' %}">Make Metaanalysis</a></li>
+                {% endif %}
+          {% if user.is_superuser %}
+                 <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a></li>
+                {% endif %}
+              <li><a class="dropdown-item" href="{%  url 'logout' %}">Logout</a></li>
           </ul>
         </div>
 

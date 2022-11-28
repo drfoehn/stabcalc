@@ -10,6 +10,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
 from django.urls import reverse_lazy
 
+from calculator.decorators import unauthenticated_user
 from .forms import *
 from django.utils.translation import gettext_lazy as _
 from calculator.models import *
@@ -47,7 +48,7 @@ def register_user(request):
 
     return render(request, 'users/register_user.html', {'form': form})
 
-
+@unauthenticated_user
 def login_user(request):
     if request.method == 'POST':
         username = request.POST['login_email']

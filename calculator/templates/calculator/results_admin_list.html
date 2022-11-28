@@ -184,7 +184,14 @@
     {#--------------------------------------Switch Graph Total Values------------------------------#}
     <div class="row">
         <div class="col d-flex justify-content-center">
-            <img src='data:image/png;base64,{{ single_subject_chart }}'>
+            <h4>Deviation (%)</h4>
+            <img src='data:image/png;base64,{{ single_subject_chart_dev }}'>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h4>Average (abs)</h4>
+            <img src='data:image/png;base64,{{ single_subject_chart_avg }}'>
         </div>
         {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
 
