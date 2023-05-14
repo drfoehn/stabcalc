@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+    <div class="row">
+        <h4 class="display-5">Select available Stability Studies</h4>
+        <p></p>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <form method="GET">
+                {{ filter.form | crispy }}
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+                <br>
+            </form>
+        </div>
+    </div>
+
+    <br>
+    <hr>
+    <br>
+        <table class="table table-hover dashboard-table">
+            <tr class="table-header">
+                <td class="display-7">Setting Name</td>
+                <td class="display-7">Parameter</td>
+                <td class="display-7">Sample</td>
+                <td class="display-7">Storage Condition</td>
+                <td class="display-7">Analytical Instrument</td>
+                <td class="display-7">Reagent / Assay</td>
+                <td class="display-7">Subjects/Results (n)</td>
+            </tr>
+            {% for setting in filter.qs %}
+                <tr>
+                    <th>
+                        <a href="{% url 'results' setting.id %}">{{ setting.name }}</a>
+                    </th>
+                    <td>
+                        {{ setting.parameter.parameter.name }}
+                    </td>
+                    <td>
+                        {{ setting.sample.get_sample_type_display }} <br>
+                        {{ setting.sample.get_container_additive_display }} <br>
+                        {{ setting.sample.get_storage_display }} <br>
+                        {{ setting.get_design_sample_display }}
+                    </td>
+                    <td>
+                        {{ setting.condition.get_temperature_display }} <br>
+                        {{ setting.condition.other_condition }}
+                    </td>
+
+                    <td>
+                        {{ setting.parameter.instrument.name }} / {{ setting.parameter.instrument.manufacturer }}
+                    </td>
+                    <td>
+                        {{ setting.parameter.reagent_name }} / {{ setting.parameter.reagent_manufacturer }}
+                    </td>
+                    <td>
+                        Subjects (n): {{ setting.subjects.count }} <br>
+                        Results (n): {{ setting.results.count }}
+                    </td>
+
+                </tr>
+
+
+
+
+            {% endfor %}
+        </table>
+
+{% endblock %}

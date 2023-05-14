@@ -1,0 +1,166 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <p></p>
+    <div class="col object-list-div">
+        <form method="POST">
+
+            {% csrf_token %}
+            {#        {{ form }}#}
+            <table>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.temperature.label_tag }}
+                    </td>
+                    <th class="form-rowhead" id="temp_other_label">
+                        {{ form.temperature_other.label_tag }}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.temperature }}
+                    </td>
+                    <td>
+                        {{ form.temperature_other }}
+                    </td>
+                    <td>
+                        {{ form.temperature.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td id="sample_thaw">
+                        <p></p>
+                        How were frozen samples thawed prior to analysis :<br>
+                        {{ form.thawing }} <br>
+                        {{ form.thawing.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        yes
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Exposure to <strong>light</strong> during storage?
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="light" id="id_light">
+                        </div>
+{#                        {{ form.light }}&nbsp;#}
+                    </td>
+                    <td>
+                        {{ form.light.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Contact to <strong>cells</strong> during storage?
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="cell" id="id_cell">
+                        </div>
+{#                        {{ form.cell }}#}
+                    </td>
+                    <td>
+                        {{ form.cell.errors }}
+                        <p></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Contact to <strong>air</strong> during storage?
+                    </td>
+                    <td>
+<div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="air" id="id_air">
+                        </div>
+{#                        {{ form.air }}&nbsp;#}
+                    </td>
+                    <td>
+                        {{ form.air.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Agitation</strong> during storage?
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="agitation" id="id_agitation">
+                        </div>
+{#                        {{ form.agitation }}#}
+                    </td>
+                    <td>
+                        {{ form.agitation.errors }}
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        {{ form.other_condition.label_tag }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.other_condition }}
+                    </td>
+                    <td>
+                        {{ form.other_condition.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ form.feedback }}</td>
+                </tr>
+            </table>
+            <p></p>
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if condition %}     {#  Passed in from Edit-condition-view #}
+                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-condition' condition.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+            {% else %}
+                <button class="btn btn-secondary" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('id_temperature').addEventListener('change', toggleTemp)
+
+
+    function toggleTemp() {
+        let dropdown = document.getElementById('id_temperature').value;
+        let thaw = document.getElementById('sample_thaw');
+        let other = document.getElementById('id_temperature_other');
+        let other_label = document.getElementById('temp_other_label');
+        if (dropdown === "9") {
+            other.style.display = 'block'
+            other_label.style.display = 'block'
+            thaw.style.display = 'none'
+            thaw.value = ''
+        } else if (dropdown === "4" || dropdown === "3") {
+            thaw.style.display = 'block'
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+        } else {
+            other.style.display = 'none'
+            other_label.style.display = 'none'
+            other.value = ''
+            thaw.style.display = 'none'
+            thaw.value = ''
+        }
+    }
+
+    window.onload = toggleTemp()
+</script>
+

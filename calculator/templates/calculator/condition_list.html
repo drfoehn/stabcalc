@@ -1,0 +1,30 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}My conditions{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">My conditions</h4>
+
+
+    <a hx-get="{% url 'create-condition-form' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#condition_form">Add additional condition</a>
+    <div class="row" id="condition_form"></div>
+    {% if conditions %}
+        {% for condition in conditions %}
+            {% include 'calculator/partials/condition_detail.html' %}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no conditions saved - <a hx-get="{% url 'create-condition-form' %}" hx-swap="beforeend"
+                                                hx-target="#condition_form" class="alert-link">Create your first
+            condition</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,30 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}My settings{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">My settings</h4>
+
+
+    <a hx-get="{% url 'create-setting-form' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforebegin" hx-target="#setting_form">Add additional setting</a>
+    <div class="row" id="setting_form"></div>
+    {% if settings %}
+        {% for setting in settings %}
+            {% include 'calculator/partials/setting_detail.html' %}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no settings saved - <a hx-get="{% url 'create-setting-form' %}" hx-swap="beforeend"
+                                                hx-target="#setting_form" class="alert-link">Create your first
+            setting</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

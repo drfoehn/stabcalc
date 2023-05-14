@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+{% load average %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+
+
+    <div class="row">
+        <h2>Select Results</h2>
+        <p></p>
+    </div>
+
+
+    <div class="row">
+        <div class="col">
+            <form method="GET">
+
+{#                {{ ResultFilter.form | crispy }}#}
+                <div class="row">
+                    <div class="col">
+                        <h3 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__parameter__name | as_crispy_field}}</h3>
+                                {{ ResultFilter.form.setting__parameter__parameter__name.error | as_crispy_errors }}
+                    </div>
+                </div>
+                <div class="row">
+                    <h3 class="heading_resultfilter">Sample</h3>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__sample__sample_type.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__sample__sample_type }}
+                                {{ ResultFilter.form.setting__sample__sample_type.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__sample__container_additive.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__sample__container_additive }}
+                                {{ ResultFilter.form.setting__sample__container_additive.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+
+
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__sample__gel.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__sample__gel }}
+                                {{ ResultFilter.form.setting__sample__gel.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__sample_type.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__sample_type }}
+                                {{ ResultFilter.form.setting__sample_type.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3 class="heading_resultfilter">Storage</h3>
+
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__condition__temperature.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__condition__temperature }}
+                                {{ ResultFilter.form.setting__condition__temperature.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+{#                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__condition__other_condition.label_tag }}</h5>#}
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__condition__other_condition | as_crispy_field }}</h5>
+                                {{ ResultFilter.form.setting__condition__other_condition.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__sample__storage.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__sample__storage }}
+                                {{ ResultFilter.form.setting__sample__storage.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__design_sample.label_tag }}</h5>
+                                {{ ResultFilter.form.setting__design_sample }}
+                                {{ ResultFilter.form.setting__design_sample.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="heading_resultfilter">Analysis</h3>
+                        <div class="row">
+                            <div class="col">
+{#                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__instrument__manufacturer.label_tag }}</h5>#}
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__instrument__manufacturer | as_crispy_field }}</h5>
+                                {{ ResultFilter.form.setting__parameter__instrument__manufacturer.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+{#                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__instrument__name.label_tag }}</h5>#}
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__instrument__name | as_crispy_field }}</h5>
+                                {{ ResultFilter.form.setting__parameter__instrument__name.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+{#                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__reagent_manufacturer.label_tag }}</h5>#}
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__reagent_manufacturer | as_crispy_field }}</h5>
+                                {{ ResultFilter.form.setting__parameter__reagent_manufacturer.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col">
+{#                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__analytical_method.label_tag }}</h5>#}
+                                <h5 class="heading_resultfilter">{{ ResultFilter.form.setting__parameter__analytical_method | as_crispy_field }}</h5>
+                                {{ ResultFilter.form.setting__parameter__analytical_method.error | as_crispy_errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit
+                </button>
+                <br>
+            </form>
+{#            {% crispy ResultFilter ResultFilter.form %}#}
+        </div>
+    </div>
+
+    <br>
+    <hr>
+    <div class="row">
+
+            <div class="row d-flex justify-content-center">
+
+
+
+                      <h2>  Number of results matching your criteria: <span class="alert-danger">{{ results.count }} from  {{ subject_count }} subjects.</span></h2>
+                <hr>
+            <h1 class="display-6">Filtered Results Attributes:</h1>
+                <div class="row">
+
+                    <div class="col">
+                    <h4>Durations:</h4>
+                        {% for duration in duration_list %}
+                            {{ duration.duration_number}} {{ duration.get_duration_unit_display }} <br>
+                        {% endfor %}
+                    </div>
+                <div class="col">
+                    <h4>Settings:</h4>
+                        {% for setting in setting_list %}
+                    <a href="{% url 'results' setting.id %}">{{ setting.name }}</a> from {{ setting.owner }}<br>
+
+                {% endfor %}
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+
+    </div>
+    <hr>
+
+    <div class="row">
+    <div class="col">
+
+            {#    ----------------------------------Google Charts ---------------------------------------#}
+
+    {#--------------------------------------Switch Graph Total Values------------------------------#}
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h4>Deviation (%)</h4>
+            <img src='data:image/png;base64,{{ single_subject_chart_dev }}'>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col d-flex justify-content-center">
+            <h4>Average (abs)</h4>
+            <img src='data:image/png;base64,{{ single_subject_chart_avg }}'>
+        </div>
+        {#    ---------------------------------------Switch Graph Single Values---------------------------------------#}
+
+    </div>
+
+    {#    ######################################   Regression Graph   ##########################################}
+    <hr>
+    <h1 class="display-6">Regression Analysis of filtered data</h1>
+
+
+    <div class="row">
+
+        {#    ooooooooooooooooooooooooooo  Linear Regression  ooooooooooooooooooooooooooooooooo#}
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_lin }}'>
+            </div>
+
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+        <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_linregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_linregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_lin | floatformat:2 }} </td>
+        </tr>
+
+        </table>
+
+
+            {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
+
+        </div>
+        {#    ooooooooooooooooooooooooooo  Poly2nd ° Regression  ooooooooooooooooooooooooooooooooo#}
+
+        <div class="col">
+            {#                    --------------------Graph----------------#}
+            <div class="reg_image">
+                <img src='data:image/png;base64,{{ chart_poly }}'>
+            </div>
+            {#                      --------------------Statistics--------------#}
+
+            <br>
+            <table>
+            <tr>
+                <td class="calc_result">R<sup>2</sup> = {{ r2_polyregr | floatformat:3 }}</td>
+            </tr>
+            <tr>
+                <td class="calc_result">Stability equation: {{ eq_polyregr }}</td>
+            </tr>
+
+        <tr>
+            <td class="calc_result">Statistical Power: {{ power_poly | floatformat:2 }} </td>
+        </tr>
+
+        </table>
+
+
+        </div>
+    </div>
+    <p></p>
+
+        <hr>
+    <table class="table">
+    <thead>
+    <th scope="col">
+        Setting
+    </th>
+    <th scope="col">
+        Subject
+    </th>
+    <th scope="col">
+        Duration (h)
+    </th>
+    <th scope="col">
+        Average
+    </th>
+        <th scope="col">
+        Deviation (%)
+    </th>
+    <th scope="col">
+        Owner
+    </th>
+    </thead>
+    <tbody>
+    {% for item in data %}
+      <tr>
+      <td>
+          {{ item.setting_name }}
+      </td>
+          <td>
+              {{ item.subject_name }}
+          </td>
+      <td>
+        {{ item.duration }} h
+          </td>
+      <td>
+          {{ item.average }}
+      </td>
+          <td>
+              {{ item.deviation }} %
+          </td>
+      <td>
+          {{ item.owner_name }}
+      </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+    </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,30 @@
+
+
+{% if parameters %}
+
+
+{% for parameter in parameters %}
+<tr>
+    <td>
+        <a class="" hx-post="{% url 'select-parameter' parameter.pk %}" style="cursor: pointer">{{ parameter.name }}</a>
+    </td>
+    <td>
+        {{ parameter.unit }}
+    </td>
+    <td>
+        {{ parameter.cv_g }}
+    </td>
+    <td>
+        {{ parameter.cv_i }}
+    </td>
+</tr>
+
+
+{% endfor %}
+
+{% else %}
+
+Is the parameter you are searching for not in the list? <br>
+    <h4><a href="{% url 'new-parameter' %}">Request new parameter</a></h4>
+
+{% endif %}

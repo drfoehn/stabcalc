@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+    <div class="row">
+        <div class="col">
+            <h4>Thank you for your message.</h4>
+            Your request was successfully submitted and will be processed at the earliest convenience. <br>
+        </div>
+
+        <div class="col">
+            <img src="{% static 'images/mail.png' %}" alt="" width="100%">
+                 <p class="image_attribution"><a href="https://storyset.com/business">Business illustrations by Storyset</a></p>
+
+        </div>
+    </div>
+
+{% endblock %}

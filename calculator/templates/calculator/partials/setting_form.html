@@ -1,0 +1,262 @@
+{% load crispy_forms_tags %}
+<div hx-target="this" hx-swap="outerHTML" >
+<div class="col object-list-div">
+    <form method="POST">
+        {% csrf_token %}
+{#        {{ form | crispy}}#}
+
+
+
+    <table>
+        <tr>
+            <td class="form-rowhead">
+                Choose a name for your setting
+            </td>
+            </tr>
+            <tr>
+            <td>
+                {{ form.name }}
+            </td>
+            <td>
+                {{ form.name.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                {{ form.parameter.label_tag }}
+            </td>
+        </tr>
+            <tr>
+            <td>
+                {{ form.parameter}}
+            </td>
+            <td>
+                {{ form.parameter.errors }}
+            </td>
+        </tr>
+                <tr>
+            <td class="form-rowhead">
+                {{ form.sample.label_tag }}
+            </td>
+                    </tr>
+            <tr>
+            <td>
+                {{ form.sample }}
+            </td>
+            <td>
+                {{ form.sample.errors }}
+            </td>
+        </tr>
+                   <tr>
+            <td class="form-rowhead">
+                {{ form.sample_type.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.sample_type }}
+            </td>
+            <td>
+                {{ form.sample_type.errors }}
+            </td>
+        </tr>
+
+
+
+
+        <tr>
+            <td class="form-rowhead">
+                {{ form.durations.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+                <tr>
+        <td class="sub-italic">
+        Note that at least 5 sampling times are necessary to verify whether the fit of the instability equation corresponds to a linear model or not.
+    </td>
+    </tr>
+        <tr>
+            <td>
+                {{ form.durations }}
+                <p></p>
+            </td>
+
+        </tr>
+        <tr>
+            <td>
+                <strong>{{ form.durations.errors }}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                {{ form.subjects.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.subjects }}
+            </td>
+            <td>
+                {{ form.subjects.errors }}
+            </td>
+        </tr>
+                <tr>
+            <td class="form-rowhead">
+                How many replicates did you measure per study subject/sample/aliquot?
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.replicate_count }}
+            </td>
+            <td>
+                {{ form.replicate_count.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                {{ form.condition.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+               {{ form.condition }}
+            </td>
+            <td>
+                {{ form.condition.errors }}
+            </td>
+        </tr>
+        <tr id="freeze_thaw_cycle_label" style="display: none">
+
+            <td class="form-rowhead">
+                How many freeze/thaw cycles have the samples gone through? <br>
+
+            </td>
+                       </tr>
+            <tr id="freeze_thaw_cycle" style="display: none">
+            <td>
+                <i>(Select "1" for first thawing cycle)</i>
+                {{ form.freeze_thaw }}
+            </td>
+            <td>
+                {{ form.freeze_thaw.errors }}
+            </td>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+            How were samples analyzed?
+                <!-- Button trigger modal -->
+<span  data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor: help">
+  <i class="bi bi-info-circle"></i>
+</span>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Study design</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <u>Real time</u> = Samples are measured immediately after the defined storage times <br>
+                <u>Isochronus</u> = Samples are frozen after defined storage times and all samples are measured as batch after the last sample has been collected.
+
+      </div>
+    </div>
+  </div>
+</div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ form.design_type }}
+            </td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+            <td class="form-rowhead">
+                Were primary samples or aliquots used for storage?
+            </td>
+
+    </tr>
+
+            <tr>
+            <td>
+                {{ form.design_sample }}
+            </td>
+        </tr>
+    <tr>
+            <td class="form-rowhead">
+                {{ form.protocol.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.protocol }}
+            </td>
+            <td>
+                {{ form.protocol.errors }}
+            </td>
+        </tr>
+    <tr>
+            <td class="form-rowhead">
+                {{ form.comment.label_tag }}
+            </td>
+                       </tr>
+            <tr>
+            <td>
+                {{ form.comment }}
+            </td>
+            <td>
+                {{ form.comment.errors }}
+            </td>
+        </tr>
+                        <tr>
+                    <td>{{ form.feedback}}</td>
+                </tr>
+
+
+    </table>
+
+    <p></p>
+{#    If statement to prevent edit-view from creating more objects#}
+        {% if setting %}     {#  Passed in from Edit-setting-view #}
+            <button  class="btn btn-secondary" type="submit" hx-post="{% url 'edit-setting' setting.id %}"
+            class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            Save
+        </button>
+        {% else %}
+            <button type="submit"  class="btn btn-secondary" hx-post=".">
+            Save
+        </button>
+        {% endif %}
+    </form>
+</div>
+</div>
+
+
+<script>
+    document.getElementById('id_condition').addEventListener('change', toggleFreeze)
+
+
+    function toggleFreeze() {
+        let dropdown = document.getElementById('id_condition')
+        let selected_option = dropdown.options[dropdown.selectedIndex].innerText;
+        let freeze_thaw = document.getElementById('freeze_thaw_cycle');
+        let freeze_thaw_label = document.getElementById('freeze_thaw_cycle_label');
+        console.log(dropdown)
+        if (selected_option.includes('Frozen') || selected_option.includes('Deepfrozen')) {
+            console.log('yes')
+            freeze_thaw.style.display = 'block'
+            freeze_thaw_label.style.display = 'block'
+            }
+        else {
+            freeze_thaw.style.display = 'none'
+            freeze_thaw_label.style.display = 'none'
+            console.log('no')
+        }
+    }
+window.onload = toggleFreeze()
+</script>

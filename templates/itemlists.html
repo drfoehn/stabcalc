@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+{% url 'create-instrument' as instrument_url %}
+
+{% block title %}EFLM WG-PRE Stability Calculator{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if user == user %}
+
+
+
+
+
+            <div class="row">
+                <div class="col-3 item-box">
+                    <ul class="nav flex-column justify-content-center">
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-instrument' %}
+                                <img src="{% static 'images/icon/1h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/1.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link {% if request.resolver_match.url_name == 'create-instrument' %} active {% endif %}"
+                               href="{% url 'create-instrument' %}">Instruments</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-parameter' %}
+                                <img src="{% static 'images/icon/2h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/2.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-parameter' %} active {% endif %}"
+                               href="{% url 'create-parameter' %}">Parameters / Analytes</a>
+                        </li>
+                    <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-preanalytical-set' %}
+                                <img src="{% static 'images/icon/3h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/3.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-preanalytical-set' %} active {% endif %}"
+                               href="{% url 'create-preanalytical-set' %}">Preanalytical Condition</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-sample' %}
+                                <img src="{% static 'images/icon/4h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/4.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-sample' %} active {% endif %}"
+                               href="{% url 'create-sample' %}">Samples</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-duration' %}
+                                <img src="{% static 'images/icon/5h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/5.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-duration' %} active {% endif %}"
+                               href="{% url 'create-duration' %}">Storage durations</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-condition' %}
+                                <img src="{% static 'images/icon/6h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/6.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-condition' %} active {% endif %}"
+                               href="{% url 'create-condition' %}">Storage conditions</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-subject' %}
+                                <img src="{% static 'images/icon/7h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/7.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-subject' %} active {% endif %}"
+                               href="{% url 'create-subject' %}">Study subjects/voluteers/samples</a>
+                        </li>
+                        <li class="nav-item">
+                            {% if request.resolver_match.url_name == 'create-setting' %}
+                                <img src="{% static 'images/icon/8h.png' %}" alt="" class="number-icons">
+                            {% else %}
+                                <img src="{% static 'images/icon/8.png' %}" alt="" class="number-icons">
+                            {% endif %}<br>
+                            <a class="nav-link{% if request.resolver_match.url_name == 'create-setting' %} active {% endif %}"
+                               href="{% url 'create-setting' %}">Study settings</a>
+                        </li>
+                    </ul>
+                </div>
+
+    <div class="col-1"></div>
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-8">
+                            {% block item %}
+                            {% endblock %}
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </div>
+
+            </div>
+        {% else %}
+            You are not allowed to see content of other users.
+            <br> You are currently logged in as "{{ use.user_name }}"
+        {% endif %}
+    {% else %}
+        {% include 'unregistered_user.html' %}
+    {% endif %}
+{% endblock %}

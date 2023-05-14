@@ -1,0 +1,30 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}My durations{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">My durations</h4>
+
+
+    <a hx-get="{% url 'create-duration-form' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#duration_form">Add additional duration</a>
+    <div class="row" id="duration_form"></div>
+    {% if durations %}
+        {% for duration in durations %}
+            {% include 'calculator/partials/duration_detail.html' %}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no durations saved - <a hx-get="{% url 'create-duration-form' %}" hx-swap="beforeend"
+                                                hx-target="#duration_form" class="alert-link">Create your first
+            duration</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Insert Results to {{ setting.name }}{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">{{ user.user_name }}'s Dashboard</h4>
+    <div class="row">
+
+    </div>
+    <div class="row">
+    <div class="col-10">
+        <div>
+            <h4 class="display-6">My Stability studies</h4>
+        </div>
+    <table class="table table-hover dashboard-table">
+            <tr class="table-header">
+                <td class="display-7">Name</td>
+                <td class="display-7">Storage conditions</td>
+                <td class="display-7">Storage durations</td>
+                <td class="display-7">Study subjects/volunteers/samples (n)</td>
+                <td class="display-7">Recorded Results (n)</td>
+                <td class="display-7">Action</td>
+                <td></td>
+            </tr>
+        {% for setting in settings %}
+        <tr>
+            <th id="table-dashboard-settingname"><a href="{% url 'create-setting' %}">{{ setting.name }}</a>
+
+            </th>
+
+        <td id="table-dashboard-condition">
+
+        {% if setting.condition.other_condition %}
+             Other condition: {{ setting.condition.other_condition }}
+        {% endif %}
+            <br>
+            {{ setting.condition.get_temperature_display }}
+            <br>
+            Light: {{ setting.condition.light }}
+            <br>
+            Air: {{ setting.condition.air }}
+            <br>
+            Agitation: {{ setting.condition.agitation }}
+        </td>
+        <td class="table-dashboard-td">
+            {% for duration in setting.durations.all %}
+                {% if duration.seconds == 0%}
+                Baseline <br>
+            {% else %}
+
+            {{ duration }} <br>
+                {% endif %}
+            {% endfor %}
+        </td>
+        <td  class="table-dashboard-td">{{ setting.subjects.count }}</td>
+        <td  class="table-dashboard-td">{{ setting.results.count}}</td>
+        <td>
+            <!-- Example single danger button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Action
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'export_template_view' setting.pk %}">Add Results</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'create-result' setting.pk %}">Edit Results</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <li>{% if setting.results.count < 10 or setting.subjects.count < 5  %}
+                        <element class="dropdown-item"onclick="alert10()">No Report available </element>
+                    {% else %}
+                    <a class="dropdown-item" href="{% url 'results' setting.id %}">Show Report</a></li>
+                        {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'download-data' setting.pk %}">Download Data and Report</a></li>
+              </ul>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+</div>
+
+    <div class="col-2">
+    <h4 class="heading2">Add / Edit / Delete</h4>
+            <div><a href="{% url 'create-instrument' %}">1. Instruments</a></div>
+    <div><a href="{% url 'create-parameter' %}">2. Parameters / Lab tests</a></div>
+        <div><a href="{% url 'create-preanalytical-set' %}">3. Preanalytical condition set</a></div>
+    <div><a href="{% url 'create-sample' %}">4. Samples</a></div>
+    <div><a href="{% url 'create-duration' %}">5. Storage durations</a></div>
+    <div><a href="{% url 'create-condition' %}">6. Conditions</a></div>
+        <div><a href="{% url 'create-subject' %}">7. Study subjects/volunteers/samples</a></div>
+        <div><a href="{% url 'create-setting' %}">8. Settings</a></div>
+
+
+    </div>
+
+{#'settings': settings,#}
+{#        'parameters': parameters,#}
+{#        'subjects': subjects,#}
+{#        'durations': durations,#}
+{#        'samples': samples,#}
+{#        'conditions': conditions,#}
+{#        'instruments': instruments,#}
+
+<script type = "text/javascript">
+            function alert10() {
+               alert ("Please insert at least 10 results from 5 study subjects/samples for a statistical evaluation");
+            }
+      </script>
+
+{% endblock %}

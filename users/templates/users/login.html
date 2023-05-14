@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block headadditional %}
+{% endblock %}
+
+{% block title %}Stability Calculator - Login{% endblock %}
+
+{% block content %}
+    <div class="p-md-4 p-sm-3 rounded-sm header_hike_add">
+        <h2 class="display-4">Stability Calculator - Login</h2>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col shadow p-4 mb-5 bg-body rounded">
+                <form action="" method="post">
+                    {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="login_email" class="form-label">Login-ID</label>
+                            <input type="text" class="form-control" name="login_email"
+                                   aria-describedby="emailHelp">
+                       </div>
+                        <div class="mb-3">
+                            <label for="login_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="login_password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+
+                </form>
+                <br>
+                <div class="text-muted">
+                    No account yet? <a href="{% url 'register_user' %}">Get one here!</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}

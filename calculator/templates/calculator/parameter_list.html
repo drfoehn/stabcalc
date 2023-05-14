@@ -1,0 +1,30 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}My parameters{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">My parameters</h4>
+
+
+    <a hx-get="{% url 'create-parameter-form' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a>
+    <div class="row" id="parameter_form"></div>
+    {% if parameters %}
+        {% for parameter in parameters %}
+            {% include 'calculator/partials/parameter_detail.html' %}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no parameters saved - <a hx-get="{% url 'create-parameter-form' %}" hx-swap="beforeend"
+                                                hx-target="#parameter_form" class="alert-link">Create your first
+            parameter</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

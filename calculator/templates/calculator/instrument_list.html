@@ -1,0 +1,32 @@
+{% extends "itemlists.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}My Instruments{% endblock %}
+
+{% block item %}
+
+    <h4 class="display-5">My Instruments</h4>
+
+
+    <a hx-get="{% url 'create-instrument-form' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforebegin" hx-target="#instrument_form">Add additional Instrument</a>
+    <div class="row" id="instrument_form"></div>
+    {% if instruments %}
+        {% for instrument in instruments %}
+{#                    {% if user == instrument.owner %}#}
+            {% include 'calculator/partials/instrument_detail.html' %}
+{#            {% endif %}#}
+        {% endfor %}
+    {% else %}
+        <br>
+        <div class="alert alert-primary" role="alert">
+            Currently no instruments saved - <a hx-get="{% url 'create-instrument-form' %}" hx-swap="beforeend"
+                                                hx-target="#instrument_form" class="alert-link">Create your first
+            instrument</a>.
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+

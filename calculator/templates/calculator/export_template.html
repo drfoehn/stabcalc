@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+    <div class="jumbotron">
+        <h1 class="display-4">Add Results</h1>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div>
+                Dear {{ setting.owner }}, <br>
+
+                Please chose your preferred method of data acquisition for the following Setting: <br>
+                <strong>
+                    Setting-Name: {{ setting.name }}<br>
+                    Setting-ID: {{ setting.pk }}<br>
+                </strong>
+                <br>
+            </div>
+            <div>
+                <h4>
+                    1.)<a href="{% url 'create-result' setting.id %}">Input Data online</a>
+                </h4>
+                <br>
+            </div>
+            <div>
+                <h4>
+                    2.)<a href="{% url 'export-xls-template' setting.pk %}"
+                       >Download an Excel-Template</a>
+                </h4>
+                <p>
+
+                    If chosing this method, <span class="alert-danger">please do not alter the template in any way other than inputting the results on sheet #2</span>,
+                    otherwise, the upload of your data will not be possible. <br>
+                    You can upload the template with your results and all the data will be imported automatically.
+
+                </p>
+            </div>
+             <div>
+                <h4>
+                    3.)<a href="{% url 'import-xls-template' %}">Upload template with data</a>
+                </h4>
+                <br>
+<a href="{% url 'import_excel' %}">test</a>
+            </div>
+
+        </div>
+
+        <div class="col">
+            <img src="{% static 'images/import_export.png' %}" alt="" width="100%">
+            <p class="image_attribution"><a href="https://storyset.com/technology">Technology illustrations by
+                Storyset</a>
+            </p>
+
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,233 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="col item-box">
+        <form method="POST">
+            <h4 {% if parameter.pk %}class="d-none"{% endif %}>Select Parameter</h4>
+            {% csrf_token %}
+
+            <input class="form-control {% if parameter.pk %}d-none{% endif %}"
+                   type="search"
+                   placeholder="Begin Typing To Search Parameters..."
+                   name="name"
+                   {% if parameter.pk %}readonly{% endif %}
+                   hx-trigger="keyup changed delay:500ms, search"
+                   hx-post="{% url 'search-parameter' %}"
+                   hx-target="#search-results"
+                   hx-indicator=".htmx-indicator"
+                   hx-swap="innerHtml"
+                    {#                    hx-select=""#}
+            >
+            <div class="spinner-border htmx-indicator" role="status">
+                <span class="visually-hidden">Searching...</span>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Parameter name</th>
+                    <th>Unit</th>
+                    <th>CVg</th>
+                    <th>CVi</th>
+                </tr>
+                </thead>
+                <tbody id="search-results">
+
+                </tbody>
+                <tr id="selected_parameter">
+                    <td>
+                        {{ parameter_name }}
+                    </td>
+                    <td>
+                        {{ parameter_unit }}
+                    </td>
+                    <td>
+                        {{ parameter_cvg }}
+                    </td>
+                    <td>
+                        {{ parameter_cvi }}
+                    </td>
+                </tr>
+            </table>
+            <a href="https://globalrph.com/medcalcs/conventional-and-si-unit-converter-updated/" target="_blank">SI-Unit
+                Converter</a>
+            <br>
+
+            <table>
+                <tr style="display: none">
+                    <td>
+                        {{ form.parameter }}
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="2"><h4>
+                        <br>Analytical Info
+                    </h4></th>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.reagent_name.label_tag }}
+                    </td>
+                    <td>
+                        {{ form.reagent_name }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+
+                        {{ form.reagent_manufacturer.label_tag }}
+
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        {{ form.reagent_name.errors }}
+                    </td>
+                    <td>
+                        {{ form.reagent_manufacturer.errors }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.analytical_method.label_tag }}
+                    </td>
+                    <td>
+                        {{ form.analytical_method }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        Analytical imprecision (CVa)
+                    </td>
+                    <td>
+                        {{ form.cv_a }}
+                    </td>
+                    <td>
+                        %
+                    </td>
+                    <td>
+
+                        <!-- Button trigger modal -->
+                        <i class="bi bi-question-circle" data-bs-toggle="modal"
+                                data-bs-target="#cva_Modal">
+                        </i>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="cva_Modal" tabindex="-1" aria-labelledby="cva_ModalLabel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Please calculate the analytical imprecision using your laboratory's IQC data from the lot your study samples were measured in, applying the following formula:
+                                        <br>
+                                        <br>
+                                        <strong>Analytical imprecision (CV%) = (SD/Mean) * 100</strong>
+                                        <br>
+                                        <p>
+                                            SD - Overall Standard deviation of your IQC measurements<br>
+                                            Mean - Overall Mean Value of your IQC measurements
+
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        Is it a manual analytical method?<br>
+
+
+                    </td>
+                    <td class="form-rowhead">
+                        <p></p>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="method_hand"
+                                   onclick="hideInstrument()">
+
+                            </input>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="instrument-toggle">
+                            <br>
+                            <span class="form-rowhead">Analytical instrument</span> <br>
+                            {{ form.instrument }} {{ form.instrument.errors }}
+                        </div>
+                    </td>
+                </tr>
+                {#                <tr>#}
+                {#                    <th colspan="2"><h4>#}
+                {#                        CVs#}
+                {#                    </h4></th>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    <td class="form-rowhead">#}
+                {#                        Analytical Imprecision (Intra-Assay CV %)#}
+                {#                    </td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {##}
+                {#                    <td>#}
+                {#                        {{ form.CV.CV_g }}#}
+                {#                    </td>#}
+                {#                    <td>#}
+                {#                        %#}
+                {#                    </td>#}
+                {#                </tr>#}
+                {#                <tr>#}
+                {#                    <td>#}
+                {#                        {{ form.CV_intra.errors }}#}
+                {#                    </td>#}
+                {#                    <td>#}
+                {#                        {{ form.CV_inter.errors }}#}
+                {#                    </td>#}
+                {#                </tr>#}
+                <tr>
+                    <td>{{ form.feedback }}</td>
+                </tr>
+            </table>
+
+
+            <script>
+                function hideInstrument() {
+
+                    let displaystatus = document.getElementById('instrument-toggle');
+
+                    if (displaystatus.style.display === 'none') {
+                        displaystatus.style.display = 'block'
+                    } else {
+                        displaystatus.style.display = 'none'
+                    }
+                }
+            </script>
+            <p></p>
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if parameter %}     {#  Passed in from Edit-instrument-view #}
+                <button class="button button-save" type="submit" hx-post="{% url 'edit-parameter' parameter.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+            {% else %}
+                <button class="button button-save" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
+
+
+</div>

@@ -1,0 +1,26 @@
+
+{##}
+<div hx-target="this" hx-swap='outerHTML' class="row">
+{% if preanalytical_set.owner == user %}
+
+
+<div class="col object-list-div">
+    <h3>
+        {{ preanalytical_set.collection_site }}
+    </h3>
+<h4>Transportation</h4>
+Time: {{ preanalytical_set.transportation_time }} {{ preanalytical_set.get_transportation_time_unit_display }} <br>
+Temperature: {{ preanalytical_set.transportation_temp }} °C <br>
+Method: {{ preanalytical_set.get_transportation_method_display }}
+<h4>Centrifugation</h4>
+Speed: {{ preanalytical_set.centrifugation_g }} *g <br>
+Time: {{ preanalytical_set.centrifugation_time }} minutes <br>
+Temperature: {{ preanalytical_set.transportation_temp }}
+</div>
+    <div class="col-2 edit-delete-div">
+    <div hx-get="{% url 'edit-preanalytical-set' preanalytical_set.id %}"><i class="bi bi-pencil icon_edit"></i></div>
+    <div hx-post="{% url 'delete-preanalytical-set' preanalytical_set.id %}" hx-confirm="Are you sure?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
+    </div>
+{% endif %}
+</div>
+

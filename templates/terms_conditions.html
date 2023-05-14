@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Terms of use and disclaimer{% endblock %}
+
+{% block content %}
+
+
+    <div class="header_static">
+        <h2 class="display-4">Terms of use and disclaimer:</h2>
+    </div>
+    <div class="row">
+    <div class="col-sm-8">
+        <p class="about_subheading">Use of data</p>
+            This website and its content is copyright of Janne Cadamuro and the Preanalytical Working Group of the EFLM. All rights reserved. You may not, except with our express written permission, distribute or commercially exploit the content (contact Silvia Cattaneo, EFLM Office for more information, silvia.cattaneo@eflm.eu). You may, however, print ordownload to a local hard disk extracts for your personal and non-commercial use only. If you present the content you must acknowledge the website as the source of the material. You cannot transmit the content or store it in any other website or other form of electronic retrieval system.
+    <p  class="about_subheading">The use of this website is subject to the following terms of use:</p>
+        <ul class="list-group">
+            <li class="list-group-item">
+                By using the stability calculator, you agree to your stability data being used for meta-analysis.
+            </li>
+            <li class="list-group-item">
+                Calculations are made with ... No warrenty on completeness or correctness
+            </li>
+            <li class="list-group-item">
+                Every effort is made to keep the website up and running smoothly. However, the EFLM takes no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.
+
+            </li>
+            <li class="list-group-item">
+                Be aware there are limitations on the use of data from this website, see copyright .
+
+            </li>
+            <li class="list-group-item">
+                If using data from this website, it should be referenced as <br>
+                <i>Cadamuro J., all WG-PRE members. The EFLM Sample Stability Calculator. https://stabilitycalculator.eu/ [time of access].
+</i>
+
+            </li>
+            <li class="list-group-item">
+                Regarding privacy policies and cookies, please refer to the EFLM information on https://www.eflm.eu/site/page/a/1451
+
+            </li>
+            <li class="list-group-item">By using our website, you hereby consent to our disclaimer and agree to its terms of use.
+</li>
+        </ul>
+
+
+
+        <p  class="about_subheading">Cookies</p>
+
+
+        <p  class="about_subheading">Usage tracking</p>
+
+ </div>
+        <div class="col-sm-4">
+             <img src="{% static 'images/terms.png' %}" alt="cookie" width="100%" style="float: right">
+             <p class="image_attribution"><a href="https://storyset.com/business">Business illustrations by Storyset</a></p>
+        </div>
+    </div>
+
+{% endblock %}

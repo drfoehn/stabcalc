@@ -1,0 +1,313 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="col object-list-div">
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.sample_type.label_tag }}
+                    </td>
+                    <td>
+
+                    </td>
+                    <td></td>
+                    <td id="storage-title">
+Blood samples are stored as...
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.sample_type }}
+                    </td>
+                    <td>
+                        {{ form.sample_type_other }}
+                    </td>
+                    <td>
+                        {{ form.sample_type.errors }}
+                    </td>
+                    <td id="storage-field">
+
+                        {{ form.storage }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.container_additive.label_tag }}
+                    </td>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_additive }}
+                    </td>
+                    <td>
+                        {{ form.container_additive_other }}
+                    </td>
+                    <td>
+                        {{ form.container_additive.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.container_fillingvolume.label_tag }} <strong>in mL</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_fillingvolume }}
+                    </td>
+                    <td>
+                        {{ form.container_fillingvolume.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.container_dimension.label_tag }}
+                    </td>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_dimension }}
+                    </td>
+                    <td>
+                        {{ form.container_dimension_other }}
+                    </td>
+                    <td>
+                        {{ form.container_dimension.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        {{ form.container_material.label_tag }}
+                    </td>
+                    <th>
+
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        {{ form.container_material }}
+
+                    </td>
+                    <td>
+                        {{ form.container_material_other }}
+                    </td>
+                    <td>
+                        {{ form.container_material.errors }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        Does the container use gel as seperator?
+                    </td>
+                    <td>
+                        <p></p>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="gel" id="id_gel">
+                        </div>
+{#                        {{ form.gel }} (yes)#}
+                    </td>
+                    <td>
+                        <p></p>
+                        {{ form.gel.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <p></p>
+                    <td class="form-rowhead">
+                        Are study samples leftovers from routine analysis?
+                    </td>
+                    <td>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="sample_leftover" id="id_sample_leftover">
+                        </div>
+{#                        {{ form.sample_leftover }} (Yes)#}
+
+                    </td>
+                    <td>{{ form.sample_leftover.errors}}</td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        Are your study samples pooled from individual samples?
+                    </td>
+                    <td><div class="form-check form-switch">
+                        <input type="checkbox" name="sample_pool" id="id_sample_pool" class="form-check-input" onclick="togglePool()"></input>
+                    </div>
+                    </td>
+                    <td>
+                        {{ form.sample_pool.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td id="sample_pool_text_th" style="display: none" class="form-rowhead">
+                        <p></p>
+                        Please describe the pooling (Source, Concentrations, etc) <br>
+                        {{ form.sample_pool_text }}
+
+                    </td>
+                    <td>{{ form.sample_pool_text.errors }}</td>
+
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        Have you spiked samples with the analyte in question?
+                    </td>
+                    <td><div class="form-check form-switch">
+                        <input type="checkbox" name="sample_spike" id="sample_spike" class="form-check-input" onclick="toggleSpike()"></input>
+                    </div>
+                    </td>
+                    <td>
+                        {{ form.sample_spike.errors }}
+                    </td>
+                </tr>
+                <tr>
+                    <td id="sample_spike_text_th" style="display: none" class="form-rowhead">
+                        <p></p>
+                        Please describe the spiking (analyte, concentrations, etc) <br>
+                        {{ form.sample_spike_text}}
+
+                    </td>
+                    <td>{{ form.sample_spike_text.errors }}</td>
+                </tr>
+                <tr>
+                    <td class="form-rowhead">
+                        <p></p>
+                        {{ form.preanalytical_set.label_tag }}<br>
+                        {{ form.preanalytical_set }}<br>
+                        {{ form.preanalytical_set.errors }}
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+                                <tr>
+                    <td>{{ form.feedback }}</td>
+                </tr>
+            </table>
+            <p></p>
+
+
+            {#        {{ form }}#}
+            {#    If statement to prevent edit-view from creating more objects#}
+            {% if sample %}     {#  Passed in from Edit-sample-view #}
+                <button class="btn btn-secondary" type="submit" hx-post="{% url 'edit-sample' sample.id %}"
+                        class="inline-flex items-center px-3 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Save
+                </button>
+            {% else %}
+                <button class="btn btn-secondary" type="submit" hx-post=".">
+                    Save
+                </button>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('id_sample_type').addEventListener('change', toggleType)
+    document.getElementById('id_container_additive').addEventListener('change', toggleAdd)
+    document.getElementById('id_container_dimension').addEventListener('change', toggleDim)
+    document.getElementById('id_container_material').addEventListener('change', toggleMaterial)
+
+
+
+    function toggleType() {
+        let dropdown = document.getElementById('id_sample_type').value
+        let other = document.getElementById('id_sample_type_other');
+        let storage_title = document.getElementById('storage-title');
+        let storage_field = document.getElementById('storage-field');
+
+        if (dropdown === "9") {
+            other.style.display = 'block'
+            storage_title.style.display = 'none'
+            storage_field.style.display = 'none'
+        } else if(dropdown === "3" || dropdown === '2' || dropdown==='1'){
+            storage_title.style.display = 'block'
+            storage_field.style.display = 'block'
+            other.style.display = 'none'
+        }
+        else {
+            other.style.display = 'none'
+            other.value = ''
+            storage_title.style.display = 'none'
+            storage_field.style.display = 'none'
+            storage_field.value = ''
+        }
+    }
+window.onload = toggleType()
+
+
+     function toggleAdd() {
+        let dropdown = document.getElementById('id_container_additive').value
+        let other = document.getElementById('id_container_additive_other');
+        if (dropdown === "4") {
+            other.style.display = 'block'
+        } else {
+            other.style.display = 'none'
+            other.value = ''
+        }
+    }
+    window.onload = toggleAdd()
+
+
+    function toggleDim() {
+        let dropdown = document.getElementById('id_container_dimension').value
+        let other = document.getElementById('id_container_dimension_other');
+        if (dropdown === "4") {
+            other.style.display = 'block'
+        } else {
+            other.style.display = 'none'
+            other.value = ''
+        }
+    }
+    window.onload = toggleDim()
+
+
+    function toggleMaterial() {
+        let dropdown_material = document.getElementById('id_container_material').value
+        let other_material = document.getElementById('id_container_material_other');
+        if (dropdown_material === "3") {
+            other_material.style.display = 'block'
+        } else {
+            other_material.style.display = 'none'
+            other_material.value = ''
+        }
+    }
+    window.onload = toggleMaterial()
+
+
+
+    function toggleSpike() {
+        let spike_text = document.getElementById('sample_spike_text_th');
+        if (spike_text.style.display === 'none') {
+            spike_text.style.display = 'block'
+        } else {
+            spike_text.style.display = 'none'
+        }
+    }
+
+    document.getElementById('id_sample_spike').addEventListener('change', toggleSpike)
+    document.getElementById('id_sample_pool').addEventListener('change', togglePool)
+
+    function togglePool() {
+        let spike_pool = document.getElementById('sample_pool_text_th');
+        if (spike_pool.style.display === 'none') {
+            spike_pool.style.display = 'block'
+        } else {
+            spike_pool.style.display = 'none'
+        }
+    }
+
+
+</script>

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Insert Results to {{ setting.name }}{% endblock %}
+
+{% block content %}
+
+    <script type = "text/javascript">
+            function alert10() {
+               alert ("Please insert at least 10 results for a statistical evaluation");
+            }
+      </script>
+
+    <h4 class="display-5">List / Edit / Add results"</h4>
+
+    <h4>
+    Setting:  {{ setting.name }}<br>
+    Parameter: {{ setting.parameter.parameter.name }}<br>
+    Temperature: {{ setting.condition.get_temperature_display }}<br>
+</h4>
+        <h4 class="display6"
+    {% if setting.result_set.count < 10 %}
+           onclick="alert10()"><a href="
+    {% else %}
+       ><a href="{% url 'results' setting.id %}
+        {% endif %}
+    ">Show statistical evaluation</a>
+        </h4>
+    <br>
+
+    <div class="row">
+        <!--
+        Define here the variables, you can delete this comment afterwords:
+            object_list for the "items" to loo over: a
+            single object: a
+            machine name attrof the object: a
+            display title ttr of the object: a
+        -->
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                {% for duration in durations %}
+                    <button
+                            class="nav-link{% if forloop.first %} active{% endif %}"
+                            id="nav-{{ duration.seconds }}-tab"
+                            data-bs-toggle="tab"
+                            data-bs-target="#nav-{{ duration.seconds }}"
+                            type="button"
+                            role="tab"
+                            aria-controls="nav-{{ duration.seconds }}"
+                            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                            {#                            {% if not duration.enabled %}disabled{% endif %}#}
+                    >
+                        {% if duration.seconds == 0 %}
+                            Baseline
+                        {% else %}
+                            {{ duration }}
+                        {% endif %}
+                    </button>
+                {% endfor %}
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            {% for duration in durations %}
+                <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+                     id="nav-{{ duration.seconds }}"
+                     role="tabpanel"
+                     aria-labelledby="nav-{{ duration.seconds }}-tab"
+                     tabindex="0"
+                >
+{#                  <a hx-get="{% url 'create-result-form' setting.id duration.id %}" class="btn btn-danger btn-add"#}
+{#                                   role="button" data-bs-toggle="button" id="addresults-button"#}
+{#                                   hx-swap="beforebegin">Add additional result rows per subject/sample</a>#}
+ <form action="" method="post">
+ {% csrf_token %}
+                    {% for subject in setting.subjects.all %}
+                        <div class="row">
+                            <div class="col-2">
+                                <h4 class="display6">{{ subject }} </h4> <br>
+                            </div>
+                            <div class="col-3">
+
+                                <div class="row" id="result_form-{{ duration.id }}-{{ subject.id }}"></div>
+
+                                {##}
+{#                                {% include 'calculator/partials/result_form.html' %}#}
+                                {% for field in form %}
+                                    {% if field.field.subject_id == subject.id and field.field.duration_id == duration.id %}
+{#                                        {{ field.label }}#}
+                                        {{ field }}
+                                        Enter result in {{ setting.parameter.parameter.unit }}
+
+                                    {% endif %}
+                                {% endfor %}
+{#                                {{ form.value-.label_tag }} {{ form.value }}#}
+
+                                {##}
+{#                                <button type="submit" class="btn btn-secondary">Save</button>#}
+{#                            </form>#}
+                                {% for result in subject.result_set.all %}
+                                    {% if result.setting == setting %}
+                                        {% if result.duration == duration %}
+                                            {% if result %}
+                                                {% include 'calculator/partials/result_detail.html' %}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+  <button type="submit" class="btn btn-danger">Save</button>
+  </form>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+

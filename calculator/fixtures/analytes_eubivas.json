@@ -1,0 +1,813 @@
+[
+    {
+      "model": "calculator.Parameter",
+      "pk": 1,
+      "fields": {
+        "name": "ALT / GPT",
+        "unit": "U/L",
+        "cv_i": 9.3,
+        "cv_g": 28
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 2,
+      "fields": {
+        "name": "AST / GOT",
+        "unit": "U/L",
+        "cv_i": 9.5,
+        "cv_g": 20.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 3,
+      "fields": {
+        "name": "Gamma-Glutamy Transferase",
+        "unit": "U/L",
+        "cv_i": 8.9,
+        "cv_g": 45.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 4,
+      "fields": {
+        "name": "Alkal. Phosphatase",
+        "unit": "U/L",
+        "cv_i": 5.3,
+        "cv_g": 24.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 5,
+      "fields": {
+        "name": "LDH",
+        "unit": "U/L",
+        "cv_i": 5.2,
+        "cv_g": 12.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 6,
+      "fields": {
+        "name": "Creatin-Kinase",
+        "unit": "U/L",
+        "cv_i": 14.5,
+        "cv_g": 37.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 7,
+      "fields": {
+        "name": "Amylase",
+        "unit": "U/L",
+        "cv_i": 6.8,
+        "cv_g": 30.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 8,
+      "fields": {
+        "name": "Pancreatic α-amylase",
+        "unit": "U/L",
+        "cv_i": 6.3,
+        "cv_g": 24.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 9,
+      "fields": {
+        "name": "Lipase",
+        "unit": "U/L",
+        "cv_i": 7.7,
+        "cv_g": 23.8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 10,
+      "fields": {
+        "name": "Sodium",
+        "unit": "mmol/L",
+        "cv_i": 0.53,
+        "cv_g": 1.21
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 11,
+      "fields": {
+        "name": "Potassium",
+        "unit": "mmol/L",
+        "cv_i": 3.92,
+        "cv_g": 4.08
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 12,
+      "fields": {
+        "name": "Chloride",
+        "unit": "mmol/L",
+        "cv_i": 0.98,
+        "cv_g": 1.34
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 13,
+      "fields": {
+        "name": "Calcium",
+        "unit": "mg/dL",
+        "cv_i": 1.81,
+        "cv_g": 2.73
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 14,
+      "fields": {
+        "name": "Magnesium",
+        "unit": "mg/dL",
+        "cv_i": 2.88,
+        "cv_g": 5.79
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 15,
+      "fields": {
+        "name": "inorg. Phosphate",
+        "unit": "mg/dL",
+        "cv_i": 7.67,
+        "cv_g": 10.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 16,
+      "fields": {
+        "name": "Total Cholesterol",
+        "unit": "mg/dL",
+        "cv_i": 5.18,
+        "cv_g": 17.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 17,
+      "fields": {
+        "name": "HDL Cholesterol",
+        "unit": "mg/dL",
+        "cv_i": 5.67,
+        "cv_g": 25.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 18,
+      "fields": {
+        "name": "LDL Cholesterol",
+        "unit": "mg/dL",
+        "cv_i": 8.46,
+        "cv_g": 28.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 19,
+      "fields": {
+        "name": "Non-HDL Cholesterol",
+        "unit": "mg/dL",
+        "cv_i": 6.88,
+        "cv_g": 26.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 20,
+      "fields": {
+        "name": "Trigycerides",
+        "unit": "mg/dL",
+        "cv_i": 19.8,
+        "cv_g": 40.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 21,
+      "fields": {
+        "name": "Glucose",
+        "unit": "mg/dL",
+        "cv_i": 4.7,
+        "cv_g": 8.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 22,
+      "fields": {
+        "name": "Urea",
+        "unit": "mg/dL",
+        "cv_i": 14.1,
+        "cv_g": 22.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 23,
+      "fields": {
+        "name": "Uric Acid",
+        "unit": "mg/dL",
+        "cv_i": 8.32,
+        "cv_g": 23.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 24,
+      "fields": {
+        "name": "Total Protein",
+        "unit": "mg/dL",
+        "cv_i": 2.6,
+        "cv_g": 4.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 25,
+      "fields": {
+        "name": "Total Bilirubin",
+        "unit": "mg/dL",
+        "cv_i": 20.9,
+        "cv_g": 26.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 26,
+      "fields": {
+        "name": "Direct Bilirubin",
+        "unit": "mg/dL",
+        "cv_i": 20.9,
+        "cv_g": 31.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 27,
+      "fields": {
+        "name": "Creatinine (enzymatic)",
+        "unit": "mg/dL",
+        "cv_i": 4.4,
+        "cv_g": 17.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 28,
+      "fields": {
+        "name": "Creatinine (Jaffe)",
+        "unit": "mg/dL",
+        "cv_i": 4.7,
+        "cv_g": 19
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 29,
+      "fields": {
+        "name": "neuron-specific enolase",
+        "unit": "mg/L",
+        "cv_i": 10.9,
+        "cv_g": 20.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 30,
+      "fields": {
+        "name": "S100-β protein",
+        "unit": "pg/L",
+        "cv_i": 10.2,
+        "cv_g": 32.7
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 31,
+      "fields": {
+        "name": "Alpha1-Antitrypsin",
+        "unit": "mg/dL",
+        "cv_i": 3.8,
+        "cv_g": 10.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 32,
+      "fields": {
+        "name": "Alpha1-acid-glycoprotein",
+        "unit": "mg/dL",
+        "cv_i": 6.8,
+        "cv_g": 24
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 33,
+      "fields": {
+        "name": "Albumin",
+        "unit": "g/dL",
+        "cv_i": 2.5,
+        "cv_g": 5.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 34,
+      "fields": {
+        "name": "ß2-Microglobulin",
+        "unit": "mg/L",
+        "cv_i": 4,
+        "cv_g": 11.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 35,
+      "fields": {
+        "name": "Complement component 3",
+        "unit": "mg/L",
+        "cv_i": 4.6,
+        "cv_g": 15.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 36,
+      "fields": {
+        "name": "Complement component 4",
+        "unit": "mg/L",
+        "cv_i": 6.9,
+        "cv_g": 24.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 37,
+      "fields": {
+        "name": "Ceruloplasmin",
+        "unit": "mg/L",
+        "cv_i": 4.9,
+        "cv_g": 15.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 38,
+      "fields": {
+        "name": "Cystatin C",
+        "unit": "mg/L",
+        "cv_i": 3.9,
+        "cv_g": 12
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 39,
+      "fields": {
+        "name": "Haptoglobin",
+        "unit": "mg/dL",
+        "cv_i": 7.4,
+        "cv_g": 39.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 40,
+      "fields": {
+        "name": "Immunglobulin A",
+        "unit": "mg/dL",
+        "cv_i": 3.3,
+        "cv_g": 39.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 41,
+      "fields": {
+        "name": "Immunglobulin G",
+        "unit": "mg/dL",
+        "cv_i": 2.8,
+        "cv_g": 19.7
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 42,
+      "fields": {
+        "name": "Immunglobulin M",
+        "unit": "mg/dL",
+        "cv_i": 3.9,
+        "cv_g": 48.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 43,
+      "fields": {
+        "name": "Transferrin",
+        "unit": "mg/dL",
+        "cv_i": 3.4,
+        "cv_g": 13.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 44,
+      "fields": {
+        "name": "soluble Transferrin Receptor",
+        "unit": "mg/L",
+        "cv_i": 6.9,
+        "cv_g": 19.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 45,
+      "fields": {
+        "name": "C-reactive Protein",
+        "unit": "mg/L",
+        "cv_i": 29.4,
+        "cv_g": 87
+      }
+    },
+
+    {
+      "model": "calculator.Parameter",
+      "pk": 47,
+      "fields": {
+        "name": "Apolipoprotein A1",
+        "unit": "mg/dL",
+        "cv_i": 4.8,
+        "cv_g": 17.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 48,
+      "fields": {
+        "name": "Apolipoprotein B",
+        "unit": "mg/dL",
+        "cv_i": 6.7,
+        "cv_g": 25.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 49,
+      "fields": {
+        "name": "Troponin I (Siemens)",
+        "unit": "ng/L",
+        "cv_i": 13.9,
+        "cv_g": 36.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 50,
+      "fields": {
+        "name": "Troponin I (Singulex)",
+        "unit": "ng/L",
+        "cv_i": 16.6,
+        "cv_g": 40.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 51,
+      "fields": {
+        "name": "Parathormone",
+        "unit": "ng/L",
+        "cv_i": 14.7,
+        "cv_g": 26.8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 52,
+      "fields": {
+        "name": "Osteocalcin",
+        "unit": "μg/L",
+        "cv_i": 8.9,
+        "cv_g": 32.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 53,
+      "fields": {
+        "name": "uncarboxylated-unphosphorylated Matrix-Gla Protein",
+        "unit": "pmol/L",
+        "cv_i": 6.9,
+        "cv_g": 13.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 54,
+      "fields": {
+        "name": "N-terminal propeptide of type I collagen",
+        "unit": "μg/L",
+        "cv_i": 8.8,
+        "cv_g": 35.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 55,
+      "fields": {
+        "name": "β-isomerized C-terminal telopeptide of type I collagen",
+        "unit": "ng/L",
+        "cv_i": 15.1,
+        "cv_g": 45.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 56,
+      "fields": {
+        "name": "intact Fibroblast Growth Factor 23",
+        "unit": "ng/L",
+        "cv_i": 13.9,
+        "cv_g": 26.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 57,
+      "fields": {
+        "name": "Cortisol",
+        "unit": "nmol/L",
+        "cv_i": 15.5,
+        "cv_g": 20.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 58,
+      "fields": {
+        "name": "Insulin",
+        "unit": "mU/mL",
+        "cv_i": 25.3,
+        "cv_g": 33.4
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 59,
+      "fields": {
+        "name": "TSH",
+        "unit": "mIU/L",
+        "cv_i": 18.9,
+        "cv_g": 35.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 60,
+      "fields": {
+        "name": "Free T3",
+        "unit": "pmol/L",
+        "cv_i": 5,
+        "cv_g": 8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 61,
+      "fields": {
+        "name": "Free Thyroxine",
+        "unit": "pmol/L",
+        "cv_i": 4.8,
+        "cv_g": 7.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 62,
+      "fields": {
+        "name": "human Calcitonin",
+        "unit": "ng/L",
+        "cv_i": 13,
+        "cv_g": 65.8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 63,
+      "fields": {
+        "name": "Thyreoglobulin",
+        "unit": "µg/L",
+        "cv_i": 10.3,
+        "cv_g": 79
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 64,
+      "fields": {
+        "name": "total PSA",
+        "unit": "µg/L",
+        "cv_i": 6.8,
+        "cv_g": 42
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 65,
+      "fields": {
+        "name": "free PSA (absolut)",
+        "unit": "µg/L",
+        "cv_i": 7.1,
+        "cv_g": 46.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 66,
+      "fields": {
+        "name": "conjugated PSA",
+        "unit": "µg/L",
+        "cv_i": 8.8,
+        "cv_g": 57.7
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 67,
+      "fields": {
+        "name": "free PSA (relative)",
+        "unit": "%",
+        "cv_i": 5.3,
+        "cv_g": 36.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 68,
+      "fields": {
+        "name": "CA 15-3",
+        "unit": "U/mL",
+        "cv_i": 4.4,
+        "cv_g": 36.8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 69,
+      "fields": {
+        "name": "Carcino Embryonal Antigen",
+        "unit": "ng/mL",
+        "cv_i": 6.3,
+        "cv_g": 59.8
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 70,
+      "fields": {
+        "name": "CA 19-9",
+        "unit": "U/mL",
+        "cv_i": 4,
+        "cv_g": 56
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 71,
+      "fields": {
+        "name": "Cytokeratin Fragment 21-1",
+        "unit": "mg/L",
+        "cv_i": 19.7,
+        "cv_g": 29.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 72,
+      "fields": {
+        "name": "human epididymis protein-4",
+        "unit": "pmol/L",
+        "cv_i": 6.7,
+        "cv_g": 18.5
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 73,
+      "fields": {
+        "name": "Alpha Fetoprotein",
+        "unit": "µg/L",
+        "cv_i": 4.1,
+        "cv_g": 41.9
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 74,
+      "fields": {
+        "name": "CA 125",
+        "unit": "U/mL",
+        "cv_i": 8.6,
+        "cv_g": 41.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 75,
+      "fields": {
+        "name": "activated partial Thromboplasin Time ",
+        "unit": "s",
+        "cv_i": 2.9,
+        "cv_g": 7.2
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 76,
+      "fields": {
+        "name": "Prothrombin Time",
+        "unit": "s",
+        "cv_i": 2.6,
+        "cv_g": 5.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 77,
+      "fields": {
+        "name": "Antithrombin 3",
+        "unit": "%",
+        "cv_i": 3.5,
+        "cv_g": 8.1
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 78,
+      "fields": {
+        "name": "Coagulation factor VIII",
+        "unit": "%",
+        "cv_i": 8.3,
+        "cv_g": 23.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 79,
+      "fields": {
+        "name": "Fibrinogen",
+        "unit": "mg/dL",
+        "cv_i": 10.2,
+        "cv_g": 17.3
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 80,
+      "fields": {
+        "name": "D-Dimer",
+        "unit": "ng/mL (FEU)",
+        "cv_i": 29,
+        "cv_g": 35.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 81,
+      "fields": {
+        "name": "Protein C",
+        "unit": "%",
+        "cv_i": 5.4,
+        "cv_g": 18.6
+      }
+    },
+    {
+      "model": "calculator.Parameter",
+      "pk": 82,
+      "fields": {
+        "name": "free Protein S",
+        "unit": "%",
+        "cv_i": 4,
+        "cv_g": 16.2
+      }
+    }
+  ]

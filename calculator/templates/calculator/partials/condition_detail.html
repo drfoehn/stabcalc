@@ -1,0 +1,37 @@
+
+{##}
+<div hx-target="this" hx-swap='outerHTML' class="row">
+{% if condition.owner == user %}
+
+
+<div class="col object-list-div">
+    <h3>
+        {{ condition.get_temperature_display }} <br>
+        {% if condition.other_condition%}
+            {{ condition.other_condition }}
+        {% endif %}
+    </h3>
+Exposure during storage to: <br>
+
+    - Light: {% if condition.light == True %} yes {% else %} no {% endif %} <br>
+    - Air: {% if condition.air == True %} yes {% else %} no {% endif %} <br>
+    - Cells: {% if condition.cell == True %} yes {% else %} no {% endif %} <br>
+    - Agitation: {% if condition.agitation == True %} yes {% else %} no {% endif %} <br>
+    <br>
+
+    <p>
+        {% if condition.thawing %}
+            Thawing process: <br>
+            {{ condition.thawing }}
+        {% endif %}
+
+
+    </p>
+</div>
+    <div class="col-2 edit-delete-div">
+    <div hx-get="{% url 'edit-condition' condition.id %}"><i class="bi bi-pencil icon_edit"></i></div>
+    <div hx-post="{% url 'delete-condition' condition.id %}" hx-confirm="Are you sure?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
+    </div>
+{% endif %}
+</div>
+

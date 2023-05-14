@@ -1,0 +1,18 @@
+
+{##}
+<div hx-target="this" hx-swap='outerHTML' class="row">
+    {% if subject.owner == user %}
+
+<div class="col object-list-div">
+
+
+    <h3>{{ subject.name }}</h3>
+    {{ subject.unit }}<br>
+</div>
+<div class="col-2 edit-delete-div">
+    <div hx-get="{% url 'edit-subject' subject.id %}"><i class="bi bi-pencil icon_edit"></i></button>
+    <div hx-post="{% url 'delete-subject' subject.id %}" hx-confirm="Are you sure?"  class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
+</div>
+</div>
+    {% endif %}
+</div>

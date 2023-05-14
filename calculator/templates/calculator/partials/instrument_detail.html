@@ -1,0 +1,21 @@
+{##}
+<div hx-target="this" hx-swap='outerHTML' class="row ">
+
+{% if instrument.owner == user %}
+
+    <div class="col object-list-div">
+
+    <h3>{{ instrument.name }}</h3>
+    {{ instrument.manufacturer }}<br>
+        {{ instrument.owner.user_name }}
+
+    </div>
+    <div class="col-2 edit-delete-div">
+    <div hx-get="{% url 'edit-instrument' instrument.id %}"><i class="bi bi-pencil icon_edit"></i></div>
+    <div hx-post="{% url 'delete-instrument' instrument.id %}"
+         hx-confirm="Are you sure you want to delete '{{ instrument.name }}'?" class="icon-delete"><i class="bi bi-trash icon_delete"></i></div>
+    </div>
+    <div class="col-3"></div>
+
+{% endif %}
+</div>

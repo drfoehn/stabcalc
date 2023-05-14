@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}EFLM WG-PRE Stability Calculator{% endblock %}
+
+{% block content %}
+
+    {% if user.is_authenticated %}
+
+
+        <div class="header_index row">
+            <div class="col-2 d-flex justify-content-center">
+                <img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt="" width="150px" height="auto">
+            </div>
+            <div class="col-10">
+                <h2 class="display-5">Stability Calculator</h2>
+                <p class="display-6 index-site-title">
+                    EFLM Working Group "Preanalytical Phase" (WG-PRE)
+                </p>
+            </div>
+        </div>
+
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-2"></div>
+            <div class="col-3 button-index">
+                <a href="{% url 'create-instrument' %}"><img src="{% static 'images/wizard.png' %}" alt=""></a><br>
+                <h4 class="display-7">New study</h4>
+            </div>
+            <div class="col-2"></div>
+            <div class="col-3 button-index">
+                <a href="{% url 'dashboard' %}"><img src="{% static 'images/dashboard.png' %}" alt=""></a><br>
+                <h4 class="display-7">Dashboard</h4>
+            </div>
+            <div class="col-2"></div>
+        </div>
+
+        <div class="row use-of-data">
+            <h4 class="display-7 index-site-title">Use of data:</h4>
+            <p>
+                This website and its content is copyright of Janne Cadamuro.
+
+            </p>
+            <p> You may not, except with our express written permission, distribute or commercially exploit the content
+                (see copyright below).</p>
+            <br>
+            <p>
+                If using data from this website for any purpose, it should be referenced as:
+                    <i>Cadamuro J., von Meyer A., Gómez Rioja R., Simundic A.M., Kristensen G., Nybo M., Costelloe S.,
+                        Cornes M. The EFLM Sample Stability Calculator. https://stabilitycalculator.eu/ [time of
+                        access].</i>
+            </p>
+            <br>
+            <p>
+                For further information see the<a href="{% url 'terms_conditions' %}">Terms and Conditions</a>
+
+            </p>
+
+        </div>
+
+    {% else %}
+
+
+        <div class="d-flex flex-column justify-content-center align-content-center">
+            <div class="row">
+                <div class="col-sm-4">
+                    <span class="align-middle">
+                        <img src="{% static 'images/stability.png' %}" alt="" width="100%" , height="auto">
+                    </span>
+                </div>
+
+{#                    <div class="col-3 logo-index"><img src="{% static 'images/Stabcalc-Logo-BRG.png' %}" alt=""></div>#}
+                    <div class="col-8">
+                        <span class="align-middle">
+                        <div class="index-title"><h2 class="display-5">
+                            EFLM Stability Calculator</h2></div>
+                        <div class="heading2">Working Group "Preanalytical Phase" (WG-PRE)</div>
+                            <p></p>
+                        <div class="index-text">The EFLM Stability Calculator is a freely accsessible tool to calculate
+                            individual analyte stability in different matrices under defined conditions.
+                        </div>
+                            <p></p>
+                        <div class="index-text"> For usage, please <a href="{% url 'register_user' %}">Register </a> or
+                            <a
+                                    href="{% url 'login' %}"> Login</a></div>
+                        </span>
+                    </div>
+
+            </div>
+        </div>
+
+
+    {% endif %}
+<div class="cookie-wrapper">
+    <img src="#" alt="">
+    <div class="cookie-content">
+        <div class="row">
+            <div class="col">
+                <header class="cookie-header">Cookies Consent</header>
+            </div>
+            <div class="col">
+                <img src="{% static 'images/cookie.png' %}" alt="" width="100px", height="auto">
+            </div>
+        </div>
+      <div class="row">
+      <p class="cookie-content">This website use cookies to ensure you get the best experience on this website.</p>
+      <div class="buttons">
+        <button class="button button-cookie">I understand</button>
+          <br>
+        <a href="{% url 'terms_conditions' %}" class="item" style="color: white !important;">Learn more</a>
+          </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const cookieBox = document.querySelector(".cookie-wrapper"),
+    acceptBtn = cookieBox.querySelector("button");
+    acceptBtn.onclick = ()=>{
+      //setting cookie for 1 month, after one month it'll be expired automatically
+      document.cookie = "CookieBy=CodingNepal; max-age="+60*60*24*30;
+      if(document.cookie){ //if cookie is set
+        cookieBox.classList.add("hide"); //hide cookie box
+      }else{ //if cookie not set then alert an error
+        alert("Cookie can't be set! Please unblock this site from the cookie setting of your browser.");
+      }
+    }
+    let checkCookie = document.cookie.indexOf("CookieBy=CodingNepal"); //checking our cookie
+    //if cookie is set then hide the cookie box else show it
+    checkCookie != -1 ? cookieBox.classList.add("hide") : cookieBox.classList.remove("hide");
+  </script>
+{% endblock %}
