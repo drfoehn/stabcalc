@@ -7,13 +7,14 @@ numpy
 matplotlib
 ipython
 jupyter
+plotly
 pandas
 statsmodels
 patsy
 django-guardian
 openpyxl
 django-environ
-sklearn
+scikit-learn
 seaborn
 django_filter
 django_bootstrap5
