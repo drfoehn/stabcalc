@@ -146,16 +146,20 @@ class Sample(OwnedModelMixin, models.Model):
     )
     sample_type_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Sampletype'))
 
+    NA = 0
     WHOLEBLOOD = 1
     PLASMA = 2
     STORAGE = (
+        (NA, _("N/A")),
         (WHOLEBLOOD, _("Whole Blood")),
         (PLASMA, _("Plasma/Serum")),
     )
 
     storage = models.SmallIntegerField(
         choices=STORAGE,
+        default=NA, #TODO: make required only if blood is selected
         verbose_name='Blood storage as'
+
     )
 
     PLASTIC = 1

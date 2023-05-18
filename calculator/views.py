@@ -83,6 +83,7 @@ class ResultsView(LoginRequiredMixin,DetailView):
         context['results_n'] = Result.objects.filter(setting=self.object).count()
 
         # ---------------------------Get deviation data for each subject setting and time individually in a dict
+        # TODO: If only 1 replicate is entered no deviation shall be calculated
         deviation_dict: dict[int, dict[int, int]] = {}
         for subject in subjects:
             if not subject.id in deviation_dict:
@@ -1106,18 +1107,19 @@ def delete_preanalytical_set(request, pk):
 # --------------------------------------SAMPLE----------------------------------------
 
 def sample_list(request):
-    form = SampleForm(request.POST)
+    form = SampleForm(request.POST or None, user=request.user)
     samples = Sample.objects.all()
     if request.method == 'POST':
         if form.is_valid():
             sample = form.save(commit=False)
             sample.owner = request.user
             sample.save()
+            form.save_m2m()
             return redirect('sample-detail', pk=sample.id)
         else:
             context = {
                 'form': form,
-                'samples': Sample.objects.all()
+                'samples': samples
             }
             return render(request, 'calculator/partials/sample_form.html', context)
 
@@ -1131,7 +1133,7 @@ def sample_list(request):
 
 
 def add_sample_form(request):
-    form = SampleForm()
+    form = SampleForm(user=request.user)
     context = {
         "form": form
     }
@@ -1151,7 +1153,7 @@ def sample_detail(request, pk):
 
 def edit_sample(request, pk):
     sample = Sample.objects.get(pk=pk)
-    form = SampleForm(request.POST or None, instance=sample)
+    form = SampleForm(request.POST or None, instance=sample, user=request.user)
 
     # This part is so that the update does not produce more objects
     if request.method == 'POST':
@@ -1615,7 +1617,7 @@ def result_template_upload(request):
         setting = Setting.objects.get(id=setting_pk)
 
         # ----get last row and col from input sheet using pandas (openpyxl does not count empty cells)
-        resultfile = 'other_data/test.xlsx'
+        resultfile = uploaded_file
         df = pandas.read_excel(resultfile, sheet_name=[1])
         max_row = 1
         max_col = 1

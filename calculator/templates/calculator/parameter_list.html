@@ -8,9 +8,10 @@
 
     <h4 class="display-5">My parameters</h4>
 
+    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>
 
     <a hx-get="{% url 'create-parameter-form' %}" class="button button-red" role="button" data-bs-toggle="button"
-       hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a>
+       hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a> | <a href="{% url 'create-preanalytical-set' %}" class="button button-red">Next step</a>
     <div class="row" id="parameter_form"></div>
     {% if parameters %}
         {% for parameter in parameters %}

@@ -7,10 +7,10 @@
 {% block item %}
 
     <h4 class="display-5">My durations</h4>
-
-
+<div  class="alert alert-primary" role="alert">Define alle storage times you evaluated in your study</div>
+<div  class="alert alert-danger" role="alert">Do not forget to add a basline (0 hours) duration</div>
     <a hx-get="{% url 'create-duration-form' %}" class="button button-red" role="button" data-bs-toggle="button"
-       hx-swap="beforeend" hx-target="#duration_form">Add additional duration</a>
+       hx-swap="beforeend" hx-target="#duration_form">Add additional duration</a> | <a href="{% url 'create-condition' %}" class="button button-red">Next step</a>
     <div class="row" id="duration_form"></div>
     {% if durations %}
         {% for duration in durations %}

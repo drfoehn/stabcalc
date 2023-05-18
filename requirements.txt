@@ -18,3 +18,4 @@ scikit-learn
 seaborn
 django_filter
 django_bootstrap5
+django-import-export

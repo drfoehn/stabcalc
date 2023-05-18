@@ -6,6 +6,7 @@ from .models import *
 from .forms import *
 from users.models import LabUser
 from guardian.admin import GuardedModelAdmin
+from import_export.admin import ImportExportModelAdmin
 
 # Register your models here.
 # class SubjectAdmin(admin.ModelAdmin):
@@ -25,12 +26,15 @@ from guardian.admin import GuardedModelAdmin
 
 
 
-class CalculatorAdmin(GuardedModelAdmin):
-    pass
+#class CalculatorAdmin(GuardedModelAdmin):
+ #   pass
 
-class ParameterAdmin(admin.ModelAdmin):
-    model = Parameter
-    list_display = ['name', 'unit']
+#class ParameterAdmin(admin.ModelAdmin):
+ #   model = Parameter
+  #  list_display = ['name', 'unit']
+
+class ParameterAdmin(ImportExportModelAdmin):
+    pass
 
 class ParameterUserAdmin(admin.ModelAdmin):
     model = ParameterUser
@@ -98,7 +102,7 @@ class UserAdminArea(admin.AdminSite):
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)
 
-admin.site.register(Parameter, CalculatorAdmin)
+admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(ParameterUser, ParameterUserAdmin)
 admin.site.register(Instrument, InstrumentAdmin)
 admin.site.register(Condition, ConditionAdmin)

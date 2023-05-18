@@ -8,9 +8,11 @@
 
     <h4 class="display-5">My samples</h4>
 
+    <div  class="alert alert-primary" role="alert">Define the sample / matrix the parameter is measured in (if not already in the list below)</div>
+
 
     <a hx-get="{% url 'create-sample-form' %}" class="button button-red" role="button" data-bs-toggle="button"
-       hx-swap="beforeend" hx-target="#sample_form">Add additional sample</a>
+       hx-swap="beforeend" hx-target="#sample_form">Add additional sample</a> | <a href="{% url 'create-duration' %}" class="button button-red">Next step</a>
     <div class="row" id="sample_form"></div>
     {% if samples %}
         {% for sample in samples %}

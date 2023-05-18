@@ -10,7 +10,7 @@
 
 
     <a hx-get="{% url 'create-condition-form' %}" class="button button-red" role="button" data-bs-toggle="button"
-       hx-swap="beforeend" hx-target="#condition_form">Add additional condition</a>
+       hx-swap="beforeend" hx-target="#condition_form">Add additional condition</a> | <a href="{% url 'create-subject' %}" class="button button-red">Next step</a>
     <div class="row" id="condition_form"></div>
     {% if conditions %}
         {% for condition in conditions %}

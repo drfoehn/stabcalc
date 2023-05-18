@@ -8,9 +8,9 @@
 
     <h4 class="display-5">My Instruments</h4>
 
-
+    <div  class="alert alert-primary" role="alert">Enter the instrument the laboratory test was measured on (if not already in the list below)</div>
     <a hx-get="{% url 'create-instrument-form' %}" class="button button-red" role="button" data-bs-toggle="button"
-       hx-swap="beforebegin" hx-target="#instrument_form">Add additional Instrument</a>
+       hx-swap="beforebegin" hx-target="#instrument_form">Add additional Instrument</a> | <a href="{% url 'create-parameter' %}" class="button button-red">Next step</a>
     <div class="row" id="instrument_form"></div>
     {% if instruments %}
         {% for instrument in instruments %}

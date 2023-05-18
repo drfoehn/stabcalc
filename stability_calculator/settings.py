@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     "patsy",
     "guardian",
     'django_filters',
-
+    'import_export',
 
 ]
 AUTH_USER_MODEL = 'users.LabUser'

@@ -97,20 +97,26 @@ class SampleForm(forms.ModelForm):
     sample_pool_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
     sample_spike = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     sample_spike_text = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'class': 'form-control'}), required=False)
-    container_additive = forms.Select()
+    container_additive = forms.Select(attrs={'required': False})
     container_additive_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    container_dimension = forms.Select()
+    container_dimension = forms.Select(attrs={'required': False})
     container_dimension_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     container_fillingvolume = forms.FloatField(required=False)
-    container_material = forms.Select()
+    container_material = forms.Select(attrs={'required': False})
     container_material_other = forms.CharField(required=False, max_length=255, widget=forms.TextInput(attrs={'class': 'form-control'}))
     gel = forms.BooleanField(widget=forms.CheckboxInput(), required=False)
     preanalytical_set = forms.ModelChoiceField(queryset=PreanalyticalSet.objects.all(), empty_label='---Select preanalytical set---')
+
+    # owner = None
+
+    # ----------------------Botcatcher-------------------------
+
     feedback = forms.CharField(
         widget=forms.HiddenInput,
         required=False,
         validators=[validators.MaxLengthValidator(0)],
     )
+    # -----------------------------------------------------------
 
     class Meta:
         model = Sample
@@ -135,7 +141,9 @@ class SampleForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(SampleForm, self).__init__(*args, **kwargs)
+        user = kwargs.pop('user')  # get the correct user for the dropdown-selections
+        self.owner = user  # retrieve the current user, so that the dropdown of foreignkeys only shows the users own objects
+        super().__init__(*args, **kwargs)
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
         self.fields['sample_type'].widget.attrs['onchange'] = "showMe(\"idShowMe\")"
         self.fields['storage'].widget.attrs['class'] = 'form-select'
@@ -147,6 +155,7 @@ class SampleForm(forms.ModelForm):
         self.fields['sample_spike'].widget.attrs['class'] = 'form-check-input'
         self.fields['sample_pool'].widget.attrs['class'] = 'form-check-input'
         self.fields['sample_leftover'].widget.attrs['class'] = 'form-check-input'
+        self.fields['preanalytical_set'].queryset = PreanalyticalSet.objects.filter(owner=user)
         self.fields['preanalytical_set'].widget.attrs['class'] = 'form-select'
 
     def clean_feedback(self):
@@ -192,6 +201,8 @@ class PreanalyticalSetForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PreanalyticalSetForm, self).__init__(*args, **kwargs)
+        self.fields['collection_instrument'].widget.attrs['placeholder'] = 'e.g. Butterfly, Needle, None, ...'
+        self.fields['collection_site'].widget.attrs['placeholder'] = 'e.g. Cubital vein'
         self.fields['transportation_time_unit'].widget.attrs['class'] = 'form-select'
         self.fields['transportation_method'].widget.attrs['class'] = 'form-select'
 
@@ -261,7 +272,9 @@ class SettingForm(forms.ModelForm):
             widget=forms.Select,
         )
         self.fields['parameter'].widget.attrs['class'] = 'form-select'
+        self.fields['parameter'].queryset = ParameterUser.objects.filter(owner=user)
         self.fields['condition'].widget.attrs['class'] = 'form-select'
+        self.fields['condition'].queryset = Condition.objects.filter(owner=user)
         self.fields['sample'].widget.attrs['class'] = 'form-select'
         self.fields['sample_type'].widget.attrs['class'] = 'form-select'
         self.fields['design_sample'].widget.attrs['class'] = 'form-select'
