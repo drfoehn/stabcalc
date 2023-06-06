@@ -28,6 +28,7 @@ urlpatterns = [
     path("about/", TemplateView.as_view(template_name="about.html"), name='about'),
     path("terms_condition/", TemplateView.as_view(template_name="terms_conditions.html"), name='terms_conditions'),
     path("calculator/", include('calculator.urls')),
+    path("database/", include('database.urls')),
     path('users/', include('django.contrib.auth.urls')),
     path('users/', include('users.urls')),
     path('itemlists/', views.item_lists, name="itemlists"),

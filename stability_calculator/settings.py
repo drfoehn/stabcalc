@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'calculator',
+    'database',
     'users',
     'django_countries',
     "crispy_forms",
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     "guardian",
     'django_filters',
     'import_export',
+
 
 ]
 AUTH_USER_MODEL = 'users.LabUser'
@@ -117,10 +119,16 @@ WSGI_APPLICATION = 'stability_calculator.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": env("DATABASE_NAME", default="db.sqlite3"),
-        "USER": env("DATABASE_USER", default=""),
-        "PASSWORD": env("DATABASE_PASS", default=""),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'stability_calculater_databse',
+        'HOST': 'localhost',
+        'PORT': 3306,
+        'USER': 'root',
+        'PASSWORD': 'dMiz50%Iin',
+        # "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
+        # "NAME": env("DATABASE_NAME", default="db.sqlite3"),
+        # "USER": env("DATABASE_USER", default=""),
+        # "PASSWORD": env("DATABASE_PASS", default=""),
     }
 }
 
