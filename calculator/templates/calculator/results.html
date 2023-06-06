@@ -589,13 +589,17 @@
 
                 function drawTotal() {
                     var rowData1 = [['Duration', 'Average PD%'],
-                        {% for duration in setting.durations.all %}
-                            ['{{ duration }}', {% deviation_tot setting duration %}],
+                        {% for duration in durations %}
+{#                            {% if duration.owner == request.user %}#}
+                                ['{{ duration }}', {% deviation_tot setting duration  %}],
+{#                            {% endif %}#}
                         {% endfor %}];
 
                     var rowData2 = [['Duration', 'Average absolute'],
                         {% for duration in setting.durations.all %}
-                            ['{{ duration }}', {% average_tot setting duration %}],
+{#                            {% if duration.owner == request.user %}#}
+                                ['{{ duration }}', {% average_tot setting duration %}],
+{#                            {% endif %}#}
                         {% endfor %}];
 
                     // Create and populate the data tables.

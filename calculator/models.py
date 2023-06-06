@@ -391,6 +391,8 @@ class Setting(OwnedModelMixin, models.Model):
 
 
 class Duration(OwnedModelMixin, models.Model):
+    owner = models.ForeignKey(LabUser, on_delete=models.PROTECT)
+
     class Meta:
         # unique_together = ["duration_number", "duration_unit"]
         ordering = ["seconds"]
@@ -498,8 +500,9 @@ class Subject(OwnedModelMixin, models.Model):
             return math.ceil(((stdv / average) * 100) * 100) / 100
 
     def deviation(self, duration: Duration, setting: Setting) -> float|None:
+        user = setting.owner
         average = self.average(duration, setting)
-        duration_zero = Duration.objects.get(duration_number=0)
+        duration_zero = Duration.objects.get(duration_number=0, owner=user)
         average_zero = self.average(duration_zero, setting)
         if not average or not average_zero:
             return None

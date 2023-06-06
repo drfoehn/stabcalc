@@ -69,26 +69,27 @@ class ResultsView(LoginRequiredMixin,DetailView):
     def get_context_data(self, **kwargs):
         global single_results_value, single_results_duration
         context = super().get_context_data(**kwargs)
-        subjects = Subject.objects.filter(settings__in=[self.object])
-        durations = Duration.objects.filter(settings__in=[self.object])
+        user = self.request.user
+        subjects = Subject.objects.filter(settings__in=[self.object], owner=user)
+        durations = Duration.objects.filter(settings__in=[self.object], owner=user)
         durations_val = durations.values()
         durations_data = pd.DataFrame(durations_val)
-        results = Result.objects.filter(setting=self.object)
+        results = Result.objects.filter(setting=self.object, owner=user)
         results_val = results.values()
         results_data = pd.DataFrame(results_val)
-        parameter = ParameterUser.objects.filter(setting=self.object).values('parameter__name', 'parameter__unit')
+        parameter = ParameterUser.objects.filter(setting=self.object, owner=user).values('parameter__name', 'parameter__unit')
         setting = self.object
-        context['subjects_n'] = Subject.objects.filter(settings__in=[self.object]).count()
-        context['durations_n'] = Duration.objects.filter(settings__in=[self.object]).count()
-        context['results_n'] = Result.objects.filter(setting=self.object).count()
+        context['subjects_n'] = subjects.count()
+        context['durations_n'] = durations.count()
+        context['results_n'] = results.count()
 
         # ---------------------------Get deviation data for each subject setting and time individually in a dict
-        # TODO: If only 1 replicate is entered no deviation shall be calculated
+        # TODO: If multiple users enter same durations: calculator.models.Duration.MultipleObjectsReturned: get() returned more than one Duration -- it returned 2!
         deviation_dict: dict[int, dict[int, int]] = {}
         for subject in subjects:
             if not subject.id in deviation_dict:
                 deviation_dict[subject.id] = {}
-                for duration in self.object.durations.all():
+                for duration in self.object.durations.filter(owner=self.request.user):
                     if setting == self.object:
                         deviation_dict[subject.id][duration.seconds] = subject.deviation(duration, setting)
 
@@ -629,7 +630,7 @@ class ResultsView(LoginRequiredMixin,DetailView):
             {
                 "subjects": subjects,
                 "results": results,
-                "durations": Duration.objects.all(),
+                "durations": durations,
                 "r_square": results_abs.rsquared,
                 "f_p_value": results_abs.f_pvalue,
                 "f_p_value_perc": results_abs.f_pvalue * 100,
