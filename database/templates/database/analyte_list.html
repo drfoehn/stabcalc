@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 
+
 {% block title %}Search Stability Database{% endblock %}
 
 {% block content %}
@@ -9,60 +10,66 @@
     <h4 class="display-5">Search Stability Database</h4>
 
 {#    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>#}
+    <div class="row">
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th scope="col">{% trans 'Name' %}</th>
-      <th scope="col">{% trans 'Specimen' %}</th>
-      <th scope="col">{% trans 'Stored as' %}</th>
-      <th scope="col">{% trans 'Room Temp' %}</th>
-      <th scope="col">{% trans '4°C' %}</th>
-      <th scope="col">{% trans '-20°C' %}</th>
-      <th scope="col">{% trans '-70°C' %}</th>
-      <th scope="col">{% trans '-150°C' %}</th>
+                <div class="col">
+                    <form method="GET" id="analyte_search_form">
+                        {% csrf_token %}
+                        {{ analyte_filter.form }}
+                        <button type="submit" class="btn btn-primary">
+                            {% trans 'Search' %}
+                        </button>
 
-    </tr>
-  </thead>
-  <tbody>
-  {% for analyte in analyte_list %}
-      <tr>
-      <td>
-          {{ analyte.name }}
-      </td>
-      <td>
-          {{ analyte.tube_recomm }}
-      </td>
-      </tr>
-  {% endfor %}
-{#  {% for analyte in analyte_list %}#}
-{#    <tr>#}
-{#      <th scope="row">{{ analyte.bhl. }}</th>#}
-{#      <td>Mark</td>#}
-{#      <td>Otto</td>#}
-{#      <td>@mdo</td>#}
-{#    </tr>#}
-{#{% endfor %}#}
-  </tbody>
-</table>
+                        <a href="{% url 'analyte_list' %}">
+                            <button class="btn btn-primary">
+                                {% trans 'undo' %}
+                            </button>
+                        </a>
+                        <input type="button" value="undo" onClick="undoFunction()">
+                          <input type="button" onclick="undoFunction()" value="undo form">
+                    </form>
+                </div>
+
+    </div>
+
+        {% if analyte_filter.qs %}
+
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th scope="col">{% trans 'Analyte' %}</th>
+                        </tr>
+                      </thead>
+                    <tbody>
+                    {% for analyte in analyte_filter.qs %}
+{#                        {% if analyte.is_published == True %}#}
+                            <tr>
+                            <td>
+                                {{ analyte.name }}
+                            </td>
+                            </tr>
+{#                        {% endif %}#}
+                    {% endfor %}
+                    </tbody>
+                    </table>
+    {#            </div>#}
+    {#            <ul class="pagination"></ul>#}
+    {#        </div>#}
+
+            </div>
+        {% else %}
+            <p>{% trans 'It seems we do not have what you are looking for.' %}</p>
+        {% endif %}
 
 
-{#    <a hx-get="{% url 'create-parameter-form' %}" class="button button-red" role="button" data-bs-toggle="button"#}
-{#       hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a> | <a href="{% url 'create-preanalytical-set' %}" class="button button-red">Next step</a>#}
-{#    <div class="row" id="parameter_form"></div>#}
-{#    {% if parameters %}#}
-{#        {% for parameter in parameters %}#}
-{#            {% include 'calculator/partials/parameter_detail.html' %}#}
-{#        {% endfor %}#}
-{#    {% else %}#}
-{#        <br>#}
-{#        <div class="alert alert-primary" role="alert">#}
-{#            Currently no parameters saved - <a hx-get="{% url 'create-parameter-form' %}" hx-swap="beforeend"#}
-{#                                                hx-target="#parameter_form" class="alert-link">Create your first#}
-{#            parameter</a>.#}
-{#        </div>#}
-{#    {% endif %}#}
-
+<script>
+function undoFunction() {
+    form = document.getElementById("analyte_search_form")
+    form.reset();
+  {#window.location.reload();#}
+  console.log(form)
+}
+</script>
 {% endblock %}
 
 

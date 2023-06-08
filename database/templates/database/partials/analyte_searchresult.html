@@ -1,0 +1,23 @@
+
+
+{% if analytes %}
+
+
+{% for analyte in analytes %}
+<tr>
+    <td>
+        <a class="" hx-post="{% url 'select-analyte' analyte.pk %}" style="cursor: pointer">{{ analyte.name }}</a>
+    </td>
+</tr>
+
+
+{% endfor %}
+
+{% else %}
+
+Is the parameter you are searching for not in the list? <br>
+    <h4>It seems we do not have what you are looking for ...
+        <br>
+        <a href="{% url 'analyte_list' %}">Show complete list</a></h4>
+
+{% endif %}
