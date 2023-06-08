@@ -36,13 +36,11 @@ SECRET_KEY = env(
     "SECRET_KEY", default="don't use this pseudo-secret-key on production!"
 )
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", default="127.0.0.1,localhost").split(",")
-
+# ALLOWED_HOSTS = ['127.0.0.1']
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = []
-
-
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 # Application definition
 
 INSTALLED_APPS = [
@@ -119,16 +117,18 @@ WSGI_APPLICATION = 'stability_calculator.wsgi.application'
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stability_calculater_databse',
-        'HOST': 'localhost',
-        'PORT': 3306,
-        'USER': 'root',
-        'PASSWORD': 'dMiz50%Iin',
-        # "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
-        # "NAME": env("DATABASE_NAME", default="db.sqlite3"),
-        # "USER": env("DATABASE_USER", default=""),
-        # "PASSWORD": env("DATABASE_PASS", default=""),
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'stability_calculater_database',
+        # 'HOST': 'localhost',
+        # 'PORT': 3306,
+        # 'USER': 'root',
+        # 'PASSWORD': 'dMiz50%Iin',
+        "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": env("DATABASE_NAME", default="db.sqlite3"),
+        "HOST": env("DATABASE_HOST", default="localhost"),
+        "PORT": env("DATABASE_PORT", default=3306),
+        "USER": env("DATABASE_USER", default=""),
+        "PASSWORD": env("DATABASE_PASS", default=""),
     }
 }
 

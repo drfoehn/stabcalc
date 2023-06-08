@@ -25,6 +25,16 @@
     </tr>
   </thead>
   <tbody>
+  {% for analyte in analyte_list %}
+      <tr>
+      <td>
+          {{ analyte.name }}
+      </td>
+      <td>
+          {{ analyte.tube_recomm }}
+      </td>
+      </tr>
+  {% endfor %}
 {#  {% for analyte in analyte_list %}#}
 {#    <tr>#}
 {#      <th scope="row">{{ analyte.bhl. }}</th>#}

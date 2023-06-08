@@ -7,6 +7,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
 
+    path("", TemplateView.as_view(template_name="calculator/index_calculator.html"), name="calculator_index"),
+
     path('instruments/', instrument_list, name='create-instrument'),
     path('instruments/instrument/<pk>/', instrument_detail, name="instrument-detail"),
     path('instruments/instrument/<pk>/delete', delete_instrument, name="delete-instrument"),

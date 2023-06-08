@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}Search Stability Database{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">Search Stability Database</h4>
+
+    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>
+
+    <a href="{% url 'analyte_search' %}">test</a>
+
+
+    <a hx-get="{% url 'analyte_search' %}" class="button button-red" role="button" data-bs-toggle="button"
+       hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a>
+    <div class="row" id="parameter_form"></div>
+    {% if analyte_list %}
+        {% for analyte in analyte_list %}
+            {% include 'database/analyte_detail.html' %}
+        {% endfor %}
+
+    {% endif %}
+
+
+
+    <h3>
+  Search Contacts
+  <span class="htmx-indicator">
+    <img src="/img/bars.svg"/> Searching...
+   </span>
+</h3>
+<input class="form-control" type="search"
+       name="search" placeholder="Begin Typing To Search Analytes..."
+       hx-post="/search"
+       hx-trigger="keyup changed delay:500ms, search"
+       hx-target="#search-results"
+       hx-indicator=".htmx-indicator">
+
+<table class="table">
+    <thead>
+    <tr>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody id="search-results">
+    </tbody>
+</table>
+
+{% endblock %}
+
+
