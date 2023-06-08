@@ -11,6 +11,6 @@ urlpatterns = [
     path("", views.search_analyte_form, name="analyte_search"),
     path("list/", views.AnalyteIndex.as_view(), name="analyte_list"),
     # path("add/", views.HikeAddView.as_view(), name="add"),
-    path("<int:pk>/", views.AnalyteDetail.as_view(), name="detail"),
+    path("<int:pk>/", views.AnalyteDetail.as_view(), name="analyte_detail"),
 
 ]

@@ -8,27 +8,18 @@
 
     <h4 class="display-5">Search Stability Database</h4>
 
-    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>
-
-    <a href="{% url 'analyte_search' %}">test</a>
 
 
     <a hx-get="{% url 'analyte_search' %}" class="button button-red" role="button" data-bs-toggle="button"
        hx-swap="beforeend" hx-target="#parameter_form">Add additional parameter</a>
     <div class="row" id="parameter_form"></div>
-    {% if analyte_list %}
-        {% for analyte in analyte_list %}
-            {% include 'database/analyte_detail.html' %}
-        {% endfor %}
-
-    {% endif %}
 
 
 
     <h3>
-  Search Contacts
+
   <span class="htmx-indicator">
-    <img src="/img/bars.svg"/> Searching...
+    <img src="/images/search_idle.gif"/> Searching...
    </span>
 </h3>
 <input class="form-control" type="search"
@@ -37,6 +28,25 @@
        hx-trigger="keyup changed delay:500ms, search"
        hx-target="#search-results"
        hx-indicator=".htmx-indicator">
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">{% trans 'Name' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for analyte in analyte_list %}
+      <tr>
+      <td>
+          <a href="{% url 'analyte_detail' analyte.analyte_id %}"> {{ analyte.name }} {% if analyte.details %} - {{ analyte.details }}{% endif %}</a>
+      </td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+
 
 <table class="table">
     <thead>

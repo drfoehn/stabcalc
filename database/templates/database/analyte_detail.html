@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}Search Stability Database{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">{{ object.name }}</h4>
+
+{% endblock %}
