@@ -9,10 +9,8 @@ from django.views.generic import TemplateView
 
 
 urlpatterns = [
-    path("", views.search_analyte_form, name="analyte_search"),
-    path("list/", views.AnalyteIndex.as_view(), name="analyte_list"),
-    # path("add/", views.HikeAddView.as_view(), name="add"),
+    path("search/", search_analyte, name="search_analyte"),
+    path("", views.AnalyteIndex.as_view(), name="analyte_list"),
     path("<int:pk>/", views.AnalyteDetail.as_view(), name="analyte_detail"),
-    path('search/', views.search_analyte_form, name='search_analyte'),
-    path('analytes/<pk>/select', select_analyte, name='select-analyte'),
+    # path('analytes/<pk>/select', select_analyte, name='select-analyte'),
 ]

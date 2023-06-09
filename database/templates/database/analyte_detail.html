@@ -6,6 +6,6 @@
 
 {% block content %}
 
-    <h4 class="display-5">{{ object.name }}</h4>
+    <h4 class="display-5">{{ object.name }} {% if object.details %} - {{ object.details }}{% endif %}</h4>
 
 {% endblock %}

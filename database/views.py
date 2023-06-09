@@ -6,39 +6,59 @@ from .filters import AnalyteFilter
 
 class AnalyteIndex(ListView):
     model = Analyte
-    paginate_by = 50
+    # paginate_by = 50
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["analyte_filter"] = AnalyteFilter(self.request.GET, queryset=self.get_queryset())
-        return context
+    # Reactivate to use with django-filter
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["analyte_filter"] = AnalyteFilter(self.request.GET, queryset=self.get_queryset())
+    #     return context
+
+    # def get_queryset(self):
+    #     searchstring=self.request.GET.get('q',""),
+    #     filters={'name__icontains':searchstring} if searchstring else {}
+    #     return super().get_queryset().filter(**filters)
+
+
+
+def search_analyte(request):
+    search_text = request.POST.get('search')
+    if search_text:
+        results = Analyte.objects.filter(name__icontains=search_text)
+    else:
+        results = []
+    context= {'results':results}
+    return render(request, 'database/partials/analyte_searchresult.html', context)
+# def search_analyte(request):
+#     searchterm = request.GET.get('qs', None)
+#     if searchterm:
+#         searchresult = Analyte.objects.filter(name__icontains=searchterm).all()
+#         template = 'database/partials/analyte_searchresult.html'
+#     else:
+#         searchresult = []
+#         template = 'database/analyte_search.html'
+#     return render(request=request,
+#                   template_name=template,
+#                   context={'searchresult':searchresult})
+
 
 class AnalyteDetail(DetailView):
     model = Analyte
 
-def search_analyte_form(request):
-    form = AnalyteSearchForm
-    analyte_select = Analyte.objects.all()
 
-    context = {
-        "form": form,
-        "analyte_list": analyte_select
-    }
 
-    return render(request, 'database/analyte_form.html', context)
-
-def search_analyte(request):
-    if 'name' in request.POST:
-        try:
-            analytes = Analyte.objects.filter(name__icontains=request.POST.get("name"))
-        except Analyte.DoesNotExist:
-            analytes = None
-
-    context = {
-        "analytes": analytes,
-
-    }
-    return render(request, 'database/partials/analyte_searchresult.html', context)
+# def search_analyte(request):
+#     if 'name' in request.POST:
+#         try:
+#             analytes = Analyte.objects.filter(name__icontains=request.POST.get("name"))
+#         except Analyte.DoesNotExist:
+#             analytes = None
+#
+#     context = {
+#         "analytes": analytes,
+#
+#     }
+#     return render(request, 'database/partials/analyte_searchresult.html', context)
 
 
 def select_analyte(request, pk):

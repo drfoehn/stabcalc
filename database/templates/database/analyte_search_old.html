@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}Search Stability Database{% endblock %}
+
+{% block content %}
+
+    <h4 class="display-5">Search Stability Database</h4>
+    <div class="row">
+    <div class="col">
+        <form method="POST" id="analyte_search_form">
+            {% csrf_token %}
+<input class="form-control" type="search"
+       name="search" placeholder="Begin Typing To Search Analytes..."
+       hx-post="{% url 'search_analyte' %}"
+       hx-trigger="keyup changed delay:500ms, search"
+       hx-target="#searchresults"
+
+>
+{#       hx-indicator=".htmx-indicator">#}
+
+        </form>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col" id="searchresults"
+{#    hx-get='{% url 'analyte_list' %}' hx-trigger="load"#}
+    >
+{%  include 'database/partials/analyte_searchresult.html' %}
+    </div>
+    </div>
+{#    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>#}
+{#    <div class="row">#}
+{##}
+{#                <div class="col">#}
+{#                    <form method="GET" id="analyte_search_form">#}
+{#                        {% csrf_token %}#}
+{#                        {{ analyte_filter.form }}#}
+{#                        <button type="submit" class="btn btn-primary">#}
+{#                            {% trans 'Search' %}#}
+{#                        </button>#}
+{#                    </form>#}
+{#                </div>#}
+{##}
+{#    </div>#}
+
+{#        {% if analyte_filter.qs %}#}
+{#                    <table class="table table-striped">#}
+{#                      <thead>#}
+{#                        <tr>#}
+{#                          <th scope="col">{% trans 'Analyte' %}</th>#}
+{#                        </tr>#}
+{#                      </thead>#}
+{#                    <tbody>#}
+{#                    {% for analyte in analyte_filter.qs %}#}
+{#                        {% if analyte.is_published == True %}#}
+{#                            <tr>#}
+{#                            <td>#}
+{#                                {{ analyte.name }}#}
+{#                            </td>#}
+{#                            </tr>#}
+{#                        {% endif %}#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                    </table>#}
+    {#            </div>#}
+    {#            <ul class="pagination"></ul>#}
+    {#        </div>#}
+{##}
+{#            </div>#}
+{#        {% else %}#}
+{#            <p><h5>{% trans 'It seems we do not have what you are looking for.' %}</h5>#}
+{#            </p>#}
+{#        {% endif %}#}
+
+
+
+{% endblock %}
+
+

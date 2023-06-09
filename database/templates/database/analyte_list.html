@@ -3,73 +3,20 @@
 {% load static %}
 
 
-{% block title %}Search Stability Database{% endblock %}
+{% block title %}{% trans 'Search Stability Database' %}{% endblock %}
 
 {% block content %}
 
-    <h4 class="display-5">Search Stability Database</h4>
-
-{#    <div  class="alert alert-primary" role="alert">Enter the laboratory test/parameter which was tested for stability (if not already in the list below)</div>#}
+    <h4 class="display-5">{% trans 'Analyte List' %}</h4>
+    <section>
     <div class="row">
-
-                <div class="col">
-                    <form method="GET" id="analyte_search_form">
-                        {% csrf_token %}
-                        {{ analyte_filter.form }}
-                        <button type="submit" class="btn btn-primary">
-                            {% trans 'Search' %}
-                        </button>
-
-                        <a href="{% url 'analyte_list' %}">
-                            <button class="btn btn-primary">
-                                {% trans 'undo' %}
-                            </button>
-                        </a>
-                        <input type="button" value="undo" onClick="undoFunction()">
-                          <input type="button" onclick="undoFunction()" value="undo form">
-                    </form>
-                </div>
-
+        <div class="col">
+            {% include 'database/partials/analyte_search.html' %}
+        </div>
     </div>
-
-        {% if analyte_filter.qs %}
-
-                    <table class="table table-striped">
-                      <thead>
-                        <tr>
-                          <th scope="col">{% trans 'Analyte' %}</th>
-                        </tr>
-                      </thead>
-                    <tbody>
-                    {% for analyte in analyte_filter.qs %}
-{#                        {% if analyte.is_published == True %}#}
-                            <tr>
-                            <td>
-                                {{ analyte.name }}
-                            </td>
-                            </tr>
-{#                        {% endif %}#}
-                    {% endfor %}
-                    </tbody>
-                    </table>
-    {#            </div>#}
-    {#            <ul class="pagination"></ul>#}
-    {#        </div>#}
-
-            </div>
-        {% else %}
-            <p>{% trans 'It seems we do not have what you are looking for.' %}</p>
-        {% endif %}
+    </section>
 
 
-<script>
-function undoFunction() {
-    form = document.getElementById("analyte_search_form")
-    form.reset();
-  {#window.location.reload();#}
-  console.log(form)
-}
-</script>
 {% endblock %}
 
 
