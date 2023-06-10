@@ -24,10 +24,10 @@ class AnalyteIndex(ListView):
 def search_analyte(request):
     search_text = request.GET.get('search', "")
     if search_text:
-        results = Analyte.objects.filter(name__icontains=search_text).all()
+        results = Analyte.objects.filter(name__icontains=search_text).all().order_by('name')
         template = 'database/partials/analyte_searchresult.html'
     else:
-        results = Analyte.objects.all()
+        results = Analyte.objects.order_by('name')
         template = 'database/partials/search_list.html'
     context= {'results':results}
     return render(request, template, context)

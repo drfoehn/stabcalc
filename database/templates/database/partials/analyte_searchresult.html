@@ -7,6 +7,7 @@
         <thead>
         <tr>
             <td><h5>{% trans 'Analyte name' %}</h5></td>
+            <td>AID</td>
         </tr>
         </thead>
         <tbody>
@@ -22,6 +23,9 @@
                         {% endif %}
                     </a>
                 </td>
+            <td>
+                {{ analyte.aid_orig }}
+            </td>
             </tr>
         {% endfor %}
         </tbody>
