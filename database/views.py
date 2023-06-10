@@ -22,13 +22,15 @@ class AnalyteIndex(ListView):
 
 
 def search_analyte(request):
-    search_text = request.POST.get('search')
+    search_text = request.GET.get('search', "")
     if search_text:
-        results = Analyte.objects.filter(name__icontains=search_text)
+        results = Analyte.objects.filter(name__icontains=search_text).all()
+        template = 'database/partials/analyte_searchresult.html'
     else:
-        results = []
+        results = Analyte.objects.all()
+        template = 'database/partials/search_list.html'
     context= {'results':results}
-    return render(request, 'database/partials/analyte_searchresult.html', context)
+    return render(request, template, context)
 # def search_analyte(request):
 #     searchterm = request.GET.get('qs', None)
 #     if searchterm:
