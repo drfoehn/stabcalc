@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -94,26 +95,29 @@ class PasswordsChangeView(PasswordChangeView):
 
 
 def user_dashboard(request):
-    settings = Setting.objects.filter(owner=request.user)
-    parameters= ParameterUser.objects.filter(owner=request.user)
-    subjects= Subject.objects.filter(owner=request.user)
-    durations= Duration.objects.filter(owner=request.user)
-    samples= Sample.objects.filter(owner=request.user)
-    conditions= Condition.objects.filter(owner=request.user)
-    instruments= Instrument.objects.filter(owner=request.user)
+    if request.user.is_authenticated:
+        settings = Setting.objects.filter(owner=request.user)
+        parameters= ParameterUser.objects.filter(owner=request.user)
+        subjects= Subject.objects.filter(owner=request.user)
+        durations= Duration.objects.filter(owner=request.user)
+        samples= Sample.objects.filter(owner=request.user)
+        conditions= Condition.objects.filter(owner=request.user)
+        instruments= Instrument.objects.filter(owner=request.user)
 
-    context = {
-        'settings': settings,
-        'parameters': parameters,
-        'subjects': subjects,
-        'durations': durations,
-        'samples': samples,
-        'conditions': conditions,
-        'instruments': instruments,
-    }
+        context = {
+            'settings': settings,
+            'parameters': parameters,
+            'subjects': subjects,
+            'durations': durations,
+            'samples': samples,
+            'conditions': conditions,
+            'instruments': instruments,
+        }
 
-    return render(request, 'users/dashboard.html', context)
-
+        return render(request, 'users/dashboard.html', context)
+    else:
+        # return HttpResponse('Please log in')
+        return render(request, 'unregistered_user.html')
 
 
 
