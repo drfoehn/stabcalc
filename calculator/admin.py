@@ -59,7 +59,6 @@ class ConditionAdmin(admin.ModelAdmin):
 
 
 
-# TODO: Prepopulate Duration filed with all durautions from the setting (Custom validation? Override initial?)
 
 
 class ResultInline(admin.StackedInline):

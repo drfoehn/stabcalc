@@ -791,7 +791,6 @@
         </table>
 
 
-            {#                        TODO: Which Regression-Equation should be used and how can it be forced through zero#}
 
         </div>
         {#    ooooooooooooooooooooooooooo  Poly2nd ° Regression  ooooooooooooooooooooooooooooooooo#}
@@ -1046,7 +1045,7 @@
     <h1 class="display-6">Single results</h1>
     <div class="row">
         <div class="col">
-{#            TODO - Outlier calculation in very low results#}
+
 {#            {% cv_max setting as cv_max %}#}
 {#            {% if cv_max %}#}
 {#                <span class="calc_result">Outliers are marked in <span style="color: red">red</span>.<br>#}
@@ -1090,7 +1089,7 @@
                     <tr>
                         <th scope="row" rowspan="2">{{ subject }}</th>
                         {% for duration in setting.durations.all %}
-                            {#                                TODO: Does not work for integers for some reason - also in very low numbers (i.e. 0,6 mg/dl) the cvs are always >5%#}
+                            {#        Does not work for integers for some reason - also in very low numbers (i.e. 0,6 mg/dl) the cvs are always >5%#}
                             {#                                {% cv_max_abs_high duration setting as cv_max_abs_high%}#}
                             {#                                {% cv_max_abs_low duration setting as cv_max_abs_low%}#}
                             <td>

@@ -99,8 +99,8 @@ def deviation_tot(setting: Setting, duration: Duration):
 
 @register.filter(name="human_readable_seconds")
 def human_readable_seconds(secs: int):
-    years = secs // (86400 * 365)  # TODO: muss ich noch neu berechnen
-    months = secs // (86400 * 30)  # TODO: muss ich noch neu berechnen
+    years = secs // (86400 * 365)
+    months = secs // (86400 * 30)
     weeks = secs // (86400 * 7)
     days = secs // 86400
     hours = (secs - days * 86400) // 3600

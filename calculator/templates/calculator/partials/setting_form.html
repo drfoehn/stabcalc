@@ -77,8 +77,10 @@
     </tr>
         <tr>
             <td>
+
                 {{ form.durations }}
                 <p></p>
+
             </td>
 
         </tr>
@@ -246,17 +248,20 @@
         let selected_option = dropdown.options[dropdown.selectedIndex].innerText;
         let freeze_thaw = document.getElementById('freeze_thaw_cycle');
         let freeze_thaw_label = document.getElementById('freeze_thaw_cycle_label');
-        console.log(dropdown)
+        {#console.log(dropdown)#}
         if (selected_option.includes('Frozen') || selected_option.includes('Deepfrozen')) {
-            console.log('yes')
+            {#console.log('yes')#}
             freeze_thaw.style.display = 'block'
             freeze_thaw_label.style.display = 'block'
             }
         else {
             freeze_thaw.style.display = 'none'
             freeze_thaw_label.style.display = 'none'
-            console.log('no')
+            {#console.log('no')#}
         }
     }
 window.onload = toggleFreeze()
+
+
+
 </script>

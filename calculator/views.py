@@ -1325,6 +1325,7 @@ def delete_condition(request, pk):
 def duration_list(request):
     form = DurationForm(request.POST or None)
     durations = Duration.objects.all()
+    duration_zero = Duration.objects.filter(duration_number=0).exists()
 
     if request.method == 'POST':
         if form.is_valid():
@@ -1342,6 +1343,7 @@ def duration_list(request):
     context = {
         'form': form,
         'durations': durations,
+        'duration_zero': duration_zero
     }
 
     return render(request, 'calculator/duration_list.html', context)
