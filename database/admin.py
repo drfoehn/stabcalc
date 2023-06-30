@@ -5,6 +5,8 @@ from database.models import *
 
 class AnalyteAdmin(admin.ModelAdmin):
     model = Analyte
+    ordering = ['name']
+    search_fields = ['name']
 
 class LiteratureAdmin(admin.ModelAdmin):
     model = Literature

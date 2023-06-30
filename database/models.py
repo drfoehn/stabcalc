@@ -57,7 +57,7 @@ class SampleType(models.Model):
     abbr = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     group = models.ForeignKey(SampleGroup, on_delete=models.CASCADE, blank=True, null=True)
-    # TODO: Add all entries where there is a comment to the tube type - e.g. - "&#8599;"  - from table stability_all_de
+
     def __str__(self):
         return f"{self.name}"
 

@@ -31,7 +31,71 @@
             </div>
             <div class="card-body tab-content">
                 <div class="tab-pane active" id="blood">
-                    <p class="card-text">BLOOD.</p>
+                    <p class="card-text">
+                        Category:
+                        {% for cat in object.category.all %}
+                            {{ cat.name }}
+                    {% endfor %}
+                        <br>
+
+
+                        <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Tube</th>
+      <th scope="col">Type</th>
+      <th scope="col">Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Recommended</th>
+      <td>
+          {% for tube in object.tube_recomm.all %}
+                            {{ tube.name }}
+                        {% endfor %}
+      </td>
+        <td>{{ object.tube_recomm_comment }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Possible</th>
+      <td>
+          {% for tube in object.tube_possible.all %}
+                            {{ tube.name }}
+                        {% endfor %}
+      </td>
+        <td>{{ object.tube_possible_comment }}</td>
+
+    </tr>
+    <tr>
+      <th scope="row">Maybe Possible</th>
+      <td>
+          {% for tube in object.tube_maybeposs.all %}
+                            {{ tube.name }}
+                        {% endfor %}
+      </td>
+        <td>{{ object.tube_maybeposs_comment }}</td>
+    </tr>
+      <tr>
+      <th scope="row">Not recommended</th>
+      <td>
+          {% for tube in object.tube_not.all %}
+                            {{ tube.name }}
+                        {% endfor %}
+      </td>
+        <td>{{ object.tube_not_comment }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+                    </p>
                 </div>
                 <div class="tab-pane" id="urine">
                     <p class=" card-text">URINE.</p>
