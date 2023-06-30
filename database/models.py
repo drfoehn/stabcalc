@@ -24,7 +24,7 @@ class Literature(models.Model):
 class Platform(models.Model):
     pt_id = models.AutoField(primary_key=True)
     pt_id_orig = models.IntegerField(blank=True, null=True)
-    flag = models.CharField(max_length=3)
+    flag = models.CharField(max_length=3, blank=True, null=True)
     set_value = models.IntegerField(blank=True, null=True)
     code = models.CharField(max_length=255, blank=True, null=True)
     company = models.CharField(max_length=255, blank=True, null=True)
@@ -183,7 +183,7 @@ class Stability(models.Model):
     stab_comment = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.stab_id
+        return self.analyte_name
 
     class Meta:
         verbose_name = "Stability"

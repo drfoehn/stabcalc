@@ -65,7 +65,7 @@
         {% for analyte in analyte_list %}
             <tr>
                 <td>
-                    <a href="{% url 'analyte_detail' analyte.analyte_id %}"> {{ analyte.name }} {% if analyte.details %}
+                    <a href="{% url 'analyte_detail' analyte.aid %}"> {{ analyte.name }} {% if analyte.details %}
                         - {{ analyte.details }}{% endif %}</a>
                 </td>
             </tr>

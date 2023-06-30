@@ -30,6 +30,8 @@ class AnalytMethodAdmin(admin.ModelAdmin):
 class StabilityAdmin(admin.ModelAdmin):
     model = Stability
 
+class CategoryAdmin(admin.ModelAdmin):
+    model = Category
 
 admin.site.register(Analyte, AnalyteAdmin)
 admin.site.register(Literature, LiteratureAdmin)
@@ -38,4 +40,5 @@ admin.site.register(Unit, UnitAdmin)
 admin.site.register(SampleType, SampleTypeAdmin)
 admin.site.register(SampleGroup, SampleGroupAdmin)
 admin.site.register(AnalytMethod, AnalytMethodAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Stability, StabilityAdmin)

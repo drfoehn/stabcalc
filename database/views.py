@@ -44,6 +44,9 @@ def search_analyte(request):
 #                   context={'searchresult':searchresult})
 
 
+
+
+
 class AnalyteDetail(DetailView):
     model = Analyte
 
@@ -66,7 +69,7 @@ class AnalyteDetail(DetailView):
 def select_analyte(request, pk):
     analyte = Analyte.objects.get(pk=pk)
     initial_dict = {
-        'analyte': analyte.analyte_id
+        'analyte': analyte.aid
     }
     form = AnalyteSearchForm(
         initial=initial_dict
