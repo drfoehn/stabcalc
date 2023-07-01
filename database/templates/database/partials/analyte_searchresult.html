@@ -7,7 +7,7 @@
         <thead>
         <tr>
             <td><h5>{% trans 'Analyte name' %}</h5></td>
-            <td>AID</td>
+            <td><h5>{% trans 'Specimen' %}</h5></td>
         </tr>
         </thead>
         <tbody>
@@ -24,7 +24,7 @@
                     </a>
                 </td>
             <td>
-                {{ analyte.aid_orig }}
+                {{ analyte.specimen.name }}
             </td>
             </tr>
         {% endfor %}

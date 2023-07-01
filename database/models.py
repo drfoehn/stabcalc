@@ -11,7 +11,7 @@ class Literature(models.Model):
     authors = models.TextField(blank=True, null=True)
     title = models.TextField(blank=True, null=True)
     source = models.TextField(blank=True, null=True)
-    doi_url = models.URLField(max_length=255, blank=True, null=True)
+    doi = models.CharField(max_length=255, blank=True, null=True)
     url = models.URLField(max_length=255, blank=True, null=True)
 
     def __str__(self):
@@ -56,7 +56,7 @@ class SampleType(models.Model):
     sat_id = models.AutoField(primary_key=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
-    group = models.ForeignKey(SampleGroup, on_delete=models.CASCADE, blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.name}"
@@ -193,6 +193,7 @@ class Analyte(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     details = models.CharField(max_length=255, blank=True, null=True)
+    specimen = models.ForeignKey(SampleGroup, on_delete=models.CASCADE, blank=True, null=True)
     loinc_num = models.CharField(max_length=50, blank=True, null=True)
     loinc_component = models.CharField(max_length=255, blank=True, null=True)
     loinc_short_name= models.CharField(max_length=255, blank=True, null=True)
@@ -209,9 +210,7 @@ class Analyte(models.Model):
     tube_maybeposs_comment = models.CharField(max_length=255, blank=True, null=True)
     tube_possible_comment = models.CharField(max_length=255, blank=True, null=True)
     tube_recomm_comment = models.CharField(max_length=255, blank=True, null=True)
-    cvi = models.FloatField(blank=True, null=True)
-    cvi_comment = models.CharField(max_length=255, blank=True, null=True)
-    cvi_literature = models.ManyToManyField(Literature, related_name='cvi_literature')
+    cvi_url = models.URLField(blank=True, null=True)
     bhl_min = models.FloatField(blank=True, null=True)
     bhl_max = models.FloatField(blank=True, null=True)
     bhl_comment = models.CharField(max_length=255, blank=True, null=True)

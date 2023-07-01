@@ -20,8 +20,7 @@ class SampleGroupAdmin(admin.ModelAdmin):
 
 class SampleTypeAdmin(admin.ModelAdmin):
     model = SampleType
-    list_display = ['name',
-                    'group']
+    list_display = ['name']
 
 class UnitAdmin(admin.ModelAdmin):
     model = Unit
