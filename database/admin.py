@@ -15,8 +15,8 @@ class LiteratureAdmin(admin.ModelAdmin):
 class PlatformAdmin(admin.ModelAdmin):
     model = Platform
 
-class SampleGroupAdmin(admin.ModelAdmin):
-    model = SampleGroup
+class SpecimenAdmin(admin.ModelAdmin):
+    model = Specimen
 
 class SampleTypeAdmin(admin.ModelAdmin):
     model = SampleType
@@ -34,12 +34,16 @@ class StabilityAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     model = Category
 
+class AnalyteSpecimenAdmin(admin.ModelAdmin):
+    model = AnalyteSpecimen
+
 admin.site.register(Analyte, AnalyteAdmin)
 admin.site.register(Literature, LiteratureAdmin)
 admin.site.register(Platform, PlatformAdmin)
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(SampleType, SampleTypeAdmin)
-admin.site.register(SampleGroup, SampleGroupAdmin)
+admin.site.register(Specimen, SpecimenAdmin)
 admin.site.register(AnalytMethod, AnalytMethodAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Stability, StabilityAdmin)
+admin.site.register(AnalyteSpecimen, AnalyteSpecimenAdmin)

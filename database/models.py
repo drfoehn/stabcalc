@@ -45,7 +45,7 @@ class Platform(models.Model):
 #
 #     def __str__(self):
 #         return self.name
-class SampleGroup(models.Model):
+class Specimen(models.Model):
     sg_id = models.AutoField(primary_key=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -114,7 +114,6 @@ class Stability(models.Model):
     )
 
     stab_id = models.AutoField(primary_key=True)
-    analyte_name = models.CharField(max_length=255, blank=True, null=True)
     rt_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
     rt_abs_min = models.FloatField(blank=True, null=True)
     rt_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
@@ -176,14 +175,13 @@ class Stability(models.Model):
     ultradeepfr_comment = models.CharField(max_length=255, blank=True, null=True)
     ultradeepfr_import = models.CharField(max_length=255, blank=True, null=True)
     stabilizer = models.CharField(max_length=255, blank=True, null=True)
-    # samplegroup = models.ForeignKey(StabilitySampleGroup, on_delete=models.CASCADE, blank=True, null=True)
     stab_platform = models.ForeignKey(Platform, on_delete=models.CASCADE, blank=True, null=True)
     stab_analyt_method = models.ForeignKey(AnalytMethod, on_delete=models.CASCADE, blank=True, null=True)
     stab_literature = models.ManyToManyField(Literature)
     stab_comment = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return self.analyte_name
+    # def __str__(self):
+    #     return self.analyte_name
 
     class Meta:
         verbose_name = "Stability"
@@ -193,15 +191,25 @@ class Analyte(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     details = models.CharField(max_length=255, blank=True, null=True)
-    specimen = models.ForeignKey(SampleGroup, on_delete=models.CASCADE, blank=True, null=True)
-    loinc_num = models.CharField(max_length=50, blank=True, null=True)
-    loinc_component = models.CharField(max_length=255, blank=True, null=True)
-    loinc_short_name= models.CharField(max_length=255, blank=True, null=True)
-    loinc_long_name= models.CharField(max_length=255, blank=True, null=True)
-    loinc_class = models.CharField(max_length=255, blank=True, null=True)
-    loinc_url = models.URLField(blank=True, null=True)
-    unit = models.ManyToManyField(Unit)
+    specimen = models.ManyToManyField(Specimen, through='AnalyteSpecimen')
     category = models.ManyToManyField(Category)
+    bhl_min = models.FloatField(blank=True, null=True)
+    bhl_max = models.FloatField(blank=True, null=True)
+    bhl_comment = models.CharField(max_length=255, blank=True, null=True)
+    bhl_literature = models.ManyToManyField(Literature, related_name='bhl_literature')
+
+
+    def __str__(self):
+        return f"{self.name}, {self.details}"
+
+class AnalyteSpecimen(models.Model):
+    analyte = models.ForeignKey(Analyte, on_delete=models.CASCADE)
+    specimen = models.ForeignKey(Specimen, on_delete=models.CASCADE)
+    unit = models.ManyToManyField(Unit)
+    stability = models.ManyToManyField(Stability, blank=True)
+    annotation = models.CharField(max_length=255, blank=True, null=True)
+    comment = models.CharField(max_length=255, blank=True, null=True)
+    is_published = models.BooleanField(default=False)
     tube_not = models.ManyToManyField(SampleType, blank=True, related_name='tube_not_sampletype')
     tube_maybeposs = models.ManyToManyField(SampleType, blank=True, related_name='tube_maybe_sampletype')
     tube_possible = models.ManyToManyField(SampleType, blank=True, related_name='tube_possible_sampletype')
@@ -211,14 +219,16 @@ class Analyte(models.Model):
     tube_possible_comment = models.CharField(max_length=255, blank=True, null=True)
     tube_recomm_comment = models.CharField(max_length=255, blank=True, null=True)
     cvi_url = models.URLField(blank=True, null=True)
-    bhl_min = models.FloatField(blank=True, null=True)
-    bhl_max = models.FloatField(blank=True, null=True)
-    bhl_comment = models.CharField(max_length=255, blank=True, null=True)
-    bhl_literature = models.ManyToManyField(Literature, related_name='bhl_literature')
-    stability = models.ManyToManyField(Stability)
-    annotation = models.CharField(max_length=255, blank=True, null=True)
-    comment = models.CharField(max_length=255, blank=True, null=True)
-    is_published = models.BooleanField(default=False)
+    loinc_num = models.CharField(max_length=50, blank=True, null=True)
+    loinc_component = models.CharField(max_length=255, blank=True, null=True)
+    loinc_short_name= models.CharField(max_length=255, blank=True, null=True)
+    loinc_long_name= models.CharField(max_length=255, blank=True, null=True)
+    loinc_class = models.CharField(max_length=255, blank=True, null=True)
+    loinc_url = models.URLField(blank=True, null=True)
+
 
     def __str__(self):
-        return f"{self.name}, {self.details}"
+        if self.analyte.details:
+            return f"{self.analyte.name} - {self.analyte.details} in {self.specimen.name}"
+        else:
+            return f"{self.analyte.name} in {self.specimen.name}"

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load static %}
+{#{% load filters %}#}
 
 {% block title %}Search Stability Database{% endblock %}
 
@@ -132,36 +133,76 @@
                             {{ object.bhl_min }} - {{ object.bhl_max }} <br>
                             {% if object.bhl_comment %} {{ aobject.bhl_comment }} {% endif %} <br>
                             {% if object.bhl_literature %} Source:
-                                 {% for lit in object.bhl_literature.all %}
+                                {% for lit in object.bhl_literature.all %}
 
 
-                                     <!-- Button trigger modal -->
-<a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">
-  {{ lit.lit_no }}
-</a> |
+                                    <!-- Button trigger modal -->
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">
+                                        {{ lit.lit_no }}
+                                    </a> |
 
-<!-- Modal -->
-<div class="modal fade" id="literatureModal" tabindex="-1" aria-labelledby="literatureModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="literatureModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>
-          DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a> <br>
-          <a href="{{ lit.url }}">Link</a>
-      </div>
-    </div>
-  </div>
-</div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="literatureModal" tabindex="-1"
+                                         aria-labelledby="literatureModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="literatureModalLabel">Modal title</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>
+                                                    DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a> <br>
+                                                    <a href="{{ lit.url }}">Link</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 {% endfor %}
 
                             {% endif %}
                         </div>
                     </div>
-
+                    <div class="row">
+                        <div class="col">
+                            <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Roomtemperature <br>20 to 25°C</th>
+      <th scope="col">Refrigerated <br>2 to 8°C</th>
+      <th scope="col">Frozen <br>-15 to -25°C</th>
+      <th scope="col">Deepfrozen <br>-60 to -80°C</th>
+        <th scope="col">Ultradeepfrozen <br>-140 to -160°C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+          {% for rt in object.stability.all %}
+             {{ rt.rt_abs_min }} to  {{ rt.rt_abs_max }} Minutes
+          {% endfor %}
+      </td>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td colspan="2">Larry the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
+                        </div>
+                    </div>
                     </p>
                 </div>
                 <div class="tab-pane" id="urine">
