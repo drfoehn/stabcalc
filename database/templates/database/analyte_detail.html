@@ -6,27 +6,53 @@
 {% block title %}Search Stability Database{% endblock %}
 
 {% block content %}
-<h1>{{ object.name }}</h1>
 
-{% for a in analyte_specimen %}
-    {{ a.specimen.name }}
-    <br>
 
-{% endfor %}
-    {{ analyte_specimen }}
-<div class="tab-content">
-{% for analyte_instance in analyte_specimen %}
-  <div class="tab-pane" id="tab{{ analyte__instance.specimen_id }}">
-    <h2>{{ analyte__instance.specimen.name }}</h2>
-    <p>Biological variation: {{ analyte__instance.biological_variation }}</p>
+    <h4 class="display-5">{{ object.name }} {% if object.details %} - {{ object.details }}{% endif %}</h4>
 
-    {% for stability in analyte__instances.stability_set.all %}
-      <p>Stability at 4°C: {{ stability.stability_4C }}</p>
-      <p>Stability at rt: {{ stability.stability_rt }}</p>
-      <p>Stability at -20°C: {{ stability.stability_minus20C }}</p>
-      <p>Stability at -70°C: {{ stability.stability_minus70C }}</p>
-    {% endfor %}
+        {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
+
+
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-2">
+                            <h5>Categories</h5>
+                            <br>
+
+                        </div>
+                <div class="col-2">
+                    {% for cat in object.category.all %}
+                                {{ cat.name }}<br>
+                            {% endfor %}
+                </div>
+                </div>
+
+
+<div class="container">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+  {% for a_s in analyte_specimen %}
+    <li class="nav-item">
+      <a class="nav-link{% if forloop.first %} active{% endif %}" id="tab-{{ a_s.specimen.sg_id }}" data-bs-toggle="tab" href="#pane-{{ a_s.specimen.sg_id }}">{{ a_s.specimen.name }}</a>
+    </li>
+  {% endfor %}
+  </ul>
+
+  <div class="tab-content">
+  {% for a_s in analyte_specimen %}
+    <div class="tab-pane{% if forloop.first %} active{% endif %}" id="pane-{{ a_s.specimen.sg_id }}">
+      <h2>{{ a_s.specimen.name }}</h2>
+      <p>Biological variation: {{ a_s.biological_variation }}</p>
+
+      {% for stability in a_s.stability_set.all %}
+        <p>Stability at 4°C: {{ stability.stability_4C }}</p>
+        <p>Stability at rt: {{ stability.stability_rt }}</p>
+        <p>Stability at -20°C: {{ stability.stability_minus20C }}</p>
+        <p>Stability at -70°C: {{ stability.stability_minus70C }}</p>
+      {% endfor %}
+    </div>
+  {% endfor %}
   </div>
-{% endfor %}
 </div>
+
 {% endblock %}
