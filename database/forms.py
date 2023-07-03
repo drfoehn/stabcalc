@@ -5,8 +5,8 @@ from .models import *
 from django import forms
 
 
-class AnalyteSearchForm(forms.ModelForm):
-    analyte = forms.ModelChoiceField(queryset=(Analyte.objects.all()))
+class AnalyteSpecimenSearchForm(forms.ModelForm):
+    analyte = forms.ModelChoiceField(queryset=(AnalyteSpecimen.objects.all()))
 
     # ----------------------Botcatcher-------------------------
 
@@ -18,9 +18,10 @@ class AnalyteSearchForm(forms.ModelForm):
     # -----------------------------------------------------------
 
     class Meta:
-        model = Analyte
+        model = AnalyteSpecimen
         fields = (
             'analyte',
+            'specimen'
         )
 
     def __init__(self, *args, **kwargs):

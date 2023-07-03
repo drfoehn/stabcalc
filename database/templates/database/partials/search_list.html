@@ -14,10 +14,10 @@
             <tr>
                 <td>
 
-                    <a href="{% url 'analyte_detail' analyte.aid %}">
-                        {{ analyte.name }}
-                        {% if analyte.details %}
-                            - {{ analyte.details }}
+                    <a href="{% url 'analytespecimen_detail' analyte.pk %}">
+                        {{ analyte.analyte.name }}
+                        {% if analyte.analyte.details %}
+                            - {{ analyte.analyte.details }}
                         {% endif %}
                     </a>
                 </td>

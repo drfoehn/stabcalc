@@ -10,8 +10,8 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path("search/", search_analyte, name="search_analyte"),
-    path("", views.AnalyteIndex.as_view(), name="analyte_list"),
-    path("<int:pk>/", views.AnalyteDetail.as_view(), name="analyte_detail"),
+    path("", views.AnalyteSpecimenIndex.as_view(), name="analytespecimen_list"),
+    path("<int:pk>/", views.AnalyteSpecimenDetail.as_view(), name="analytespecimen_detail"),
     # path("<int:pk>/blood", views.AnalyteDetail.as_view(), name="analyte_blood"),
     # path('analytes/<pk>/select', select_analyte, name='select-analyte'),
 ]

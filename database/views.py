@@ -4,8 +4,8 @@ from database.models import *
 from database.forms import *
 from .filters import AnalyteFilter
 
-class AnalyteIndex(ListView):
-    model = Analyte
+class AnalyteSpecimenIndex(ListView):
+    model = AnalyteSpecimen
     # paginate_by = 50
 
     # Reactivate to use with django-filter
@@ -24,10 +24,10 @@ class AnalyteIndex(ListView):
 def search_analyte(request):
     search_text = request.GET.get('search', "")
     if search_text:
-        results = Analyte.objects.filter(name__icontains=search_text).all().order_by('name')
+        results = AnalyteSpecimen.objects.filter(analyte__name__icontains=search_text).all().order_by('analyte')
         template = 'database/partials/analyte_searchresult.html'
     else:
-        results = Analyte.objects.order_by('name')
+        results = AnalyteSpecimen.objects.order_by('analyte')
         template = 'database/partials/search_list.html'
     context= {'results':results}
     return render(request, template, context)
@@ -47,8 +47,14 @@ def search_analyte(request):
 
 
 
-class AnalyteDetail(DetailView):
+class AnalyteSpecimenDetail(DetailView):
     model = Analyte
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # The related AnalyteSpecimen instances can be accessed via the related_name
+        context['analyte_specimen'] = self.object.analyte_specimen.all()
+        return context
 
 
 
@@ -67,11 +73,11 @@ class AnalyteDetail(DetailView):
 
 
 def select_analyte(request, pk):
-    analyte = Analyte.objects.get(pk=pk)
+    analyte = AnalyteSpecimen.objects.get(pk=pk)
     initial_dict = {
-        'analyte': analyte.aid
+        'analyte': analyte.pk
     }
-    form = AnalyteSearchForm(
+    form = AnalyteSpecimenSearchForm(
         initial=initial_dict
     )
 
@@ -79,8 +85,8 @@ def select_analyte(request, pk):
 
     context = {
         "form": form,
-        "analyte_name": analyte.name,
+        "analyte_name": f"{analyte.analyte.name} - {analyte.specimen.name}",
     }
 
-    return render(request, 'database/analyte_form.html', context)
+    return render(request, 'database/templates/database/analytespecimen_form.html', context)
 

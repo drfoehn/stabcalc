@@ -203,8 +203,8 @@ class Analyte(models.Model):
         return f"{self.name}, {self.details}"
 
 class AnalyteSpecimen(models.Model):
-    analyte = models.ForeignKey(Analyte, on_delete=models.CASCADE)
-    specimen = models.ForeignKey(Specimen, on_delete=models.CASCADE)
+    analyte = models.ForeignKey(Analyte, related_name="analyte_specimen", on_delete=models.CASCADE)
+    specimen = models.ForeignKey(Specimen, related_name="specimen_analyte", on_delete=models.CASCADE)
     unit = models.ManyToManyField(Unit)
     stability = models.ManyToManyField(Stability, blank=True)
     annotation = models.CharField(max_length=255, blank=True, null=True)
