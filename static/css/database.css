@@ -1,0 +1,13 @@
+@font-face {
+     font-family: "Montserrat";
+     src: url('fonts/Montserrat/static/Montserrat-Light.ttf') format('truetype');
+}
+
+@font-face {
+     font-family: "Ubuntu";
+     src: url('fonts/Ubuntu/Ubuntu-Light.ttf') format('truetype');
+}
+
+.tubetype{
+    margin-bottom: 20px;
+}

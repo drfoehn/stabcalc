@@ -41,6 +41,45 @@
   <div class="tab-content">
   {% for a_s in analyte_specimen %}
     <div class="tab-pane{% if forloop.first %} active{% endif %}" id="pane-{{ a_s.specimen.sg_id }}">
+
+
+    <div class="row">
+                        <div class="col">
+                            <h5>LOINC
+                                Number: <a href="{{ a_s.loinc_url }}" target="_blank"> {{ a_s.loinc_num }}</a>
+                            </h5>
+
+                        </div>
+                    </div>
+    <div class="container" id="blood_collection_tubes">
+    <div class="row">
+    <h4>Blood collection tubes</h4>
+        <div class="col-md-3 tubetype">
+        <h5>Recommended</h5>
+            {% for tube in a_s.tube_recomm.all %}
+                                    - {{ tube.name }} <br>
+                                {% endfor %}
+        </div>
+            <div class="col-md-3 tubetype">
+        <h5>Possible</h5>
+            {% for tube in a_s.tube_possible.all %}
+                                    - {{ tube.name }} <br>
+                                {% endfor %}
+        </div>
+            <div class="col-md-3 tubetype">
+        <h5>Eventually possible</h5>
+            {% for tube in a_s.tube_maybeposs.all %}
+                                    - {{ tube.name }} <br>
+                                {% endfor %}
+        </div>
+            <div class="col-md-3 tubetype">
+        <h5>NOT recommended</h5>
+            {% for tube in a_s.tube_not.all %}
+                                    - {{ tube.name }} <br>
+                                {% endfor %}
+        </div>
+    </div>
+    </div>
       <h2>{{ a_s.specimen.name }}</h2>
       <p>Biological variation: {{ a_s.biological_variation }}</p>
 
