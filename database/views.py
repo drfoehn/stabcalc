@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from database.models import *
 from database.forms import *
+import numpy as np
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 from .filters import AnalyteFilter
 
 class AnalyteSpecimenIndex(ListView):
@@ -54,8 +58,35 @@ class AnalyteSpecimenDetail(DetailView):
         context = super().get_context_data(**kwargs)
         # The related AnalyteSpecimen instances can be accessed via the related_name
         context['analyte_specimen'] = self.object.analyte_specimen.all()
-        return context
 
+
+        graphs = []
+        for analyte_specimen in context['analyte_specimen']:
+            for stability in analyte_specimen.stability.all():
+                x_values = np.linspace(stability.rt_abs_min, stability.rt_abs_max, 100)
+                if stability.rt_eq_type == Stability.LIN:
+                    y_values = stability.rt_b0 + stability.rt_b1 * x_values
+                elif stability.rt_eq_type == Stability.QUADR:
+                    y_values = stability.rt_b0 + stability.rt_b1 * x_values + stability.rt_b2 * x_values ** 2
+                elif stability.rt_eq_type == Stability.CUBIC:
+                    y_values = stability.rt_b0 + stability.rt_b1 * x_values + stability.rt_b2 * x_values ** 2 + stability.rt_b2 * x_values ** 3
+                elif stability.rt_eq_type == Stability.EXP:
+                    y_values = stability.rt_exp_a * np.exp(stability.rt_exp_b * x_values)
+                else:
+                    raise ValueError("Invalid equation type")
+
+                # Create the plot
+                fig, ax = plt.subplots()
+                ax.plot(x_values, y_values)
+                # Save it to a BytesIO object
+                buf = BytesIO()
+                plt.savefig(buf, format='png')
+                # Embed the result in the html output.
+                data = base64.b64encode(buf.getbuffer()).decode("ascii")
+                graphs.append(f"data:image/png;base64,{data}")
+
+        context['graphs'] = graphs
+        return context
 
 
 # def search_analyte(request):
