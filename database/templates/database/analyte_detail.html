@@ -46,12 +46,12 @@
                     References:
                     {% for lit in object.bhl_literature.all %}
                         <!-- Button trigger modal -->
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
                             #{{ lit.lit_no }}
                         </a> |
 
                         <!-- Modal -->
-                        <div class="modal fade text-black" id="literatureModal" tabindex="-1"
+                        <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
                              aria-labelledby="literatureModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -132,7 +132,7 @@
                             <div class="row">
                                 <h4>Stabilities</h4>
                                 <div class="col-md-6 tubetype">
-                                    <h5>Room Temperature <br> 20-25°C</h5>
+                                    <h6>Room Temperature <br> 20-25°C</h6>
                                     {% for stab in a_s.stability.all %}
                                         {{ stab.rt_abs_min|convert_time|get_time_value|floatformat:2 }}
                                         {{ stab.rt_abs_min|convert_time|get_time_unit }}
@@ -140,17 +140,17 @@
                                         {{ stab.rt_abs_max|convert_time|get_time_value|floatformat:2 }}
                                         {{ stab.rt_abs_max|convert_time|get_time_unit }}
                                         <br>
-                                        <p>Comment: {{ stab.stab_comment }}</p>
-                                        <p>References:
+                                        <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
+                                        <u>References:</u> <br>
                                             {% for lit in stab.stab_literature.all %}
 
                                                 <!-- Button trigger modal -->
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
                                                     #{{ lit.lit_no }}
                                                 </a> |
-                                        </p>
+
                                                 <!-- Modal -->
-                                                <div class="modal fade text-black" id="literatureModal" tabindex="-1"
+                                                <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
                                                      aria-labelledby="literatureModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -168,7 +168,7 @@
                                                                 DOI: <a
                                                                     href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
                                                                 <br>
-                                                                {#TODO: Hinter DOI wird /html irgendwo dazugefügt#}
+
                                                             </div>
                                                         </div>
                                                     </div>
