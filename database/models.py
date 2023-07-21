@@ -98,8 +98,9 @@ class Category(models.Model):
         return self.name
 
 
-
 class Stability(models.Model):
+
+    stab_id = models.AutoField(primary_key=True)
 
     LIN = "1"
     QUADR = "2"
@@ -113,79 +114,46 @@ class Stability(models.Model):
         (EXP, _("Exponential")),
     )
 
-    stab_id = models.AutoField(primary_key=True)
-    rt_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
-    rt_abs_min = models.FloatField(blank=True, null=True)
-    rt_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
-    rt_abs_max = models.FloatField(blank=True, null=True)
-    rt_eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
-    rt_b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
-    rt_b1 = models.FloatField(blank=True, null=True)
-    rt_b2 = models.FloatField(blank=True, null=True)
-    rt_exp_a = models.FloatField(blank=True, null=True)
-    rt_exp_b = models.FloatField(blank=True, null=True)
-    rt_comment = models.CharField(max_length=255, blank=True, null=True)
-    rt_import = models.CharField(max_length=255, blank=True, null=True)
-    refrig_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
-    refrig_abs_min = models.FloatField(blank=True, null=True)
-    refrig_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
-    refrig_abs_max = models.FloatField(blank=True, null=True)
-    refrig_eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
-    refrig_b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
-    refrig_b1 = models.FloatField(blank=True, null=True)
-    refrig_b2 = models.FloatField(blank=True, null=True)
-    refrig_exp_a = models.FloatField(blank=True, null=True)
-    refrig_exp_b = models.FloatField(blank=True, null=True)
-    refrig_comment = models.CharField(max_length=255, blank=True, null=True)
-    refrig_import = models.CharField(max_length=255, blank=True, null=True)
-    frozen_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
-    frozen_abs_min = models.FloatField(blank=True, null=True)
-    frozen_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
-    frozen_abs_max = models.FloatField(blank=True, null=True)
-    frozen_eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
-    frozen_b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
-    frozen_b1 = models.FloatField(blank=True, null=True)
-    frozen_b2 = models.FloatField(blank=True, null=True)
-    frozen_exp_a = models.FloatField(blank=True, null=True)
-    frozen_exp_b = models.FloatField(blank=True, null=True)
-    frozen_comment = models.CharField(max_length=255, blank=True, null=True)
-    frozen_import = models.CharField(max_length=255, blank=True, null=True)
-    deepfr_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
-    deepfr_abs_min = models.FloatField(blank=True, null=True)
-    deepfr_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
-    deepfr_abs_max = models.FloatField(blank=True, null=True)
-    deepfr_eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
-    deepfr_b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
-    deepfr_b1 = models.FloatField(blank=True, null=True)
-    deepfr_b2 = models.FloatField(blank=True, null=True)
-    deepfr_exp_a = models.FloatField(blank=True, null=True)
-    deepfr_exp_b = models.FloatField(blank=True, null=True)
-    deepfr_comment = models.CharField(max_length=255, blank=True, null=True)
-    deepfr_import = models.CharField(max_length=255, blank=True, null=True)
-    ultradeepfr_abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
-    ultradeepfr_abs_min = models.FloatField(blank=True, null=True)
-    ultradeepfr_abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
-    ultradeepfr_abs_max = models.FloatField(blank=True, null=True)
-    ultradeepfr_eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
-    ultradeepfr_b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
-    ultradeepfr_b1 = models.FloatField(blank=True, null=True)
-    ultradeepfr_b2 = models.FloatField(blank=True, null=True)
-    ultradeepfr_exp_a = models.FloatField(blank=True, null=True)
-    ultradeepfr_exp_b = models.FloatField(blank=True, null=True)
-    ultradeepfr_comment = models.CharField(max_length=255, blank=True, null=True)
-    ultradeepfr_import = models.CharField(max_length=255, blank=True, null=True)
+    RT = "1"
+    REFRIG = "2"
+    FROZEN = "3"
+    DEEPFROZEN = "4"
+    ULTRADEEPFROZEN = "5"
+
+    TemepratureChoices = (
+        (RT, _("Room Temperature (20 to 25°C)")),
+        (REFRIG, _("Refrigerated (2 to 8°C)")),
+        (FROZEN, _("Frozen (-15 to -25°C)")),
+        (DEEPFROZEN, _("Deepfrozen (-60 to -80°C)")),
+        (ULTRADEEPFROZEN, _("Ultradeepfrozen( < -80°C)")),
+    )
+    temperature = models.CharField(choices=TemepratureChoices, blank=True, null=True, max_length=1)
+
+
+    abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
+    abs_min = models.FloatField(blank=True, null=True)
+    abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
+    abs_max = models.FloatField(blank=True, null=True)
+    eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
+    b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
+    b1 = models.FloatField(blank=True, null=True)
+    b2 = models.FloatField(blank=True, null=True)
+    exp_a = models.FloatField(blank=True, null=True)
+    exp_b = models.FloatField(blank=True, null=True)
+    orig_import = models.CharField(max_length=255, blank=True, null=True)
     stabilizer = models.CharField(max_length=255, blank=True, null=True)
     stab_platform = models.ForeignKey(Platform, on_delete=models.CASCADE, blank=True, null=True)
     stab_analyt_method = models.ForeignKey(AnalytMethod, on_delete=models.CASCADE, blank=True, null=True)
     stab_literature = models.ManyToManyField(Literature)
     stab_comment = models.TextField(blank=True, null=True)
 
-    # def __str__(self):
-    #     return self.analyte_name
+    def __str__(self):
+        return f"{self.get_temperature_display()} - {self.stab_id}"
 
     class Meta:
         verbose_name = "Stability"
         verbose_name_plural = "Stabilities"
+
 class Analyte(models.Model):
     aid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
@@ -197,7 +165,6 @@ class Analyte(models.Model):
     bhl_max = models.FloatField(blank=True, null=True)
     bhl_comment = models.CharField(max_length=255, blank=True, null=True)
     bhl_literature = models.ManyToManyField(Literature, related_name='bhl_literature')
-
 
     def __str__(self):
         return f"{self.name}, {self.details}"
@@ -232,3 +199,19 @@ class AnalyteSpecimen(models.Model):
             return f"{self.analyte.name} - {self.analyte.details} in {self.specimen.name}"
         else:
             return f"{self.analyte.name} in {self.specimen.name}"
+
+    # def get_fields(self):
+    #     field_values = []
+    #     for field in AnalyteSpecimen._meta.get_fields():
+    #         value = getattr(self, field.name)
+    #         if field.is_relation:
+    #             if field.many_to_many:
+    #                 if value.exists():  # Überprüfe, ob es zugehörige Objekte gibt
+    #                     field_values.append((field.name, value.all()))
+    #             else:  # Es handelt sich um einen FK
+    #                 if value is not None:  # Überprüfe, ob es ein zugehöriges Objekt gibt
+    #                     field_values.append((field.name, value))
+    #         else:  # Es handelt sich um ein normales Feld
+    #             if value:
+    #                 field_values.append((field.name, value))
+    #     return field_values
