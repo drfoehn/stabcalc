@@ -138,6 +138,7 @@ class Stability(models.Model):
     b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
     b1 = models.FloatField(blank=True, null=True)
     b2 = models.FloatField(blank=True, null=True)
+    b3 = models.FloatField(blank=True, null=True)
     exp_a = models.FloatField(blank=True, null=True)
     exp_b = models.FloatField(blank=True, null=True)
     orig_import = models.CharField(max_length=255, blank=True, null=True)

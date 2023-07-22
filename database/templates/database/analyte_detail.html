@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load time_filters %}
+{% load template_filters %}
 {% load i18n %}
 {% load static %}
 {#{% load filters %}#}
@@ -90,9 +90,9 @@
                                 <div class="container" id="loinc">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h5>LOINC
+                                    <h4>LOINC
                                         Number: <a href="{{ a_s.loinc_url }}" target="_blank"> {{ a_s.loinc_num }}</a>
-                                    </h5>
+                                    </h4>
 
                                 </div>
                             </div>
@@ -141,7 +141,98 @@
                                 </div>
                             </div>
                             <div class="container" id="stabilities">
-{#                            {% if a_s.stability.abs_min or a_s.stability.abs_max %}#}
+                            {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
+                                <div class="card-header">
+                                <h4>Stability Equations</h4>
+                                </div>
+                                <div class="card-body row">
+
+                                    {% for stab in a_s.stability.all %}
+                                        {% if stab.eq_type %}
+                                            <div class="row">
+                                            <div class="col">
+
+
+                                <h6><u>Regression:</u>
+                                    {{ stab.get_eq_type_display }} <br>
+                                                {% if stab.eq_type == "1" %}
+                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time
+                                                    {% elif stab.eq_type == "2" %}
+                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time + {{ stab.b2 }} * Time^2
+                                                    {% elif stab.eq_type == "3" %}
+                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time + {{ stab.b2 }} * Time^2 + {{ stab.b3 }} * Time^3
+                                                {% endif %}
+                                </h6>
+                                            </div>
+                                            <div class="col">
+                                                Equation-image
+                                            </div>
+                                            </div>
+                                            <div class="row">
+                                            <div class="col">
+                                                <u>References</u>
+                                                {% for lit in stab.stab_literature.all %}
+
+                                                <!-- Button trigger modal -->
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                                    #{{ lit.lit_no }}
+                                                </a> |
+
+                                                <!-- Modal -->
+                                                <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                                     aria-labelledby="literatureModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="literatureModalLabel">Reference
+                                                                    #{{ lit.lit_no }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
+                                                                <br>
+                                                                DOI: <a
+                                                                    href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
+                                                                <br>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                            </div>
+                                            {% if stab.stabilizer %}
+                                            <div class="col">
+                                                Stabilizer: {{ stab.stabilizer }}
+                                            </div>
+                                                {% endif %}
+                                            {% if stab.stab_platform %}
+                                            <div class="col">
+                                                Platform: {{ stab.stab_platform }}
+                                            </div>
+                                            {% endif %}
+                                                {% if stab.stab_analyt_method %}
+                                            <div class="col">
+                                                Analyt. Method: {{ stab.stab_analyt_method }}
+                                            </div>
+                                            {% endif %}
+                                            </div>
+                                                    {% if stab.stab_comment %}
+                                            <div class="row">
+                                            <div class="col">
+                                                Comment: {{ stab.stab_comment }}
+                                            </div>
+                                            </div>
+                                                        {% endif %}
+                                            <hr>
+                                        {% endif %}
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                            {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
                             <div class="card-header">
                                 <h4>Absolute Stabilities</h4>
                             </div>
@@ -210,7 +301,7 @@
                                     {% endfor %}
                             </div>
                             </div>
-{#                            {% endif %}#}
+                            {% endif %}
                             {##}
 {#                            </div>#}
 {#                            <div class="card row">#}

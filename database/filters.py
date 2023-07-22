@@ -27,3 +27,5 @@ def time_format(value):
         return f"{value // 60} hours"
     else:
         return f"{value // 3600} hours"
+
+

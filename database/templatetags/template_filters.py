@@ -42,3 +42,25 @@ def convert_time(value):
     years = months / 12
     unit = 'years'
     return {"value": years, "unit": unit}
+
+
+@register.filter
+def is_not_empty_m2m_field_or(m2m_field, field_names_string):
+    """
+    Checks if a specific field in a M2M field is empty or not.
+
+    Args:
+      m2m_field: The M2M field to check.
+      field_names_string: A string of field names separated by a comma.
+
+    Returns:
+      True if the field is not empty, False otherwise.
+    """
+
+    # Split the field names string into a list of field names.
+    field_names = field_names_string.split(',')
+
+    if m2m_field.filter(**{f"{field_name}__isnull": False for field_name in field_names}).exists():
+        return True
+    else:
+        return False
