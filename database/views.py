@@ -122,8 +122,8 @@ class AnalyteSpecimenDetail(DetailView):
                 graphs[stability.pk] = f"data:image/png;base64,{data}"
 
                     # Add the dictionary of graphs to the context.
-                context['graph'] = graphs[stability.pk]
-
+                context['graph'] = graphs
+        print(graphs)
         return context
 
 

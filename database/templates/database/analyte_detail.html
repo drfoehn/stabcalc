@@ -168,8 +168,9 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col">
-                                                        Graph - {{ stab.pk }} - {{ stab.graph }}
-                                                        <img src="{{ graph }}" />
+
+                                                        <img src="{{ graph|dict_key:stab.pk  }}"  alt=""/>
+
                                                     </div>
                                                 </div>
                                                 <div class="row">

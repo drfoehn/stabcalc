@@ -65,6 +65,7 @@ def is_not_empty_m2m_field_or(m2m_field, field_names_string):
     else:
         return False
 
-@register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
+@register.filter(name='dict_key')
+def dict_key(dict, key):
+    '''Returns the given key from a dictionary.'''
+    return dict[key]
