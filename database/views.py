@@ -24,6 +24,16 @@ class AnalyteSpecimenIndex(ListView):
     #     return super().get_queryset().filter(**filters)
 
 
+class CategoryAnalytesView(DetailView):
+    model = Category
+    template_name = 'database/category_analytes_list.html'
+    context_object_name = 'category'  # this is used in the template to refer to the category object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        analytes = context['category'].analyte_set.all()
+        context['analyte_specimens'] = AnalyteSpecimen.objects.filter(analyte__in=analytes)
+        return context
 
 def search_analyte(request):
     search_text = request.GET.get('search', "")
@@ -35,6 +45,8 @@ def search_analyte(request):
         template = 'database/partials/search_list.html'
     context= {'results':results}
     return render(request, template, context)
+
+
 # def search_analyte(request):
 #     searchterm = request.GET.get('qs', None)
 #     if searchterm:
@@ -49,40 +61,6 @@ def search_analyte(request):
 
 
 
-
-# def get_context_data(self, **kwargs):
-#     context = super().get_context_data(**kwargs)
-#     context['analyte_specimen'] = self.object.analyte_specimen.all()
-#
-#     graphs = {}
-#     for analyte_specimen in context['analyte_specimen']:
-#         graphs[analyte_specimen.id] = {}
-#         for stability in analyte_specimen.stability.all():
-#             if stability.eq_type:
-#                 x_values = np.linspace(0, 100)
-#                 if stability.eq_type == Stability.LIN:
-#                     y_values = stability.b0 + stability.b1 * x_values
-#                 elif stability.eq_type == Stability.QUADR:
-#                     y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2
-#                 elif stability.eq_type == Stability.CUBIC:
-#                     y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2 + stability.b3 * x_values ** 3
-#                 elif stability.eq_type == Stability.EXP:
-#                     y_values = stability.exp_a * np.exp(stability.exp_b * x_values)
-#                 else:
-#                     raise ValueError("Invalid equation type")
-#
-#                 # Create the plot
-#                 fig, ax = plt.subplots()
-#                 ax.plot(x_values, y_values)
-#                 # Save it to a BytesIO object
-#                 buf = BytesIO()
-#                 plt.savefig(buf, format='png')
-#                 # Embed the result in the html output.
-#                 data = base64.b64encode(buf.getbuffer()).decode("ascii")
-#                 graphs[analyte_specimen.id][stability.id] = f"data:image/png;base64,{data}"
-#
-#     context['graphs'] = graphs
-#     return context
 
 class AnalyteSpecimenDetail(DetailView):
     model = Analyte

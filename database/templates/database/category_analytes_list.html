@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{% trans 'Search Stability Database' %}{% endblock %}
+
+{% block content %}
+
+<h4 class="display-5">{% trans 'Analyte List for Category ' %}{{ category.name }}</h4>
+
+<ul>
+    {% for a_s in analyte_specimens %}
+        <li>
+            <h2>{{ a_s.analyte.name }} in {{ a_s.specimen.name }}</h2>
+            <!-- Add other fields here -->
+        </li>
+    {% empty %}
+        <li>No analytes for this category.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
