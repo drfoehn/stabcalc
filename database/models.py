@@ -129,12 +129,27 @@ class Stability(models.Model):
     )
     temperature = models.CharField(choices=TemepratureChoices, blank=True, null=True, max_length=1)
 
+    HOUR = "1"
+    DAY = "2"
+    WEEK = "3"
+    MONTH = "4"
+    YEAR = "5"
+
+    TimeChoices = (
+        (HOUR, _("Hours")),
+        (DAY, _("Days")),
+        (WEEK, _("Weeks")),
+        (MONTH, _("Months")),
+        (YEAR, _("Years")),
+    )
 
     abs_min_prefix = models.CharField(max_length=5, blank=True, null=True)
     abs_min = models.FloatField(blank=True, null=True)
     abs_max_prefix = models.CharField(max_length=5, blank=True, null=True)
     abs_max = models.FloatField(blank=True, null=True)
     eq_type = models.CharField(choices=EQTypeChoices,blank=True, null=True, max_length=1)
+    max_time_evaluated = models.FloatField(blank=True, null=True)
+    max_time_evaluated_unit = models.CharField(choices=TimeChoices,blank=True, null=True, max_length=1)
     b0 = models.FloatField(blank=True, null=True, help_text="If forced through zero, B0 has to be 0")
     b1 = models.FloatField(blank=True, null=True)
     b2 = models.FloatField(blank=True, null=True)

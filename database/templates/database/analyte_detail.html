@@ -11,7 +11,7 @@
     {#    {% if "Blood" in object.specimen.name %}#}
     <h4 class="display-5">{{ object.name }} {% if object.details %} - <i>{{ object.details }}</i>{% endif %}
         in {{ object.specimen.name }}</h4>
-{#    TODO: Name does not work #}
+    {#    TODO: Name does not work #}
 
     {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
 
@@ -30,44 +30,44 @@
                     {% endfor %}
                 </div>
             </div>
-        {% if  object.bhl_min  %}
-            <div class="row">
-                <div class="col-2">
-                    <h5>Biol. Halflife</h5>
-                </div>
-                <div class="col-10">
-                    {{ object.bhl_min }} - {{ object.bhl_max }} <br>
-                    {{ object.bhl_comment }}<br>
-                    References:
-                    {% for lit in object.bhl_literature.all %}
-                        <!-- Button trigger modal -->
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
-                            #{{ lit.lit_no }}
-                        </a> |
+            {% if  object.bhl_min %}
+                <div class="row">
+                    <div class="col-2">
+                        <h5>Biol. Halflife</h5>
+                    </div>
+                    <div class="col-10">
+                        {{ object.bhl_min }} - {{ object.bhl_max }} <br>
+                        {{ object.bhl_comment }}<br>
+                        References:
+                        {% for lit in object.bhl_literature.all %}
+                            <!-- Button trigger modal -->
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                #{{ lit.lit_no }}
+                            </a> |
 
-                        <!-- Modal -->
-                        <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                             aria-labelledby="literatureModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title"
-                                            id="literatureModalLabel">Reference #{{ lit.lit_no }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>
-                                        DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a> <br>
-                                        {#TODO: Hinter DOI wird /html irgendwo dazugefügt#}
+                            <!-- Modal -->
+                            <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                 aria-labelledby="literatureModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"
+                                                id="literatureModalLabel">Reference #{{ lit.lit_no }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>
+                                            DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a> <br>
+                                            {#TODO: Hinter DOI wird /html irgendwo dazugefügt#}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
             <div class="row">
                 <div class="container">
                     <ul class="nav nav-tabs" id="specimen_tab" role="tablist">
@@ -88,478 +88,486 @@
 
                             {% if a_s.loinc_num %}
                                 <div class="container" id="loinc">
-                            <div class="card-header">
-                                <div class="col-12">
-                                    <h4>LOINC
-                                        Number: <a href="{{ a_s.loinc_url }}" target="_blank"> {{ a_s.loinc_num }}</a>
-                                    </h4>
+                                    <div class="card-header">
+                                        <div class="col-12">
+                                            <h4>LOINC
+                                                Number: <a href="{{ a_s.loinc_url }}"
+                                                           target="_blank"> {{ a_s.loinc_num }}</a>
+                                            </h4>
 
-                                </div>
-                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             {% endif %}
 
                             <div class="container" id="blood_collection_tubes">
-                            <div class="card-header">
-                                <h4>Blood collection tubes</h4>
-                            </div>
+                                <div class="card-header">
+                                    <h4>Blood collection tubes</h4>
+                                </div>
                                 <div class="card-body row">
 
                                     {% if a_s.tube_recomm.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Recommended</h5>
-                                        {% for tube in a_s.tube_recomm.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Recommended</h5>
+                                            {% for tube in a_s.tube_recomm.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
                                     {% endif %}
 
-                                {% if a_s.tube_possible.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Possible</h5>
-                                        {% for tube in a_s.tube_possible.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if a_s.tube_maybeposs.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Eventually possible</h5>
-                                        {% for tube in a_s.tube_maybeposs.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if a_s.tube_not.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>NOT recommended</h5>
-                                        {% for tube in a_s.tube_not.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                                    {% if a_s.tube_possible.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Possible</h5>
+                                            {% for tube in a_s.tube_possible.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if a_s.tube_maybeposs.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Eventually possible</h5>
+                                            {% for tube in a_s.tube_maybeposs.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if a_s.tube_not.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>NOT recommended</h5>
+                                            {% for tube in a_s.tube_not.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="container" id="stabilities">
-                            {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
-                                <div class="card-header">
-                                <h4>Stability Equations</h4>
-                                </div>
-                                <div class="card-body row">
+                                {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
+                                    <div class="card-header">
+                                        <h4>Stability Equations</h4>
+                                    </div>
+                                    <div class="card-body row">
 
-                                    {% for stab in a_s.stability.all %}
-                                        {% if stab.eq_type %}
-                                            <div class="row">
-                                            <div class="col">
+                                        {% for stab in a_s.stability.all %}
+                                            {% if stab.eq_type %}
+                                                <div class="row">
+                                                    <div class="col">
 
 
-                                <h6><u>Regression:</u>
-                                    {{ stab.get_eq_type_display }} <br>
-                                                {% if stab.eq_type == "1" %}
-                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time
-                                                    {% elif stab.eq_type == "2" %}
-                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time + {{ stab.b2 }} * Time^2
-                                                    {% elif stab.eq_type == "3" %}
-                                                    Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time + {{ stab.b2 }} * Time^2 + {{ stab.b3 }} * Time^3
-                                                {% endif %}
-                                </h6>
-                                            </div>
-                                            <div class="col">
-                                                Equation-image
-                                            </div>
-                                            </div>
-                                            <div class="row">
-                                            <div class="col">
-                                                <u>References</u>
-                                                {% for lit in stab.stab_literature.all %}
-
-                                                <!-- Button trigger modal -->
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
-                                                    #{{ lit.lit_no }}
-                                                </a> |
-
-                                                <!-- Modal -->
-                                                <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                                                     aria-labelledby="literatureModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="literatureModalLabel">Reference
-                                                                    #{{ lit.lit_no }}</h5>
-                                                                <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
-                                                                <br>
-                                                                DOI: <a
-                                                                    href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
-                                                                <br>
-
-                                                            </div>
-                                                        </div>
+                                                        <h6><u>Regression:</u>
+                                                            {{ stab.get_eq_type_display }} <br>
+                                                            {% if stab.eq_type == "1" %}
+                                                                Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time
+                                                            {% elif stab.eq_type == "2" %}
+                                                                Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time +
+                                                                {{ stab.b2 }} * Time^2
+                                                            {% elif stab.eq_type == "3" %}
+                                                                Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time +
+                                                                {{ stab.b2 }} * Time^2 + {{ stab.b3 }} * Time^3
+                                                            {% endif %}
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col">
+                                                        Graph - {{ stab.pk }} - {{ stab.graph }}
+                                                        <img src="{{ graph }}" />
                                                     </div>
                                                 </div>
-                                            {% endfor %}
-                                            </div>
-                                            {% if stab.stabilizer %}
-                                            <div class="col">
-                                                Stabilizer: {{ stab.stabilizer }}
-                                            </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <u>References</u>
+                                                        {% for lit in stab.stab_literature.all %}
+
+                                                            <!-- Button trigger modal -->
+                                                            <a href="#" data-bs-toggle="modal"
+                                                               data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                                                #{{ lit.lit_no }}
+                                                            </a> |
+
+                                                            <!-- Modal -->
+                                                            <div class="modal fade text-black"
+                                                                 id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                                                 aria-labelledby="literatureModalLabel"
+                                                                 aria-hidden="true">
+                                                                <div class="modal-dialog">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title"
+                                                                                id="literatureModalLabel">Reference
+                                                                                #{{ lit.lit_no }}</h5>
+                                                                            <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
+                                                                            <br>
+                                                                            DOI: <a
+                                                                                href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
+                                                                            <br>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                    {% if stab.stabilizer %}
+                                                        <div class="col">
+                                                            Stabilizer: {{ stab.stabilizer }}
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if stab.stab_platform %}
+                                                        <div class="col">
+                                                            Platform: {{ stab.stab_platform }}
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if stab.stab_analyt_method %}
+                                                        <div class="col">
+                                                            Analyt. Method: {{ stab.stab_analyt_method }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                {% if stab.stab_comment %}
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            Comment: {{ stab.stab_comment }}
+                                                        </div>
+                                                    </div>
                                                 {% endif %}
-                                            {% if stab.stab_platform %}
-                                            <div class="col">
-                                                Platform: {{ stab.stab_platform }}
-                                            </div>
+                                                <hr>
                                             {% endif %}
-                                                {% if stab.stab_analyt_method %}
-                                            <div class="col">
-                                                Analyt. Method: {{ stab.stab_analyt_method }}
-                                            </div>
-                                            {% endif %}
-                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
+                                    <div class="card-header">
+                                        <h4>Absolute Stabilities</h4>
+                                    </div>
+                                    <div class="card-body row">
+                                        {% for stab in a_s.stability.all %}
+                                            <div class="row stabilities-abs">
+                                                <div class="col-md-3">
+                                                    <h6>{{ stab.get_temperature_display }}</h6>
+                                                    {% if stab.abs_min_prefix %}
+                                                        {{ stab.abs_min_prefix }}
+                                                    {% endif %}
+                                                    {% if stab.abs_min %}
+                                                        {{ stab.abs_min|convert_time|get_time_value|floatformat:2 }}
+                                                        {{ stab.abs_min|convert_time|get_time_unit }}
+                                                    {% endif %}
+                                                    {% if stab.abs_max_prefix %}
+                                                        {{ stab.abs_max_prefix }}
+                                                    {% endif %}
+                                                    {% if stab.abs_max %}
+                                                        -
+                                                        {{ stab.abs_max|convert_time|get_time_value|floatformat:2 }}
+                                                        {{ stab.abs_max|convert_time|get_time_unit }}
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-3">
                                                     {% if stab.stab_comment %}
-                                            <div class="row">
-                                            <div class="col">
-                                                Comment: {{ stab.stab_comment }}
-                                            </div>
-                                            </div>
-                                                        {% endif %}
-                                            <hr>
-                                        {% endif %}
-                                {% endfor %}
-                                </div>
-                            {% endif %}
-                            {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
-                            <div class="card-header">
-                                <h4>Absolute Stabilities</h4>
-                            </div>
-                            <div class="card-body row">
-                             {% for stab in a_s.stability.all %}
-                                 <div class="row stabilities-abs">
-                                 <div class="col-md-3">
-                                 <h6>{{ stab.get_temperature_display }}</h6>
-                                 {% if stab.abs_min_prefix %}
-                                        {{ stab.abs_min_prefix }}
-                                 {% endif %}
-                                 {% if stab.abs_min %}
-                                        {{ stab.abs_min|convert_time|get_time_value|floatformat:2 }}
-                                        {{ stab.abs_min|convert_time|get_time_unit }}
-                                 {% endif %}
-                                 {% if stab.abs_max_prefix %}
-                                        {{ stab.abs_max_prefix }}
-                                 {% endif %}
-                                 {% if stab.abs_max %}
-                                        -
-                                        {{ stab.abs_max|convert_time|get_time_value|floatformat:2 }}
-                                        {{ stab.abs_max|convert_time|get_time_unit }}
-                                 {% endif %}
-                                 </div>
-                                 <div class="col-md-3">
-                                     {% if stab.stab_comment  %}
-                                     <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
-                                     {% endif %}
-                                 </div>
-                                 <div class="col-md-3">
-                                        <u>References:</u> <br>
-                                            {% for lit in stab.stab_literature.all %}
+                                                        <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <u>References:</u> <br>
+                                                    {% for lit in stab.stab_literature.all %}
 
-                                                <!-- Button trigger modal -->
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
-                                                    #{{ lit.lit_no }}
-                                                </a> |
+                                                        <!-- Button trigger modal -->
+                                                        <a href="#" data-bs-toggle="modal"
+                                                           data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                                            #{{ lit.lit_no }}
+                                                        </a> |
 
-                                                <!-- Modal -->
-                                                <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                                                     aria-labelledby="literatureModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title"
-                                                                    id="literatureModalLabel">Reference
-                                                                    #{{ lit.lit_no }}</h5>
-                                                                <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
-                                                                <br>
-                                                                DOI: <a
-                                                                    href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
-                                                                <br>
+                                                        <!-- Modal -->
+                                                        <div class="modal fade text-black"
+                                                             id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                                             aria-labelledby="literatureModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title"
+                                                                            id="literatureModalLabel">Reference
+                                                                            #{{ lit.lit_no }}</h5>
+                                                                        <button type="button" class="btn-close"
+                                                                                data-bs-dismiss="modal"
+                                                                                aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
+                                                                        <br>
+                                                                        DOI: <a
+                                                                            href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
+                                                                        <br>
 
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    {% endfor %}
                                                 </div>
-                                            {% endfor %}
-                                 </div>
-                                 </div>
-                                    {% endfor %}
-                            </div>
-                            </div>
-                            {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    </div>
+                                {% endif %}
                             {##}
-{#                            </div>#}
-{#                            <div class="card row">#}
-{#                            <h4>Stability equations</h4>#}
-{#                                <h6>Temperature:</h6>#}
-{##}
-{#                                <h6>Model:</h6>#}
-{#                            {% for graph in graphs %}#}
-{#                                        <img src="{{ graph }}"/>#}
-{#                                    {% endfor %}#}
-{#                            </div>#}
+                            {#                            </div>#}
+                            {#                            <div class="card row">#}
+                            {#                            <h4>Stability equations</h4>#}
+                            {#                                <h6>Temperature:</h6>#}
+                            {##}
+                            {#                                <h6>Model:</h6>#}
+                            {#                            {% for graph in graphs %}#}
+                            {#                                        <img src="{{ graph }}"/>#}
+                            {#                                    {% endfor %}#}
+                            {#                            </div>#}
                         {% endfor %}
                         </div>
-                        </div>
                     </div>
-
-
-
-{#                    <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#blood">Blood</a>#}
-{#                        </li>#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" data-bs-toggle="tab" href="#urine">Urine</a>#}
-{#                        </li>#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>#}
-{#                        </li>#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>#}
-{#                        </li>#}
-{#                    </ul>#}
                 </div>
-{#                <div class="card-body tab-content">#}
-{#                    <div class="tab-pane active" id="blood">#}
-{#                        <p class="card-text">#}
-{#                        <div class="row">#}
-{#                            {{ object.specimen.name }}#}
-{##}
-{#                            <div class="col">#}
-{#                                <h5>LOINC#}
-{#                                    Number: <a href="{{ object.loinc_url }}" target="_blank"> {{ object.loinc_num }}</a>#}
-{#                                </h5>#}
-{##}
-{#                            </div>#}
-{#                        </div>#}
-{##}
-{#                        <br>#}
-{##}
-{##}
-{#                        <table class="table">#}
-{#                            <thead>#}
-{#                            <tr>#}
-{#                                <th scope="col">Tube</th>#}
-{#                                <th scope="col">Type</th>#}
-{#                                <th scope="col">Comment</th>#}
-{#                            </tr>#}
-{#                            </thead>#}
-{#                            <tbody>#}
-{#                            <tr>#}
-{#                                <th scope="row">Recommended</th>#}
-{#                                <td>#}
-{#                                    {% for tube in object.tube_recomm.all %}#}
-{#                                        {{ tube.name }}#}
-{#                                    {% endfor %}#}
-{#                                </td>#}
-{#                                <td>#}
-{#                                    {% if object.tube_recomm_comment %}#}
-{#                                        {{ object.tube_recomm_comment }}#}
-{#                                    {% endif %}#}
-{#                                </td>#}
-{##}
-{#                            </tr>#}
-{#                            <tr>#}
-{#                                <th scope="row">Possible</th>#}
-{#                                <td>#}
-{#                                    {% for tube in object.tube_possible.all %}#}
-{#                                        {{ tube.name }}#}
-{#                                    {% endfor %}#}
-{#                                </td>#}
-{##}
-{#                                <td>#}
-{#                                    {% if object.tube_possible_comment %}#}
-{#                                        {{ object.tube_possible_comment }}#}
-{#                                    {% endif %}#}
-{#                                </td>#}
-{##}
-{#                            </tr>#}
-{#                            <tr>#}
-{#                                <th scope="row">Maybe Possible</th>#}
-{#                                <td>#}
-{#                                    {% for tube in object.tube_maybeposs.all %}#}
-{#                                        {{ tube.name }}#}
-{#                                    {% endfor %}#}
-{#                                </td>#}
-{##}
-{#                                <td>#}
-{#                                    {% if object.tube_maybeposs_comment %}#}
-{#                                        {{ object.tube_maybeposs_comment }}#}
-{#                                    {% endif %}#}
-{#                                </td>#}
-{#                            </tr>#}
-{#                            <tr>#}
-{#                                <th scope="row">Not recommended</th>#}
-{#                                <td>#}
-{#                                    {% for tube in object.tube_not.all %}#}
-{#                                        {{ tube.name }}#}
-{#                                    {% endfor %}#}
-{#                                </td>#}
-{##}
-{#                                <td>#}
-{#                                    {% if object.tube_not_comment %}#}
-{#                                        {{ object.tube_not_comment }}#}
-{#                                    {% endif %}#}
-{#                                </td>#}
-{#                            </tr>#}
-{#                            </tbody>#}
-{#                        </table>#}
-{##}
-{#                        <div class="row">#}
-{#                            <div class="col">#}
-{#                                <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation#}
-{#                                    of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>#}
-{#                            </div>#}
-{#                            <div class="col">#}
-{#                                <h5>Biological HalfLife</h5>#}
-{#                                {{ object.bhl_min }} - {{ object.bhl_max }} <br>#}
-{#                                {% if object.bhl_comment %} {{ aobject.bhl_comment }} {% endif %} <br>#}
-{#                                {% if object.bhl_literature %} Source:#}
-{#                                    {% for lit in object.bhl_literature.all %}#}
-{##}
-{##}
-{#                                        <!-- Button trigger modal -->#}
-{#                                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">#}
-{#                                            {{ lit.lit_no }}#}
-{#                                        </a> |#}
-{##}
-{#                                        <!-- Modal -->#}
-{#                                        <div class="modal fade" id="literatureModal" tabindex="-1"#}
-{#                                             aria-labelledby="literatureModalLabel" aria-hidden="true">#}
-{#                                            <div class="modal-dialog">#}
-{#                                                <div class="modal-content">#}
-{#                                                    <div class="modal-header">#}
-{#                                                        <h5 class="modal-title" id="literatureModalLabel">Modal#}
-{#                                                            title</h5>#}
-{#                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"#}
-{#                                                                aria-label="Close"></button>#}
-{#                                                    </div>#}
-{#                                                    <div class="modal-body">#}
-{#                                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>#}
-{#                                                        DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>#}
-{#                                                        <br>#}
-{#                                                        <a href="{{ lit.url }}">Link</a>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    {% endfor %}#}
-{##}
-{#                                {% endif %}#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="row">#}
-{#                            <div class="col">#}
-{#                                <table class="table">#}
-{#                                    <thead>#}
-{#                                    <tr>#}
-{#                                        <th scope="col">Roomtemperature <br>20 to 25°C</th>#}
-{#                                        <th scope="col">Refrigerated <br>2 to 8°C</th>#}
-{#                                        <th scope="col">Frozen <br>-15 to -25°C</th>#}
-{#                                        <th scope="col">Deepfrozen <br>-60 to -80°C</th>#}
-{#                                        <th scope="col">Ultradeepfrozen <br>-140 to -160°C</th>#}
-{#                                    </tr>#}
-{#                                    </thead>#}
-{#                                    <tbody>#}
-{#                                    <tr>#}
-{#                                        <td>#}
-{#                                            {% for rt in object.stability.all %}#}
-{#                                                {{ rt.rt_abs_min }} to  {{ rt.rt_abs_max }} Minutes#}
-{#                                            {% endfor %}#}
-{#                                        </td>#}
-{#                                        <td>Mark</td>#}
-{#                                        <td>Otto</td>#}
-{#                                        <td>@mdo</td>#}
-{#                                        <td>@mdo</td>#}
-{#                                    </tr>#}
-{#                                    <tr>#}
-{#                                        <th scope="row">2</th>#}
-{#                                        <td>Jacob</td>#}
-{#                                        <td>Thornton</td>#}
-{#                                        <td>@fat</td>#}
-{#                                    </tr>#}
-{#                                    <tr>#}
-{#                                        <th scope="row">3</th>#}
-{#                                        <td colspan="2">Larry the Bird</td>#}
-{#                                        <td>@twitter</td>#}
-{#                                    </tr>#}
-{#                                    </tbody>#}
-{#                                </table>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        </p>#}
-{#                    </div>#}
-{#                    <div class="tab-pane" id="urine">#}
-{#                        <p class=" card-text">URINE.</p>#}
-{#                    </div>#}
-{#                    <div class="tab-pane" id="csf">#}
-{#                        <p class=" card-text">CSF.</p>#}
-{#                    </div>#}
-{#                    <div class="tab-pane" id="saliva">#}
-{#                        <p class=" card-text">SALIVA.</p>#}
-{#                    </div>#}
-{##}
-{#                </div>#}
+
+
+                {#                    <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">#}
+                {#                        <li class="nav-item">#}
+                {#                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#blood">Blood</a>#}
+                {#                        </li>#}
+                {#                        <li class="nav-item">#}
+                {#                            <a class="nav-link" data-bs-toggle="tab" href="#urine">Urine</a>#}
+                {#                        </li>#}
+                {#                        <li class="nav-item">#}
+                {#                            <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>#}
+                {#                        </li>#}
+                {#                        <li class="nav-item">#}
+                {#                            <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>#}
+                {#                        </li>#}
+                {#                    </ul>#}
             </div>
+            {#                <div class="card-body tab-content">#}
+            {#                    <div class="tab-pane active" id="blood">#}
+            {#                        <p class="card-text">#}
+            {#                        <div class="row">#}
+            {#                            {{ object.specimen.name }}#}
+            {##}
+            {#                            <div class="col">#}
+            {#                                <h5>LOINC#}
+            {#                                    Number: <a href="{{ object.loinc_url }}" target="_blank"> {{ object.loinc_num }}</a>#}
+            {#                                </h5>#}
+            {##}
+            {#                            </div>#}
+            {#                        </div>#}
+            {##}
+            {#                        <br>#}
+            {##}
+            {##}
+            {#                        <table class="table">#}
+            {#                            <thead>#}
+            {#                            <tr>#}
+            {#                                <th scope="col">Tube</th>#}
+            {#                                <th scope="col">Type</th>#}
+            {#                                <th scope="col">Comment</th>#}
+            {#                            </tr>#}
+            {#                            </thead>#}
+            {#                            <tbody>#}
+            {#                            <tr>#}
+            {#                                <th scope="row">Recommended</th>#}
+            {#                                <td>#}
+            {#                                    {% for tube in object.tube_recomm.all %}#}
+            {#                                        {{ tube.name }}#}
+            {#                                    {% endfor %}#}
+            {#                                </td>#}
+            {#                                <td>#}
+            {#                                    {% if object.tube_recomm_comment %}#}
+            {#                                        {{ object.tube_recomm_comment }}#}
+            {#                                    {% endif %}#}
+            {#                                </td>#}
+            {##}
+            {#                            </tr>#}
+            {#                            <tr>#}
+            {#                                <th scope="row">Possible</th>#}
+            {#                                <td>#}
+            {#                                    {% for tube in object.tube_possible.all %}#}
+            {#                                        {{ tube.name }}#}
+            {#                                    {% endfor %}#}
+            {#                                </td>#}
+            {##}
+            {#                                <td>#}
+            {#                                    {% if object.tube_possible_comment %}#}
+            {#                                        {{ object.tube_possible_comment }}#}
+            {#                                    {% endif %}#}
+            {#                                </td>#}
+            {##}
+            {#                            </tr>#}
+            {#                            <tr>#}
+            {#                                <th scope="row">Maybe Possible</th>#}
+            {#                                <td>#}
+            {#                                    {% for tube in object.tube_maybeposs.all %}#}
+            {#                                        {{ tube.name }}#}
+            {#                                    {% endfor %}#}
+            {#                                </td>#}
+            {##}
+            {#                                <td>#}
+            {#                                    {% if object.tube_maybeposs_comment %}#}
+            {#                                        {{ object.tube_maybeposs_comment }}#}
+            {#                                    {% endif %}#}
+            {#                                </td>#}
+            {#                            </tr>#}
+            {#                            <tr>#}
+            {#                                <th scope="row">Not recommended</th>#}
+            {#                                <td>#}
+            {#                                    {% for tube in object.tube_not.all %}#}
+            {#                                        {{ tube.name }}#}
+            {#                                    {% endfor %}#}
+            {#                                </td>#}
+            {##}
+            {#                                <td>#}
+            {#                                    {% if object.tube_not_comment %}#}
+            {#                                        {{ object.tube_not_comment }}#}
+            {#                                    {% endif %}#}
+            {#                                </td>#}
+            {#                            </tr>#}
+            {#                            </tbody>#}
+            {#                        </table>#}
+            {##}
+            {#                        <div class="row">#}
+            {#                            <div class="col">#}
+            {#                                <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation#}
+            {#                                    of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>#}
+            {#                            </div>#}
+            {#                            <div class="col">#}
+            {#                                <h5>Biological HalfLife</h5>#}
+            {#                                {{ object.bhl_min }} - {{ object.bhl_max }} <br>#}
+            {#                                {% if object.bhl_comment %} {{ aobject.bhl_comment }} {% endif %} <br>#}
+            {#                                {% if object.bhl_literature %} Source:#}
+            {#                                    {% for lit in object.bhl_literature.all %}#}
+            {##}
+            {##}
+            {#                                        <!-- Button trigger modal -->#}
+            {#                                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">#}
+            {#                                            {{ lit.lit_no }}#}
+            {#                                        </a> |#}
+            {##}
+            {#                                        <!-- Modal -->#}
+            {#                                        <div class="modal fade" id="literatureModal" tabindex="-1"#}
+            {#                                             aria-labelledby="literatureModalLabel" aria-hidden="true">#}
+            {#                                            <div class="modal-dialog">#}
+            {#                                                <div class="modal-content">#}
+            {#                                                    <div class="modal-header">#}
+            {#                                                        <h5 class="modal-title" id="literatureModalLabel">Modal#}
+            {#                                                            title</h5>#}
+            {#                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"#}
+            {#                                                                aria-label="Close"></button>#}
+            {#                                                    </div>#}
+            {#                                                    <div class="modal-body">#}
+            {#                                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>#}
+            {#                                                        DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>#}
+            {#                                                        <br>#}
+            {#                                                        <a href="{{ lit.url }}">Link</a>#}
+            {#                                                    </div>#}
+            {#                                                </div>#}
+            {#                                            </div>#}
+            {#                                        </div>#}
+            {#                                    {% endfor %}#}
+            {##}
+            {#                                {% endif %}#}
+            {#                            </div>#}
+            {#                        </div>#}
+            {#                        <div class="row">#}
+            {#                            <div class="col">#}
+            {#                                <table class="table">#}
+            {#                                    <thead>#}
+            {#                                    <tr>#}
+            {#                                        <th scope="col">Roomtemperature <br>20 to 25°C</th>#}
+            {#                                        <th scope="col">Refrigerated <br>2 to 8°C</th>#}
+            {#                                        <th scope="col">Frozen <br>-15 to -25°C</th>#}
+            {#                                        <th scope="col">Deepfrozen <br>-60 to -80°C</th>#}
+            {#                                        <th scope="col">Ultradeepfrozen <br>-140 to -160°C</th>#}
+            {#                                    </tr>#}
+            {#                                    </thead>#}
+            {#                                    <tbody>#}
+            {#                                    <tr>#}
+            {#                                        <td>#}
+            {#                                            {% for rt in object.stability.all %}#}
+            {#                                                {{ rt.rt_abs_min }} to  {{ rt.rt_abs_max }} Minutes#}
+            {#                                            {% endfor %}#}
+            {#                                        </td>#}
+            {#                                        <td>Mark</td>#}
+            {#                                        <td>Otto</td>#}
+            {#                                        <td>@mdo</td>#}
+            {#                                        <td>@mdo</td>#}
+            {#                                    </tr>#}
+            {#                                    <tr>#}
+            {#                                        <th scope="row">2</th>#}
+            {#                                        <td>Jacob</td>#}
+            {#                                        <td>Thornton</td>#}
+            {#                                        <td>@fat</td>#}
+            {#                                    </tr>#}
+            {#                                    <tr>#}
+            {#                                        <th scope="row">3</th>#}
+            {#                                        <td colspan="2">Larry the Bird</td>#}
+            {#                                        <td>@twitter</td>#}
+            {#                                    </tr>#}
+            {#                                    </tbody>#}
+            {#                                </table>#}
+            {#                            </div>#}
+            {#                        </div>#}
+            {#                        </p>#}
+            {#                    </div>#}
+            {#                    <div class="tab-pane" id="urine">#}
+            {#                        <p class=" card-text">URINE.</p>#}
+            {#                    </div>#}
+            {#                    <div class="tab-pane" id="csf">#}
+            {#                        <p class=" card-text">CSF.</p>#}
+            {#                    </div>#}
+            {#                    <div class="tab-pane" id="saliva">#}
+            {#                        <p class=" card-text">SALIVA.</p>#}
+            {#                    </div>#}
+            {##}
+            {#                </div>#}
+        </div>
 
-            {#    {% endif %}#}
+        {#    {% endif %}#}
 
 
-            {% if "CSF" in object.specimen.abbr %}
-                <h4 class="display-5">{{ object.name }} {% if object.details %} - {{ object.details }}{% endif %}
-                    in {{ object.specimen.name }}</h4>
+        {% if "CSF" in object.specimen.abbr %}
+            <h4 class="display-5">{{ object.name }} {% if object.details %} - {{ object.details }}{% endif %}
+                in {{ object.specimen.name }}</h4>
 
-                {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
+            {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
 
 
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Stability Data</h5>
-                        <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="true" data-bs-toggle="tab"
-                                   href="#blood">Blood</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#urine">Urine</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body tab-content">
-                        <div class="tab-pane active" id="blood">
-                            <p class="card-text">
-                            <div class="row">
-                                <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Stability Data</h5>
+                    <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab"
+                               href="#blood">Blood</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#urine">Urine</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body tab-content">
+                    <div class="tab-pane active" id="blood">
+                        <p class="card-text">
+                        <div class="row">
+                            <div class="col">
 
-                                    <strong>Categories</strong>
-                                    <br>
-                                    {% for cat in object.category.all %}
-                                        {{ cat.name }}<br>
-                                    {% endfor %}
-                                </div>
-                        {% if object.loinc_num %}
+                                <strong>Categories</strong>
+                                <br>
+                                {% for cat in object.category.all %}
+                                    {{ cat.name }}<br>
+                                {% endfor %}
+                            </div>
+                            {% if object.loinc_num %}
                                 <div class="col">
                                     <h5>LOINC
                                         Number: <a href="{{ object.loinc_url }}"
@@ -568,81 +576,81 @@
 
                                 </div>
                             {% endif %}
+                        </div>
+
+                        <br>
+
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Tube</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Comment</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">Recommended</th>
+                                <td>
+                                    {% for tube in object.tube_recomm.all %}
+                                        {{ tube.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ object.tube_recomm_comment }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Possible</th>
+                                <td>
+                                    {% for tube in object.tube_possible.all %}
+                                        {{ tube.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ object.tube_possible_comment }}</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">Maybe Possible</th>
+                                <td>
+                                    {% for tube in object.tube_maybeposs.all %}
+                                        {{ tube.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ object.tube_maybeposs_comment }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Not recommended</th>
+                                <td>
+                                    {% for tube in object.tube_not.all %}
+                                        {{ tube.name }}
+                                    {% endfor %}
+                                </td>
+                                <td>{{ object.tube_not_comment }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-2-md">
+                                <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation
+                                    of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>
                             </div>
-
-                            <br>
-
-
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Tube</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Comment</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">Recommended</th>
-                                    <td>
-                                        {% for tube in object.tube_recomm.all %}
-                                            {{ tube.name }}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{{ object.tube_recomm_comment }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Possible</th>
-                                    <td>
-                                        {% for tube in object.tube_possible.all %}
-                                            {{ tube.name }}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{{ object.tube_possible_comment }}</td>
-
-                                </tr>
-                                <tr>
-                                    <th scope="row">Maybe Possible</th>
-                                    <td>
-                                        {% for tube in object.tube_maybeposs.all %}
-                                            {{ tube.name }}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{{ object.tube_maybeposs_comment }}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Not recommended</th>
-                                    <td>
-                                        {% for tube in object.tube_not.all %}
-                                            {{ tube.name }}
-                                        {% endfor %}
-                                    </td>
-                                    <td>{{ object.tube_not_comment }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-
-                            <div class="row">
-                                <div class="col-2-md">
-                                    <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation
-                                        of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>
-                                </div>
-                            </div>
-
-                            </p>
-                        </div>
-                        <div class="tab-pane" id="urine">
-                            <p class=" card-text">URINE.</p>
-                        </div>
-                        <div class="tab-pane" id="csf">
-                            <p class=" card-text">CSF.</p>
-                        </div>
-                        <div class="tab-pane" id="saliva">
-                            <p class=" card-text">SALIVA.</p>
                         </div>
 
+                        </p>
                     </div>
-                </div>
+                    <div class="tab-pane" id="urine">
+                        <p class=" card-text">URINE.</p>
+                    </div>
+                    <div class="tab-pane" id="csf">
+                        <p class=" card-text">CSF.</p>
+                    </div>
+                    <div class="tab-pane" id="saliva">
+                        <p class=" card-text">SALIVA.</p>
+                    </div>
 
-            {% endif %}
+                </div>
+            </div>
+
+        {% endif %}
 {% endblock %}

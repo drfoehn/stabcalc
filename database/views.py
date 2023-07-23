@@ -50,6 +50,39 @@ def search_analyte(request):
 
 
 
+# def get_context_data(self, **kwargs):
+#     context = super().get_context_data(**kwargs)
+#     context['analyte_specimen'] = self.object.analyte_specimen.all()
+#
+#     graphs = {}
+#     for analyte_specimen in context['analyte_specimen']:
+#         graphs[analyte_specimen.id] = {}
+#         for stability in analyte_specimen.stability.all():
+#             if stability.eq_type:
+#                 x_values = np.linspace(0, 100)
+#                 if stability.eq_type == Stability.LIN:
+#                     y_values = stability.b0 + stability.b1 * x_values
+#                 elif stability.eq_type == Stability.QUADR:
+#                     y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2
+#                 elif stability.eq_type == Stability.CUBIC:
+#                     y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2 + stability.b3 * x_values ** 3
+#                 elif stability.eq_type == Stability.EXP:
+#                     y_values = stability.exp_a * np.exp(stability.exp_b * x_values)
+#                 else:
+#                     raise ValueError("Invalid equation type")
+#
+#                 # Create the plot
+#                 fig, ax = plt.subplots()
+#                 ax.plot(x_values, y_values)
+#                 # Save it to a BytesIO object
+#                 buf = BytesIO()
+#                 plt.savefig(buf, format='png')
+#                 # Embed the result in the html output.
+#                 data = base64.b64encode(buf.getbuffer()).decode("ascii")
+#                 graphs[analyte_specimen.id][stability.id] = f"data:image/png;base64,{data}"
+#
+#     context['graphs'] = graphs
+#     return context
 
 class AnalyteSpecimenDetail(DetailView):
     model = Analyte
@@ -59,33 +92,38 @@ class AnalyteSpecimenDetail(DetailView):
         # The related AnalyteSpecimen instances can be accessed via the related_name
         context['analyte_specimen'] = self.object.analyte_specimen.all()
 
+        # Initialize the dictionary to store graphs.
+        graphs = {}
 
-        # graphs = []
-        # for analyte_specimen in context['analyte_specimen']:
-        #     for stability in analyte_specimen.stability.all():
-        #         x_values = np.linspace(stability.abs_min, stability.abs_max, 100)
-        #         if stability.eq_type == Stability.LIN:
-        #             y_values = stability.b0 + stability.b1 * x_values
-        #         elif stability.rt_eq_type == Stability.QUADR:
-        #             y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2
-        #         elif stability.rt_eq_type == Stability.CUBIC:
-        #             y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2 + stability.rt_b2 * x_values ** 3
-        #         elif stability.rt_eq_type == Stability.EXP:
-        #             y_values = stability.exp_a * np.exp(stability.exp_b * x_values)
-        #         else:
-        #             raise ValueError("Invalid equation type")
-        #
-        #         # Create the plot
-        #         fig, ax = plt.subplots()
-        #         ax.plot(x_values, y_values)
-        #         # Save it to a BytesIO object
-        #         buf = BytesIO()
-        #         plt.savefig(buf, format='png')
-        #         # Embed the result in the html output.
-        #         data = base64.b64encode(buf.getbuffer()).decode("ascii")
-        #         graphs.append(f"data:image/png;base64,{data}")
-        #
-        # context['graphs'] = graphs
+        for analyte_specimen in context['analyte_specimen']:
+            for stability in analyte_specimen.stability.all():
+                if not stability.eq_type:
+                    continue
+                x_values = np.linspace(0, stability.max_time_evaluated)
+                if stability.eq_type == Stability.LIN:
+                    y_values = stability.b0 + stability.b1 * x_values
+                elif stability.eq_type == Stability.QUADR:
+                    y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2
+                elif stability.eq_type == Stability.CUBIC:
+                    y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2 + stability.b3 * x_values ** 3
+                elif stability.eq_type == Stability.EXP:
+                    y_values = stability.exp_a * np.exp(stability.exp_b * x_values)
+                else:
+                    raise ValueError("Invalid equation type")
+
+                fig, ax = plt.subplots()
+                ax.plot(x_values, y_values)
+                ax.set_xlabel(stability.get_max_time_evaluated_unit_display())
+                ax.set_ylabel('%Deviation')
+                buf = BytesIO()
+                plt.savefig(buf, format='png')
+                data = base64.b64encode(buf.getbuffer()).decode("ascii")
+                # Store each graph in the dictionary with its associated stability instance's id.
+                graphs[stability.pk] = f"data:image/png;base64,{data}"
+
+                    # Add the dictionary of graphs to the context.
+                context['graph'] = graphs[stability.pk]
+
         return context
 
 

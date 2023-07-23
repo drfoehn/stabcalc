@@ -64,3 +64,7 @@ def is_not_empty_m2m_field_or(m2m_field, field_names_string):
         return True
     else:
         return False
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
