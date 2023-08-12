@@ -5,7 +5,7 @@
         <thead>
         <tr>
             <td><h5>{% trans 'Analyte name' %}</h5></td>
-            <td><h5>{% trans 'Specimen' %}</h5></td>
+            <td><h5>{% trans 'Available Specimen' %}</h5></td>
         </tr>
         </thead>
         <tbody>
@@ -14,15 +14,23 @@
             <tr>
                 <td>
 
-                    <a href="{% url 'analytespecimen_detail' analyte.pk %}">
-                        {{ analyte.analyte.name }}
-                        {% if analyte.analyte.details %}
-                            - {{ analyte.analyte.details }}
+                    <a href="{% url 'analyte_detail' analyte.aid %}">
+                        {{ analyte.name }}
+                        {% if analyte.details %}
+                            - {{ analyte.details }}
                         {% endif %}
                     </a>
                 </td>
             <td>
-                {{ analyte.specimen.name }}
+                {% if analyte.analyte_specimen.all.count > 0 %}
+                {% for specimen in analyte.analyte_specimen.all %}
+
+                        {{ specimen.specimen.name }} |
+                    {% endfor %}
+                    {% else %}
+                    No stability data available
+                    {% endif %}
+
             </td>
             </tr>
         {% endfor %}

@@ -9,86 +9,78 @@
 
 {% block content %}
 
-    {#    {% if "Blood" in object.specimen.name %}#}
-    <h4 class="display-5">{{ object.name }} {% if object.details %} - <i>{{ object.details }}</i>{% endif %}
+    {#    {% if "Blood" in analyte.specimen.name %}#}
+    <h4 class="display-5">{{ analyte.name }} {% if analyte.details %} - <i>{{ analyte.details }}</i>{% endif %}
         </h4>
     {#    TODO: Name does not work #}
 
     {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
 
 
-    <div class="card">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-2">
-                <h5>Categories</h5>
+{% for a_s in analyte.analyte_specimen.all %}
+    {{ analyte.name }} - {{ a_s.specimen }} <br>
+    {% endfor %}
 
 
-            </div>
-            <div class="col-10">
-                {% for cat in object.category.all %}
-                    {{ cat.name }} |
-                {% endfor %}
-            </div>
-        </div>
-        {% if  object.bhl_min %}
-            <div class="row">
-                <div class="col-2">
-                    <h5>Biol. Halflife</h5>
-                </div>
-                <div class="col-10">
-                    {{ object.bhl_min }} - {{ object.bhl_max }} <br>
-                    {{ object.bhl_comment }}<br>
-                    References:
-                    {% for lit in object.bhl_literature.all %}
-                        <!-- Button trigger modal -->
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal{{ lit.lit_no }}">
-                            #{{ lit.lit_no }}
-                        </a> |
-
-                        <!-- Modal -->
-                        <div class="modal fade text-black" id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                             aria-labelledby="literatureModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title"
-                                            id="literatureModalLabel">Reference #{{ lit.lit_no }}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>
-                                        DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a> <br>
-                                        {#TODO: Hinter DOI wird /html irgendwo dazugefügt#}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-        <div class="row">
+       <div class="card">
             <div class="card-header">
-                <ul class="nav nav-tabs" id="specimen_tab" data-bs-tabs="tabs">
-                    {% for a_s in analyte_specimen %}
-                        <li class="nav-item">
-                            <a class="nav-link{% if forloop.first %} active"
-                               aria-current="true {% endif %}"
-                               data-bs-toggle="tab"
-                               href="#pane-{{ a_s.specimen.sg_id }}">{{ a_s.specimen.name }}</a>
-                        </li>
-                    {% endfor %}
+                <h5 class="card-title">Network Settings</h5>
+                <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active"
+                           aria-current="true"
+                           data-bs-toggle="tab"
+                           href="#dhcp">
+                            DHCP
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           data-bs-toggle="tab"
+                           href="#static">Static</a>
+                    </li>
                 </ul>
+            </div>
+            <div class="card-body tab-content">
+                <div class="tab-pane active" id="dhcp">
+                    <p class="card-text">Change DHCP Network settings.</p>
+                </div>
+                <div class="tab-pane" id="static">
+                    <p class=" card-text">Change Static Network settings.</p>
+                </div>
+
+            </div>
+       </div>
 
 
-                <div class="tab-content card-body" id="specimen_tabContent">
-                    {% for a_s in analyte_specimen %}
-                        <div class="tab-pane fade{% if forloop.first %} active{% endif %}"
-                             id="pane-{{ a_s.specimen.sg_id }}">
-                        <!-- Place your content here -->
-                        {% if a_s.loinc_num %}
+    <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Network Settings</h5>
+
+    <ul class="nav nav-tabs card-header-tabs" id="specimen_tab" role="tablist">
+    {% for a_s in analyte.analyte_specimen.all %}
+    <li class="nav-item" role="presentation">
+        <a class="nav-link{% if forloop.first %} active{% endif %}"
+           id="tab-{{ a_s.specimen.sg_id }}"
+           data-bs-toggle="tab"
+           href="#pane-{{ a_s.specimen.sg_id }}"
+           role="tab"
+           aria-controls="pane-{{ a_s.specimen.sg_id }}"
+           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+           {{ a_s.specimen.name }}
+        </a>
+    </li>
+{% endfor %}
+    </ul>
+            </div>
+<div class="card-body tab-content">
+<div class="tab-content" id="specimen_tabContent">
+    {% for a_s in analyte.analyte_specimen.all %}
+        <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+             id="pane-{{ a_s.specimen.sg_id }}"
+             role="tabpanel"
+             aria-labelledby="tab-{{ a_s.specimen.sg_id }}">
+{% if a_s.loinc_num %}
                             <div class="container" id="loinc">
                                 <div class="card-header">
                                     <div class="col-12">
@@ -101,7 +93,7 @@
                                 </div>
                             </div>
                         {% endif %}
-                        {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
+        {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
                         <div class="container" id="blood_collection_tubes">
                             <div class="card-header">
                                 <h4>Specimen collection tubes</h4>
@@ -144,8 +136,7 @@
                             </div>
                         </div>
                         {% endif %}
-                        <div class="container" id="stabilities">
-                            {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
+        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
                                 <div class="card-header">
                                     <h4>Stability Equations</h4>
                                 </div>
@@ -316,348 +307,45 @@
                                 </div>
                                 </div>
                             {% endif %}
-                        {##}
-                        {#                            </div>#}
-                        {#                            <div class="card row">#}
-                        {#                            <h4>Stability equations</h4>#}
-                        {#                                <h6>Temperature:</h6>#}
-                        {##}
-                        {#                                <h6>Model:</h6>#}
-                        {#                            {% for graph in graphs %}#}
-                        {#                                        <img src="{{ graph }}"/>#}
-                        {#                                    {% endfor %}#}
-                        {#                            </div>#}
-                    {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-
-            {#                    <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">#}
-            {#                        <li class="nav-item">#}
-            {#                            <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="#blood">Blood</a>#}
-            {#                        </li>#}
-            {#                        <li class="nav-item">#}
-            {#                            <a class="nav-link" data-bs-toggle="tab" href="#urine">Urine</a>#}
-            {#                        </li>#}
-            {#                        <li class="nav-item">#}
-            {#                            <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>#}
-            {#                        </li>#}
-            {#                        <li class="nav-item">#}
-            {#                            <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>#}
-            {#                        </li>#}
-            {#                    </ul>#}
         </div>
-        {#                <div class="card-body tab-content">#}
-        {#                    <div class="tab-pane active" id="blood">#}
-        {#                        <p class="card-text">#}
-        {#                        <div class="row">#}
-        {#                            {{ object.specimen.name }}#}
-        {##}
-        {#                            <div class="col">#}
-        {#                                <h5>LOINC#}
-        {#                                    Number: <a href="{{ object.loinc_url }}" target="_blank"> {{ object.loinc_num }}</a>#}
-        {#                                </h5>#}
-        {##}
-        {#                            </div>#}
-        {#                        </div>#}
-        {##}
-        {#                        <br>#}
-        {##}
-        {##}
-        {#                        <table class="table">#}
-        {#                            <thead>#}
-        {#                            <tr>#}
-        {#                                <th scope="col">Tube</th>#}
-        {#                                <th scope="col">Type</th>#}
-        {#                                <th scope="col">Comment</th>#}
-        {#                            </tr>#}
-        {#                            </thead>#}
-        {#                            <tbody>#}
-        {#                            <tr>#}
-        {#                                <th scope="row">Recommended</th>#}
-        {#                                <td>#}
-        {#                                    {% for tube in object.tube_recomm.all %}#}
-        {#                                        {{ tube.name }}#}
-        {#                                    {% endfor %}#}
-        {#                                </td>#}
-        {#                                <td>#}
-        {#                                    {% if object.tube_recomm_comment %}#}
-        {#                                        {{ object.tube_recomm_comment }}#}
-        {#                                    {% endif %}#}
-        {#                                </td>#}
-        {##}
-        {#                            </tr>#}
-        {#                            <tr>#}
-        {#                                <th scope="row">Possible</th>#}
-        {#                                <td>#}
-        {#                                    {% for tube in object.tube_possible.all %}#}
-        {#                                        {{ tube.name }}#}
-        {#                                    {% endfor %}#}
-        {#                                </td>#}
-        {##}
-        {#                                <td>#}
-        {#                                    {% if object.tube_possible_comment %}#}
-        {#                                        {{ object.tube_possible_comment }}#}
-        {#                                    {% endif %}#}
-        {#                                </td>#}
-        {##}
-        {#                            </tr>#}
-        {#                            <tr>#}
-        {#                                <th scope="row">Maybe Possible</th>#}
-        {#                                <td>#}
-        {#                                    {% for tube in object.tube_maybeposs.all %}#}
-        {#                                        {{ tube.name }}#}
-        {#                                    {% endfor %}#}
-        {#                                </td>#}
-        {##}
-        {#                                <td>#}
-        {#                                    {% if object.tube_maybeposs_comment %}#}
-        {#                                        {{ object.tube_maybeposs_comment }}#}
-        {#                                    {% endif %}#}
-        {#                                </td>#}
-        {#                            </tr>#}
-        {#                            <tr>#}
-        {#                                <th scope="row">Not recommended</th>#}
-        {#                                <td>#}
-        {#                                    {% for tube in object.tube_not.all %}#}
-        {#                                        {{ tube.name }}#}
-        {#                                    {% endfor %}#}
-        {#                                </td>#}
-        {##}
-        {#                                <td>#}
-        {#                                    {% if object.tube_not_comment %}#}
-        {#                                        {{ object.tube_not_comment }}#}
-        {#                                    {% endif %}#}
-        {#                                </td>#}
-        {#                            </tr>#}
-        {#                            </tbody>#}
-        {#                        </table>#}
-        {##}
-        {#                        <div class="row">#}
-        {#                            <div class="col">#}
-        {#                                <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation#}
-        {#                                    of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>#}
-        {#                            </div>#}
-        {#                            <div class="col">#}
-        {#                                <h5>Biological HalfLife</h5>#}
-        {#                                {{ object.bhl_min }} - {{ object.bhl_max }} <br>#}
-        {#                                {% if object.bhl_comment %} {{ aobject.bhl_comment }} {% endif %} <br>#}
-        {#                                {% if object.bhl_literature %} Source:#}
-        {#                                    {% for lit in object.bhl_literature.all %}#}
-        {##}
-        {##}
-        {#                                        <!-- Button trigger modal -->#}
-        {#                                        <a href="#" data-bs-toggle="modal" data-bs-target="#literatureModal">#}
-        {#                                            {{ lit.lit_no }}#}
-        {#                                        </a> |#}
-        {##}
-        {#                                        <!-- Modal -->#}
-        {#                                        <div class="modal fade" id="literatureModal" tabindex="-1"#}
-        {#                                             aria-labelledby="literatureModalLabel" aria-hidden="true">#}
-        {#                                            <div class="modal-dialog">#}
-        {#                                                <div class="modal-content">#}
-        {#                                                    <div class="modal-header">#}
-        {#                                                        <h5 class="modal-title" id="literatureModalLabel">Modal#}
-        {#                                                            title</h5>#}
-        {#                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"#}
-        {#                                                                aria-label="Close"></button>#}
-        {#                                                    </div>#}
-        {#                                                    <div class="modal-body">#}
-        {#                                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }} <br>#}
-        {#                                                        DOI: <a href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>#}
-        {#                                                        <br>#}
-        {#                                                        <a href="{{ lit.url }}">Link</a>#}
-        {#                                                    </div>#}
-        {#                                                </div>#}
-        {#                                            </div>#}
-        {#                                        </div>#}
-        {#                                    {% endfor %}#}
-        {##}
-        {#                                {% endif %}#}
-        {#                            </div>#}
-        {#                        </div>#}
-        {#                        <div class="row">#}
-        {#                            <div class="col">#}
-        {#                                <table class="table">#}
-        {#                                    <thead>#}
-        {#                                    <tr>#}
-        {#                                        <th scope="col">Roomtemperature <br>20 to 25°C</th>#}
-        {#                                        <th scope="col">Refrigerated <br>2 to 8°C</th>#}
-        {#                                        <th scope="col">Frozen <br>-15 to -25°C</th>#}
-        {#                                        <th scope="col">Deepfrozen <br>-60 to -80°C</th>#}
-        {#                                        <th scope="col">Ultradeepfrozen <br>-140 to -160°C</th>#}
-        {#                                    </tr>#}
-        {#                                    </thead>#}
-        {#                                    <tbody>#}
-        {#                                    <tr>#}
-        {#                                        <td>#}
-        {#                                            {% for rt in object.stability.all %}#}
-        {#                                                {{ rt.rt_abs_min }} to  {{ rt.rt_abs_max }} Minutes#}
-        {#                                            {% endfor %}#}
-        {#                                        </td>#}
-        {#                                        <td>Mark</td>#}
-        {#                                        <td>Otto</td>#}
-        {#                                        <td>@mdo</td>#}
-        {#                                        <td>@mdo</td>#}
-        {#                                    </tr>#}
-        {#                                    <tr>#}
-        {#                                        <th scope="row">2</th>#}
-        {#                                        <td>Jacob</td>#}
-        {#                                        <td>Thornton</td>#}
-        {#                                        <td>@fat</td>#}
-        {#                                    </tr>#}
-        {#                                    <tr>#}
-        {#                                        <th scope="row">3</th>#}
-        {#                                        <td colspan="2">Larry the Bird</td>#}
-        {#                                        <td>@twitter</td>#}
-        {#                                    </tr>#}
-        {#                                    </tbody>#}
-        {#                                </table>#}
-        {#                            </div>#}
-        {#                        </div>#}
-        {#                        </p>#}
-        {#                    </div>#}
-        {#                    <div class="tab-pane" id="urine">#}
-        {#                        <p class=" card-text">URINE.</p>#}
-        {#                    </div>#}
-        {#                    <div class="tab-pane" id="csf">#}
-        {#                        <p class=" card-text">CSF.</p>#}
-        {#                    </div>#}
-        {#                    <div class="tab-pane" id="saliva">#}
-        {#                        <p class=" card-text">SALIVA.</p>#}
-        {#                    </div>#}
-        {##}
-        {#                </div>#}
-    </div>
+    {% endfor %}
+</div>
+</div>
 
-    {#    {% endif %}#}
+{#            {% for a_s in analyte.analyte_specimen.all %}#}
+{#                <li class="nav-item" role="presentation">#}
+{#                    <a class="nav-link{% if forloop.first %} active{% endif %}"#}
+{#                       id="tab-{{ a_s.specimen.sg_id }}"#}
+{#                       data-bs-toggle="tab"#}
+{#                       href="#pane-{{ a_s.specimen.sg_id }}"#}
+{#                       role="tab"#}
+{#                       aria-controls="pane-{{ a_s.specimen.sg_id }}"#}
+{#                       aria-current="{% if forloop.first %}true{% else %}false{% endif %}">{{ a_s.specimen.name }}</a>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        <div class="tab-content" id="specimen_tabContent">#}
+{#            {% for a_s in analyte.analyte_specimen.all %}#}
+{#                <div class="tab-pane fade{% if forloop.first %} show active {% endif %}"#}
+{#                     id="pane-{{ a_s.specimen.sg_id }}"#}
+{#                     role="tabpanel"#}
+{#                     aria-labelledby="tab-{{ a_s.specimen.sg_id }}">#}
+{#                        {% if a_s.loinc_num %}#}
+{#                            <div class="container" id="loinc">#}
+{#                                <div class="card-header">#}
+{#                                    <div class="col-12">#}
+{#                                        <h4>LOINC#}
+{#                                            Number: <a href="https://loinc.org/{{ a_s.loinc_num }}"#}
+{#                                                       target="_blank"> {{ a_s.loinc_num }}</a>#}
+{#                                        </h4>#}
+{##}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#    {% endif %}#}
+{#    {% endfor %}#}
 
 
-    {% if "CSF" in object.specimen.abbr %}
-        <h4 class="display-5">{{ object.name }} {% if object.details %} - {{ object.details }}{% endif %}
-            in {{ object.specimen.name }}</h4>
-
-        {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
-
-
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Stability Data</h5>
-                <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="true" data-bs-toggle="tab"
-                           href="#blood">Blood</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="#urine">Urine</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#csf">CSF</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" href="#saliva">Saliva</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body tab-content">
-                <div class="tab-pane active" id="blood">
-                    <p class="card-text">
-                    <div class="row">
-                        <div class="col">
-
-                            <strong>Categories</strong>
-                            <br>
-                            {% for cat in object.category.all %}
-                                {{ cat.name }}<br>
-                            {% endfor %}
-                        </div>
-                        {% if object.loinc_num %}
-                            <div class="col">
-                                <h5>LOINC
-                                    Number: <a href="{{ object.loinc_url }}"
-                                               target="_blank"> {{ object.loinc_num }}</a>
-                                </h5>
-
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <br>
-
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Tube</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Comment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">Recommended</th>
-                            <td>
-                                {% for tube in object.tube_recomm.all %}
-                                    {{ tube.name }}
-                                {% endfor %}
-                            </td>
-                            <td>{{ object.tube_recomm_comment }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Possible</th>
-                            <td>
-                                {% for tube in object.tube_possible.all %}
-                                    {{ tube.name }}
-                                {% endfor %}
-                            </td>
-                            <td>{{ object.tube_possible_comment }}</td>
-
-                        </tr>
-                        <tr>
-                            <th scope="row">Maybe Possible</th>
-                            <td>
-                                {% for tube in object.tube_maybeposs.all %}
-                                    {{ tube.name }}
-                                {% endfor %}
-                            </td>
-                            <td>{{ object.tube_maybeposs_comment }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Not recommended</th>
-                            <td>
-                                {% for tube in object.tube_not.all %}
-                                    {{ tube.name }}
-                                {% endfor %}
-                            </td>
-                            <td>{{ object.tube_not_comment }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="row">
-                        <div class="col-2-md">
-                            <h5><a href="{{ analyte.cvi_url }}" target="_blank">Biological Variation
-                                of {{ analyte.name }} in {{ analyte.specimen.name }}</a></h5>
-                        </div>
-                    </div>
-
-                    </p>
-                </div>
-                <div class="tab-pane" id="urine">
-                    <p class=" card-text">URINE.</p>
-                </div>
-                <div class="tab-pane" id="csf">
-                    <p class=" card-text">CSF.</p>
-                </div>
-                <div class="tab-pane" id="saliva">
-                    <p class=" card-text">SALIVA.</p>
-                </div>
-
-            </div>
-        </div>
-
-    {% endif %}
 {% endblock %}
 
 

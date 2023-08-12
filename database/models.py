@@ -183,7 +183,11 @@ class Analyte(models.Model):
     bhl_literature = models.ManyToManyField(Literature, related_name='bhl_literature')
 
     def __str__(self):
-        return f"{self.name}, {self.details}"
+
+        if self.details:
+            return f"{self.name}, {self.details}"
+        else:
+            return f"{self.name}"
 
 class AnalyteSpecimen(models.Model):
     analyte = models.ForeignKey(Analyte, related_name="analyte_specimen", on_delete=models.CASCADE)
@@ -215,6 +219,9 @@ class AnalyteSpecimen(models.Model):
             return f"{self.analyte.name} - {self.analyte.details} in {self.specimen.name}"
         else:
             return f"{self.analyte.name} in {self.specimen.name}"
+
+    class Meta:
+        unique_together = ["analyte", "specimen"]
 
     # def get_fields(self):
     #     field_values = []

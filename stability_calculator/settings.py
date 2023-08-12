@@ -15,23 +15,27 @@ from django.conf.urls.static import static
 import environ
 
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_TEMPLATE_DIR = Path(BASE_DIR, "templates")
 STATIC_DIR = Path(BASE_DIR, "static")
 
 env = environ.Env()
-if Path(".env").exists():
-    env.read_env(env_file=str(Path.cwd() / ".env"))
-else:
-    # if not, use the default location from django-environ
-    env.read_env()
+environ.Env.read_env()
+# env = environ.Env()
+# if Path(".env").exists():
+#     env.read_env(env_file=str(Path.cwd() / ".env"))
+# else:
+#     # if not, use the default location from django-environ
+#     env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEBUG = env("DEBUG", default=False)
+DEBUG = env("DEBUG", default=True)
 SECRET_KEY = env(
     "SECRET_KEY", default="don't use this pseudo-secret-key on production!"
 )
@@ -117,18 +121,18 @@ WSGI_APPLICATION = 'stability_calculator.wsgi.application'
 
 DATABASES = {
     "default": {
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'stability_calculater_database',
-        # 'HOST': 'localhost',
-        # 'PORT': 3306,
-        # 'USER': 'root',
-        # 'PASSWORD': 'dMiz50%Iin',
-        "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": env("DATABASE_NAME", default="db.sqlite3"),
-        "HOST": env("DATABASE_HOST", default="localhost"),
-        "PORT": env("DATABASE_PORT", default=3306),
-        "USER": env("DATABASE_USER", default=""),
-        "PASSWORD": env("DATABASE_PASS", default=""),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'stability_calculator_database',
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
+        'USER': 'StabCalc',
+        'PASSWORD': 'dMiz50%Iin',
+        # "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
+        # "NAME": env("DATABASE_NAME", default="db.sqlite3"),
+        # "HOST": env("DATABASE_HOST", default="localhost"),
+        # "PORT": env("DATABASE_PORT", default=3306),
+        # "USER": env("DATABASE_USER", default=""),
+        # "PASSWORD": env("DATABASE_PASS", default=""),
     }
 }
 

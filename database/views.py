@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
 from database.models import *
 from database.forms import *
@@ -38,10 +38,10 @@ class CategoryAnalytesView(DetailView):
 def search_analyte(request):
     search_text = request.GET.get('search', "")
     if search_text:
-        results = AnalyteSpecimen.objects.filter(analyte__name__icontains=search_text).all().order_by('analyte')
+        results = Analyte.objects.filter(name__icontains=search_text).all().order_by('analyte')
         template = 'database/partials/analyte_searchresult.html'
     else:
-        results = AnalyteSpecimen.objects.order_by('analyte')
+        results = Analyte.objects.order_by('name')
         template = 'database/partials/search_list.html'
     context= {'results':results}
     return render(request, template, context)
@@ -62,7 +62,7 @@ def search_analyte(request):
 
 
 
-class AnalyteSpecimenDetail(DetailView):
+class AnalyteDetail(DetailView):
     model = Analyte
 
     def get_context_data(self, **kwargs):
@@ -73,8 +73,9 @@ class AnalyteSpecimenDetail(DetailView):
         # Initialize the dictionary to store graphs.
         graphs = {}
 
-        for analyte_specimen in context['analyte_specimen']:
-            for stability in analyte_specimen.stability.all():
+        # for analyte_specimen in context['analyte_specimen']:
+        for analyte_specimen_instance in context['analyte_specimen']:
+            for stability in analyte_specimen_instance.stability.all():
                 if not stability.eq_type:
                     continue
                 x_values = np.linspace(0, stability.max_time_evaluated)
@@ -99,10 +100,52 @@ class AnalyteSpecimenDetail(DetailView):
                 # Store each graph in the dictionary with its associated stability instance's id.
                 graphs[stability.pk] = f"data:image/png;base64,{data}"
 
-                    # Add the dictionary of graphs to the context.
-                context['graph'] = graphs
+                # Add the dictionary of graphs to the context.
+            context['graph'] = graphs
         print(graphs)
         return context
+
+# class AnalyteDetail(DetailView):
+#     model = Analyte
+
+def analyte_detail(request, pk):
+    analyte = get_object_or_404(Analyte, pk=pk)
+    analyte_specimen = analyte.analyte_specimen.all()
+    # Initialize the dictionary to store graphs.
+    graphs = {}
+    for analyte_specimen_instance in analyte_specimen:
+        for stability in analyte_specimen_instance.stability.all():
+            if not stability.eq_type:
+                continue
+            x_values = np.linspace(0, stability.max_time_evaluated)
+            if stability.eq_type == Stability.LIN:
+                y_values = stability.b0 + stability.b1 * x_values
+            elif stability.eq_type == Stability.QUADR:
+                y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2
+            elif stability.eq_type == Stability.CUBIC:
+                y_values = stability.b0 + stability.b1 * x_values + stability.b2 * x_values ** 2 + stability.b3 * x_values ** 3
+            elif stability.eq_type == Stability.EXP:
+                y_values = stability.exp_a * np.exp(stability.exp_b * x_values)
+            else:
+                raise ValueError("Invalid equation type")
+
+            fig, ax = plt.subplots()
+            ax.plot(x_values, y_values)
+            ax.set_xlabel(stability.get_max_time_evaluated_unit_display())
+            ax.set_ylabel('%Deviation')
+            buf = BytesIO()
+            plt.savefig(buf, format='png')
+            data = base64.b64encode(buf.getbuffer()).decode("ascii")
+            # Store each graph in the dictionary with its associated stability instance's id.
+            graphs[stability.pk] = f"data:image/png;base64,{data}"
+
+    context = {
+        'analyte': analyte,
+        # 'analyte_specimen': analyte_specimen,
+        'graph': graphs
+    }
+
+    return render(request, 'database/analytespecimen_detail.html', context)
 
 
 # def search_analyte(request):
