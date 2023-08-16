@@ -17,40 +17,6 @@
     {#    <div id="tabs" hx-get="{% url 'analyte_blood' %}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>#}
 
 
-{% for a_s in analyte.analyte_specimen.all %}
-    {{ analyte.name }} - {{ a_s.specimen }} <br>
-    {% endfor %}
-
-
-       <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Network Settings</h5>
-                <ul class="nav nav-tabs card-header-tabs" data-bs-tabs="tabs">
-                    <li class="nav-item">
-                        <a class="nav-link active"
-                           aria-current="true"
-                           data-bs-toggle="tab"
-                           href="#dhcp">
-                            DHCP
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           data-bs-toggle="tab"
-                           href="#static">Static</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body tab-content">
-                <div class="tab-pane active" id="dhcp">
-                    <p class="card-text">Change DHCP Network settings.</p>
-                </div>
-                <div class="tab-pane" id="static">
-                    <p class=" card-text">Change Static Network settings.</p>
-                </div>
-
-            </div>
-       </div>
 
 
     <div class="card">
@@ -136,13 +102,15 @@
                             </div>
                         </div>
                         {% endif %}
-        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0" %}
+        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0,exp_a" %}
                                 <div class="card-header">
                                     <h4>Stability Equations</h4>
+
                                 </div>
                                 <div class="card-body row">
 
                                     {% for stab in a_s.stability.all %}
+                                        {{ stab.exp_a }}
                                         {% if stab.eq_type %}
                                             <div class="row">
                                                 <div class="col">
@@ -159,6 +127,8 @@
                                                         {% elif stab.eq_type == "3" %}
                                                             Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time +
                                                             {{ stab.b2 }} * Time^2 + {{ stab.b3 }} * Time^3
+                                                            {% elif stab.eq_type == "4" %}
+                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }}^Storage hours
                                                         {% endif %}
                                                     </h6>
                                                 </div>

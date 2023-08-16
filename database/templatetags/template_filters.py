@@ -60,10 +60,10 @@ def is_not_empty_m2m_field_or(m2m_field, field_names_string):
     # Split the field names string into a list of field names.
     field_names = field_names_string.split(',')
 
-    if m2m_field.filter(**{f"{field_name}__isnull": False for field_name in field_names}).exists():
-        return True
-    else:
-        return False
+    for field_name in field_names:
+        if m2m_field.filter(**{f"{field_name}__isnull": False}).exists():
+            return True
+    return False
 
 @register.filter(name='dict_key')
 def dict_key(dict, key):
