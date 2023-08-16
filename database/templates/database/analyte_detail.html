@@ -110,7 +110,7 @@
                                 <div class="card-body row">
 
                                     {% for stab in a_s.stability.all %}
-                                        {{ stab.exp_a }}
+
                                         {% if stab.eq_type %}
                                             <div class="row">
                                                 <div class="col">
@@ -120,15 +120,15 @@
                                                     <h6><u>Regression:</u>
                                                         {{ stab.get_eq_type_display }} <br>
                                                         {% if stab.eq_type == "1" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time
+                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time
                                                         {% elif stab.eq_type == "2" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time +
-                                                            {{ stab.b2 }} * Time^2
+                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
+                                                            {{ stab.b2 }} * Storage Time<sup>2</sup>
                                                         {% elif stab.eq_type == "3" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Time +
-                                                            {{ stab.b2 }} * Time^2 + {{ stab.b3 }} * Time^3
+                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
+                                                            {{ stab.b2 }} * Storage Time<sup>2</sup> + {{ stab.b3 }} * Storage Time<sup>3</sup>
                                                             {% elif stab.eq_type == "4" %}
-                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }}^Storage hours
+                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }} <sup>Storage time</sup>
                                                         {% endif %}
                                                     </h6>
                                                 </div>
@@ -196,7 +196,7 @@
                                             {% if stab.stab_comment %}
                                                 <div class="row">
                                                     <div class="col">
-                                                        Comment: {{ stab.stab_comment }}
+                                                        <u>Comment:</u> {{ stab.stab_comment }}
                                                     </div>
                                                 </div>
                                             {% endif %}

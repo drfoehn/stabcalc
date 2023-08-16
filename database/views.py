@@ -92,6 +92,7 @@ class AnalyteDetail(DetailView):
 
                 fig, ax = plt.subplots()
                 ax.plot(x_values, y_values)
+                ax.set_xlim(0, stability.max_time_evaluated)  # Setting x-axis limits
                 ax.set_xlabel(stability.get_max_time_evaluated_unit_display())
                 ax.set_ylabel('%Deviation')
                 buf = BytesIO()
