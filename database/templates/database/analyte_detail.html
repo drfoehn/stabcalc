@@ -11,38 +11,38 @@
 
     {#    {% if "Blood" in analyte.specimen.name %}#}
     <h4 class="display-5">{{ analyte.name }} {% if analyte.details %} - <i>{{ analyte.details }}</i>{% endif %}
-        </h4>
+    </h4>
 
 
 
     <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Choose Matrix</h5>
+        <div class="card-header">
+            <h5 class="card-title">Choose Matrix</h5>
 
-    <ul class="nav nav-tabs card-header-tabs" id="specimen_tab" role="tablist">
-    {% for a_s in analyte.analyte_specimen.all %}
-    <li class="nav-item" role="presentation">
-        <a class="nav-link{% if forloop.first %} active{% endif %}"
-           id="tab-{{ a_s.specimen.sg_id }}"
-           data-bs-toggle="tab"
-           href="#pane-{{ a_s.specimen.sg_id }}"
-           role="tab"
-           aria-controls="pane-{{ a_s.specimen.sg_id }}"
-           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
-           {{ a_s.specimen.name }}
-        </a>
-    </li>
-{% endfor %}
-    </ul>
-            </div>
-<div class="card-body tab-content">
-<div class="tab-content" id="specimen_tabContent">
-    {% for a_s in analyte.analyte_specimen.all %}
-        <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
-             id="pane-{{ a_s.specimen.sg_id }}"
-             role="tabpanel"
-             aria-labelledby="tab-{{ a_s.specimen.sg_id }}">
-{% if a_s.loinc_num %}
+            <ul class="nav nav-tabs card-header-tabs" id="specimen_tab" role="tablist">
+                {% for a_s in analyte.analyte_specimen.all %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link{% if forloop.first %} active{% endif %}"
+                           id="tab-{{ a_s.specimen.sg_id }}"
+                           data-bs-toggle="tab"
+                           href="#pane-{{ a_s.specimen.sg_id }}"
+                           role="tab"
+                           aria-controls="pane-{{ a_s.specimen.sg_id }}"
+                           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                            {{ a_s.specimen.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-content" id="specimen_tabContent">
+                {% for a_s in analyte.analyte_specimen.all %}
+                    <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+                         id="pane-{{ a_s.specimen.sg_id }}"
+                         role="tabpanel"
+                         aria-labelledby="tab-{{ a_s.specimen.sg_id }}">
+                        {% if a_s.loinc_num %}
                             <div class="container" id="loinc">
                                 <div class="card-header">
                                     <div class="col-12">
@@ -55,50 +55,51 @@
                                 </div>
                             </div>
                         {% endif %}
-        {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
-                        <div class="container" id="blood_collection_tubes">
-                            <div class="card-header">
-                                <h4>Specimen collection tubes</h4>
-                            </div>
-                            <div class="card-body row">
+                        {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
+                            <div class="container" id="blood_collection_tubes">
+                                <div class="card-header">
+                                    <h4>Specimen collection tubes</h4>
+                                </div>
+                                <div class="card-body row">
 
-                                {% if a_s.tube_recomm.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Recommended</h5>
-                                        {% for tube in a_s.tube_recomm.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                                    {% if a_s.tube_recomm.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Recommended</h5>
+                                            {% for tube in a_s.tube_recomm.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
 
-                                {% if a_s.tube_possible.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Possible</h5>
-                                        {% for tube in a_s.tube_possible.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if a_s.tube_maybeposs.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>Eventually possible</h5>
-                                        {% for tube in a_s.tube_maybeposs.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if a_s.tube_not.all %}
-                                    <div class="col-md-3 tubetype">
-                                        <h5>NOT recommended</h5>
-                                        {% for tube in a_s.tube_not.all %}
-                                            - {{ tube.name }} <br>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+                                    {% if a_s.tube_possible.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Possible</h5>
+                                            {% for tube in a_s.tube_possible.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if a_s.tube_maybeposs.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>Eventually possible</h5>
+                                            {% for tube in a_s.tube_maybeposs.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                    {% if a_s.tube_not.all %}
+                                        <div class="col-md-3 tubetype">
+                                            <h5>NOT recommended</h5>
+                                            {% for tube in a_s.tube_not.all %}
+                                                - {{ tube.name }} <br>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
                         {% endif %}
-        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0,exp_a" %}
+                        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0,exp_a" %}
+                            <div class="contsiner" id="stability_equations">
                                 <div class="card-header">
                                     <h4>Stability Equations</h4>
 
@@ -122,39 +123,14 @@
                                                             {{ stab.b2 }} * Storage Time<sup>2</sup>
                                                         {% elif stab.eq_type == "3" %}
                                                             Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
-                                                            {{ stab.b2 }} * Storage Time<sup>2</sup> + {{ stab.b3 }} * Storage Time<sup>3</sup>
-                                                            {% elif stab.eq_type == "4" %}
-                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }} <sup>Storage time</sup>
+                                                            {{ stab.b2 }} * Storage Time<sup>2</sup> + {{ stab.b3 }} *
+                                                            Storage Time<sup>3</sup>
+                                                        {% elif stab.eq_type == "4" %}
+                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }}
+                                                            <sup>Storage time</sup>
                                                         {% endif %}
                                                     </h6>
-                                                </div>
-                                                <div class="col">
-
-                                                    <img src="{{ graph|dict_key:stab.pk }}" alt=""/>
-                                                    <br>
-                                                    <div class="calculator">
-          {# For the xValue input field #}
-    <input type="number" id="xValue_{{ stab.pk }}" placeholder="Enter storage time">
-
-    {# Hidden fields for capturing the variable values #}
-    <input type="hidden" id="eq_type_{{ stab.pk }}" value="{{ stab.eq_type }}">
-    <input type="hidden" id="b0_{{ stab.pk }}" value="{{ stab.b0 }}">
-    <input type="hidden" id="b1_{{ stab.pk }}" value="{{ stab.b1 }}">
-    <input type="hidden" id="b2_{{ stab.pk }}" value="{{ stab.b2 }}">
-    <input type="hidden" id="b3_{{ stab.pk }}" value="{{ stab.b3 }}">
-    <input type="hidden" id="exp_a_{{ stab.pk }}" value="{{ stab.exp_a }}">
-    <input type="hidden" id="exp_b_{{ stab.pk }}" value="{{ stab.exp_b }}">
-
-    {# Button for calculation and display area for y-value #}
-    <button onclick="calculateYValue({{ stab.pk }})">Calculate</button>
-    <p>Deviation %: <span id="yValue_{{ stab.pk }}">-</span></p>
-</div>
-
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <u>References</u>
+                                                <u>References</u>
                                                     {% for lit in stab.stab_literature.all %}
 
                                                         <!-- Button trigger modal -->
@@ -190,23 +166,57 @@
                                                             </div>
                                                         </div>
                                                     {% endfor %}
-                                                </div>
-                                                {% if stab.stabilizer %}
+                                                    {% if stab.stabilizer %}
                                                     <div class="col">
-                                                        Stabilizer: {{ stab.stabilizer }}
+                                                        <u>Stabilizer:</u> {{ stab.stabilizer }}
                                                     </div>
                                                 {% endif %}
                                                 {% if stab.stab_platform %}
                                                     <div class="col">
-                                                        Platform: {{ stab.stab_platform }}
+                                                        <u>Platform:</u> {{ stab.stab_platform }}
                                                     </div>
                                                 {% endif %}
                                                 {% if stab.stab_analyt_method %}
                                                     <div class="col">
-                                                        Analyt. Method: {{ stab.stab_analyt_method }}
+                                                        <u>Analyt. Method:</u> {{ stab.stab_analyt_method }}
                                                     </div>
                                                 {% endif %}
+                                                </div>
+                                                <div class="col">
+
+                                                    <img src="{{ graph|dict_key:stab.pk }}" width="100%" alt="Regression Graph"/>
+                                                    <br>
+                                                    <div class="calculator">
+                                                        {# For the xValue input field #}
+                                                        <input type="number" id="xValue_{{ stab.pk }}"
+                                                               placeholder="Enter storage time">
+
+                                                        {# Hidden fields for capturing the variable values #}
+                                                        <input type="hidden" id="eq_type_{{ stab.pk }}"
+                                                               value="{{ stab.eq_type }}">
+                                                        <input type="hidden" id="b0_{{ stab.pk }}"
+                                                               value="{{ stab.b0 }}">
+                                                        <input type="hidden" id="b1_{{ stab.pk }}"
+                                                               value="{{ stab.b1 }}">
+                                                        <input type="hidden" id="b2_{{ stab.pk }}"
+                                                               value="{{ stab.b2 }}">
+                                                        <input type="hidden" id="b3_{{ stab.pk }}"
+                                                               value="{{ stab.b3 }}">
+                                                        <input type="hidden" id="exp_a_{{ stab.pk }}"
+                                                               value="{{ stab.exp_a }}">
+                                                        <input type="hidden" id="exp_b_{{ stab.pk }}"
+                                                               value="{{ stab.exp_b }}">
+
+                                                        {# Button for calculation and display area for y-value #}
+                                                        <button onclick="calculateYValue({{ stab.pk }})">Calculate
+                                                            Deviation
+                                                        </button>
+                                                        <p>Deviation %: <span id="yValue_{{ stab.pk }}">-</span></p>
+                                                    </div>
+
+                                                </div>
                                             </div>
+
                                             {% if stab.stab_comment %}
                                                 <div class="row">
                                                     <div class="col">
@@ -223,139 +233,144 @@
 
                                     {% endfor %}
                                 </div>
-                            {% endif %}
-                            {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
-                                <div class="card-header">
-                                    <h4>Absolute Stabilities</h4>
-                                </div>
-                                <div class="card-body row">
-                                    {% for stab in a_s.stability.all %}
-                                        <div class="row stabilities-abs">
-                                            <div class="col-md-3">
-                                                <h6>{{ stab.get_temperature_display }}</h6>
-                                                {% if stab.abs_min_prefix %}
-                                                    {{ stab.abs_min_prefix }}
-                                                {% endif %}
-                                                {% if stab.abs_min %}
-                                                    {{ stab.abs_min|convert_time|get_time_value|floatformat:2 }}
-                                                    {{ stab.abs_min|convert_time|get_time_unit }}
-                                                {% endif %}
-                                                {% if stab.abs_max_prefix %}
-                                                    {{ stab.abs_max_prefix }}
-                                                {% endif %}
-                                                {% if stab.abs_max %}
-                                                    -
-                                                    {{ stab.abs_max|convert_time|get_time_value|floatformat:2 }}
-                                                    {{ stab.abs_max|convert_time|get_time_unit }}
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-md-3">
-                                                {% if stab.stab_comment %}
-                                                    <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
-                                                {% endif %}
-                                            </div>
-                                            <div class="col-md-3">
-                                                <u>References:</u> <br>
-                                                {% for lit in stab.stab_literature.all %}
+                            </div>
+                        {% endif %}
+                        {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
+                            <div class="container" id="absolute_stabilities">
+                            <div class="card-header">
+                                <h4>Absolute Stabilities</h4>
+                            </div>
+                            <div class="card-body row">
+                                {% for stab in a_s.stability.all %}
+                                    <div class="row stabilities-abs">
+                                        <div class="col-md-6">
+                                            <h6>{{ stab.get_temperature_display }}</h6>
+                                            {% if stab.abs_min_prefix %}
+                                                {{ stab.abs_min_prefix }}
+                                            {% endif %}
+                                            {% if stab.abs_min %}
+                                                {{ stab.abs_min|convert_time|get_time_value|floatformat:2 }}
+                                                {{ stab.abs_min|convert_time|get_time_unit }}
+                                            {% endif %}
+                                            {% if stab.abs_max_prefix %}
+                                                {{ stab.abs_max_prefix }}
+                                            {% endif %}
+                                            {% if stab.abs_max %}
+                                                -
+                                                {{ stab.abs_max|convert_time|get_time_value|floatformat:2 }}
+                                                {{ stab.abs_max|convert_time|get_time_unit }}
+                                            {% endif %}
+                                        </div>
 
-                                                    <!-- Button trigger modal -->
-                                                    <a href="#" data-bs-toggle="modal"
-                                                       data-bs-target="#literatureModal{{ lit.lit_no }}">
-                                                        #{{ lit.lit_no }}
-                                                    </a> |
+                                        <div class="col-md-6">
+                                            <u>References:</u> <br>
+                                            {% for lit in stab.stab_literature.all %}
 
-                                                    <!-- Modal -->
-                                                    <div class="modal fade text-black"
-                                                         id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                                                         aria-labelledby="literatureModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title"
-                                                                        id="literatureModalLabel">Reference
-                                                                        #{{ lit.lit_no }}</h5>
-                                                                    <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal"
-                                                                            aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
-                                                                    <br>
-                                                                    DOI: <a
-                                                                        href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
-                                                                    <br>
+                                                <!-- Button trigger modal -->
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                                    #{{ lit.lit_no }}
+                                                </a> |
 
-                                                                </div>
+                                                <!-- Modal -->
+                                                <div class="modal fade text-black"
+                                                     id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                                     aria-labelledby="literatureModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title"
+                                                                    id="literatureModalLabel">Reference
+                                                                    #{{ lit.lit_no }}</h5>
+                                                                <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
+                                                                <br>
+                                                                DOI: <a
+                                                                    href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
+                                                                <br>
+
                                                             </div>
                                                         </div>
                                                     </div>
-                                                {% endfor %}
-                                            </div>
+                                                </div>
+                                            {% endfor %}
                                         </div>
-                                    {% endfor %}
-                                </div>
-                                </div>
-                            {% endif %}
+                                    <div class="row">
+                                        <div class="col">
+                                            {% if stab.stab_comment %}
+                                                <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
         </div>
-    {% endfor %}
-</div>
-</div>
+    </div>
 
-<script>
-    function calculateYValue(stabId) {
-    // Accessing the x-value input field specific to the stabId
-    var xElement = document.getElementById("xValue_" + stabId);
-    if (!xElement) {
-        console.error('X value input not found for stabId:', stabId);
-        return;
-    }
-    var x = parseFloat(xElement.value);
+    <script>
+        function calculateYValue(stabId) {
+            // Accessing the x-value input field specific to the stabId
+            var xElement = document.getElementById("xValue_" + stabId);
+            if (!xElement) {
+                console.error('X value input not found for stabId:', stabId);
+                return;
+            }
+            var x = parseFloat(xElement.value);
 
-    // Accessing equation type specific to the stabId
-    var eq_type_element = document.getElementById("eq_type_" + stabId);
-    var eq_type = eq_type_element ? eq_type_element.value : null;
+            // Accessing equation type specific to the stabId
+            var eq_type_element = document.getElementById("eq_type_" + stabId);
+            var eq_type = eq_type_element ? eq_type_element.value : null;
 
-    // Accessing b0...b3 and exp_a, exp_b values specific to the stabId
-    var b0 = getFieldValue("b0_" + stabId);
-    var b1 = getFieldValue("b1_" + stabId);
-    var b2 = getFieldValue("b2_" + stabId);
-    var b3 = getFieldValue("b3_" + stabId);
-    var exp_a = getFieldValue("exp_a_" + stabId);
-    var exp_b = getFieldValue("exp_b_" + stabId);
+            // Accessing b0...b3 and exp_a, exp_b values specific to the stabId
+            var b0 = getFieldValue("b0_" + stabId);
+            var b1 = getFieldValue("b1_" + stabId);
+            var b2 = getFieldValue("b2_" + stabId);
+            var b3 = getFieldValue("b3_" + stabId);
+            var exp_a = getFieldValue("exp_a_" + stabId);
+            var exp_b = getFieldValue("exp_b_" + stabId);
 
-    var y;
-    switch(eq_type) {
-        case '1':
-            y = b0 + b1 * x;
-            break;
-        case '2':
-            y = b0 + b1 * x + b2 * x ** 2;
-            break;
-        case '3':
-            y = b0 + b1 * x + b2 * x ** 2 + b3 * x ** 3;
-            break;
-        case '4':
-            y = exp_a * Math.exp(exp_b * x);
-            break;
-        default:
-            y = "Invalid equation type";
-    }
+            var y;
+            switch (eq_type) {
+                case '1':
+                    y = b0 + b1 * x;
+                    break;
+                case '2':
+                    y = b0 + b1 * x + b2 * x ** 2;
+                    break;
+                case '3':
+                    y = b0 + b1 * x + b2 * x ** 2 + b3 * x ** 3;
+                    break;
+                case '4':
+                    y = exp_a * Math.exp(exp_b * x);
+                    break;
+                default:
+                    y = "Invalid equation type";
+            }
 
-    // Display the calculated y-value specific to the stabId
-    var yElement = document.getElementById("yValue_" + stabId);
-    if (yElement) {
-        yElement.innerText = y;
-    } else {
-        console.error('Y value display not found for stabId:', stabId);
-    }
-}
+            // Display the calculated y-value specific to the stabId
+            var yElement = document.getElementById("yValue_" + stabId);
+            if (yElement) {
+                yElement.innerText = y;
+            } else {
+                console.error('Y value display not found for stabId:', stabId);
+            }
+        }
 
-function getFieldValue(fieldId) {
-    var fieldElement = document.getElementById(fieldId);
-    return fieldElement ? parseFloat(fieldElement.value) : 0;  // default to 0 if not present
-}
+        function getFieldValue(fieldId) {
+            var fieldElement = document.getElementById(fieldId);
+            return fieldElement ? parseFloat(fieldElement.value) : 0;  // default to 0 if not present
+        }
 
-</script>
+    </script>
 
 
 {% endblock %}
