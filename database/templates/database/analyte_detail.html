@@ -16,157 +16,157 @@
 
 
     <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">Choose Matrix</h5>
+    <div class="card-header">
+        <h5 class="card-title">Choose Matrix</h5>
 
-            <ul class="nav nav-tabs card-header-tabs" id="specimen_tab" role="tablist">
-                {% for a_s in analyte.analyte_specimen.all %}
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link{% if forloop.first %} active{% endif %}"
-                           id="tab-{{ a_s.specimen.sg_id }}"
-                           data-bs-toggle="tab"
-                           href="#pane-{{ a_s.specimen.sg_id }}"
-                           role="tab"
-                           aria-controls="pane-{{ a_s.specimen.sg_id }}"
-                           aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
-                            {{ a_s.specimen.name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="card-body tab-content">
-            <div class="tab-content" id="specimen_tabContent">
-                {% for a_s in analyte.analyte_specimen.all %}
-                    <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
-                         id="pane-{{ a_s.specimen.sg_id }}"
-                         role="tabpanel"
-                         aria-labelledby="tab-{{ a_s.specimen.sg_id }}">
-                        {% if a_s.loinc_num %}
-                            <div class="container" id="loinc">
-                                <div class="card-header">
-                                    <div class="col-12">
-                                        <h4>LOINC
-                                            Number: <a href="https://loinc.org/{{ a_s.loinc_num }}"
-                                                       target="_blank"> {{ a_s.loinc_num }}</a>
-                                        </h4>
+        <ul class="nav nav-tabs card-header-tabs" id="specimen_tab" role="tablist">
+            {% for a_s in analyte.analyte_specimen.all %}
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link{% if forloop.first %} active{% endif %}"
+                       id="tab-{{ a_s.specimen.sg_id }}"
+                       data-bs-toggle="tab"
+                       href="#pane-{{ a_s.specimen.sg_id }}"
+                       role="tab"
+                       aria-controls="pane-{{ a_s.specimen.sg_id }}"
+                       aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                        {{ a_s.specimen.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="card-body tab-content">
+        <div class="tab-content" id="specimen_tabContent">
+            {% for a_s in analyte.analyte_specimen.all %}
+                <div class="tab-pane fade{% if forloop.first %} show active{% endif %}"
+                     id="pane-{{ a_s.specimen.sg_id }}"
+                     role="tabpanel"
+                     aria-labelledby="tab-{{ a_s.specimen.sg_id }}">
+                    {% if a_s.loinc_num %}
+                        <div class="container" id="loinc">
+                            <div class="card-header">
+                                <div class="col-12">
+                                    <h4>LOINC
+                                        Number: <a href="https://loinc.org/{{ a_s.loinc_num }}"
+                                                   target="_blank"> {{ a_s.loinc_num }}</a>
+                                    </h4>
 
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
+                        <div class="container" id="blood_collection_tubes">
+                            <div class="card-header">
+                                <h4>Specimen collection tubes</h4>
+                            </div>
+                            <div class="card-body row">
+
+                                {% if a_s.tube_recomm.all %}
+                                    <div class="col-md-3 tubetype">
+                                        <h5>Recommended</h5>
+                                        {% for tube in a_s.tube_recomm.all %}
+                                            - {{ tube.name }} <br>
+                                        {% endfor %}
                                     </div>
-                                </div>
+                                {% endif %}
+
+                                {% if a_s.tube_possible.all %}
+                                    <div class="col-md-3 tubetype">
+                                        <h5>Possible</h5>
+                                        {% for tube in a_s.tube_possible.all %}
+                                            - {{ tube.name }} <br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if a_s.tube_maybeposs.all %}
+                                    <div class="col-md-3 tubetype">
+                                        <h5>Eventually possible</h5>
+                                        {% for tube in a_s.tube_maybeposs.all %}
+                                            - {{ tube.name }} <br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if a_s.tube_not.all %}
+                                    <div class="col-md-3 tubetype">
+                                        <h5>NOT recommended</h5>
+                                        {% for tube in a_s.tube_not.all %}
+                                            - {{ tube.name }} <br>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </div>
-                        {% endif %}
-                        {% if a_s.tube_recomm.all or a_s.tube_possible.all or a_s.tube_maybeposs.all or a_s.tube_not.all %}
-                            <div class="container" id="blood_collection_tubes">
-                                <div class="card-header">
-                                    <h4>Specimen collection tubes</h4>
-                                </div>
-                                <div class="card-body row">
+                        </div>
+                    {% endif %}
+                    {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0,exp_a" %}
+                        <div class="contsiner" id="stability_equations">
+                            <div class="card-header">
+                                <h4>Stability Equations</h4>
 
-                                    {% if a_s.tube_recomm.all %}
-                                        <div class="col-md-3 tubetype">
-                                            <h5>Recommended</h5>
-                                            {% for tube in a_s.tube_recomm.all %}
-                                                - {{ tube.name }} <br>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-
-                                    {% if a_s.tube_possible.all %}
-                                        <div class="col-md-3 tubetype">
-                                            <h5>Possible</h5>
-                                            {% for tube in a_s.tube_possible.all %}
-                                                - {{ tube.name }} <br>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    {% if a_s.tube_maybeposs.all %}
-                                        <div class="col-md-3 tubetype">
-                                            <h5>Eventually possible</h5>
-                                            {% for tube in a_s.tube_maybeposs.all %}
-                                                - {{ tube.name }} <br>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    {% if a_s.tube_not.all %}
-                                        <div class="col-md-3 tubetype">
-                                            <h5>NOT recommended</h5>
-                                            {% for tube in a_s.tube_not.all %}
-                                                - {{ tube.name }} <br>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
                             </div>
-                        {% endif %}
-                        {% if a_s.stability|is_not_empty_m2m_field_or:"eq_type,b0,exp_a" %}
-                            <div class="contsiner" id="stability_equations">
-                                <div class="card-header">
-                                    <h4>Stability Equations</h4>
+                            <div class="card-body row">
 
-                                </div>
-                                <div class="card-body row">
+                                {% for stab in a_s.stability.all %}
 
-                                    {% for stab in a_s.stability.all %}
+                                    {% if stab.eq_type %}
+                                        <div class="row">
+                                            <div class="col">
 
-                                        {% if stab.eq_type %}
-                                            <div class="row">
-                                                <div class="col">
-
-                                                    <h6><u>Storage Temperature:</u> {{ stab.get_temperature_display }}
-                                                    </h6>
-                                                    <h6><u>Regression:</u>
-                                                        {{ stab.get_eq_type_display }} <br>
-                                                        {% if stab.eq_type == "1" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time
-                                                        {% elif stab.eq_type == "2" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
-                                                            {{ stab.b2 }} * Storage Time<sup>2</sup>
-                                                        {% elif stab.eq_type == "3" %}
-                                                            Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
-                                                            {{ stab.b2 }} * Storage Time<sup>2</sup> + {{ stab.b3 }} *
-                                                            Storage Time<sup>3</sup>
-                                                        {% elif stab.eq_type == "4" %}
-                                                            PD% = {{ stab.exp_a }} * {{ stab.exp_b }}
-                                                            <sup>Storage time</sup>
-                                                        {% endif %}
-                                                    </h6>
+                                                <h6><u>Storage Temperature:</u> {{ stab.get_temperature_display }}
+                                                </h6>
+                                                <h6><u>Regression:</u>
+                                                    {{ stab.get_eq_type_display }} <br>
+                                                    {% if stab.eq_type == "1" %}
+                                                        Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time
+                                                    {% elif stab.eq_type == "2" %}
+                                                        Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
+                                                        {{ stab.b2 }} * Storage Time<sup>2</sup>
+                                                    {% elif stab.eq_type == "3" %}
+                                                        Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time +
+                                                        {{ stab.b2 }} * Storage Time<sup>2</sup> + {{ stab.b3 }} *
+                                                        Storage Time<sup>3</sup>
+                                                    {% elif stab.eq_type == "4" %}
+                                                        PD% = {{ stab.exp_a }} * {{ stab.exp_b }}
+                                                        <sup>Storage time</sup>
+                                                    {% endif %}
+                                                </h6>
                                                 <u>References</u>
-                                                    {% for lit in stab.stab_literature.all %}
+                                                {% for lit in stab.stab_literature.all %}
 
-                                                        <!-- Button trigger modal -->
-                                                        <a href="#" data-bs-toggle="modal"
-                                                           data-bs-target="#literatureModal{{ lit.lit_no }}">
-                                                            #{{ lit.lit_no }}
-                                                        </a> |
+                                                    <!-- Button trigger modal -->
+                                                    <a href="#" data-bs-toggle="modal"
+                                                       data-bs-target="#literatureModal{{ lit.lit_no }}">
+                                                        #{{ lit.lit_no }}
+                                                    </a> |
 
-                                                        <!-- Modal -->
-                                                        <div class="modal fade text-black"
-                                                             id="literatureModal{{ lit.lit_no }}" tabindex="-1"
-                                                             aria-labelledby="literatureModalLabel"
-                                                             aria-hidden="true">
-                                                            <div class="modal-dialog">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title"
-                                                                            id="literatureModalLabel">Reference
-                                                                            #{{ lit.lit_no }}</h5>
-                                                                        <button type="button" class="btn-close"
-                                                                                data-bs-dismiss="modal"
-                                                                                aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
-                                                                        <br>
-                                                                        DOI: <a
-                                                                            href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
-                                                                        <br>
+                                                    <!-- Modal -->
+                                                    <div class="modal fade text-black"
+                                                         id="literatureModal{{ lit.lit_no }}" tabindex="-1"
+                                                         aria-labelledby="literatureModalLabel"
+                                                         aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="literatureModalLabel">Reference
+                                                                        #{{ lit.lit_no }}</h5>
+                                                                    <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    {{ lit.authors }}. {{ lit.title }}. {{ lit_source }}
+                                                                    <br>
+                                                                    DOI: <a
+                                                                        href="https://doi.org/{{ lit.doi }}">{{ lit.doi }}</a>
+                                                                    <br>
 
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    {% endfor %}
-                                                    {% if stab.stabilizer %}
+                                                    </div>
+                                                {% endfor %}
+                                                {% if stab.stabilizer %}
                                                     <div class="col">
                                                         <u>Stabilizer:</u> {{ stab.stabilizer }}
                                                     </div>
@@ -181,15 +181,19 @@
                                                         <u>Analyt. Method:</u> {{ stab.stab_analyt_method }}
                                                     </div>
                                                 {% endif %}
-                                                </div>
-                                                <div class="col">
+                                            </div>
+                                            <div class="col">
 
-                                                    <img src="{{ graph|dict_key:stab.pk }}" width="100%" alt="Regression Graph"/>
-                                                    <br>
-                                                    <div class="calculator">
-                                                        {# For the xValue input field #}
-                                                        <input type="number" id="xValue_{{ stab.pk }}"
-                                                               placeholder="Enter storage time">
+                                                <img src="{{ graph|dict_key:stab.pk }}" width="100%"
+                                                     alt="Regression Graph"/>
+                                                <br>
+                                                <div class="calculator">
+                                                    {# For the xValue input field #}
+                                                    <span class="input-group mb-3">
+                                                        <input type="number" class="form-control" placeholder="Enter storage time" aria-label="Enter storage time" aria-describedby="button-addon2" id="xValue_{{ stab.pk }}">
+                                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="calculateYValue({{ stab.pk }})">Calculate</button>
+{#                                                        <input type="number" id="xValue_{{ stab.pk }}"#}
+{#                                                               placeholder="Enter storage time">#}
 
                                                         {# Hidden fields for capturing the variable values #}
                                                         <input type="hidden" id="eq_type_{{ stab.pk }}"
@@ -206,37 +210,42 @@
                                                                value="{{ stab.exp_a }}">
                                                         <input type="hidden" id="exp_b_{{ stab.pk }}"
                                                                value="{{ stab.exp_b }}">
-
+                                                    </span>
                                                         {# Button for calculation and display area for y-value #}
-                                                        <button onclick="calculateYValue({{ stab.pk }})">Calculate
-                                                            Deviation
-                                                        </button>
-                                                        <p>Deviation %: <span id="yValue_{{ stab.pk }}">-</span></p>
-                                                    </div>
+{#                                                        <button onclick="calculateYValue({{ stab.pk }})">Calculate#}
+{#                                                            Deviation#}
+{#                                                        </button>#}
+                                                            <br>
+                                                            <div>
+                                                                <h6>Deviation %: <span id="yValue_{{ stab.pk }}">-</span></h6>
+                                                                </div>
 
+</span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        {% if stab.stab_comment %}
+                                            <div class="row">
+                                                <div class="col">
+                                                    <u>Comment:</u> {{ stab.stab_comment }}
                                                 </div>
                                             </div>
-
-                                            {% if stab.stab_comment %}
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <u>Comment:</u> {{ stab.stab_comment }}
-                                                    </div>
-                                                </div>
-                                            {% endif %}
-                                            <hr>
                                         {% endif %}
+                                        <hr>
+                                    {% endif %}
 
 
 
 
 
-                                    {% endfor %}
-                                </div>
+                                {% endfor %}
                             </div>
-                        {% endif %}
-                        {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
-                            <div class="container" id="absolute_stabilities">
+                        </div>
+                    {% endif %}
+                    {% if a_s.stability|is_not_empty_m2m_field_or:"abs_min,abs_max" %}
+                        <div class="container" id="absolute_stabilities">
                             <div class="card-header">
                                 <h4>Absolute Stabilities</h4>
                             </div>
@@ -299,20 +308,20 @@
                                                 </div>
                                             {% endfor %}
                                         </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            {% if stab.stab_comment %}
-                                                <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
-                                            {% endif %}
+                                        <div class="row">
+                                            <div class="col">
+                                                {% if stab.stab_comment %}
+                                                    <p><u>Comment:</u> <br>{{ stab.stab_comment }}</p>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                 {% endfor %}
                             </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
     </div>
 
