@@ -115,6 +115,7 @@
                                                 <h6><u>Storage Temperature:</u> {{ stab.get_temperature_display }}
                                                 </h6>
                                                 <h6><u>Regression:</u>
+                                                <span class="regression">
                                                     {{ stab.get_eq_type_display }} <br>
                                                     {% if stab.eq_type == "1" %}
                                                         Bias = {{ stab.b0 }} + {{ stab.b1 }} * Storage Time
@@ -129,6 +130,7 @@
                                                         PD% = {{ stab.exp_a }} * {{ stab.exp_b }}
                                                         <sup>Storage time</sup>
                                                     {% endif %}
+                                                </span>
                                                 </h6>
                                                 <u>References</u>
                                                 {% for lit in stab.stab_literature.all %}
