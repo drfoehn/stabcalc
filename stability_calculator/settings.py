@@ -121,18 +121,12 @@ WSGI_APPLICATION = 'stability_calculator.wsgi.application'
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stability_calculator_database',
-        'HOST': '127.0.0.1',
-        'PORT': 3306,
-        'USER': 'StabCalc',
-        'PASSWORD': '',
-        # "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
-        # "NAME": env("DATABASE_NAME", default="db.sqlite3"),
-        # "HOST": env("DATABASE_HOST", default="localhost"),
-        # "PORT": env("DATABASE_PORT", default=3306),
-        # "USER": env("DATABASE_USER", default=""),
-        # "PASSWORD": env("DATABASE_PASS", default=""),
+        "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": env("DATABASE_NAME", default="stability_calculator_database"),
+        "HOST": env("DATABASE_HOST", default="127.0.0.1"),
+        "PORT": env("DATABASE_PORT", default=3306),
+        "USER": env("DATABASE_USER", default=""),
+        "PASSWORD": env("DATABASE_PASS", default=""),
     }
 }
 
