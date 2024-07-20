@@ -126,7 +126,7 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': 3306,
         'USER': 'StabCalc',
-        'PASSWORD': 'dMiz50%Iin',
+        'PASSWORD': '',
         # "ENGINE": env("DATABASE_ENGINE", default="django.db.backends.sqlite3"),
         # "NAME": env("DATABASE_NAME", default="db.sqlite3"),
         # "HOST": env("DATABASE_HOST", default="localhost"),
