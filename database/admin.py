@@ -2,25 +2,28 @@ from django.contrib import admin
 
 from django.contrib import admin
 from database.models import *
+from import_export.admin import ImportExportModelAdmin
 
-class AnalyteAdmin(admin.ModelAdmin):
-    model = Analyte
-    ordering = ['name']
-    search_fields = ['name']
+class AnalyteAdmin(ImportExportModelAdmin):
+    pass
 
-class LiteratureAdmin(admin.ModelAdmin):
-    model = Literature
-    list_display = ['authors', 'title']
+# class AnalyteAdmin(admin.ModelAdmin):
+#     model = Analyte
+#     ordering = ['name']
+#     search_fields = ['name']
+
+class LiteratureAdmin(ImportExportModelAdmin):
+    pass
 
 class PlatformAdmin(admin.ModelAdmin):
     model = Platform
 
-class SpecimenAdmin(admin.ModelAdmin):
-    model = Specimen
+class SpecimenAdmin(ImportExportModelAdmin):
+    pass
 
 class SampleTypeAdmin(admin.ModelAdmin):
     model = SampleType
-    list_display = ['name']
+    # list_display = ['container_additive'], ['storage']
 
 class UnitAdmin(admin.ModelAdmin):
     model = Unit

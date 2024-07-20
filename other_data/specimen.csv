@@ -1,0 +1,5 @@
+database/specimen;sg_id;abbr;name;;;
+database/specimen;1;VB;Venous Blood;;;
+database/specimen;2;U;Urine;;;
+database/specimen;3;CSF;CSF;;;
+database/specimen;4;A;Arterial Blood;;;

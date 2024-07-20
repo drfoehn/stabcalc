@@ -1,0 +1,83 @@
+﻿model;id;name;unit;cv_i;cv_g
+calculator.Parameter;1;ALT / GPT;U/L;9,3;28
+calculator.Parameter;2;AST / GOT;U/L;9,5;20,3
+calculator.Parameter;3;Gamma-Glutamy Transferase;U/L;8,9;45,1
+calculator.Parameter;4;Alkal. Phosphatase;U/L;5,3;24,9
+calculator.Parameter;5;LDH;U/L;5,2;12,6
+calculator.Parameter;6;Creatin-Kinase;U/L;14,5;37,9
+calculator.Parameter;7;Amylase;U/L;6,8;30,4
+calculator.Parameter;8;Pancreatic α-amylase;U/L;6,3;24,9
+calculator.Parameter;9;Lipase;U/L;7,7;23,8
+calculator.Parameter;10;Sodium;mmol/L;0,53;1,21
+calculator.Parameter;11;Potassium;mmol/L;3,92;4,08
+calculator.Parameter;12;Chloride;mmol/L;0,98;1,34
+calculator.Parameter;13;Calcium;mg/dL;1,81;2,73
+calculator.Parameter;14;Magnesium;mg/dL;2,88;5,79
+calculator.Parameter;15;inorg. Phosphate;mg/dL;7,67;10,5
+calculator.Parameter;16;Total Cholesterol;mg/dL;5,18;17,4
+calculator.Parameter;17;HDL Cholesterol;mg/dL;5,67;25,1
+calculator.Parameter;18;LDL Cholesterol;mg/dL;8,46;28,2
+calculator.Parameter;19;Non-HDL Cholesterol;mg/dL;6,88;26,4
+calculator.Parameter;20;Trigycerides;mg/dL;19,8;40,3
+calculator.Parameter;21;Glucose;mg/dL;4,7;8,1
+calculator.Parameter;22;Urea;mg/dL;14,1;22,5
+calculator.Parameter;23;Uric Acid;mg/dL;8,32;23,6
+calculator.Parameter;24;Total Protein;mg/dL;2,6;4,6
+calculator.Parameter;25;Total Bilirubin;mg/dL;20,9;26,6
+calculator.Parameter;26;Direct Bilirubin;mg/dL;20,9;31,1
+calculator.Parameter;27;Creatinine (enzymatic);mg/dL;4,4;17,1
+calculator.Parameter;28;Creatinine (Jaffe);mg/dL;4,7;19
+calculator.Parameter;29;neuron-specific enolase;mg/L;10,9;20,3
+calculator.Parameter;30;S100-β protein;pg/L;10,2;32,7
+calculator.Parameter;31;Alpha1-Antitrypsin;mg/dL;3,8;10,1
+calculator.Parameter;32;Alpha1-acid-glycoprotein;mg/dL;6,8;24
+calculator.Parameter;33;Albumin;g/dL;2,5;5,1
+calculator.Parameter;34;ß2-Microglobulin;mg/L;4;11,2
+calculator.Parameter;35;Complement component 3;mg/L;4,6;15,2
+calculator.Parameter;36;Complement component 4;mg/L;6,9;24,5
+calculator.Parameter;37;Ceruloplasmin;mg/L;4,9;15,2
+calculator.Parameter;38;Cystatin C;mg/L;3,9;12
+calculator.Parameter;39;Haptoglobin;mg/dL;7,4;39,4
+calculator.Parameter;40;Immunglobulin A;mg/dL;3,3;39,4
+calculator.Parameter;41;Immunglobulin G;mg/dL;2,8;19,7
+calculator.Parameter;42;Immunglobulin M;mg/dL;3,9;48,6
+calculator.Parameter;43;Transferrin;mg/dL;3,4;13,9
+calculator.Parameter;44;soluble Transferrin Receptor;mg/L;6,9;19,1
+calculator.Parameter;45;C-reactive Protein;mg/L;29,4;87
+calculator.Parameter;46;Lipoprotein (a);nmol/L;8,9;8
+calculator.Parameter;47;Apolipoprotein A1;mg/dL;4,8;17,3
+calculator.Parameter;48;Apolipoprotein B;mg/dL;6,7;25,9
+calculator.Parameter;49;Troponin I (Siemens);ng/L;13,9;36,3
+calculator.Parameter;50;Troponin I (Singulex);ng/L;16,6;40,3
+calculator.Parameter;51;Parathormone;ng/L;14,7;26,8
+calculator.Parameter;52;Osteocalcin;μg/L;8,9;32,6
+calculator.Parameter;53;uncarboxylated-unphosphorylated Matrix-Gla Protein;pmol/L;6,9;13,9
+calculator.Parameter;54;N-terminal propeptide of type I collagen;μg/L;8,8;35,2
+calculator.Parameter;55;β-isomerized C-terminal telopeptide of type I collagen;ng/L;15,1;45,9
+calculator.Parameter;56;intact Fibroblast Growth Factor 23;ng/L;13,9;26,4
+calculator.Parameter;57;Cortisol;nmol/L;15,5;20,6
+calculator.Parameter;58;Insulin;mU/mL;25,3;33,4
+calculator.Parameter;59;TSH;mIU/L;18,9;35,9
+calculator.Parameter;60;Free T3;pmol/L;5;8
+calculator.Parameter;61;Free Thyroxine;pmol/L;4,8;7,5
+calculator.Parameter;62;human Calcitonin;ng/L;13;65,8
+calculator.Parameter;63;Thyreoglobulin;µg/L;10,3;79
+calculator.Parameter;64;total PSA;µg/L;6,8;42
+calculator.Parameter;65;free PSA (absolut);µg/L;7,1;46,2
+calculator.Parameter;66;conjugated PSA;µg/L;8,8;57,7
+calculator.Parameter;67;free PSA (relative);%;5,3;36,1
+calculator.Parameter;68;CA 15-3;U/mL;4,4;36,8
+calculator.Parameter;69;Carcino Embryonal Antigen;ng/mL;6,3;59,8
+calculator.Parameter;70;CA 19-9;U/mL;4;56
+calculator.Parameter;71;Cytokeratin Fragment 21-1;mg/L;19,7;29,5
+calculator.Parameter;72;human epididymis protein-4;pmol/L;6,7;18,5
+calculator.Parameter;73;Alpha Fetoprotein;µg/L;4,1;41,9
+calculator.Parameter;74;CA 125;U/mL;8,6;41,1
+calculator.Parameter;75;activated partial Thromboplasin Time ;s;2,9;7,2
+calculator.Parameter;76;Prothrombin Time;s;2,6;5,1
+calculator.Parameter;77;Antithrombin 3;%;3,5;8,1
+calculator.Parameter;78;Coagulation factor VIII;%;8,3;23,3
+calculator.Parameter;79;Fibrinogen;mg/dL;10,2;17,3
+calculator.Parameter;80;D-Dimer;ng/mL (FEU);29;35,6
+calculator.Parameter;81;Protein C;%;5,4;18,6
+calculator.Parameter;82;free Protein S;%;4;16,2

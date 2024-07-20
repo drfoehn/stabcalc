@@ -12,7 +12,7 @@
         </thead>
         <tbody>
 
-        {% for analyte in results %}
+{% for analyte in results %}
             <tr>
                 <td>
 
@@ -24,7 +24,15 @@
                     </a>
                 </td>
             <td>
-                {{ analyte.specimen.name }}
+                {% if analyte.analyte_specimen.all.count > 0 %}
+                {% for specimen in analyte.analyte_specimen.all %}
+
+                        {{ specimen.specimen.name }} |
+                    {% endfor %}
+                    {% else %}
+                    No stability data available
+                    {% endif %}
+
             </td>
             </tr>
         {% endfor %}

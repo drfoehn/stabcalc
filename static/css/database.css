@@ -30,3 +30,7 @@
 #loinc{
     margin-bottom: 1em;
 }
+
+.regression{
+    color: var(--imperial-red);
+}

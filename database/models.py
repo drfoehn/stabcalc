@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
+
 # Create your models here.
 
 
@@ -46,20 +48,62 @@ class Platform(models.Model):
 #     def __str__(self):
 #         return self.name
 class Specimen(models.Model):
+    # blood, urine, etc
     sg_id = models.AutoField(primary_key=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
 class SampleType(models.Model):
+    # Heparin-Wholeblood, EDTA, etc
     sat_id = models.AutoField(primary_key=True)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
 
+    NA = 0
+    WHOLEBLOOD = 1
+    PLASMA = 2
+    STORAGE = (
+        (NA, _("N/A")),
+        (WHOLEBLOOD, _("Whole Blood")),
+        (PLASMA, _("Plasma/Serum")),
+    )
+
+    storage = models.SmallIntegerField(
+        choices=STORAGE,
+        default=NA,  # TODO: make required only if blood is selected
+        verbose_name='Blood storage as'
+
+    )
+
+    NONE = 0
+    EDTA = 1
+    HEP = 2
+    CITRATE = 3
+    CLOTACTIVATOR = 6
+    OTHER = 9
+    CONTAINERADDITIVE = (
+        (NONE, _("No additive")),
+        (EDTA, _("EDTA")),
+        (HEP, _("Heparin")),
+        (CITRATE, _("Citrate")),
+        (CLOTACTIVATOR, _("Clotactivator (Serum)")),
+        (OTHER, _("Other - Please specify")),
+
+    )
+
+    container_additive = models.SmallIntegerField(
+        choices=CONTAINERADDITIVE,
+        # default=HOURS,
+        verbose_name='Container Additive', blank=True, null=True
+    )
+    container_additive_other = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Other Additive'))
+
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.get_container_additive_display()} -- {self.get_storage_display()}"
 
 class AnalytMethod(models.Model):
     meth_id = models.AutoField(primary_key=True)
@@ -129,16 +173,14 @@ class Stability(models.Model):
     )
     temperature = models.CharField(choices=TemepratureChoices, blank=True, null=True, max_length=1)
 
-    HOUR = "1"
-    DAY = "2"
-    WEEK = "3"
+    HOUR = "2"
+    DAY = "3"
     MONTH = "4"
     YEAR = "5"
 
     TimeChoices = (
         (HOUR, _("Hours")),
         (DAY, _("Days")),
-        (WEEK, _("Weeks")),
         (MONTH, _("Months")),
         (YEAR, _("Years")),
     )
@@ -172,7 +214,8 @@ class Stability(models.Model):
 
 class Analyte(models.Model):
     aid = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, blank=True, null=True)
+    # name = models.OneToOneField(Parameter, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
     abbr = models.CharField(max_length=255, blank=True, null=True)
     details = models.CharField(max_length=255, blank=True, null=True)
     specimen = models.ManyToManyField(Specimen, through='AnalyteSpecimen')

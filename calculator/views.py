@@ -1554,7 +1554,7 @@ def import_excel(self):
 
 
     # ----get last row and col from input sheet using pandas (openpyxl does not count empty cells)
-    resultfile = 'other_data/test.xlsx'
+    resultfile = 'other_data/data1.xlsx'
     df = pandas.read_excel(resultfile, sheet_name=[1])
     max_row = 1
     max_col = 1
@@ -1621,7 +1621,7 @@ def result_template_upload(request):
 
         # ----get last row and col from input sheet using pandas (openpyxl does not count empty cells)
         resultfile = uploaded_file
-        df = pandas.read_excel(resultfile, sheet_name=[1])
+        df = pandas.read_excel(resultfile, sheet_name=['Input results'])
         max_row = 1
         max_col = 1
         for sh_name, sh_content in df.items():
@@ -2346,6 +2346,5 @@ def ResultAdminList(request):
     #     return context
 
 
+# ------------------------ Transfer Results to Database -----------------------
 
-    
-        

@@ -9,6 +9,8 @@ from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 import math
 import statistics
+
+from database.models import Analyte
 from users.models import LabUser
 
 
@@ -32,12 +34,14 @@ class Condition(OwnedModelMixin, models.Model):
     FRIDGE = 2
     FREEZE = 3
     DEEPFREEZE = 4
+    ULTRADEEPFROZEN = 5
     OTHER = 9
     TEMPERATURE = (
         (ROOMTEMP, _("Roomtemperature (20 to 25°C)")),
         (FRIDGE, _("Refrigerated (2 to 6°C)")),
         (FREEZE, _("Frozen (-15 to -25°C)")),
         (DEEPFREEZE, _("Deepfrozen (-60 to -80°C)")),
+        (ULTRADEEPFROZEN, _("Ultradeepfrozen( < -80°C)")),
         (OTHER, _("Other - Please specify")),
 
     )
@@ -205,7 +209,7 @@ class Sample(OwnedModelMixin, models.Model):
     HEP = 2
     CITRATE = 3
     CLOTACTIVATOR = 6
-    Other = 9
+    OTHER = 9
     CONTAINERADDITIVE = (
         (NONE, _("No additive")),
         (EDTA, _("EDTA")),
@@ -230,7 +234,7 @@ class Sample(OwnedModelMixin, models.Model):
 
 
 class Parameter(models.Model):
-    name = models.CharField(max_length=255, verbose_name='Parameter Name')
+    name = models.OneToOneField(Analyte, on_delete=models.CASCADE, verbose_name='Parameter Name')
     unit = models.CharField(max_length=15, verbose_name='Parameter Unit')
     cv_i = models.FloatField(verbose_name='CVi')
     cv_g = models.FloatField(verbose_name='CVg')
